@@ -1,3 +1,7 @@
+package src;
+
+import src.Player;
+
 import java.util.List;
 
 public class PlayersManager {
@@ -7,7 +11,7 @@ public class PlayersManager {
     private boolean gameEnded;
 
     public PlayersManager() {
-        // Initialize the PlayersManager
+        // Initialize the src.PlayersManager
     }
 
     public void addPlayer(Player player) {
