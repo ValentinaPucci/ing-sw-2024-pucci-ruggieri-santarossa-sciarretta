@@ -15,4 +15,5 @@ public class ObjectiveCard extends Card {
     private Optional<String> layout; //che corrisponde allo schema indicato dalla carta obiettivo
 
 
+
 }

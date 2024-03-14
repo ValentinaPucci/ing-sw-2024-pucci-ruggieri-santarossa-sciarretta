@@ -6,13 +6,10 @@ public class Card {
         BACK
     }
     private int id;
-
     private Orientation orientation;
 
     /**
      *
-     * @param id
-     * @param orientation
      */
     public Card(int id, Orientation orientation) {
         this.id = id;
