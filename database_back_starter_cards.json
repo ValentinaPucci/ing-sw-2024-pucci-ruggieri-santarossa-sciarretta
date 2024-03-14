@@ -1,0 +1,23 @@
+{
+  "cards": [
+    {
+      "id": 81,
+      "type": "Starter",
+      "visibleCorners": 4,
+      "NE": "Leaf",
+      "SE": "Wolf",
+      "SW": "Butterfly",
+      "NW": "Mushroom"
+    },
+
+    {
+      "id": 82,
+      "type": "Starter",
+      "visibleCorners": 4,
+      "NE": "Wolf",
+      "SE": "Butterfly",
+      "SW": "Mushroom",
+      "NW": "Leaf"
+    }
+  ]
+}
