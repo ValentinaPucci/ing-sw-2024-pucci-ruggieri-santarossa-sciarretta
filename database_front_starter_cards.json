@@ -1,0 +1,30 @@
+
+{
+  "cards": [
+    {
+      "id": 81,
+      "type": "Starter",
+      "visibleCorners": 4,
+      "permanentResource1": "Butterfly",
+      "permanentResource2": null,
+      "permanentResource3": null,
+      "NE": "Leaf",
+      "SE": "Empty",
+      "SW": "Butterfly",
+      "NW": "Empty"
+    },
+
+    {
+      "id": 82,
+      "type": "Starter",
+      "visibleCorners": 4,
+      "permanentResource1": "Mushroom",
+      "permanentResource2": null,
+      "permanentResource3": null,
+      "NE": "Empty",
+      "SE": "Mushroom",
+      "SW": "Empty",
+      "NW": "Wolf"
+    }
+  ]
+}
