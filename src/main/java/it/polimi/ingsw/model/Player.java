@@ -1,5 +1,3 @@
-package src;
-
 import src.main.java.it.polimi.ingsw.model.ObjectiveCard;
 
 import java.util.List;

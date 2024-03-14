@@ -1,7 +1,7 @@
 package src.main.java.it.polimi.ingsw.model;
 
 public class PersonalBoard {
-    private Card[][] board;
+    private Cell[][] board;
     private int points;
     private int delta_points;
     private int num_mushrooms;
