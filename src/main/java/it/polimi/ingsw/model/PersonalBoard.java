@@ -1,7 +1,7 @@
 package src.main.java.it.polimi.ingsw.model;
 
 public class PersonalBoard {
-    private Card[][] board;
+    private Cell[][] board;
     private int points;
     private int delta_points;
     private int num_mushrooms;
@@ -12,10 +12,10 @@ public class PersonalBoard {
     private int num_feathers;
     private int num_potions;
 
-    //Quando creo Personal Board è vuota, poi aggiorno quando piazzo la carta iniziale.
+    // Quando creo Personal Board è vuota, poi aggiorno quando piazzo la carta iniziale.
     public PersonalBoard() {
         //ipotesi dimensione matrice:
-        this.board = new Card[156][156];
+        this.board = new Cell[1001][1001];
         this.points = 0;
         this.delta_points = 20;
         this.num_mushrooms = 0;
@@ -94,5 +94,25 @@ public class PersonalBoard {
         this.delta_points= delta_points - points_of_placed_card;
     }
 
+    public int getNum_mushrooms(){
+        return num_mushrooms;
+    }
+    public int getNum_leaves() {
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void placeCardOnBoard(Car)
 
 }

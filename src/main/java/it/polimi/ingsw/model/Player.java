@@ -1,7 +1,8 @@
-package src;
+package src.main.java.it.polimi.ingsw.model;
 
 import src.main.java.it.polimi.ingsw.model.ObjectiveCard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
