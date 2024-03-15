@@ -2,7 +2,6 @@ package src.main.java.it.polimi.ingsw.model;
 
 public class ObjectiveCard extends Card {
     private int points; //every objective card has it.
-    private Optional<String> color; //che in realtà corrisponde univocamente ad una risorsa.
     private int num_parchments;
     private int num_feathers;
     private int num_potions;
