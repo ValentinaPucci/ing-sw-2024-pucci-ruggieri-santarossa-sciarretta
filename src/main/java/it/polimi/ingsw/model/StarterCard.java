@@ -16,7 +16,7 @@ public class StarterCard extends Card {
         this.front_resource1 = null;
         this.front_resource2 = null;
         this.front_resource3 = null;
-        this.back_cornerscorners = new Corner[4][4];
+        this.back_corners = new Corner[4][4];
     }
 
     /**
@@ -24,10 +24,17 @@ public class StarterCard extends Card {
      * @param resource1
      * @param resource2
      */
-    public void SetStarterCardFront(Resource resource1, Resource resource2, Resource resource3) {
+    public void SetStarterCardFront(Resource resource1, Resource resource2, Resource resource3, Corner[][] actual_corners){
         this.front_resource1 = resource1;
         this.front_resource2 = resource2;
         this.front_resource3 = resource3;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                this.back_cornerscorners[i][j] = actual_corners[i][j];
+            }
+        }
+    }
+
     }
 
     /**
@@ -43,7 +50,6 @@ public class StarterCard extends Card {
                 this.back_cornerscorners[i][j] = actual_corners[i][j];
             }
         }
-
     }
 
 }
