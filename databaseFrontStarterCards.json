@@ -25,6 +25,61 @@
       "SE": "Mushroom",
       "SW": "Empty",
       "NW": "Wolf"
+    },
+
+    {
+      "id": 83,
+      "type": "Starter",
+      "visibleCorners": 4,
+      "permanentResource1": "Leaf",
+      "permanentResource2": "Mushroom",
+      "permanentResource3": null,
+      "NE": "Empty",
+      "SE": "Empty",
+      "SW": "Empty",
+      "NW": "Empty"
+    },
+
+
+    {
+      "id": 84,
+      "type": "Starter",
+      "visibleCorners": 4,
+      "permanentResource1": "Wolf",
+      "permanentResource2": "Butterfly",
+      "permanentResource3": null,
+      "NE": "Empty",
+      "SE": "Empty",
+      "SW": "Empty",
+      "NW": "Empty"
+    },
+
+
+
+    {
+      "id": 85,
+      "type": "Starter",
+      "visibleCorners": 2,
+      "permanentResource1": "Wolf",
+      "permanentResource2": "Butterfly",
+      "permanentResource3": "Leaf",
+      "NE": "Empty",
+      "SE": "NonVisible",
+      "SW": "NonVisible",
+      "NW": "Empty"
+    },
+
+    {
+      "id": 86,
+      "type": "Starter",
+      "visibleCorners": 2,
+      "permanentResource1": "Leaf",
+      "permanentResource2": "Wolf",
+      "permanentResource3": "Mushroom",
+      "NE": "Empty",
+      "SE": "NonVisible",
+      "SW": "NonVisible",
+      "NW": "Empty"
     }
   ]
 }
