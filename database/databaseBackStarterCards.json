@@ -18,6 +18,47 @@
       "SE": "Butterfly",
       "SW": "Mushroom",
       "NW": "Leaf"
+    },
+
+    {
+      "id": 83,
+      "type": "Starter",
+      "visibleCorners": 4,
+      "NE": "Wolf",
+      "SE": "Leaf",
+      "SW": "Mushroom",
+      "NW": "Butterfly"
+    },
+
+    {
+      "id": 84,
+      "type": "Starter",
+      "visibleCorners": 4,
+      "NE": "Butterfly",
+      "SE": "Mushroom",
+      "SW": "Wolf",
+      "NW": "Leaf"
+    },
+
+    {
+      "id": 85,
+      "type": "Starter",
+      "visibleCorners": 4,
+      "NE": "Mushroom",
+      "SE": "Wolf",
+      "SW": "Leaf",
+      "NW": "Butterfly"
+    },
+
+    {
+      "id": 86,
+      "type": "Starter",
+      "visibleCorners": 4,
+      "NE": "Wolf",
+      "SE": "Butterfly",
+      "SW": "Leaf",
+      "NW": "Mushroom"
     }
+
   ]
 }
