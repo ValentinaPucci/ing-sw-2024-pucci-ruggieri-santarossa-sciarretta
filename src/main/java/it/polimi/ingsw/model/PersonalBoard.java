@@ -91,7 +91,7 @@ public class PersonalBoard {
     public void updatePoints(int points_of_placed_card){
         //Se piazzo carta oro che mi fa guadagnare punti, ma solo se rispetta i vincoli correttamente.
         this.points += points_of_placed_card;
-        this.delta_points= delta_points - points_of_placed_card;
+        this.delta_points = delta_points - points_of_placed_card;
     }
 
     public int getNum_mushrooms(){
@@ -105,14 +105,5 @@ public class PersonalBoard {
 
 
 
-
-
-
-
-
-
-
-
-    public void placeCardOnBoard(Car)
 
 }
