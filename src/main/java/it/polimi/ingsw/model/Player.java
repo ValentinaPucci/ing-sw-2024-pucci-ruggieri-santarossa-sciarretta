@@ -13,7 +13,7 @@ public class Player {
     private List<ObjectiveCard> secret_objectives; // Assuming ObjectiveCard is a class defined elsewhere
     private ObjectiveCard chosen_objective;
 
-    private StarterCard starter_card; // Assuming StarterCard is a class defined elsewhere
+    private StarterCard starter_card; // Assuming StarterCard.java is a class defined elsewhere
     private boolean winner;
     private int score_board_position;
     private int final_score;

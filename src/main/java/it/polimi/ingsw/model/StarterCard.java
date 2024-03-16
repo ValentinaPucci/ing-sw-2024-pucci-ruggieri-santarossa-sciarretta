@@ -35,8 +35,6 @@ public class StarterCard extends Card {
         }
     }
 
-    }
-
     /**
      *
      * @param score
@@ -51,5 +49,6 @@ public class StarterCard extends Card {
             }
         }
     }
-
 }
+
+

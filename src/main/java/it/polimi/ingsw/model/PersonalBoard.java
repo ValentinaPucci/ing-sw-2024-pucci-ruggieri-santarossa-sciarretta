@@ -106,20 +106,174 @@ public class PersonalBoard {
     public int getPoints() { return points; }
 
     /**
-     * Here target_i and target_j stand for the 'first' coordinate
-     * in the matrix, namely the upper-leftmost coordinate.
-     * @param card
-     * @param target_i
-     * @param target_j
+     *
+     * @param i
+     * @param j
+     * @return true iff the planed move is doable
      */
-    public void cardOnBoard(Card card, int target_i, int target_j) {
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
+    public boolean subMatrixCellChecker(int i, int j) {
 
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                if (board[i + k][j + h].is_full) {
+                    if (!board[i + k][j + h].getCornerFromCell().is_visible) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * We assume that the game_card's corners have a specified board_coordinate,
+     *
+     *
+     * @ensures
+     *      card_to_play is attached to another card, specifically in the NE corner
+     *      of the game_card
+     *
+     * @param game_card is the card already on the PersonalBoard
+     * @param card_to_play is the card to put on the PersonalBoard
+     */
+    public void placeCardAtNE(ResourceCard game_card, ResourceCard card_to_play)
+                    throws IllegalMoveException {
+
+        /**
+         * The following attributes are the starting point in the grid
+         * to perform the 'allocation' (namely, the placement) of the
+         * card_to_play on the PersonalBoard.
+         */
+        int i;
+        int j;
+
+        Corner corner2 = game_card.getCornerAtNE();
+
+        if (!corner2.is_visible)
+            throw new IllegalMoveException();
+
+        i = corner2.board_coordinate.getX();
+        j = corner2.board_coordinate.getY();
+
+        /**
+         * i + 1 is a technicality: the checker starts always
+         * form the position (0, 0) of the submatrix 2 x 2 it is
+         * analyzing.
+         */
+        if (!subMatrixCellChecker(i + 1, j))
+            throw new IllegalMoveException();
+
+        /**
+         * we can forget to take **directly** track of the items or
+         * the resources which are currently on the board at a certain position,
+         * because we know every corner in a given cell. Hence, we know the resources
+         * and/or the items in every cell.
+         */
+        for (int k = 1; k >= 0; k--) {
+            for (int h = 0; h < 2; h++) {
+                this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
             }
         }
     }
 
-    public void placeCardOnBoard(Car)
+    /**
+     *
+     * @ensures
+     *      card_to_play is attached to another card, specifically in the SE corner
+     *      of the game_card
+     *
+     * @param game_card is the card already on the PersonalBoard
+     * @param card_to_play is the card to put on the PersonalBoard
+     */
+    public void placeCardAtSE(ResourceCard game_card, ResourceCard card_to_play)
+            throws IllegalMoveException {
+
+        int i;
+        int j;
+
+        Corner corner2 = game_card.getCornerAtSE();
+
+        if (!corner2.is_visible)
+            throw new IllegalMoveException();
+
+        i = corner2.board_coordinate.getX();
+        j = corner2.board_coordinate.getY();
+
+        if (!subMatrixCellChecker(i , j))
+            throw new IllegalMoveException();
+
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
+            }
+        }
+    }
+
+    /**
+     *
+     * @ensures
+     *      card_to_play is attached to another card, specifically in the SO corner
+     *      of the game_card
+     *
+     * @param game_card is the card already on the PersonalBoard
+     * @param card_to_play is the card to put on the PersonalBoard
+     */
+    public void placeCardAtSO(ResourceCard game_card, ResourceCard card_to_play)
+            throws IllegalMoveException {
+
+        int i;
+        int j;
+
+        Corner corner2 = game_card.getCornerAtSO();
+
+        if (!corner2.is_visible)
+            throw new IllegalMoveException();
+
+        i = corner2.board_coordinate.getX();
+        j = corner2.board_coordinate.getY();
+
+        if (!subMatrixCellChecker(i , j - 1))
+            throw new IllegalMoveException();
+
+        for (int k = 0; k < 2; k++) {
+            for (int h = 1; h >= 0; h--) {
+                this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
+            }
+        }
+    }
+
+    /**
+     *
+     * @ensures
+     *      card_to_play is attached to another card, specifically in the NO corner
+     *      of the game_card
+     *
+     * @param game_card is the card already on the PersonalBoard
+     * @param card_to_play is the card to put on the PersonalBoard
+     */
+    public void placeCardAtNO(ResourceCard game_card, ResourceCard card_to_play)
+            throws IllegalMoveException {
+
+        int i;
+        int j;
+
+        Corner corner2 = game_card.getCornerAtNO();
+
+        if (!corner2.is_visible)
+            throw new IllegalMoveException();
+
+        i = corner2.board_coordinate.getX();
+        j = corner2.board_coordinate.getY();
+
+        if (!subMatrixCellChecker(i + 1 , j - 1))
+            throw new IllegalMoveException();
+
+        for (int k = 1; k >= 0; k--) {
+            for (int h = 1; h >= 0; h--) {
+                this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
+            }
+        }
+    }
+
 
 }
