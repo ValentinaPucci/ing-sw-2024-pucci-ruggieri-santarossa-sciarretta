@@ -12,7 +12,6 @@ public class PersonalBoard {
     private int num_feathers;
     private int num_potions;
 
-    // Quando creo Personal Board è vuota, poi aggiorno quando piazzo la carta iniziale.
     public PersonalBoard() {
         //ipotesi dimensione matrice:
         this.board = new Cell[1001][1001];
@@ -82,7 +81,7 @@ public class PersonalBoard {
     public void updatePotions(int potions_placed){
         this.num_potions += potions_placed;
     }
-    //Sarà necesario anche aggiornare i punti, ma servono i controlli sulla carta da piazzare.
+    // Sarà necesario anche aggiornare i punti, ma servono i controlli sulla carta da piazzare.
 
     /**
      *
