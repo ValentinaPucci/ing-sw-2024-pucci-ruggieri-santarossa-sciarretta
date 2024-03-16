@@ -91,19 +91,35 @@ public class PersonalBoard {
     public void updatePoints(int points_of_placed_card){
         //Se piazzo carta oro che mi fa guadagnare punti, ma solo se rispetta i vincoli correttamente.
         this.points += points_of_placed_card;
-        this.delta_points = delta_points - points_of_placed_card;
+        this.delta_points= delta_points - points_of_placed_card;
     }
 
     public int getNum_mushrooms(){
         return num_mushrooms;
     }
-    public int getNum_leaves() {
+    public int getNum_leaves() { return num_leaves; }
+    public int getNum_butterflies() { return num_butterflies; }
+    public int getNum_wolves() { return num_wolves; }
+    public int getNum_parchments() { return num_parchments; }
+    public int getNum_feathers() { return num_feathers; }
+    public int getNum_potions() { return num_potions; }
+    public int getPoints() { return points; }
 
+    /**
+     * Here target_i and target_j stand for the 'first' coordinate
+     * in the matrix, namely the upper-leftmost coordinate.
+     * @param card
+     * @param target_i
+     * @param target_j
+     */
+    public void cardOnBoard(Card card, int target_i, int target_j) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+
+            }
+        }
     }
 
-
-
-
-
+    public void placeCardOnBoard(Car)
 
 }
