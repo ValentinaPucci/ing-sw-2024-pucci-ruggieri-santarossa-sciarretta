@@ -225,7 +225,7 @@ public class PersonalBoard {
      * @param card_to_play is the card to put on the PersonalBoard
      */
     public void placeCardAtNE(ResourceCard game_card, ResourceCard card_to_play)
-                    throws IllegalMoveException {
+            throws IllegalMoveException {
 
         /**
          * The following attributes are the starting point in the grid
