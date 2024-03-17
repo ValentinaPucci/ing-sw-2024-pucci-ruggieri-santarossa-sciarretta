@@ -11,14 +11,14 @@
       "SW": "Mushroom",
       "NW": "Mushroom",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -31,14 +31,14 @@
       "SW": "NonVisible",
       "NW": "Mushroom",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -51,14 +51,14 @@
       "SW": "Mushroom",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -71,14 +71,14 @@
       "SW": "Empty",
       "NW": "NonVisible",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -91,14 +91,14 @@
       "SW": "Leaf",
       "NW": "NonVisible",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -111,14 +111,14 @@
       "SW": "NonVisible",
       "NW": "Potion",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -131,14 +131,14 @@
       "SW": "Parchment",
       "NW": "Mushroom",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -151,14 +151,14 @@
       "SW": "Empty",
       "NW": "Empty",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -171,14 +171,14 @@
       "SW": "Empty",
       "NW": "Mushroom",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -191,14 +191,14 @@
       "SW": "Mushroom",
       "NW": "NonVisible",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -211,14 +211,14 @@
       "SW": "Leaf",
       "NW": "Leaf",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -231,14 +231,14 @@
       "SW": "NonVisible",
       "NW": "Leaf",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -251,14 +251,14 @@
       "SW": "Leaf",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -271,14 +271,14 @@
       "SW": "Empty",
       "NW": "NonVisible",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -291,14 +291,14 @@
       "SW": "Feather",
       "NW": "NonVisible",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -311,14 +311,14 @@
       "SW": "NonVisible",
       "NW": "Mushroom",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -331,14 +331,14 @@
       "SW": "Leaf",
       "NW": "Parchment",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -351,14 +351,14 @@
       "SW": "Leaf",
       "NW": "Empty",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -371,14 +371,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -391,14 +391,14 @@
       "SW": "Empty",
       "NW": "NonVisible",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -411,14 +411,14 @@
       "SW": "Empty",
       "NW": "Wolf",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -431,14 +431,14 @@
       "SW": "Wolf",
       "NW": "NonVisible",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -451,14 +451,14 @@
       "SW": "Wolf",
       "NW": "Wolf",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -471,14 +471,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -491,14 +491,14 @@
       "SW": "Potion",
       "NW": "NonVisible",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -511,14 +511,14 @@
       "SW": "NonVisible",
       "NW": "Leaf",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -531,14 +531,14 @@
       "SW": "Wolf",
       "NW": "Feather",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -551,14 +551,14 @@
       "SW": "Wolf",
       "NW": "NonVisible",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -571,14 +571,14 @@
       "SW": "Empty",
       "NW": "Empty",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -591,14 +591,14 @@
       "SW": "Empty",
       "NW": "Empty",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -611,14 +611,14 @@
       "SW": "Empty",
       "NW": "Butterfly",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -631,14 +631,14 @@
       "SW": "Butterfly",
       "NW": "NonVisible",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -651,14 +651,14 @@
       "SW": "Butterfly",
       "NW": "Butterfly",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -671,14 +671,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -691,14 +691,14 @@
       "SW": "Wolf",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -711,14 +711,14 @@
       "SW": "NonVisible",
       "NW": "Parchment",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -731,14 +731,14 @@
       "SW": "Potion",
       "NW": "Butterfly",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -751,14 +751,14 @@
       "SW": "Empty",
       "NW": "Butterfly",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -771,14 +771,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -791,14 +791,14 @@
       "SW": "Empty",
       "NW": "NonVisible",
       "points": 1,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -812,13 +812,13 @@
       "NW": "NonVisible",
       "points": 0,
       "MushroomRequired": 2,
-      "ButterflyRequired": null,
+      "ButterflyRequired": 0,
       "WolfRequired": 1,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": true
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 1
     },
 
     {
@@ -832,13 +832,13 @@
       "NW": "Empty",
       "points": 0,
       "MushroomRequired": 2,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
       "LeafRequired": 1,
-      "CoverCorners": null,
-      "PotionCount": true,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 0,
+      "PotionCount": 1,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -853,12 +853,12 @@
       "points": 0,
       "MushroomRequired": 2,
       "ButterflyRequired": 1,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": true,
-      "FeatherCount": null
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 1,
+      "FeatherCount": 0
     },
 
     {
@@ -872,13 +872,13 @@
       "NW": "Empty",
       "points": 0,
       "MushroomRequired": 3,
-      "ButterflyRequired": null,
+      "ButterflyRequired": 0,
       "WolfRequired": 1,
-      "LeafRequired": null,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "LeafRequired": 0,
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -892,13 +892,13 @@
       "NW": "Empty",
       "points": 0,
       "MushroomRequired": 3,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
       "LeafRequired": 1,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -913,12 +913,12 @@
       "points": 0,
       "MushroomRequired": 3,
       "ButterflyRequired": 1,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -933,13 +933,13 @@
       "NW": "Empty",
       "points": 3,
       "MushroomRequired": 3,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -953,13 +953,13 @@
       "NW": "Feather",
       "points": 3,
       "MushroomRequired": 3,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -974,13 +974,13 @@
       "NW": "NonVisible",
       "points": 3,
       "MushroomRequired": 3,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -996,13 +996,13 @@
       "NW": "Empty",
       "points": 5,
       "MushroomRequired": 5,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -1017,14 +1017,14 @@
       "SW": "Empty",
       "NW": "Feather",
       "points": 0,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 1,
-      "WolfRequired": null,
+      "WolfRequired": 0,
       "LeafRequired": 2,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": true
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 1
     },
 
 
@@ -1039,13 +1039,13 @@
       "NW": "Empty",
       "points": 0,
       "MushroomRequired": 1,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
       "LeafRequired": 2,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": true,
-      "FeatherCount": null
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 1,
+      "FeatherCount": 0
     },
 
 
@@ -1059,14 +1059,14 @@
       "SW": "Potion",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
       "WolfRequired": 1,
       "LeafRequired": 2,
-      "CoverCorners": null,
-      "PotionCount": true,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 0,
+      "PotionCount": 1,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1079,14 +1079,14 @@
       "SW": "Empty",
       "NW": "NonVisible",
       "points": 0,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 1,
-      "WolfRequired": null,
+      "WolfRequired": 0,
       "LeafRequired": 3,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1099,14 +1099,14 @@
       "SW": "Empty",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
       "WolfRequired": 1,
       "LeafRequired": 3,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -1121,13 +1121,13 @@
       "NW": "Empty",
       "points": 0,
       "MushroomRequired": 1,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
       "LeafRequired": 3,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1140,14 +1140,14 @@
       "SW": "Feather",
       "NW": "Empty",
       "points": 3,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
       "LeafRequired": 3,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1161,13 +1161,13 @@
       "NW": "Parchment",
       "points": 3,
       "MushroomRequired": 0,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
       "LeafRequired": 3,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -1181,14 +1181,14 @@
       "SW": "NonVisible",
       "NW": "NonVisible",
       "points": 3,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
       "LeafRequired": 3,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -1202,14 +1202,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 5,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
-      "WolfRequired": null,
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
+      "WolfRequired": 0,
       "LeafRequired": 5,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -1223,14 +1223,14 @@
       "SW": "Empty",
       "NW": "Potion",
       "points": 0,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 1,
       "WolfRequired": 2,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": true,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 1,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1243,14 +1243,14 @@
       "SW": "Empty",
       "NW": "NonVisible",
       "points": 0,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
       "WolfRequired": 2,
       "LeafRequired": 1,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": true,
-      "FeatherCount": null
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 1,
+      "FeatherCount": 0
     },
 
     {
@@ -1264,13 +1264,13 @@
       "NW": "Empty",
       "points": 0,
       "MushroomRequired": 1,
-      "ButterflyRequired": null,
+      "ButterflyRequired": 0,
       "WolfRequired": 2,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": true
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 1
     },
 
 
@@ -1284,14 +1284,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 1,
       "WolfRequired": 3,
-      "LeafRequired": null,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "LeafRequired": 0,
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1305,13 +1305,13 @@
       "NW": "Empty",
       "points": 0,
       "MushroomRequired": 1,
-      "ButterflyRequired": null,
+      "ButterflyRequired": 0,
       "WolfRequired": 3,
-      "LeafRequired": null,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "LeafRequired": 0,
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1324,14 +1324,14 @@
       "SW": "Empty",
       "NW": "NonVisible",
       "points": 0,
-      "MushroomRequired":  null,
-      "ButterflyRequired": null,
+      "MushroomRequired":  0,
+      "ButterflyRequired": 0,
       "WolfRequired": 3,
       "LeafRequired": 1,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -1347,14 +1347,14 @@
       "SW": "Parchment",
       "NW": "Empty",
       "points": 3,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
       "WolfRequired": 3,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -1369,14 +1369,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 3,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
       "WolfRequired": 3,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -1390,14 +1390,14 @@
       "SW": "NonVisible",
       "NW": "NonVisible",
       "points": 3,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
       "WolfRequired": 3,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
 
@@ -1412,14 +1412,14 @@
       "SW": "NonVisible",
       "NW": "NonVisible",
       "points": 5,
-      "MushroomRequired": null,
-      "ButterflyRequired": null,
+      "MushroomRequired": 0,
+      "ButterflyRequired": 0,
       "WolfRequired": 5,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
     {
       "id": 71,
@@ -1431,14 +1431,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 2,
-      "WolfRequired": null,
+      "WolfRequired": 0,
       "LeafRequired": 1,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": true
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 1
     },
 
     {
@@ -1451,14 +1451,14 @@
       "SW": "Parchment",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 2,
       "WolfRequired": 1,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": true,
-      "FeatherCount": null
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 1,
+      "FeatherCount": 0
     },
 
     {
@@ -1473,12 +1473,12 @@
       "points": 0,
       "MushroomRequired": 1,
       "ButterflyRequired": 2,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": true,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 1,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1491,14 +1491,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 3,
       "WolfRequired": 1,
-      "LeafRequired": null,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "LeafRequired": 0,
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1511,14 +1511,14 @@
       "SW": "Empty",
       "NW": "Empty",
       "points": 0,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 3,
-      "WolfRequired": null,
+      "WolfRequired": 0,
       "LeafRequired": 1,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1533,12 +1533,12 @@
       "points": 0,
       "MushroomRequired": 1,
       "ButterflyRequired": 3,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": true,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 1,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1551,14 +1551,14 @@
       "SW": "Empty",
       "NW": "Potion",
       "points": 3,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 3,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1571,14 +1571,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 3,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 3,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1591,14 +1591,14 @@
       "SW": "Feather",
       "NW": "NonVisible",
       "points": 3,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 3,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     },
 
     {
@@ -1611,14 +1611,14 @@
       "SW": "NonVisible",
       "NW": "Empty",
       "points": 5,
-      "MushroomRequired": null,
+      "MushroomRequired": 0,
       "ButterflyRequired": 5,
-      "WolfRequired": null,
-      "LeafRequired": null,
-      "CoverCorners": null,
-      "PotionCount": null,
-      "ParchmentCount": null,
-      "FeatherCount": null
+      "WolfRequired": 0,
+      "LeafRequired": 0,
+      "CoverCorners": 0,
+      "PotionCount": 0,
+      "ParchmentCount": 0,
+      "FeatherCount": 0
     }
   ]
 }
