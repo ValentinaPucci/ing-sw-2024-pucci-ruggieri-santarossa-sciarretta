@@ -1,14 +1,12 @@
 package src.main.java.it.polimi.ingsw.model;
 
-public class ObjectiveCard extends Card {
-
-    private int points;
+public class ItemObjectiveCard extends ObjectiveCard {
 
     /**
      * @param id
      * @param orientation
      */
-    public ObjectiveCard(int id, Orientation orientation) {
+    public ItemObjectiveCard(int id, Orientation orientation) {
         super(id, orientation);
     }
 }

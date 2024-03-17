@@ -120,32 +120,6 @@ public class PersonalBoard {
         }
     }
 
-    public void placeStarterCardOnBoard(StarterCard first_card) {
-
-    }
+    public void placeCardOnBoard(Car)
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
