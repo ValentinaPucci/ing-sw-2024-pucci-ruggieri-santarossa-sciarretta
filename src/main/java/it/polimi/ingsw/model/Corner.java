@@ -15,7 +15,9 @@ public class Corner {
     private Coordinate coordinate;
     private Optional<Resource> resource;
     private Optional<Item> item;
+    // Why is this attribute not private?
     public boolean is_visible;
+    // Why is this attribute not private?
     public ResourceCard reference_card;
 
     /**
@@ -51,23 +53,14 @@ public class Corner {
 
     }
 
-    /**
-     *
-     * @param board_coordinate
-     * @param resource
-     * @param item
-     * @param is_visible
-     * @param card
-     */
-    public Corner(BoardCellCoordinate board_coordinate, Optional<Resource> resource, Optional<Item> item,
-                   boolean is_visible, ResourceCard card) {
+    // Set corner
+// Crea un set resource. per settare resource e poi crea anche un set item per settare item.
+    public void setCornerResource(Resource resource){
+        this.resource = Optional.ofNullable(resource);
+    }
 
-        this.board_coordinate = board_coordinate;
-        this.resource = resource;
-        this.item = item;
-        this.is_visible = is_visible;
-        this.reference_card = card;
-
+    public void setCornerItem(Item item){
+        this.item = Optional.ofNullable(item);
     }
 
     public void setBoard_coordinate(Coordinate coord) {

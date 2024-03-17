@@ -26,20 +26,20 @@ public class ResourceCard extends Card {
     }
 
     /**
-     *
+     * Second constructor to initialize the cards and the respective corners. We do not need a setter method at the moment.
      * @param score
      * @param actual_corners
      */
-    public void setResourceCard(int score, Corner[][] actual_corners) {
-
+    public ResourceCard(int id, Orientation orientation, Color color,int score , Corner[][] actual_corners) {
+        super(id, orientation);
         this.score = score;
 
+        this.corners = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
+            for(int j = 0; j < 2; j++) {
                 this.corners[i][j] = actual_corners[i][j];
             }
         }
-
     }
 
     /**
@@ -92,4 +92,3 @@ public class ResourceCard extends Card {
             return this.getCornerAtSE();
     }
 }
-

@@ -2,7 +2,7 @@ package src.main.java.it.polimi.ingsw.model;
 
 /**
  * The following class describe those objective cards that deal
- * with ** letter ** patter recognition of cards with respect to the board configuration:
+ * with ** letter ** pattern recognition of cards with respect to the board configuration:
  * There are 4 possible (geometric) patterns of three cards each. In order to distinguish
  * the cards in the patter to recognise, we only need to know the color of each. It is useful
  * to implements some methods that can achieve our goals in terms of sub-matrices encoding.
@@ -30,7 +30,7 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
      * any sense. For the sake of simplicity, we assume that those cards
      * have id set to -1;
      *
-     * Remark: color is a parameter anymore
+     * Remark: color is not a parameter anymore.
      *
      * @requires
      *      color == RED || color == BLUE

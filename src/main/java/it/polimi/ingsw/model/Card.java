@@ -1,10 +1,6 @@
 package src.main.java.it.polimi.ingsw.model;
 
 public class Card {
-    public enum Orientation {
-        FRONT,
-        BACK
-    }
     private int id;
     private Orientation orientation;
 
