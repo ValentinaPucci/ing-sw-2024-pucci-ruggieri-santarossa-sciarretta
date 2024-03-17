@@ -6,19 +6,21 @@ import java.util.Stack;
 //NB il giocatore iniziale (pedina nera) è il giocatore 0
 
 public class CommonBoard {
-    private final Deck deck1; // ResourceDeck
-    private final Deck deck2; // GoldDeck
-    private final Deck deck3; // ObjectiveDeck
+    private final Deck ResourceDeck; // ResourceDeck
+    private final Deck GoldDeck; // GoldDeck
+    private final Deck ObjectiveDeck; // ObjectiveDeck
+    private final Deck[] decks;
     private final CommonBoardNode[] boardNodes; // Array of nodes representing the board
-    private Card[][] tableCards; // Cards on the table
+    private final Card[][] tableCards; // Cards on the table
 
 
     public CommonBoard(String boardImage) {
-        deck1 = new Deck(); //ResourceDeck
-        deck2 = new Deck(); //GoldDeck
-        deck3 = new Deck(); //ObjectiveDeck
+        ResourceDeck = new Deck(); //ResourceDeck
+        GoldDeck = new Deck(); //GoldDeck
+        ObjectiveDeck = new Deck(); //ObjectiveDeck
         boardNodes = new CommonBoardNode[29];
         decks = new Deck[3]; // Create an array to hold the two decks
+        tableCards = new Card[3][2];
         initializeBoard();
 
     }
@@ -31,20 +33,20 @@ public class CommonBoard {
         // Populate the table with cards from the decks
         for (int i = 0; i < 2; i++) {
             // Populate the first array with two cards from the Resource deck
-            Card cardFromDeck1 = deck1.pop();
+            Card cardFromDeck1 = ResourceDeck.pop();
             tableCards[0][i] = cardFromDeck1;
 
             // Populate the second array with two cards from the Gold deck
-            Card cardFromDeck2 = deck2.pop();
+            Card cardFromDeck2 = GoldDeck.pop();
             tableCards[1][i] = cardFromDeck2;
 
             // Populate the second array with two cards from the Objective deck
-            Card cardFromDeck3 = deck3.pop();
+            Card cardFromDeck3 = ObjectiveDeck.pop();
             tableCards[2][i] = cardFromDeck3;
         }
-        decks[0] = deck1;
-        decks[1] = deck2;
-        decks[2] = deck3;
+        decks[0] = ResourceDeck;
+        decks[1] = GoldDeck;
+        decks[2] = ObjectiveDeck;
     }
 
 
