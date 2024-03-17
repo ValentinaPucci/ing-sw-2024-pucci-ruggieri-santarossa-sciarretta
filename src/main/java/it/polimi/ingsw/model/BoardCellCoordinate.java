@@ -30,13 +30,13 @@ public class BoardCellCoordinate {
                 break;
             case SE:
                 this.setX(1);
-                this.setY(0);
+                this.setY(1);
                 break;
-            case SO:
+            case SW:
                 this.setX(1);
                 this.setY(0);
                 break;
-            case NO:
+            case NW:
                 this.setX(0);
                 this.setY(0);
                 break;
