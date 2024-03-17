@@ -16,6 +16,10 @@ public class Cell {
     private Corner corner;
     public boolean is_full;
 
+    public Cell() {
+        this.is_full = false;
+    }
+
     /**
      *
      * @param corner
@@ -37,10 +41,25 @@ public class Cell {
     /**
      * Remark: this method is crucial since it implement
      * the mapping between Cell and Corner classes
+     *
      * @return the last corner put on this cell
      */
     public Corner getCornerFromCell() {
         return this.corner;
+    }
+
+    /**
+     *
+     * @param cell
+     * @return true iff two cells are both full and has the same color
+     * @Override
+     */
+    public boolean equals(Cell cell) {
+        if (this.is_full && cell.is_full &&
+            this.corner.reference_card.color == cell.corner.reference_card.color)
+            return true;
+        else
+            return false;
     }
 
 }

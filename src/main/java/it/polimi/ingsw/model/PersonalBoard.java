@@ -2,6 +2,9 @@ package src.main.java.it.polimi.ingsw.model;
 
 public class PersonalBoard {
     private Cell[][] board;
+
+    private int dim1;
+    private int dim2;
     private int points;
     private int delta_points;
     private int num_mushrooms;
@@ -13,8 +16,69 @@ public class PersonalBoard {
     private int num_potions;
 
     public PersonalBoard() {
-        //ipotesi dimensione matrice:
-        this.board = new Cell[1001][1001];
+        this.dim1 = 1005;
+        this.dim2 = 1005;
+
+        this.board = new Cell[dim1][dim2];
+        for (int i = 0; i < dim1; i++) {
+            for (int j = 0; j < dim2; j++) {
+                this.board[i][j] = new Cell();
+            }
+        }
+
+        this.points = 0;
+        this.delta_points = 20;
+        this.num_mushrooms = 0;
+        this.num_leaves = 0;
+        this.num_butterflies = 0;
+        this.num_wolves = 0;
+        this.num_parchments = 0;
+        this.num_feathers = 0;
+        this.num_potions = 0;
+    }
+
+    /**
+     *
+     * @param dim
+     */
+    public PersonalBoard(int dim) {
+        this.dim1 = dim;
+        this.dim2 = dim;
+
+        this.board = new Cell[dim1][dim2];
+        for (int i = 0; i < dim1; i++) {
+            for (int j = 0; j < dim2; j++) {
+                this.board[i][j] = new Cell();
+            }
+        }
+
+        this.points = 0;
+        this.delta_points = 20;
+        this.num_mushrooms = 0;
+        this.num_leaves = 0;
+        this.num_butterflies = 0;
+        this.num_wolves = 0;
+        this.num_parchments = 0;
+        this.num_feathers = 0;
+        this.num_potions = 0;
+    }
+
+    /**
+     *
+     * @param dim1
+     * @param dim2
+     */
+    public PersonalBoard(int dim1, int dim2) {
+        this.dim1 = dim1;
+        this.dim2 = dim2;
+
+        this.board = new Cell[dim1][dim2];
+        for (int i = 0; i < dim1; i++) {
+            for (int j = 0; j < dim2; j++) {
+                this.board[i][j] = new Cell();
+            }
+        }
+
         this.points = 0;
         this.delta_points = 20;
         this.num_mushrooms = 0;
@@ -104,6 +168,14 @@ public class PersonalBoard {
     public int getNum_potions() { return num_potions; }
     public int getPoints() { return points; }
 
+    public int getDim1() {
+        return dim1;
+    }
+
+    public int getDim2() {
+        return dim2;
+    }
+
     /**
      *
      * @param i
@@ -122,6 +194,23 @@ public class PersonalBoard {
             }
         }
         return true;
+    }
+
+    /**
+     * This method simply put a card at position (i,j) of the board
+     * without doing any check. It is used for the placement of the first
+     * card or in other marginal situations, like for the construction of
+     * sub-matrices of personalBoard in other classes. SE because we use
+     * a classic for loop with increasing indexes both for i and j.
+     *
+     * @param card
+     */
+    public void bruteForcePlaceCardSE(ResourceCard card, int i, int j) {
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                this.board[i + k][j + h].setCellAsFull(card.getCornerAt(k, h));
+            }
+        }
     }
 
     /**
@@ -274,5 +363,41 @@ public class PersonalBoard {
         }
     }
 
+    /**
+     *
+     * @param objectiveCard
+     * @param l
+     * @param m
+     * @return true iff we recognised a diagonal patter
+     */
+    public boolean isSubMatrixDiagonalPattern(DiagonalPatternObjectiveCard objectiveCard, int l, int m) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (!board[l + i][m + j].equals(objectiveCard.aux_personal_board.board[i][j])
+                        && objectiveCard.aux_personal_board.board[i][j].is_full) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param objectiveCard
+     * @return
+     */
+    public int counterOfRecognisedDiagonalPatterns(DiagonalPatternObjectiveCard objectiveCard) {
+
+        int count = 0;
+        for (int i = 0; i <= this.getDim1() - 4; i++) {
+            for (int j = 0; j <= this.getDim2() - 4; j++) {
+                if (isSubMatrixDiagonalPattern(objectiveCard, i, j)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 
 }

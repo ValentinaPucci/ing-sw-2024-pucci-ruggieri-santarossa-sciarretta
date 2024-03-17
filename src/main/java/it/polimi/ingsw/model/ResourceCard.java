@@ -2,29 +2,37 @@ package src.main.java.it.polimi.ingsw.model;
 
 public class ResourceCard extends Card {
     private int score;
-    private Color color;
+    public Color color;
     private Corner[][] corners;
 
     /**
      *
      * @param id
      * @param orientation
+     * @param color
      */
-    public ResourceCard(int id, Orientation orientation) {
+    public ResourceCard(int id, Orientation orientation, Color color) {
         super(id, orientation);
         this.score = 0;
-        this.corners = new Corner[4][4];
+
+        this.corners = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                corners[i][j] = new Corner(new BoardCellCoordinate(i, j));
+            }
+        }
+
+        this.color = color;
     }
 
     /**
      *
      * @param score
      * @param actual_corners
-     * @param color
      */
-    public void setResourceCard(int score, Corner[][] actual_corners, Color color) {
+    public void setResourceCard(int score, Corner[][] actual_corners) {
+
         this.score = score;
-        this.color = color;
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {

@@ -16,7 +16,7 @@ public class Corner {
     private Optional<Resource> resource;
     private Optional<Item> item;
     public boolean is_visible;
-    private ResourceCard referenced_card;
+    public ResourceCard reference_card;
 
     /**
      * In fact, this attribute make a lot of sense: board_coordinate
@@ -26,18 +26,48 @@ public class Corner {
 
     /**
      *
+     * @param board_coordinate
+     */
+    public Corner(BoardCellCoordinate board_coordinate) {
+        this.board_coordinate = board_coordinate;
+        this.is_visible = true;
+    }
+
+    /**
+     *
      * @param coordinate
      * @param resource
      * @param item
      * @param is_visible
+     * @param card
      */
     public Corner(Coordinate coordinate, Optional<Resource> resource, Optional<Item> item,
-                   boolean is_visible, ResourceCard card) {
+                  boolean is_visible, ResourceCard card) {
         this.coordinate = coordinate;
         this.resource = resource;
         this.item = item;
         this.is_visible = is_visible;
-        this.referenced_card = card;
+        this.reference_card = card;
+
+    }
+
+    /**
+     *
+     * @param board_coordinate
+     * @param resource
+     * @param item
+     * @param is_visible
+     * @param card
+     */
+    public Corner(BoardCellCoordinate board_coordinate, Optional<Resource> resource, Optional<Item> item,
+                   boolean is_visible, ResourceCard card) {
+
+        this.board_coordinate = board_coordinate;
+        this.resource = resource;
+        this.item = item;
+        this.is_visible = is_visible;
+        this.reference_card = card;
+
     }
 
     public void setBoard_coordinate(Coordinate coord) {
