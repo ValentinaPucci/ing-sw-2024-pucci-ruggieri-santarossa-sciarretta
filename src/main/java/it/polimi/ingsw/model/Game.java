@@ -1,10 +1,8 @@
-package src;
-
-import src.Player;
+package src.main.java.it.polimi.ingsw.model;
 
 import java.util.List;
 
-public class PlayersManager {
+public class Game {
     private List<Player> players;
     private int currentPlayerIndex;
     private Player firstPlayer;

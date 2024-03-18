@@ -19,7 +19,7 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
      * @param id
      * @param orientation
      */
-    public LetterPatternObjectiveCard(int id, Card.Orientation orientation) {
+    public LetterPatternObjectiveCard(int id, Orientation orientation) {
         super(id, orientation);
         this.aux_personal_board = new PersonalBoard(5, 3);
     }
@@ -37,9 +37,9 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
      */
     public void init_obj_L() {
 
-        ResourceCard card1 = new ResourceCard(-1, Card.Orientation.FRONT, Color.RED);
-        ResourceCard card2 = new ResourceCard(-1, Card.Orientation.FRONT, Color.RED);
-        ResourceCard card3 = new ResourceCard(-1, Card.Orientation.FRONT, Color.GREEN);
+        ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, Color.RED);
+        ResourceCard card2 = new ResourceCard(-1, Orientation.FRONT, Color.RED);
+        ResourceCard card3 = new ResourceCard(-1, Orientation.FRONT, Color.GREEN);
 
         aux_personal_board.bruteForcePlaceCardSE(card1, 0, 0);
         aux_personal_board.bruteForcePlaceCardSE(card3, 3, 1);
@@ -48,9 +48,9 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
 
     public void init_obj_J() {
 
-        ResourceCard card1 = new ResourceCard(-1, Card.Orientation.FRONT, Color.GREEN);
-        ResourceCard card2 = new ResourceCard(-1, Card.Orientation.FRONT, Color.GREEN);
-        ResourceCard card3 = new ResourceCard(-1, Card.Orientation.FRONT, Color.PURPLE);
+        ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, Color.GREEN);
+        ResourceCard card2 = new ResourceCard(-1, Orientation.FRONT, Color.GREEN);
+        ResourceCard card3 = new ResourceCard(-1, Orientation.FRONT, Color.PURPLE);
 
         aux_personal_board.bruteForcePlaceCardSE(card1, 0, 1);
         aux_personal_board.bruteForcePlaceCardSE(card3, 3, 0);
@@ -59,9 +59,9 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
 
     public void init_obj_p() {
 
-        ResourceCard card1 = new ResourceCard(-1, Card.Orientation.FRONT, Color.RED);
-        ResourceCard card2 = new ResourceCard(-1, Card.Orientation.FRONT, Color.BLUE);
-        ResourceCard card3 = new ResourceCard(-1, Card.Orientation.FRONT, Color.BLUE);
+        ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, Color.RED);
+        ResourceCard card2 = new ResourceCard(-1, Orientation.FRONT, Color.BLUE);
+        ResourceCard card3 = new ResourceCard(-1, Orientation.FRONT, Color.BLUE);
 
         aux_personal_board.bruteForcePlaceCardSE(card1, 0, 1);
         aux_personal_board.bruteForcePlaceCardSE(card3, 3, 0);
@@ -70,9 +70,9 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
 
     public void init_obj_q() {
 
-        ResourceCard card1 = new ResourceCard(-1, Card.Orientation.FRONT, Color.BLUE);
-        ResourceCard card2 = new ResourceCard(-1, Card.Orientation.FRONT, Color.PURPLE);
-        ResourceCard card3 = new ResourceCard(-1, Card.Orientation.FRONT, Color.PURPLE);
+        ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, Color.BLUE);
+        ResourceCard card2 = new ResourceCard(-1, Orientation.FRONT, Color.PURPLE);
+        ResourceCard card3 = new ResourceCard(-1, Orientation.FRONT, Color.PURPLE);
 
         aux_personal_board.bruteForcePlaceCardSE(card1, 0, 0);
         aux_personal_board.bruteForcePlaceCardSE(card3, 3, 1);

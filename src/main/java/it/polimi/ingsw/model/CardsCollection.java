@@ -28,7 +28,7 @@ public  class CardsCollection {
 
     /**
      * To do: populateDeck read a .json file and populate the data structure using
-     * the constructor and the setter of Card subclasses.
+     * the constructors and the setters of Card subclasses.
      */
     // In this case we are creating only the FRONT, but we need also the back of the card.
     public void populateDeck(String jsonFilePath, String type) {
@@ -38,6 +38,7 @@ public  class CardsCollection {
             JsonNode cardsNode = rootNode.path("cards");
 
             for (JsonNode cardNode : cardsNode) {
+
                 int id = cardNode.path("id").asInt();
                 String colorStr = cardNode.path("color").asText();
                 Color color = Color.valueOf(colorStr.toUpperCase());
@@ -158,7 +159,7 @@ public  class CardsCollection {
                         actual_corners[1][1].setCornerItem(Item.PARCHMENT);
                     }
                 }
-                if (cardNode.path("type").asText().equals("Resource") && type.equals("Resource") ){
+                if (cardNode.path("type").asText().equals("Resource") && type.equals("Resource")){
                     ResourceCard card = new ResourceCard(id, orientation, color, score, actual_corners);
                     // Qui potresti settare ulteriori proprietà specifiche per ResourceCard
                     this.addCard(card);
@@ -191,7 +192,7 @@ public  class CardsCollection {
                     GoldCard gold_card = new GoldCard(id, orientation, color);
                     gold_card.setGoldCard(item_for_score, CoverCorners, MushroomRequired, LeafRequired, ButterflyRequired, WolfRequired);
                     this.addCard(gold_card);
-            }
+                }
             }
             System.out.println("Deck populated successfully.");
         } catch (Exception e) {

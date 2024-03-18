@@ -6,20 +6,20 @@ import java.util.Stack;
 //NB il giocatore iniziale (pedina nera) è il giocatore 0
 
 public class CommonBoard {
-    private final Deck ResourceDeck; // ResourceDeck
-    private final Deck GoldDeck; // GoldDeck
-    private final Deck ObjectiveDeck; // ObjectiveDeck
-    private final Deck[] decks;
+    private final ConcreteDeck ResourceConcreteDeck; // ResourceConcreteDeck
+    private final ConcreteDeck GoldConcreteDeck; // GoldConcreteDeck
+    private final ConcreteDeck ObjectiveConcreteDeck; // ObjectiveConcreteDeck
+    private final ConcreteDeck[] ConcreteDecks;
     private final CommonBoardNode[] boardNodes; // Array of nodes representing the board
     private final Card[][] tableCards; // Cards on the table
 
 
     public CommonBoard(String boardImage) {
-        ResourceDeck = new Deck(); //ResourceDeck
-        GoldDeck = new Deck(); //GoldDeck
-        ObjectiveDeck = new Deck(); //ObjectiveDeck
+        ResourceConcreteDeck = new ConcreteDeck(); //ResourceConcreteDeck
+        GoldConcreteDeck = new ConcreteDeck(); //GoldConcreteDeck
+        ObjectiveConcreteDeck = new ConcreteDeck(); //ObjectiveConcreteDeck
         boardNodes = new CommonBoardNode[29];
-        decks = new Deck[3]; // Create an array to hold the two decks
+        ConcreteDecks = new ConcreteDeck[3]; // Create an array to hold the two ConcreteDecks
         tableCards = new Card[3][2];
         initializeBoard();
 
@@ -30,49 +30,47 @@ public class CommonBoard {
         for (int i = 0; i < 29; i++) {
             boardNodes[i] = new CommonBoardNode(i);
         }
-        // Populate the table with cards from the decks
+        // Populate the table with cards from the ConcreteDecks
         for (int i = 0; i < 2; i++) {
-            // Populate the first array with two cards from the Resource deck
-            Card cardFromDeck1 = ResourceDeck.pop();
-            tableCards[0][i] = cardFromDeck1;
+            // Populate the first array with two cards from the Resource ConcreteDeck
+            Card cardFromConcreteDeck1 = ResourceConcreteDeck.pop();
+            tableCards[0][i] = cardFromConcreteDeck1;
 
-            // Populate the second array with two cards from the Gold deck
-            Card cardFromDeck2 = GoldDeck.pop();
-            tableCards[1][i] = cardFromDeck2;
+            // Populate the second array with two cards from the Gold ConcreteDeck
+            Card cardFromConcreteDeck2 = GoldConcreteDeck.pop();
+            tableCards[1][i] = cardFromConcreteDeck2;
 
-            // Populate the second array with two cards from the Objective deck
-            Card cardFromDeck3 = ObjectiveDeck.pop();
-            tableCards[2][i] = cardFromDeck3;
+            // Populate the second array with two cards from the Objective ConcreteDeck
+            Card cardFromConcreteDeck3 = ObjectiveConcreteDeck.pop();
+            tableCards[2][i] = cardFromConcreteDeck3;
         }
-        decks[0] = ResourceDeck;
-        decks[1] = GoldDeck;
-        decks[2] = ObjectiveDeck;
+        ConcreteDecks[0] = ResourceConcreteDeck;
+        ConcreteDecks[1] = GoldConcreteDeck;
+        ConcreteDecks[2] = ObjectiveConcreteDeck;
     }
 
 
-    // Method to draw a card directly from a deck
-    public Card drawFromDeck(int deckIndex) {
-        if (deckIndex >= 0 && deckIndex < 2) {
-            return decks[deckIndex].pop(); //the return of this function is the card that will be taken by the player
+    // Method to draw a card directly from a ConcreteDeck
+    public Card drawFromConcreteDeck(int ConcreteDeckIndex) {
+        if (ConcreteDeckIndex >= 0 && ConcreteDeckIndex < 2) {
+            return ConcreteDecks[ConcreteDeckIndex].pop(); //the return of this function is the card that will be taken by the player
         }
         return null;
     }
 
 
-    // Method to draw a card from the table and replace it with a card from the corresponding deck
-    public Card drawFromTable(int row, int col, int deckIndex) {
-        if (row >= 0 && row < 2 && col >= 0 && col < 2 && deckIndex >= 0 && deckIndex < 2) {
+    // Method to draw a card from the table and replace it with a card from the corresponding ConcreteDeck
+    public Card drawFromTable(int row, int col, int ConcreteDeckIndex) {
+        if (row >= 0 && row < 2 && col >= 0 && col < 2 && ConcreteDeckIndex >= 0 && ConcreteDeckIndex < 2) {
             // Remove the card from the table and store it
             Card drawnCard = tableCards[row][col];
-            // Draw a card from the corresponding deck and replace it on the table
-            tableCards[row][col] = decks[deckIndex].pop();
+            // Draw a card from the corresponding ConcreteDeck and replace it on the table
+            tableCards[row][col] = ConcreteDecks[ConcreteDeckIndex].pop();
             // Return the drawn card
             return drawnCard;
         }
         return null;
     }
-
-
 
     // Method to get the position of a player
     private int getPlayerPosition(int playerIndex) {

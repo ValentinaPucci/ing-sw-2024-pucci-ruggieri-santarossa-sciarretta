@@ -2,7 +2,7 @@ package src.main.java.it.polimi.ingsw.model;
 
 public class Card {
     private int id;
-    private Orientation orientation;
+    public Orientation orientation;
 
     /**
      *
