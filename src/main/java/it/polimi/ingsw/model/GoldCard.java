@@ -10,10 +10,10 @@ public class GoldCard extends ResourceCard {
     private Optional<Item> item_for_score;
     // 0=false, 1=true, the card has the darken_items requirements to calculate the score.
     private int coordinate_for_score;
-    private int MushroomRequired;
-    private int LeafRequired;
-    private int ButterflyRequired;
-    private int WolfRequired;
+    private int mushroom_required;
+    private int leaf_required;
+    private int butterfly_required;
+    private int wolf_required;
 
     /**
      *
@@ -29,13 +29,13 @@ public class GoldCard extends ResourceCard {
      * @param item_for_score
      * @param coordinate_for_score
      */
-    public void setGoldCard(Optional<Item> item_for_score, int coordinate_for_score, int MushroomRequired, int LeafRequired, int ButterflyRequired, int WolfRequired) {
+    public void setGoldCard(Optional<Item> item_for_score, int coordinate_for_score, int mushroom_required, int leaf_required, int butterfly_required, int wolf_required) {
         this.item_for_score = item_for_score;
         this.coordinate_for_score = coordinate_for_score;
-        this.MushroomRequired = MushroomRequired;
-        this.LeafRequired = LeafRequired;
-        this.ButterflyRequired = ButterflyRequired;
-        this.WolfRequired = WolfRequired;
+        this.mushroom_required = mushroom_required;
+        this.leaf_required = leaf_required;
+        this.butterfly_required = butterfly_required;
+        this.wolf_required = wolf_required;
     }
 
     /**
