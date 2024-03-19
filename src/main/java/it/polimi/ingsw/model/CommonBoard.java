@@ -6,21 +6,21 @@ import java.util.Stack;
 //NB il giocatore iniziale (pedina nera) è il giocatore 0
 
 public class CommonBoard {
-    private final ConcreteDeck ResourceConcreteDeck; // ResourceConcreteDeck
-    private final ConcreteDeck GoldConcreteDeck; // GoldConcreteDeck
-    private final ConcreteDeck ObjectiveConcreteDeck; // ObjectiveConcreteDeck
-    private final ConcreteDeck[] ConcreteDecks;
-    private final CommonBoardNode[] boardNodes; // Array of nodes representing the board
-    private final Card[][] tableCards; // Cards on the table
+    private ConcreteDeck resource_concrete_deck; // resource_concrete_deck
+    private ConcreteDeck gold_concrete_deck; // gold_concrete_deck
+    private ConcreteDeck objective_concrete_deck; // objective_concrete_deck
+    private ConcreteDeck[] decks;
+    private CommonBoardNode[] board_nodes; // Array of nodes representing the board
+    private Card[][] table_cards; // Cards on the table
 
 
     public CommonBoard(String boardImage) {
-        ResourceConcreteDeck = new ConcreteDeck(); //ResourceConcreteDeck
-        GoldConcreteDeck = new ConcreteDeck(); //GoldConcreteDeck
-        ObjectiveConcreteDeck = new ConcreteDeck(); //ObjectiveConcreteDeck
-        boardNodes = new CommonBoardNode[29];
-        ConcreteDecks = new ConcreteDeck[3]; // Create an array to hold the two ConcreteDecks
-        tableCards = new Card[3][2];
+        resource_concrete_deck = new ConcreteDeck(); //resource_concrete_deck
+        gold_concrete_deck = new ConcreteDeck(); //gold_concrete_deck
+        objective_concrete_deck = new ConcreteDeck(); //objective_concrete_deck
+        board_nodes = new CommonBoardNode[29];
+        decks = new ConcreteDeck[3]; // Create an array to hold the two decks
+        table_cards = new Card[3][2];
         initializeBoard();
 
     }
@@ -28,32 +28,32 @@ public class CommonBoard {
     // Method to initialize the board
     private void initializeBoard() {
         for (int i = 0; i < 29; i++) {
-            boardNodes[i] = new CommonBoardNode(i);
+            board_nodes[i] = new CommonBoardNode(i);
         }
-        // Populate the table with cards from the ConcreteDecks
+        // Populate the table with cards from the decks
         for (int i = 0; i < 2; i++) {
             // Populate the first array with two cards from the Resource ConcreteDeck
-            Card cardFromConcreteDeck1 = ResourceConcreteDeck.pop();
-            tableCards[0][i] = cardFromConcreteDeck1;
+            Card cardFromConcreteDeck1 = resource_concrete_deck.pop();
+            table_cards[0][i] = cardFromConcreteDeck1;
 
             // Populate the second array with two cards from the Gold ConcreteDeck
-            Card cardFromConcreteDeck2 = GoldConcreteDeck.pop();
-            tableCards[1][i] = cardFromConcreteDeck2;
+            Card cardFromConcreteDeck2 = gold_concrete_deck.pop();
+            table_cards[1][i] = cardFromConcreteDeck2;
 
             // Populate the second array with two cards from the Objective ConcreteDeck
-            Card cardFromConcreteDeck3 = ObjectiveConcreteDeck.pop();
-            tableCards[2][i] = cardFromConcreteDeck3;
+            Card cardFromConcreteDeck3 = objective_concrete_deck.pop();
+            table_cards[2][i] = cardFromConcreteDeck3;
         }
-        ConcreteDecks[0] = ResourceConcreteDeck;
-        ConcreteDecks[1] = GoldConcreteDeck;
-        ConcreteDecks[2] = ObjectiveConcreteDeck;
+        decks[0] = resource_concrete_deck;
+        decks[1] = gold_concrete_deck;
+        decks[2] = objective_concrete_deck;
     }
 
 
     // Method to draw a card directly from a ConcreteDeck
     public Card drawFromConcreteDeck(int ConcreteDeckIndex) {
         if (ConcreteDeckIndex >= 0 && ConcreteDeckIndex < 2) {
-            return ConcreteDecks[ConcreteDeckIndex].pop(); //the return of this function is the card that will be taken by the player
+            return decks[ConcreteDeckIndex].pop(); //the return of this function is the card that will be taken by the player
         }
         return null;
     }
@@ -63,9 +63,9 @@ public class CommonBoard {
     public Card drawFromTable(int row, int col, int ConcreteDeckIndex) {
         if (row >= 0 && row < 2 && col >= 0 && col < 2 && ConcreteDeckIndex >= 0 && ConcreteDeckIndex < 2) {
             // Remove the card from the table and store it
-            Card drawnCard = tableCards[row][col];
+            Card drawnCard = table_cards[row][col];
             // Draw a card from the corresponding ConcreteDeck and replace it on the table
-            tableCards[row][col] = ConcreteDecks[ConcreteDeckIndex].pop();
+            table_cards[row][col] = decks[ConcreteDeckIndex].pop();
             // Return the drawn card
             return drawnCard;
         }
@@ -74,7 +74,7 @@ public class CommonBoard {
 
     // Method to get the position of a player
     private int getPlayerPosition(int playerIndex) {
-        for (CommonBoardNode node : boardNodes) {
+        for (CommonBoardNode node : board_nodes) {
             if (node.isPlayerPresent(playerIndex)) {
                 return node.getNodeNumber();
             }
@@ -86,17 +86,17 @@ public class CommonBoard {
     // Method to move a player by a specified delta
     public void movePlayer(int playerIndex, int delta) {
         // Get the current position of the player
-        int currentPosition = getPlayerPosition(playerIndex);
+        int current_position = getPlayerPosition(playerIndex);
 
         // Calculate the new position by adding delta
-        int newPosition = currentPosition + delta;
+        int new_position = current_position + delta;
 
         // Check if the new position is within the board bounds
-        if (newPosition >= 0 && newPosition < 29) {
+        if (new_position >= 0 && new_position < 29) {
             // Remove the player from the current position
-            boardNodes[currentPosition].setPlayer(playerIndex, false);
+            board_nodes[current_position].setPlayer(playerIndex, false);
             // Set the player to the new position
-            boardNodes[newPosition].setPlayer(playerIndex, true);
+            board_nodes[new_position].setPlayer(playerIndex, true);
         }
     }
 
