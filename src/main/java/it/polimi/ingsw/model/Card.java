@@ -9,7 +9,12 @@ public class Card {
      */
     public Card(int id, Orientation orientation) {
         this.id = id;
-        this.orientation = orientation;
+        this.orientation = this.ChooseOrientation();
+
+    }
+
+    public Orientation ChooseOrientation(){
+        return orientation;
     }
 
 }

@@ -1,8 +1,10 @@
 package src.main.java.it.polimi.ingsw.model;
 
+import java.security.PrivateKey;
+
 public class PersonalBoard {
     private Cell[][] board;
-
+    private Player id_player; // one-to-one correspondence between PersonalBoard and Player
     private int dim1;
     private int dim2;
     private int points;
@@ -214,6 +216,8 @@ public class PersonalBoard {
      * a classic for loop with increasing indexes both for i and j.
      *
      * @param card
+     *
+     *
      */
     public void bruteForcePlaceCardSE(ResourceCard card, int i, int j) {
         for (int k = 0; k < 2; k++) {
@@ -222,6 +226,8 @@ public class PersonalBoard {
             }
         }
     }
+
+    //TODO: metodo brute force che prende starterCard come parametro
 
     /**
      * We assume that the game_card's corners have a specified board_coordinate,

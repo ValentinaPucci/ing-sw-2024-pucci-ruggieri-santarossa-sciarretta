@@ -12,9 +12,10 @@ public class CommonBoard {
     private ConcreteDeck[] decks;
     private CommonBoardNode[] board_nodes; // Array of nodes representing the board
     private Card[][] table_cards; // Cards on the table
+    private int partial_winner = -1;;
 
 
-    public CommonBoard(String boardImage) {
+    public CommonBoard() {
         resource_concrete_deck = new ConcreteDeck(); //resource_concrete_deck
         gold_concrete_deck = new ConcreteDeck(); //gold_concrete_deck
         objective_concrete_deck = new ConcreteDeck(); //objective_concrete_deck
@@ -83,6 +84,7 @@ public class CommonBoard {
     }
 
 
+
     // Method to move a player by a specified delta
     public void movePlayer(int playerIndex, int delta) {
         // Get the current position of the player
@@ -98,6 +100,17 @@ public class CommonBoard {
             // Set the player to the new position
             board_nodes[new_position].setPlayer(playerIndex, true);
         }
+
+        // Check if a player reaches 20 points for the first time
+        if (getPlayerPosition(playerIndex) >= 20 && partial_winner == -1) {
+            setPartialWinner(playerIndex);
+        }
+
+    }
+
+    // Method to set a player as partial winner
+    private void setPartialWinner(int playerIndex) {
+        this.partial_winner = playerIndex;
     }
 
 }
