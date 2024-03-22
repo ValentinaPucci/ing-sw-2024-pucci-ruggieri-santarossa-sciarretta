@@ -8,6 +8,7 @@ public class ConcreteDeck {
     private CardsCollection concrete_cards_bunch;
     private Stack<Card> deck;
 
+
    // To Use this class you call the constructor with the path to the json and the "type" of cards you want in the deck.
     // Then you can use on it methods such as shuffle or pop.
 
@@ -31,6 +32,11 @@ public class ConcreteDeck {
     public void shuffle() {
         Collections.shuffle(this.deck);
     }
+
+    public boolean isEmpty(){
+        return deck.isEmpty();
+    }
+
 
 //
 //    /**

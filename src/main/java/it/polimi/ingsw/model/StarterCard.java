@@ -1,10 +1,12 @@
 package it.polimi.ingsw.model;
 
 public class StarterCard extends Card {
+    public static final int STARTER_CARD_COORDINATE = 50;
     private Resource front_resource1;
     private Resource front_resource2;
     private Resource front_resource3;
     private Corner[][] back_corners;
+    private Orientation orientation;
 
     /**
      *
