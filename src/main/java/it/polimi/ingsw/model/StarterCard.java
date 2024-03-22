@@ -1,4 +1,4 @@
-package src.main.java.it.polimi.ingsw.model;
+package it.polimi.ingsw.model;
 
 public class StarterCard extends Card {
     public static final int STARTER_CARD_COORDINATE = 50;

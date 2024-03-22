@@ -1,4 +1,4 @@
-package src.main.java.it.polimi.ingsw.model;
+package it.polimi.ingsw.model;
 
 class CommonBoardNode {
     private final int nodeNumber; // Number of the node
