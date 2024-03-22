@@ -1,4 +1,4 @@
-package src.main.java.it.polimi.ingsw.model;
+package it.polimi.ingsw.model;
 
 public class StarterCard extends Card {
     private Resource front_resource1;
@@ -30,7 +30,7 @@ public class StarterCard extends Card {
         this.front_resource3 = resource3;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                this.back_cornerscorners[i][j] = actual_corners[i][j];
+                this.back_corners[i][j] = actual_corners[i][j];
             }
         }
     }
@@ -45,7 +45,7 @@ public class StarterCard extends Card {
     public void setStarterCardBack(Corner[][] actual_corners) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                this.back_cornerscorners[i][j] = actual_corners[i][j];
+                this.back_corners[i][j] = actual_corners[i][j];
             }
         }
     }

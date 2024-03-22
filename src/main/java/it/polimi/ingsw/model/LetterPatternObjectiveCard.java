@@ -1,4 +1,4 @@
-package src.main.java.it.polimi.ingsw.model;
+package it.polimi.ingsw.model;
 
 /**
  * The following class describe those objective cards that deal

@@ -1,6 +1,4 @@
-package src.main.java.it.polimi.ingsw.model;
-
-import src.main.java.it.polimi.ingsw.model.ObjectiveCard;
+package it.polimi.ingsw.model;
 
 import java.util.ArrayList;
 import java.util.List;

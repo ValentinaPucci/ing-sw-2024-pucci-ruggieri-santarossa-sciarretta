@@ -1,4 +1,4 @@
-package src.main.java.it.polimi.ingsw.model;
+package it.polimi.ingsw.model;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Stack;

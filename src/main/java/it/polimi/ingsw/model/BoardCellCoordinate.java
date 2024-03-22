@@ -1,4 +1,4 @@
-package src.main.java.it.polimi.ingsw.model;
+package it.polimi.ingsw.model;
 
 /**
  * This class provide the needed mapping between the Coordinate-based
