@@ -46,21 +46,5 @@ public class ConcreteDeck {
         return deck.isEmpty();
     }
 
-
-//
-//    /**
-//     * fill the deck (a stack of cards) with the cards contained
-//     * inside a bunch of cards.
-//     */
-//    public void deckFiller() {
-//        for (Card c : concrete_cards_bunch.cards) {
-//            deck.push(c);
-//        }
-//    }
-//
-//    public String getDeckType(){
-//        return this.type;
-//    }
-
 }
 

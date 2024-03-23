@@ -193,11 +193,11 @@ public class PersonalBoard {
      * @return true iff the planed move is doable
      */
     public boolean subMatrixCellChecker(int i, int j) {
-
         for (int k = 0; k < 2; k++) {
             for (int h = 0; h < 2; h++) {
                 if (board[i + k][j + h].is_full) {
-                    if (!board[i + k][j + h].getCornerFromCell().is_visible) {
+                    if (!board[i + k][j + h].getCornerFromCell().is_visible
+                            || board[i + k][j + h].level > 2) {
                         return false;
                     }
                 }

@@ -6,10 +6,6 @@ import java.util.Stack;
 //NB il giocatore iniziale (pedina nera) è il giocatore 0
 
 public class CommonBoard {
-    private CardsCollection concrete_resources_cards_bunch = new CardsCollection();
-    private CardsCollection concrete_gold_cards_bunch = new CardsCollection();
-    private CardsCollection concrete_objective_cards_bunch = new CardsCollection();
-    private CardsCollection concrete_starter_cards_bunch = new CardsCollection();
     private ConcreteDeck resource_concrete_deck; // resource_concrete_deck
     private ConcreteDeck gold_concrete_deck; // gold_concrete_deck
     private ConcreteDeck objective_concrete_deck; // objective_concrete_deck
@@ -20,9 +16,9 @@ public class CommonBoard {
 
 
     public CommonBoard() {
-        resource_concrete_deck = new ConcreteDeck(concrete_resources_cards_bunch, "database/databaseGameCards.json", "Resource"); //resource_concrete_deck
-        gold_concrete_deck = new ConcreteDeck(concrete_gold_cards_bunch, "database/databaseGameCards.json", "Gold"); //gold_concrete_deck
-        objective_concrete_deck = new ConcreteDeck(concrete_objective_cards_bunch, "database/databaseObjectiveCards.json"); //objective_concrete_deck
+        resource_concrete_deck = new ConcreteDeck(); //resource_concrete_deck
+        gold_concrete_deck = new ConcreteDeck(); //gold_concrete_deck
+        objective_concrete_deck = new ConcreteDeck(); //objective_concrete_deck
         board_nodes = new CommonBoardNode[29];
         decks = new ConcreteDeck[3]; // Create an array to hold the two decks
         table_cards = new Card[3][2];

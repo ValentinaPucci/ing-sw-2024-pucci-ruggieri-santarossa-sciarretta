@@ -14,14 +14,16 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
      * implemented in Personal board. Dim = 5 x 3;
      */
     public PersonalBoard aux_personal_board;
+    public ScoreStrategy score_strategy;
 
     /**
      * @param id
      * @param orientation
      */
-    public LetterPatternObjectiveCard(int id, Orientation orientation) {
-        super(id, orientation);
+    public LetterPatternObjectiveCard(int id, Orientation orientation, int points) {
+        super(id, orientation, points);
         this.aux_personal_board = new PersonalBoard(5, 3);
+        this.score_strategy = new LetterPatternScoreStrategy();
     }
 
     /**
@@ -77,6 +79,11 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
         aux_personal_board.bruteForcePlaceCardSE(card1, 0, 0);
         aux_personal_board.bruteForcePlaceCardSE(card3, 3, 1);
         aux_personal_board.placeCardAtSE(card1, card2);
+    }
+
+    @Override
+    public int calculateScore(PersonalBoard personal_board) {
+        return score_strategy.calculateScore(this, personal_board);
     }
 
 }
