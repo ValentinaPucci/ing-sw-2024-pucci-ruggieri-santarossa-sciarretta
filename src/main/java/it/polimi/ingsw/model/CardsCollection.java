@@ -201,8 +201,7 @@ public  class CardsCollection {
     }
 
     // to do: then starter cards and objective cards;
-
-    public void populateDeckObjective(String jsonFilePath){
+    public void populateDeckObjective(String jsonFilePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
@@ -211,18 +210,57 @@ public  class CardsCollection {
             for (JsonNode cardNode : cardsNode) {
 
                 int id = cardNode.path("id").asInt();
-                String colorStr = cardNode.path("color").asText();
-                Color color = Color.valueOf(colorStr.toUpperCase());
                 Orientation orientation = Orientation.FRONT;
-                int score = cardNode.path("points").asInt();
-
+                int points = cardNode.path("points").asInt();
+                String pattern = cardNode.path("pattern").asText();
+                if (pattern.equals("L")) {
+                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation);
+                    card.init_obj_L();
+                    LetterPatternScoreStrategy score_strategy = new LetterPatternScoreStrategy();
+                    // come si implementa?? come si collegano??
+                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
+                    this.addCard(obj_card);
+                }
+                if (pattern.equals("J")) {
+                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation);
+                    card.init_obj_J();
+                    LetterPatternScoreStrategy score_strategy = new LetterPatternScoreStrategy();
+                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
+                    this.addCard(obj_card);
+                }
+                if (pattern.equals("P")) {
+                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation);
+                    card.init_obj_p();
+                    LetterPatternScoreStrategy score_strategy = new LetterPatternScoreStrategy();
+                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
+                    this.addCard(obj_card);
+                }
+                if (pattern.equals("Q")) {
+                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation);
+                    card.init_obj_q();
+                    LetterPatternScoreStrategy score_strategy = new LetterPatternScoreStrategy();
+                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
+                    this.addCard(obj_card);
+                }
+                if (pattern.equals("increasingDiagonal")) {
+                    DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation);
+                    String color = cardNode.path("color1").asText();
+                    card.init_objIncreasingDiagonal(Color.valueOf(color.toUpperCase()));
+                    DiagonalPatternScoreStrategy score_strategy = new DiagonalPatternScoreStrategy();
+                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
+                    this.addCard(obj_card);
+                }
+                if (pattern.equals("decreasingDiagonal")) {
+                    DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation);
+                    String color = cardNode.path("color1").asText();
+                    card.init_objDecreasingDiagonal(Color.valueOf(color.toUpperCase()));
+                    DiagonalPatternScoreStrategy score_strategy = new DiagonalPatternScoreStrategy();
+                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
+                    this.addCard(obj_card);
+                }
             }
-            System.out.println("Deck populated successfully.");
+            System.out.println("Objective cards Deck populated successfully.");
         } catch (Exception e) {
-            System.err.println("Error populating deck: " + e.getMessage());
+            System.err.println("Error populating objective cards deck: " + e.getMessage());
         }
-
-
-    }
-
-}
+    }}
