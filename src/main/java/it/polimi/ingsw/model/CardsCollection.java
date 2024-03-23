@@ -200,7 +200,7 @@ public  class CardsCollection {
         }
     }
 
-    // to do: then starter cards and objective cards;
+    // populate objective cards draft
     public void populateDeckObjective(String jsonFilePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
