@@ -75,7 +75,7 @@ public class Game {
         return gameOver;
     }
 
-    public Card chooseCardToPlayFromHand(){
+    public Card chooseCardToPlayFromHand() {
 
     }
 
