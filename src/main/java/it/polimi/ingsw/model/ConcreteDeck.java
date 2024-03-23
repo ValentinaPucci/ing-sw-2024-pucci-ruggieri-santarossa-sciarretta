@@ -21,6 +21,15 @@ public class ConcreteDeck {
         this.deck.addAll(this.concrete_cards_bunch.cards);
     }
 
+    public ConcreteDeck(CardsCollection concrete_cards_bunch, String path){
+        // Path to the .json file
+        this.concrete_cards_bunch = concrete_cards_bunch;
+        this.type = type;
+        this.deck = new Stack<>();
+        this.concrete_cards_bunch.populateDeck(path);
+        this.deck.addAll(this.concrete_cards_bunch.cards);
+    }
+
     public void push(Card card) {
         this.deck.push(card);
     }
