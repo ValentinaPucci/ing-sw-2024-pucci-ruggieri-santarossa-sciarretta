@@ -45,6 +45,9 @@ public class StarterCard extends Card {
      * @param item
      */
     public void setStarterCardBack(Corner[][] actual_corners) {
+        this.front_resource1 = null;
+        this.front_resource2 = null;
+        this.front_resource3 = null;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 this.back_corners[i][j] = actual_corners[i][j];
@@ -52,8 +55,6 @@ public class StarterCard extends Card {
         }
     }
 
-    public void setStarterCardFront(Resource resource, Resource resource1, Resource resource2, Corner[][] actualCorners) {
-    }
 }
 
 
