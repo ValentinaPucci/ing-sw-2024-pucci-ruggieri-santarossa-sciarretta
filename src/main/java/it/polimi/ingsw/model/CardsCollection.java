@@ -214,49 +214,40 @@ public  class CardsCollection {
                 int points = cardNode.path("points").asInt();
                 String pattern = cardNode.path("pattern").asText();
                 if (pattern.equals("L")) {
-                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation);
+                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     card.init_obj_L();
-                    LetterPatternScoreStrategy score_strategy = new LetterPatternScoreStrategy();
                     // come si implementa?? come si collegano??
-                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
-                    this.addCard(obj_card);
+                    this.addCard(card);
                 }
                 if (pattern.equals("J")) {
-                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation);
+                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     card.init_obj_J();
-                    LetterPatternScoreStrategy score_strategy = new LetterPatternScoreStrategy();
-                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
-                    this.addCard(obj_card);
+                    this.addCard(card);
                 }
                 if (pattern.equals("P")) {
-                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation);
-                    card.init_obj_p();
-                    LetterPatternScoreStrategy score_strategy = new LetterPatternScoreStrategy();
-                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
-                    this.addCard(obj_card);
+                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
+                    this.addCard(card);
                 }
                 if (pattern.equals("Q")) {
-                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation);
+                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     card.init_obj_q();
-                    LetterPatternScoreStrategy score_strategy = new LetterPatternScoreStrategy();
-                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
-                    this.addCard(obj_card);
+                    this.addCard(card);
                 }
                 if (pattern.equals("increasingDiagonal")) {
-                    DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation);
+                    DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation, points);
                     String color = cardNode.path("color1").asText();
                     card.init_objIncreasingDiagonal(Color.valueOf(color.toUpperCase()));
-                    DiagonalPatternScoreStrategy score_strategy = new DiagonalPatternScoreStrategy();
-                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
-                    this.addCard(obj_card);
+                    this.addCard(card);
                 }
                 if (pattern.equals("decreasingDiagonal")) {
-                    DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation);
+                    DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation, points);
                     String color = cardNode.path("color1").asText();
                     card.init_objDecreasingDiagonal(Color.valueOf(color.toUpperCase()));
-                    DiagonalPatternScoreStrategy score_strategy = new DiagonalPatternScoreStrategy();
-                    ObjectiveCard obj_card = new ObjectiveCard(id, orientation, score_strategy, points);
-                    this.addCard(obj_card);
+                    this.addCard(card);
+                }
+                if (pattern== null) {
+
+
                 }
             }
             System.out.println("Objective cards Deck populated successfully.");
