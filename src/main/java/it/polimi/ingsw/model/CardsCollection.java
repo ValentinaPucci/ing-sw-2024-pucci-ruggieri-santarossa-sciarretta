@@ -200,6 +200,6 @@ public  class CardsCollection {
         }
     }
 
-    // to do: then starter cards and objective cards;
+    // TODO: then starter cards and objective cards;
 
 }

@@ -14,13 +14,14 @@ public class Game {
     private ConcreteDeck gold_deck;
 
 
-    public Game() {
-        common_board = new CommonBoard(); //initializes the board
+    public Game(CommonBoard common_board) {
+        playerQueue = new LinkedList<>();
+        this.common_board = common_board; //initializes the board
         dealCards();
         while (!isGameOver()) {
             // Loop through players and handle each player's turn
             for (Player player : playerQueue) {
-                placeCard(chooseCardToPlayFromHand());
+                //placeCard(chooseCardToPlayFromHand());
                 updatePersonalScore(currentPlayerIndex);
                 drawCard(); //TODO: pesco da terra o dal mazzo a seconda di cosa sceglie l'utente
             }
@@ -75,11 +76,11 @@ public class Game {
         return gameOver;
     }
 
-    public Card chooseCardToPlayFromHand() {
+//    public Card chooseCardToPlayFromHand() {
+//
+//    }
 
-    }
-
-    public void placeCard(Card card_chosen){
+    public void placeCard(Card card_chosen) {
 
     }
 

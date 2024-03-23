@@ -14,9 +14,12 @@ import  java.util.Optional;
 public class Cell {
 
     private Corner corner;
+    public int level;
     public boolean is_full;
 
+
     public Cell() {
+        this.level = 0;
         this.is_full = false;
     }
 
@@ -26,6 +29,7 @@ public class Cell {
      */
     public Cell(Corner corner) {
         this.corner = corner;
+        this.level = 0;
         this.is_full = false;
     }
 
@@ -35,6 +39,7 @@ public class Cell {
      */
     public void setCellAsFull(Corner new_corner) {
         this.corner = new_corner;
+        this.level++;
         this.is_full = true;
     }
 

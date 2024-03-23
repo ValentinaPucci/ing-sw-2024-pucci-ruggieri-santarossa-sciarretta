@@ -14,14 +14,17 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
      * implemented in Personal board. Dim = 4 x 4;
      */
     public PersonalBoard aux_personal_board;
+    public ScoreStrategy score_strategy;
 
     /**
      * @param id
      * @param orientation
+     * @param points
      */
-    public DiagonalPatternObjectiveCard(int id, Orientation orientation) {
-        super(id, orientation);
+    public DiagonalPatternObjectiveCard(int id, Orientation orientation, int points) {
+        super(id, orientation, points);
         this.aux_personal_board = new PersonalBoard(4);
+        this.score_strategy = new DiagonalPatternScoreStrategy();
     }
 
     /**
@@ -65,6 +68,11 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
         aux_personal_board.bruteForcePlaceCardSE(card1, 2, 0);
         aux_personal_board.placeCardAtNE(card1, card2);
         aux_personal_board.placeCardAtNE(card2, card3);
+    }
+
+    @Override
+    public int calculateScore(PersonalBoard personal_board) {
+        return score_strategy.calculateScore(this, personal_board);
     }
 
 }
