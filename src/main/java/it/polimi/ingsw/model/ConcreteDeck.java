@@ -26,7 +26,7 @@ public class ConcreteDeck {
         this.concrete_cards_bunch = concrete_cards_bunch;
         this.type = type;
         this.deck = new Stack<>();
-        this.concrete_cards_bunch.populateDeck(path);
+        this.concrete_cards_bunch.populateDeck(path, this.type);
         this.deck.addAll(this.concrete_cards_bunch.cards);
     }
 

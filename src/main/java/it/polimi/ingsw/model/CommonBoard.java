@@ -15,10 +15,14 @@ public class CommonBoard {
     private int partial_winner = -1;;
 
 
-    public CommonBoard() {
-        resource_concrete_deck = new ConcreteDeck(); //resource_concrete_deck
-        gold_concrete_deck = new ConcreteDeck(); //gold_concrete_deck
-        objective_concrete_deck = new ConcreteDeck(); //objective_concrete_deck
+    public CommonBoard(CardsCollection resource_cards_collection,
+                       CardsCollection gold_cards_collection,
+                       CardsCollection objective_cards_collection,
+                       String resource_path, String gold_path, String objective_path,
+                       String resource_type, String gold_type, String objective_type) {
+        resource_concrete_deck = new ConcreteDeck(resource_cards_collection, resource_path, resource_type); //resource_concrete_deck
+        gold_concrete_deck = new ConcreteDeck(gold_cards_collection, gold_path, gold_type); //gold_concrete_deck
+        objective_concrete_deck = new ConcreteDeck(objective_cards_collection, objective_path, objective_type); //objective_concrete_deck
         board_nodes = new CommonBoardNode[29];
         decks = new ConcreteDeck[3]; // Create an array to hold the two decks
         table_cards = new Card[3][2];

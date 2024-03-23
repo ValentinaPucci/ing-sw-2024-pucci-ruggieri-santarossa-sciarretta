@@ -1,12 +1,12 @@
 package it.polimi.ingsw.model;
 
-public class ItemObjectiveCard extends ObjectiveCard {
+public class ResourceObjectiveCard extends ObjectiveCard {
 
     /**
      * @param id
      * @param orientation
      */
-    public ItemObjectiveCard(int id, Orientation orientation, int points) {
+    public ResourceObjectiveCard(int id, Orientation orientation, int points) {
         super(id, orientation, points);
     }
 
@@ -14,4 +14,5 @@ public class ItemObjectiveCard extends ObjectiveCard {
     public int calculateScore(PersonalBoard personal_board) {
         return personal_board.getNum_mushrooms() + personal_board.getNum_leaves();
     }
+
 }
