@@ -1,10 +1,8 @@
 package it.polimi.ingsw.model;
 
-import java.security.PrivateKey;
-
 public class PersonalBoard {
-    private Cell[][] board;
-    private Player id_player; // one-to-one correspondence between PersonalBoard and Player
+    public Cell[][] board;
+
     private int dim1;
     private int dim2;
     private int points;
@@ -216,8 +214,6 @@ public class PersonalBoard {
      * a classic for loop with increasing indexes both for i and j.
      *
      * @param card
-     *
-     *
      */
     public void bruteForcePlaceCardSE(ResourceCard card, int i, int j) {
         for (int k = 0; k < 2; k++) {
@@ -226,8 +222,6 @@ public class PersonalBoard {
             }
         }
     }
-
-    //TODO: metodo brute force che prende starterCard come parametro
 
     /**
      * We assume that the game_card's corners have a specified board_coordinate,
@@ -366,82 +360,5 @@ public class PersonalBoard {
             }
         }
     }
-
-    /**
-     * These methods implement the score counting for the objective cards.
-     */
-
-    /**
-     * @param objectiveCard
-     * @param l
-     * @param m
-     * @return true iff we recognised a diagonal pattern
-     */
-    public boolean isSubMatrixDiagonalPattern(DiagonalPatternObjectiveCard objectiveCard, int l, int m) {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (!board[l + i][m + j].equals(objectiveCard.aux_personal_board.board[i][j])
-                        && objectiveCard.aux_personal_board.board[i][j].is_full) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @param objectiveCard
-     * @return
-     */
-    public int counterOfRecognisedDiagonalPatterns(DiagonalPatternObjectiveCard objectiveCard) {
-
-        int count = 0;
-        for (int i = 0; i <= this.getDim1() - 4; i++) {
-            for (int j = 0; j <= this.getDim2() - 4; j++) {
-                if (isSubMatrixDiagonalPattern(objectiveCard, i, j)) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-
-    /**
-     * @param objectiveCard
-     * @param l
-     * @param m
-     * @return true iff we recognised a letter pattern
-     */
-    public boolean isSubMatrixLetterPattern(LetterPatternObjectiveCard objectiveCard, int l, int m) {
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (!board[l + i][m + j].equals(objectiveCard.aux_personal_board.board[i][j])
-                        && objectiveCard.aux_personal_board.board[i][j].is_full) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * @param objectiveCard
-     * @return
-     */
-    public int counterOfRecognisedLetterPatterns(DiagonalPatternObjectiveCard objectiveCard) {
-
-        int count = 0;
-        for (int i = 0; i <= this.getDim1() - 5; i++) {
-            for (int j = 0; j <= this.getDim2() - 3; j++) {
-                if (isSubMatrixDiagonalPattern(objectiveCard, i, j)) {
-                    count++;
-                }
-            }
-        }
-        return count;
-    }
-
-
-
 
 }

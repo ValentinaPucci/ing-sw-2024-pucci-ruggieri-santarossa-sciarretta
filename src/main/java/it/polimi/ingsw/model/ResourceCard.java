@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
 public class ResourceCard extends Card {
+
+    // TODO: you always have to consider the orientation of the card...
     private int score;
     public Color color;
     private Corner[][] corners;
