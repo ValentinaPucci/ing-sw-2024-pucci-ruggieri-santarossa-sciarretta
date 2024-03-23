@@ -202,4 +202,27 @@ public  class CardsCollection {
 
     // to do: then starter cards and objective cards;
 
+    public void populateDeckObjective(String jsonFilePath){
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
+            JsonNode cardsNode = rootNode.path("cards");
+
+            for (JsonNode cardNode : cardsNode) {
+
+                int id = cardNode.path("id").asInt();
+                String colorStr = cardNode.path("color").asText();
+                Color color = Color.valueOf(colorStr.toUpperCase());
+                Orientation orientation = Orientation.FRONT;
+                int score = cardNode.path("points").asInt();
+
+            }
+            System.out.println("Deck populated successfully.");
+        } catch (Exception e) {
+            System.err.println("Error populating deck: " + e.getMessage());
+        }
+
+
+    }
+
 }

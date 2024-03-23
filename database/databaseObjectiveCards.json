@@ -11,14 +11,10 @@
       "numMushroom": 0,
       "numLeaves": 0,
       "numButterflies": 0,
-      "numWolves": 0,
-      "CC": "Red",
-      "NN": null,
-      "NE": "Red",
-      "SE": null,
-      "SS": null,
-      "SW": "Red",
-      "NW": null
+      "pattern": "increasing_diagonal",
+      "color1": "Red",
+      "color2": "Red",
+      "color3": "Red"
     },
 
     {
@@ -84,7 +80,7 @@
     },
 
 
-    {
+    { //esempio carta pattern lettera
       "id": 91,
       "type": "Objective",
       "points": 3,
@@ -95,13 +91,12 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": "Red",
-      "NN": "Red",
-      "NE": null,
-      "SE": "Green",
-      "SS": null,
-      "SW": null,
-      "NW":  null
+      "pattern": "L",
+      "color1": "Red",
+      "color2": "Red",
+      "color3": "Green"
+
+
     },
 
     {
