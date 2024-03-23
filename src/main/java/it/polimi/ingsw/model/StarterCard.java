@@ -51,6 +51,9 @@ public class StarterCard extends Card {
             }
         }
     }
+
+    public void setStarterCardFront(Resource resource, Resource resource1, Resource resource2, Corner[][] actualCorners) {
+    }
 }
 
 

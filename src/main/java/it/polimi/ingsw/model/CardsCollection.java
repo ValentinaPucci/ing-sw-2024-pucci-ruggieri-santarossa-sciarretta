@@ -246,6 +246,7 @@ public  class CardsCollection {
                     this.addCard(card);
                 }
                 if (pattern== null) {
+                    // Completa quando le classi di objective sono finite.
 
 
                 }
@@ -254,4 +255,52 @@ public  class CardsCollection {
         } catch (Exception e) {
             System.err.println("Error populating objective cards deck: " + e.getMessage());
         }
-    }}
+    }
+
+
+    public void populateDeckStarterFront(String JsonFilePath) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
+            JsonNode cardsNode = rootNode.path("cards");
+
+            for (JsonNode cardNode : cardsNode) {
+                int id = cardNode.path("id").asInt();
+                String permanent_resource1 = cardNode.path("permanentResource1").asText();
+                String permanent_resource2 = cardNode.path("permanentResource2").asText();
+                String permanent_resource3 = cardNode.path("permanentResource3").asText();
+                int front_visible_corner = cardNode.path("frontVisibleCorner").asInt();
+                String front_NE= cardNode.path("frontNE").asText();
+                String front_SE = cardNode.path("frontSE").asText();
+                String front_NO = cardNode.path("frontNW").asText();
+                String front_SO = cardNode.path("frontSW").asText();
+                int back_visible_corner = cardNode.path("backVisibleCorner").asInt();
+                String back_NE= cardNode.path("backNE").asText();
+                String back_SE = cardNode.path("backSE").asText();
+                String back_NO = cardNode.path("backNW").asText();
+                String back_SO = cardNode.path("backSW").asText();
+                StarterCard card = new StarterCard(id, Orientation.FRONT);
+                Corner[][] actual_corners = new Corner[2][2];
+                if (front_NE.equals("NonVisible")) {
+                    actual_corners[0][1].is_visible = false;
+                } else {
+                        actual_corners[0][1].setCornerResource(Resource.valueOf(front_NE.toUpperCase()));}
+                if (front_SE.equals("NonVisible")) {
+                    actual_corners[1][0].is_visible = false;
+                } else {
+                    actual_corners[1][0].setCornerResource(Resource.valueOf(front_SE.toUpperCase()));}
+                if (front_NO.equals("NonVisible")) {
+                    actual_corners[0][0].is_visible = false;
+                } else {
+                    actual_corners[0][0].setCornerResource(Resource.valueOf(front_NO.toUpperCase()));}
+                card.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()), Resource.valueOf(permanent_resource2.toUpperCase()), Resource.valueOf(permanent_resource3.toUpperCase()), actual_corners);
+
+            }
+            System.out.println("Objective cards Deck populated successfully.");
+        } catch (Exception e) {
+            System.err.println("Error populating objective cards deck: " + e.getMessage());
+        }
+
+    }
+
+    }
