@@ -26,12 +26,13 @@ public class CommonBoard {
         board_nodes = new CommonBoardNode[29];
         decks = new ConcreteDeck[3]; // Create an array to hold the two decks
         table_cards = new Card[3][2];
-        initializeBoard();
 
     }
+     public ConcreteDeck getResourseConcreteDeck(){return resource_concrete_deck;}
+     public ConcreteDeck getGoldConcreteDeck(){return gold_concrete_deck;}
 
     // Method to initialize the board
-    private void initializeBoard() {
+    public void initializeBoard() {
         for (int i = 0; i < 29; i++) {
             board_nodes[i] = new CommonBoardNode(i);
         }
