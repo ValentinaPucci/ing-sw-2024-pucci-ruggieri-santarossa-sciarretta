@@ -64,9 +64,9 @@ public  class CardsCollection {
                 // NO corner.
                 String NO_corner_content = cardNode.path("NO").asText();
                 if (NO_corner_content.equals("NonVisible")) {
-                    actual_corners[0][1].is_visible = false;
+                    actual_corners[0][0].is_visible = false;
                 } else {
-                        actual_corners[0][1].setCornerResource(Resource.valueOf(NO_corner_content.toUpperCase()));
+                        actual_corners[0][0].setCornerResource(Resource.valueOf(NO_corner_content.toUpperCase()));
                 }
                 // SO corner.
                 String SO_corner_content = cardNode.path("SO").asText();
@@ -250,7 +250,5 @@ public  class CardsCollection {
         }
 
     }
-
-
 
     }
