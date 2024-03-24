@@ -24,5 +24,19 @@ public class PersonalBoardTest {
         assertEquals(3, personalBoard.getNum_leaves());
     }
 
-    // Add more tests for other methods
+    @Test
+    public void testBruteForcePlaceCardAtSE() {
+        // Create a ResourceCard object
+        ResourceCard card = new ResourceCard(1, Orientation.FRONT, Color.RED);
+
+        // Place the card at a specific position on the board
+        personalBoard.bruteForcePlaceCardSE(card, 0, 0);
+
+        // Verify that the card has been placed correctly
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                assertEquals(card.getCornerAt(i, j), personalBoard.board[i][j].getCornerFromCell());
+            }
+        }
+    }
 }
