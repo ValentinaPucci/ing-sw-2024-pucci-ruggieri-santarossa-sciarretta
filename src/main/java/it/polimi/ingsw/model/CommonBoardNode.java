@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model;
 
 class CommonBoardNode {
-    private final int nodeNumber; // Number of the node
+    private final int node_number; // Number of the node
     private final boolean[] players; // Array of booleans to indicate player presence
 
     public CommonBoardNode(int nodeNumber) {
-        this.nodeNumber = nodeNumber;
+        this.node_number = nodeNumber;
         players = new boolean[4]; // 4 players
     }
 
@@ -15,6 +15,7 @@ class CommonBoardNode {
             players[playerIndex] = present;
         }
     }
+
 
     // Method to check if a player is present in this node
     public boolean isPlayerPresent(int playerIndex) {
@@ -27,6 +28,6 @@ class CommonBoardNode {
 
     // Method to get the node number
     public int getNodeNumber() {
-        return nodeNumber;
+        return node_number;
     }
 }
