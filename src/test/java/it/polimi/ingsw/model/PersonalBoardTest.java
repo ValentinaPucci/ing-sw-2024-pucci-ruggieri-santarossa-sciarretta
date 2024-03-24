@@ -25,18 +25,43 @@ public class PersonalBoardTest {
     }
 
     @Test
-    public void testBruteForcePlaceCardAtSE() {
-        // Create a ResourceCard object
-        ResourceCard card = new ResourceCard(1, Orientation.FRONT, Color.RED);
+    void testBruteForcePlaceCardSE() {
 
-        // Place the card at a specific position on the board
-        personalBoard.bruteForcePlaceCardSE(card, 0, 0);
+        ResourceCard card = new ResourceCard(1, Orientation.FRONT, Color.BLUE); // You may need to provide appropriate arguments to the constructor
+        int i = 0; // Specify the row index
+        int j = 0; // Specify the column index
 
-        // Verify that the card has been placed correctly
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                assertEquals(card.getCornerAt(i, j), personalBoard.board[i][j].getCornerFromCell());
+        personalBoard.bruteForcePlaceCardSE(card, i, j);
+
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                assertTrue(personalBoard.board[i + k][j + h].is_full);
             }
         }
     }
+
+    @Test
+    void testPlaceCardAtSE() {
+
+        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.BLUE);
+        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED);
+        int i = 0; // Specify the row index
+        int j = 0; // Specify the column index
+
+        personalBoard.bruteForcePlaceCardSE(card1, i, j);
+
+        try {
+            personalBoard.placeCardAtSE(card1, card2);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                assertTrue(personalBoard.board[i + k][j + h].is_full);
+            }
+        }
+    }
+
+    // Add more tests for other methods
 }
