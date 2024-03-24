@@ -5,7 +5,7 @@ public class ObjectiveFactory {
             public ObjectiveCard createObjectiveCard(String type, int id, Orientation orientation,int points) {
                 switch (type) {
                     case "Item":
-                        return new ItemObjectiveCard(id, orientation);
+                        return new ItemObjectiveCard(id, orientation,points);
                     case "LetterPattern":
                         return new LetterPatternObjectiveCard(id, orientation, points);
                     case "DiagonalPattern":
