@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.LinkedList;
 
+import static it.polimi.ingsw.model.Coordinate.NE;
+
 public class Game {
     private Queue<Player> player_queue;
     private Player[] players;
@@ -15,6 +17,15 @@ public class Game {
     private ConcreteDeck resource_deck;
     private ConcreteDeck gold_deck;
     private ConcreteDeck objective_deck;
+    private Coordinate coordinate;
+    private ResourceCard already_placed_card;
+    private StarterCard starter_card;
+    private int from_where_draw;
+    private int from_which_deckindex;
+    private int col;
+    private int row;
+
+
 
 
     public Game(CommonBoard common_board, Player[] players) {
@@ -28,19 +39,28 @@ public class Game {
         this.resource_deck = common_board.getResourseConcreteDeck();
         this.gold_deck = common_board.getGoldConcreteDeck();
         this.objective_deck = common_board.getObjectiveConcreteDeck();
+        this.coordinate = NE;
+        this.from_where_draw = 0;
+        this.from_which_deckindex = 0;
+        this.col = 0;
+        this.row = 0;;
+
     }
 
     public void gameFlow(){
         initializeGame();
+        for(Player player: player_queue){
+            //TODO: metodo per piazzare starter card
+        }
         while (!isGameOver()) {
             while (!isLastTurn()) {
                 // Loop through players and handle each player's turn
                 for (Player player : player_queue) {
-                    placeCard(player.getChosenGameCard()); //TODO: da capire quale placeCard usare tra i 4 delle coordinate
+                    placeCard(player.getChosenGameCard(), player.getPersonalBoard(), coordinate, already_placed_card);
                     PersonalBoard current_board = player.getPersonalBoard();
                     int delta = current_board.getDeltaPoints();
                     common_board.movePlayer(player.getId(), delta);
-                    drawCard(); //TODO: pesco da terra o dal mazzo a seconda di cosa sceglie l'utente
+                    drawCard(from_where_draw);
                     if(common_board.getPartialWinner() != -1)
                         last_turn = true;
                 }
@@ -96,18 +116,55 @@ public class Game {
 
 
     public void calculateFinalScores() {
-        // Calculate final scores
-        //Riceve da commonBoard le posizioni dell'ultimo giro + da personalBoard i punteggi degli obiettivi, per ciascun giocatore
-        //somma per ogni giocatore
-    }
-
-    public void placeCard(Card card_chosen) {
 
     }
 
-    public void drawCard(){
-       //da capire come usare pesca da mazzo o dal banco (metodi già scritti in CommonBoard)
+    public void placeCard(ResourceCard card_chosen, PersonalBoard personal_board, Coordinate coordinate, ResourceCard already_placed_card) {
+        switch (coordinate){
+            case NE:
+                personal_board.placeCardAtNE(already_placed_card, card_chosen);
+            case SE:
+                personal_board.placeCardAtSE(already_placed_card, card_chosen);
+            case SW:
+                personal_board.placeCardAtSO(already_placed_card, card_chosen);
+            case NW:
+                personal_board.placeCardAtNO(already_placed_card, card_chosen);
+        }
+
     }
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
+    }
+    public void setAlreadyPlacedCard(ResourceCard card) {
+        this.already_placed_card = card;
+    }
+
+
+
+    public void drawCard(int where){
+        switch (where){
+            case 0:
+                common_board.drawFromConcreteDeck(from_which_deckindex);
+            case 1:
+                common_board.drawFromTable(row, col, from_which_deckindex);
+        }
+    }
+
+    public void setFromWhereDraw(int where) {
+        this.from_where_draw = where;
+        //Convention to avoid creating another enum
+        //0: from concrete deck
+        //1: from table
+    }
+
+    public void setFromConcreteDeck(int index) {
+        this.from_which_deckindex = index;
+    }
+
+    public void setFromTable(int row, int col, int index) {
+        this.row = row;
+        this.col = col;
+        this.from_which_deckindex = index;}
 
 
 
