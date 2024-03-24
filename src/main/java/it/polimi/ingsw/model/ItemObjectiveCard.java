@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 public class ItemObjectiveCard extends ObjectiveCard {
 
-
     /**
      * @param id
      * @param orientation

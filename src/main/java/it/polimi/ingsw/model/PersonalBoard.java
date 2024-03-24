@@ -225,6 +225,8 @@ public class PersonalBoard {
         }
     }
 
+
+
     /**
      * We assume that the game_card's corners have a specified board_coordinate,
      *
