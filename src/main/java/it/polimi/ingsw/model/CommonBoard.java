@@ -30,6 +30,7 @@ public class CommonBoard {
     }
      public ConcreteDeck getResourseConcreteDeck(){return resource_concrete_deck;}
      public ConcreteDeck getGoldConcreteDeck(){return gold_concrete_deck;}
+     public ConcreteDeck getObjectiveConcreteDeck(){return objective_concrete_deck;}
 
     // Method to initialize the board
     public void initializeBoard() {
@@ -113,8 +114,12 @@ public class CommonBoard {
 
     }
 
+    public int getPartialWinner(){
+        return partial_winner;
+    }
+
     // Method to set a player as partial winner
-    private void setPartialWinner(int playerIndex) {
+    public void setPartialWinner(int playerIndex) {
         this.partial_winner = playerIndex;
     }
 

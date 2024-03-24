@@ -8,7 +8,7 @@ public class Player {
     private String username;
     private List<Card> card_hand;
     private PersonalBoard personal_board; // correspondence between PersonalBoard and Player
-    private List<ObjectiveCard> secret_objectives; //
+    private ObjectiveCard[] secret_objectives;
     private ObjectiveCard chosen_objective;
     private StarterCard starter_card;
     private boolean partial_winner;
@@ -49,12 +49,21 @@ public class Player {
         this.chosen_card = chosen_card;
     }
 
+    public ResourceCard getChosenGameCard() {
+        return this.chosen_card;
+    }
+
     public void addToHand(Card card){
        this.card_hand.add(card);
     }
     public void setPartialWinner(boolean partial_winner) { //choose the card you want to play from your hand
         // la scelta arriva dalla logica
         this.partial_winner = partial_winner;
+    }
+
+    public void setSecretObjectives(ObjectiveCard objective1, ObjectiveCard objective2){
+        secret_objectives[0] = objective1;
+        secret_objectives[1] = objective2;
     }
 
     public void setFinalWinner(boolean final_winner) { //choose the card you want to play from your hand
