@@ -88,6 +88,8 @@ public class PersonalBoard {
         this.num_potions = 0;
     }
 
+    public int getDeltaPoints(){return delta_points;} //Used in Game
+
     /**
      * @param mushrooms_placed
      */

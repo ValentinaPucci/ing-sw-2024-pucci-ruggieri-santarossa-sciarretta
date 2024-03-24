@@ -38,6 +38,11 @@ public class Player {
     public void playStarterCard() {
        //call brute force starter card from personal board
     }
+    public int getId(){return id;}
+
+    public PersonalBoard getPersonalBoard() {
+        return personal_board;
+    }
 
     public void setChosenGameCard(ResourceCard chosen_card) { //choose the card you want to play from your hand
         // la scelta arriva dal controller
