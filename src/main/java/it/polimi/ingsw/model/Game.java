@@ -2,7 +2,6 @@ package it.polimi.ingsw.model;
 
 import java.util.*;
 
-import it.polimi.ingsw.model.enumerations.Coordinate;
 
 
 public class Game {
@@ -88,7 +87,7 @@ public class Game {
         for (Player player : player_queue) {
             if (!starter_deck.isEmpty()) {
                 StarterCard card = (StarterCard) starter_deck.pop(); // Remove the top card from the gold deck
-                player.setStarterCard(card); // Add the card to the player's hand
+                //player.setStarterCard(card); // Add the card to the player's hand
             }
             // Deal 2 cards from the resource deck
             for (int i = 0; i < 2; i++) {
@@ -116,8 +115,7 @@ public class Game {
 
     public void calculateFinalScores() {
         for(int i= 0; i<players.length - 1; i++)
-            final_scores[i] = players[i].getPersonalBoard().getPoints();
-
+            final_scores[i] = common_board.getPlayerPosition(i)+ players[i].getPersonalBoard().getPoints();
     }
 
     public void placeCard(ResourceCard card_chosen, PersonalBoard personal_board, Coordinate coordinate, ResourceCard already_placed_card) {

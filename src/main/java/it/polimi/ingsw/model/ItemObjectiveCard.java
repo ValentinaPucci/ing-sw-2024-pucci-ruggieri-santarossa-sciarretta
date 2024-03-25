@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enumerations.Orientation;
-
 public class ItemObjectiveCard extends ObjectiveCard {
     private int num_feathers;
     private int num_potions;
@@ -20,6 +18,6 @@ public class ItemObjectiveCard extends ObjectiveCard {
 
     @Override
     public int calculateScore(PersonalBoard personal_board) {
-        return personal_board.getNum_mushrooms() + personal_board.getNum_leaves();
+        return personal_board.getNum_feathers() + personal_board.getNum_potions() + personal_board.getNum_parchments();
     }
 }

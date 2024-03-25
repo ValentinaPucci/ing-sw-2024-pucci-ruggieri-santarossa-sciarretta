@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enumerations.Orientation;
-import it.polimi.ingsw.model.enumerations.Resource;
-
 public class StarterCard extends Card {
     public static final int STARTER_CARD_COORDINATE = 50;
     private Resource front_resource1;
@@ -42,10 +39,7 @@ public class StarterCard extends Card {
 
     /**
      *
-     * @param score
      * @param actual_corners
-     * @param resource
-     * @param item
      */
     public void setStarterCardBack(Corner[][] actual_corners) {
         this.front_resource1 = null;
