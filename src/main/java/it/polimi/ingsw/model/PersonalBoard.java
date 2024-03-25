@@ -323,13 +323,13 @@ public class PersonalBoard {
      * @ensures card_to_play is attached to another card, specifically in the SO corner
      * of the game_card
      */
-    public void placeCardAtSO(ResourceCard game_card, ResourceCard card_to_play)
+    public void placeCardAtSW(ResourceCard game_card, ResourceCard card_to_play)
             throws IllegalMoveException {
 
         int i;
         int j;
 
-        Corner corner2 = game_card.getCornerAtSO();
+        Corner corner2 = game_card.getCornerAtSW();
 
         if (!corner2.is_visible)
             throw new IllegalMoveException();
@@ -353,13 +353,13 @@ public class PersonalBoard {
      * @ensures card_to_play is attached to another card, specifically in the NO corner
      * of the game_card
      */
-    public void placeCardAtNO(ResourceCard game_card, ResourceCard card_to_play)
+    public void placeCardAtNW(ResourceCard game_card, ResourceCard card_to_play)
             throws IllegalMoveException {
 
         int i;
         int j;
 
-        Corner corner2 = game_card.getCornerAtNO();
+        Corner corner2 = game_card.getCornerAtNW();
 
         if (!corner2.is_visible)
             throw new IllegalMoveException();
