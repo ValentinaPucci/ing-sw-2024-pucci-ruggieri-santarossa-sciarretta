@@ -321,7 +321,7 @@ public class PersonalBoard {
         int i;
         int j;
 
-        Corner corner_aux = game_card.getCornerAtSO();
+        Corner corner_aux = game_card.getCornerAtSW();
 
         if (!corner_aux.is_visible)
             throw new IllegalMoveException();
@@ -352,7 +352,7 @@ public class PersonalBoard {
         int i;
         int j;
 
-        Corner corner_aux = game_card.getCornerAtNO();
+        Corner corner_aux = game_card.getCornerAtNW();
 
         if (!corner_aux.is_visible)
             throw new IllegalMoveException();

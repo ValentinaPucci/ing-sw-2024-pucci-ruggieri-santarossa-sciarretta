@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enumerations.Coordinate;
-
 /**
  * This class provide the needed mapping between the Coordinate-based
  * description of a given corner and its matrix-based (i.e. using indexes)
