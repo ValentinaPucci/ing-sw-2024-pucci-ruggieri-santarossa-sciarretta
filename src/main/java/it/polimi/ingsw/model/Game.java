@@ -15,12 +15,12 @@ public class Game {
     private ConcreteDeck resource_deck;
     private ConcreteDeck gold_deck;
     private ConcreteDeck objective_deck;
+    private ConcreteDeck starter_deck;
     private int[] final_scores;
     private Player winner;
     private Player temp_winner;
     private Coordinate coordinate;
     private ResourceCard already_placed_card;
-    private StarterCard starter_card;
     private int from_where_draw;
     private int from_which_deckindex;
     private int col;
@@ -39,6 +39,7 @@ public class Game {
         this.common_board = common_board;
         this.resource_deck = common_board.getResourceConcreteDeck();
         this.gold_deck = common_board.getGoldConcreteDeck();
+        this.starter_deck = common_board.getStarterConcreteDeck();
         this.objective_deck = common_board.getObjectiveConcreteDeck();
         // Aggiunta dei giocatori alla coda dei giocatori
         for (Player player : players) {
@@ -55,7 +56,7 @@ public class Game {
     public void gameFlow(){
         initializeGame();
         for(Player player: player_queue){
-            //TODO: metodo per piazzare starter card
+            player.playStarterCard();
         }
         while (!isGameOver()) {
             while (!isLastTurn()) {
@@ -65,7 +66,7 @@ public class Game {
                     PersonalBoard current_board = player.getPersonalBoard();
                     int delta = current_board.getDeltaPoints();
                     common_board.movePlayer(player.getId(), delta);
-                    drawCard(from_where_draw);
+                    player.addToHand(drawCard(from_where_draw));
                     if(common_board.getPartialWinner() != -1)
                         last_turn = true;
                 }
@@ -85,6 +86,10 @@ public class Game {
     public void dealCards() {
         // Deal cards to players
         for (Player player : player_queue) {
+            if (!starter_deck.isEmpty()) {
+                StarterCard card = (StarterCard) starter_deck.pop(); // Remove the top card from the gold deck
+                player.setStarterCard(card); // Add the card to the player's hand
+            }
             // Deal 2 cards from the resource deck
             for (int i = 0; i < 2; i++) {
                 if (!resource_deck.isEmpty()) {
@@ -92,7 +97,6 @@ public class Game {
                     player.addToHand(card); // Add the card to the player's hand
                 }
             }
-
             // Deal 1 card from the gold deck
             if (!gold_deck.isEmpty()) {
                 Card card = gold_deck.pop(); // Remove the top card from the gold deck
@@ -136,24 +140,12 @@ public class Game {
         this.already_placed_card = card;
     }
 
-
-
-    public void drawCard(int where){
-        switch (where){
-            case 0:
-                common_board.drawFromConcreteDeck(from_which_deckindex);
-            case 1:
-                common_board.drawFromTable(row, col, from_which_deckindex);
-        }
-    }
-
     public void setFromWhereDraw(int where) {
         this.from_where_draw = where;
         //Convention to avoid creating another enum
         //0: from concrete deck
         //1: from table
     }
-
     public void setFromConcreteDeck(int index) {
         this.from_which_deckindex = index;
     }
@@ -162,6 +154,16 @@ public class Game {
         this.row = row;
         this.col = col;
         this.from_which_deckindex = index;}
+
+    public Card drawCard(int where){
+        switch (where){
+            case 0:
+                return common_board.drawFromConcreteDeck(from_which_deckindex);
+            case 1:
+                return common_board.drawFromTable(row, col, from_which_deckindex);
+        }
+        return null;
+    }
 
     public boolean isLastTurn() {
         return last_turn;

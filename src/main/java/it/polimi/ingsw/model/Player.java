@@ -31,9 +31,6 @@ public class Player {
         return this.nickname;
     }
 
-
-
-
     public void playStarterCard() {
        this.personal_board.bruteForcePlaceStarterCard(starter_card);
     }
@@ -49,6 +46,14 @@ public class Player {
         this.chosen_card = chosen_card;
     }
 
+    public void setStarterCard(StarterCard starter_card) {
+        this.starter_card = starter_card;
+    }
+
+    public StarterCard getStarterCard() {
+        return this.starter_card;
+    }
+
     public ResourceCard getChosenGameCard() {
         return this.chosen_card;
     }
@@ -56,7 +61,6 @@ public class Player {
     public void addToHand(Card card){
        this.card_hand.add(card);
     }
-
 
     public void setSecretObjectives(ObjectiveCard objective1, ObjectiveCard objective2){
         secret_objectives[0] = objective1;
