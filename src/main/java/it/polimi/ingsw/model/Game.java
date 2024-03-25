@@ -2,7 +2,7 @@ package it.polimi.ingsw.model;
 
 import java.util.*;
 
-import static it.polimi.ingsw.model.Coordinate.NE;
+import static it.polimi.ingsw.model.enumerations.Coordinate;
 
 public class Game {
     private Queue<Player> player_queue;
@@ -43,7 +43,7 @@ public class Game {
         for (Player player : players) {
             this.player_queue.offer(player);
         }
-        this.coordinate = NE;
+        this.coordinate = NE; // default
         this.from_where_draw = 0;
         this.from_which_deckindex = 0;
         this.col = 0;
@@ -54,7 +54,7 @@ public class Game {
     public void gameFlow(){
         initializeGame();
         for(Player player: player_queue){
-            //TODO: metodo per piazzare starter card
+            player.playStarterCard();
         }
         while (!isGameOver()) {
             while (!isLastTurn()) {

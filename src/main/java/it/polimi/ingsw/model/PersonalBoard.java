@@ -3,8 +3,9 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 
 public class PersonalBoard {
-    public Cell[][] board;
 
+    public static final int BOARD_CENTER = 50;
+    public Cell[][] board;
     private int dim1;
     private int dim2;
     private int points;
@@ -226,6 +227,15 @@ public class PersonalBoard {
             }
         }
     }
+
+    public void bruteForcePlaceStarterCard(StarterCard card) {
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                this.board[BOARD_CENTER + k][BOARD_CENTER + h].setCellAsFull(card.getCornerAt(k, h));
+            }
+        }
+    }
+
 
 
 

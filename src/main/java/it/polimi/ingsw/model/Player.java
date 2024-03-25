@@ -37,7 +37,7 @@ public class Player {
     }
 
     public void playStarterCard() {
-       //call brute force starter card from personal board
+       this.personal_board.bruteForcePlaceStarterCard(starter_card);
     }
     public int getId(){return id;}
 
