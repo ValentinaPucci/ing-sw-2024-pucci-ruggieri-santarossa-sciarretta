@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enumerations.Color;
+import it.polimi.ingsw.model.enumerations.Orientation;
+
 public class ResourceCard extends Card {
 
     // TODO: you always have to consider the orientation of the card...
@@ -64,7 +67,7 @@ public class ResourceCard extends Card {
      *
      * @return SO corner
      */
-    public Corner getCornerAtSO () {
+    public Corner getCornerAtSW () {
         return corners[1][0];
     }
 
@@ -72,7 +75,7 @@ public class ResourceCard extends Card {
      *
      * @return NO corner
      */
-    public Corner getCornerAtNO () {
+    public Corner getCornerAtNW () {
         return corners[0][0];
     }
 
@@ -85,11 +88,11 @@ public class ResourceCard extends Card {
      */
     public Corner getCornerAt(int i, int j) {
         if (i == 0 && j == 0)
-            return this.getCornerAtNO();
+            return this.getCornerAtNW();
         else if (i == 0 && j == 1)
             return this.getCornerAtNE();
         else if (i == 1 && j == 0)
-            return this.getCornerAtSO();
+            return this.getCornerAtSW();
         else
             return this.getCornerAtSE();
     }

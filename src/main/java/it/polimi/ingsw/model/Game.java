@@ -1,8 +1,6 @@
 package it.polimi.ingsw.model;
 
-import java.util.List;
-import java.util.Queue;
-import java.util.LinkedList;
+import java.util.*;
 
 import static it.polimi.ingsw.model.Coordinate.NE;
 
@@ -10,13 +8,15 @@ public class Game {
     private Queue<Player> player_queue;
     private Player[] players;
     private int num_players;
-    private Player first_player;
     private boolean game_over;
     private boolean last_turn;
     private CommonBoard common_board;
     private ConcreteDeck resource_deck;
     private ConcreteDeck gold_deck;
     private ConcreteDeck objective_deck;
+    private int[] final_scores;
+    private Player winner;
+    private Player temp_winner;
     private Coordinate coordinate;
     private ResourceCard already_placed_card;
     private StarterCard starter_card;
@@ -29,16 +29,20 @@ public class Game {
 
 
     public Game(CommonBoard common_board, Player[] players) {
-        player_queue = new LinkedList<>();
+        this.player_queue = new LinkedList<>();
         this.players = players;
-        this.first_player = players[0];
-        this.num_players = players.length-1;
+        this.num_players = players.length;
         this.game_over = false;
         this.last_turn = false;
-        this.common_board = common_board; //initializes the board
-        this.resource_deck = common_board.getResourseConcreteDeck();
+        this.final_scores = new int[num_players];
+        this.common_board = common_board;
+        this.resource_deck = common_board.getResourceConcreteDeck();
         this.gold_deck = common_board.getGoldConcreteDeck();
         this.objective_deck = common_board.getObjectiveConcreteDeck();
+        // Aggiunta dei giocatori alla coda dei giocatori
+        for (Player player : players) {
+            this.player_queue.offer(player);
+        }
         this.coordinate = NE;
         this.from_where_draw = 0;
         this.from_which_deckindex = 0;
@@ -68,12 +72,12 @@ public class Game {
             secondLastTurn();
         }
         calculateFinalScores();
+        setWinner();
     }
 
     public void initializeGame(){
         common_board.initializeBoard();
         dealCards();
-        fillQueue(player_queue, players);
     }
 
 
@@ -105,17 +109,9 @@ public class Game {
     }
 
 
-    public void fillQueue(Queue<Player> player_queue, Player[] players){
-        if ( players== null || player_queue == null) {
-            throw new IllegalArgumentException("Array o coda nulli non sono ammessi.");
-        }
-        for (Player element : players) {
-            player_queue.add(element);
-        }
-    }
-
-
     public void calculateFinalScores() {
+        for(int i= 0; i<players.length - 1; i++)
+            final_scores[i] = players[i].getPersonalBoard().getPoints();
 
     }
 
@@ -166,8 +162,6 @@ public class Game {
         this.col = col;
         this.from_which_deckindex = index;}
 
-
-
     public boolean isLastTurn() {
         return last_turn;
     }
@@ -193,5 +187,23 @@ public class Game {
     public boolean isGameOver() {
         return game_over;
     }
+
+
+    public Player getWinner(){
+        return winner;
+    }
+
+    public void setWinner(){
+        int temp_score = 0;
+        temp_winner = players[0];
+
+        for(int i= 0; i<players.length - 1; i++)
+            if (final_scores[i] > temp_score) {
+                temp_score = final_scores[i];
+                temp_winner = players[i];
+            }
+        this.winner = temp_winner;
+    }
+
 }
 

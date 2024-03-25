@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
+
 public class PersonalBoard {
     public Cell[][] board;
 

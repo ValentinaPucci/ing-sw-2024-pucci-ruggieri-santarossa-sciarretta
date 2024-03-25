@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enumerations.Coordinate;
+import it.polimi.ingsw.model.enumerations.Item;
+import it.polimi.ingsw.model.enumerations.Resource;
+
 import java.util.Optional;
 import java.util.NoSuchElementException;
 

@@ -22,7 +22,8 @@ public class Player {
         this.username = username;
         this.card_hand = new ArrayList<>();
         this.personal_board = new PersonalBoard();
-        this.secret_objectives = new ArrayList<>();
+        this.secret_objectives[0] = null;
+        this.secret_objectives[1] = null;
         this.chosen_objective = null;
         this.starter_card = null;
         this.partial_winner = false;

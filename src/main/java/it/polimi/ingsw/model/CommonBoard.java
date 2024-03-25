@@ -28,7 +28,7 @@ public class CommonBoard {
         table_cards = new Card[3][2];
 
     }
-     public ConcreteDeck getResourseConcreteDeck(){return resource_concrete_deck;}
+     public ConcreteDeck getResourceConcreteDeck(){return resource_concrete_deck;}
      public ConcreteDeck getGoldConcreteDeck(){return gold_concrete_deck;}
      public ConcreteDeck getObjectiveConcreteDeck(){return objective_concrete_deck;}
 
