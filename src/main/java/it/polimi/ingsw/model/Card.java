@@ -3,7 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.Orientation;
 
 public abstract class Card {
-    private int id;
+    protected int id;
     public Orientation orientation;
 
     /**

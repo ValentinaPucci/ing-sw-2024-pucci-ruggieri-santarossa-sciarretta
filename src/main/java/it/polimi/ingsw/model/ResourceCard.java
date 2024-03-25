@@ -19,15 +19,13 @@ public class ResourceCard extends Card {
     public ResourceCard(int id, Orientation orientation, Color color) {
         super(id, orientation);
         this.score = 0;
-
+        this.color = color;
         this.corners = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 corners[i][j] = new Corner(new BoardCellCoordinate(i, j));
             }
         }
-
-        this.color = color;
     }
 
     /**
@@ -38,6 +36,7 @@ public class ResourceCard extends Card {
     public ResourceCard(int id, Orientation orientation, Color color,int score , Corner[][] actual_corners) {
         super(id, orientation);
         this.score = score;
+        this.color = color;
 
         this.corners = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
@@ -96,4 +95,16 @@ public class ResourceCard extends Card {
         else
             return this.getCornerAtSE();
     }
+    // To print output.
+
+    @Override
+    public String toString() {
+            return "ResourceCard{" +
+                    "id=" + super.id+
+                    ", orientation=" + orientation +
+                    ", color=" + color +
+                    // Add other attributes here...
+                    '}';
+        }
+
 }

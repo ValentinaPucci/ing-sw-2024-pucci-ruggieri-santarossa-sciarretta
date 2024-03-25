@@ -29,9 +29,7 @@ public class CardsCollectionTest {
         cardsCollection.addCard(card);
         assertEquals(1, cardsCollection.size());
     }
-
     @Test
-
     public void testPopulateDeck() {
         // Assume that `cards.json` is a valid JSON file in the `src/test/resources` directory
         String jsonFilePath = "/Users/lollo/IdeaProjects/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseGameCards.json";
@@ -41,8 +39,10 @@ public class CardsCollectionTest {
         // Call the method under test
         cardsCollection.populateDeck(jsonFilePath, "Resource");
 
-        // Print the entire cards collection
-        System.out.println(cardsCollection.cards);
+        // Print the attributes of all cards in the collection
+        for (Card card : cardsCollection.cards) {
+            System.out.println(card.toString());
+        }
     }
     // Add more tests for other methods
 }

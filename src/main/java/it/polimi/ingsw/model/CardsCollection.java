@@ -54,33 +54,50 @@ public  class CardsCollection {
                     }
                 }
                 String NE_corner_content = cardNode.path("NE").asText();
+                //System.out.println("NE_corner_content: " + NE_corner_content);
                 if (NE_corner_content.equals("NonVisible")) {
                     actual_corners[0][1].is_visible = false;
                 } else {
+                    if(isResource(NE_corner_content.toUpperCase())){
                         actual_corners[0][1].setCornerResource(Resource.valueOf(NE_corner_content.toUpperCase()));
+                    }else{
+                        actual_corners[0][1].setCornerItem(Item.valueOf(NE_corner_content.toUpperCase()));
+                    }
                 }
                 // SE Corner.
                 String SE_corner_content = cardNode.path("SE").asText();
                 if (SE_corner_content.equals("NonVisible")) {
                     actual_corners[1][0].is_visible = false;
                 } else {
+                    if (isResource(SE_corner_content.toUpperCase())) {
                         actual_corners[1][0].setCornerResource(Resource.valueOf(SE_corner_content.toUpperCase()));
+                    }else{
+                        actual_corners[1][0].setCornerItem(Item.valueOf(SE_corner_content.toUpperCase()));
+                    }
                 }
                 // NO corner.
                 String NO_corner_content = cardNode.path("NW").asText();
-                System.out.println("NO_corner_content: " + NO_corner_content);
+                //System.out.println("NO_corner_content: " + NO_corner_content);
 
                 if (NO_corner_content.equals("NonVisible")) {
                     actual_corners[0][0].is_visible = false;
                 } else {
+                    if(isResource(NO_corner_content.toUpperCase())) {
                         actual_corners[0][0].setCornerResource(Resource.valueOf(NO_corner_content.toUpperCase()));
+                    }else{
+                        actual_corners[0][0].setCornerItem(Item.valueOf(NO_corner_content.toUpperCase()));
+                    }
                 }
                 // SO corner.
                 String SO_corner_content = cardNode.path("SW").asText();
                 if (SO_corner_content.equals("NonVisible")) {
                     actual_corners[1][1].is_visible = false;
                 } else {
+                    if(isResource(SO_corner_content.toUpperCase())) {
                         actual_corners[1][1].setCornerResource(Resource.valueOf(SO_corner_content.toUpperCase()));
+                    }else{
+                        actual_corners[1][1].setCornerItem(Item.valueOf(SO_corner_content.toUpperCase()));
+                    }
                 }
 
                 if (cardNode.path("type").asText().equals("Resource") && type.equals("Resource")){
@@ -123,6 +140,14 @@ public  class CardsCollection {
             e.printStackTrace();
             System.err.println("Error populating deck: " + e.getMessage());
         }
+    }
+    public boolean isResource(String str) {
+        for (Resource r : Resource.values()) {
+            if (r.name().equals(str)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     // populate objective cards draft
