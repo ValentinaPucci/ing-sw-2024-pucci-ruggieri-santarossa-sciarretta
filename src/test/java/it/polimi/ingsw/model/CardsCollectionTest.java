@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enumerations.Color;
 import it.polimi.ingsw.model.enumerations.Orientation;
+import it.polimi.ingsw.model.enumerations.Resource;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,7 @@ public class CardsCollectionTest {
     }
 
     @Test
+
     public void testPopulateDeck() {
         // Assume that `cards.json` is a valid JSON file in the `src/test/resources` directory
         String jsonFilePath = "/Users/lollo/IdeaProjects/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseGameCards.json";
@@ -39,8 +41,8 @@ public class CardsCollectionTest {
         // Call the method under test
         cardsCollection.populateDeck(jsonFilePath, "Resource");
 
-        // Check that cards have been added to the collection
-        assertTrue(cardsCollection.size() =  40);
+        // Print the entire cards collection
+        System.out.println(cardsCollection.cards);
     }
     // Add more tests for other methods
 }

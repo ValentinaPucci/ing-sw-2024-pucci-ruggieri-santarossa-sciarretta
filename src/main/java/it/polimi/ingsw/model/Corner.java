@@ -36,6 +36,9 @@ public class Corner {
         this.board_coordinate = board_coordinate;
         this.is_visible = true;
     }
+    public Corner(){
+        this.is_visible = false;
+    }
 
     /**
      *

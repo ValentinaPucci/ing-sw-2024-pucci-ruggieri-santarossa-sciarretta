@@ -4,5 +4,6 @@ public enum Resource {
     LEAF,
     MUSHROOM,
     BUTTERFLY,
-    WOLF
+    WOLF,
+    EMPTY
 }

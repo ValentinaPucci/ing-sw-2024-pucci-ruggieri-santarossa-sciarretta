@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.enumerations.Color;
 import it.polimi.ingsw.model.enumerations.Item;
 import it.polimi.ingsw.model.enumerations.Orientation;
 import it.polimi.ingsw.model.enumerations.Resource;
-
 import java.io.File;
 
 
@@ -40,7 +39,6 @@ public  class CardsCollection {
             JsonNode cardsNode = rootNode.path("cards");
 
             for (JsonNode cardNode : cardsNode) {
-
                 int id = cardNode.path("id").asInt();
                 String colorStr = cardNode.path("color").asText();
                 Color color = Color.valueOf(colorStr.toUpperCase());
@@ -50,6 +48,11 @@ public  class CardsCollection {
                 // This is the case where we have to create a ResourceCard.
                 // NE corner.
                 Corner[][] actual_corners = new Corner[2][2];
+                for (int i = 0; i < actual_corners.length; i++) {
+                    for (int j = 0; j < actual_corners[i].length; j++) {
+                        actual_corners[i][j] = new Corner();
+                    }
+                }
                 String NE_corner_content = cardNode.path("NE").asText();
                 if (NE_corner_content.equals("NonVisible")) {
                     actual_corners[0][1].is_visible = false;
@@ -64,14 +67,16 @@ public  class CardsCollection {
                         actual_corners[1][0].setCornerResource(Resource.valueOf(SE_corner_content.toUpperCase()));
                 }
                 // NO corner.
-                String NO_corner_content = cardNode.path("NO").asText();
+                String NO_corner_content = cardNode.path("NW").asText();
+                System.out.println("NO_corner_content: " + NO_corner_content);
+
                 if (NO_corner_content.equals("NonVisible")) {
                     actual_corners[0][0].is_visible = false;
                 } else {
                         actual_corners[0][0].setCornerResource(Resource.valueOf(NO_corner_content.toUpperCase()));
                 }
                 // SO corner.
-                String SO_corner_content = cardNode.path("SO").asText();
+                String SO_corner_content = cardNode.path("SW").asText();
                 if (SO_corner_content.equals("NonVisible")) {
                     actual_corners[1][1].is_visible = false;
                 } else {
@@ -115,6 +120,7 @@ public  class CardsCollection {
             }
             System.out.println("Deck populated successfully.");
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("Error populating deck: " + e.getMessage());
         }
     }
@@ -172,6 +178,7 @@ public  class CardsCollection {
             }
             System.out.println("Objective cards Deck populated successfully.");
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("Error populating objective cards deck: " + e.getMessage());
         }
     }
@@ -202,6 +209,11 @@ public  class CardsCollection {
 
                 StarterCard card_front = new StarterCard(id, Orientation.FRONT);
                 Corner[][] actual_corners_front = new Corner[2][2];
+                for (int i = 0; i < actual_corners_front.length; i++) {
+                    for (int j = 0; j < actual_corners_front[i].length; j++) {
+                        actual_corners_front[i][j] = new Corner();
+                    }
+                }
                 // Front of the Starter Card
                 if (front_NE.equals("NonVisible")) {
                     actual_corners_front[0][1].is_visible = false;
@@ -222,6 +234,12 @@ public  class CardsCollection {
                 // Back of the Starter Card
                 StarterCard card_back = new StarterCard(id, Orientation.BACK);
                 Corner[][] actual_corners_back = new Corner[2][2];
+                for (int i = 0; i < actual_corners_back.length; i++) {
+                    for (int j = 0; j < actual_corners_back[i].length; j++) {
+                        actual_corners_back[i][j] = new Corner();
+                    }
+                }
+
 
                 if (back_NE.equals("NonVisible")) {
                     actual_corners_back[0][1].is_visible = false;
@@ -248,6 +266,7 @@ public  class CardsCollection {
             }
             System.out.println("Starter cards Deck populated successfully.");
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("Error populating starter cards deck: " + e.getMessage());
         }
 
@@ -313,6 +332,7 @@ public  class CardsCollection {
                 }
             }
         } catch (Exception e) {
+            e.printStackTrace();
             System.err.println("Error populating starter cards deck: " + e.getMessage());
         }
     }
