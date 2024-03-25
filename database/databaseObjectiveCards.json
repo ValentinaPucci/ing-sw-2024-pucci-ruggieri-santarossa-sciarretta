@@ -28,13 +28,10 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": "Green",
-      "NN": null,
-      "NE": null,
-      "SE": "Green",
-      "SS": null,
-      "SW": null,
-      "NW": "Green"
+      "pattern": "decreasing_diagonal",
+      "color1": "Green",
+      "color2": "Green",
+      "color3": "Green"
     },
 
     {
@@ -47,14 +44,10 @@
       "numMushroom": 0,
       "numLeaves": 0,
       "numButterflies": 0,
-      "numWolves": 0,
-      "CC": "Blue",
-      "NN": null,
-      "NE": "Blue",
-      "SE": null,
-      "SS": null,
-      "SW": "Blue",
-      "NW": null
+      "pattern": "increasing_diagonal",
+      "color1": "Blue",
+      "color2": "Blue",
+      "color3": "Blue"
     },
 
 
@@ -69,18 +62,14 @@
       "numMushroom": 0,
       "numLeaves": 0,
       "numButterflies": 0,
-      "numWolves": 0,
-      "CC": "Purple",
-      "NN": null,
-      "NE": null,
-      "SE": "Purple",
-      "SS": null,
-      "SW": null,
-      "NW": "Purple"
+      "pattern": "decreasing_diagonal",
+      "color1": "Purple",
+      "color2": "Purple",
+      "color3": "Purple"
     },
 
 
-    { //esempio carta pattern lettera
+    {
       "id": 91,
       "type": "Objective",
       "points": 3,
@@ -95,8 +84,6 @@
       "color1": "Red",
       "color2": "Red",
       "color3": "Green"
-
-
     },
 
     {
@@ -110,13 +97,10 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": "Green",
-      "NN": "Green",
-      "NE": null,
-      "SE": null,
-      "SS": null,
-      "SW": "Purple",
-      "NW":  null
+      "pattern": "J",
+      "color1": "Green",
+      "color2": "Green",
+      "color3": "Purple"
     },
 
 
@@ -131,13 +115,10 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": "Blue",
-      "NN": null,
-      "NE": "Red",
-      "SE": null,
-      "SS": "Blue",
-      "SW": null,
-      "NW": null
+      "pattern": "P",
+      "color1": "Red",
+      "color2": "Blue",
+      "color3": "Blue"
     },
 
 
@@ -152,13 +133,10 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": "Purple",
-      "NN": null,
-      "NE": null,
-      "SE": null,
-      "SS": "Purple",
-      "SW": null,
-      "NW": "Blue"
+      "pattern": "Q",
+      "color1": "Blue",
+      "color2": "Purple",
+      "color3": "Purple"
     },
 
 
@@ -173,13 +151,10 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": null,
-      "NN": null,
-      "NE": null,
-      "SE": null,
-      "SS": null,
-      "SW": null,
-      "NW": null
+      "pattern": null,
+      "color1": null,
+      "color2": null,
+      "color3": null
     },
 
 
@@ -194,13 +169,10 @@
       "numLeaves": 3,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": null,
-      "NN": null,
-      "NE": null,
-      "SE": null,
-      "SS": null,
-      "SW": null,
-      "NW": null
+      "pattern": null,
+      "color1": null,
+      "color2": null,
+      "color3": null
     },
 
     {
@@ -214,13 +186,10 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 3,
-      "CC": null,
-      "NN": null,
-      "NE": null,
-      "SE": null,
-      "SS": null,
-      "SW": null,
-      "NW": null
+      "pattern": null,
+      "color1": null,
+      "color2": null,
+      "color3": null
     },
 
 
@@ -235,13 +204,10 @@
       "numLeaves": 0,
       "numButterflies": 3,
       "numWolves": 0,
-      "CC": null,
-      "NN": null,
-      "NE": null,
-      "SE": null,
-      "SS": null,
-      "SW": null,
-      "NW": null
+      "pattern": null,
+      "color1": null,
+      "color2": null,
+      "color3": null
     },
 
     {
@@ -255,13 +221,10 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": null,
-      "NN": null,
-      "NE": null,
-      "SE": null,
-      "SS": null,
-      "SW": null,
-      "NW": null
+      "pattern": null,
+      "color1": null,
+      "color2": null,
+      "color3": null
     },
 
 
@@ -276,13 +239,10 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": null,
-      "NN": null,
-      "NE": null,
-      "SE": null,
-      "SS": null,
-      "SW": null,
-      "NW": null
+      "pattern": null,
+      "color1": null,
+      "color2": null,
+      "color3": null
     },
 
 
@@ -297,13 +257,10 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": null,
-      "NN": null,
-      "NE": null,
-      "SE": null,
-      "SS": null,
-      "SW": null,
-      "NW": null
+      "pattern": null,
+      "color1": null,
+      "color2": null,
+      "color3": null
     },
 
 
@@ -318,13 +275,10 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "CC": null,
-      "NN": null,
-      "NE": null,
-      "SE": null,
-      "SS": null,
-      "SW": null,
-      "NW": null
+      "pattern": null,
+      "color1": null,
+      "color2": null,
+      "color3": null
     }
   ]
 }

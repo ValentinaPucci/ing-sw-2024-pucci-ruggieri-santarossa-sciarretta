@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enumerations.Orientation;
+import it.polimi.ingsw.model.enumerations.Resource;
+
 public class StarterCard extends Card {
     public static final int STARTER_CARD_COORDINATE = 50;
     private Resource front_resource1;
@@ -53,6 +56,46 @@ public class StarterCard extends Card {
                 this.back_corners[i][j] = actual_corners[i][j];
             }
         }
+    }
+
+
+    public Corner getCornerAtNE () {
+        return back_corners[0][1];
+    }
+
+    /**
+     *
+     * @return SE corner
+     */
+    public Corner getCornerAtSE () {
+        return back_corners[1][1];
+    }
+
+    /**
+     *
+     * @return SO corner
+     */
+    public Corner getCornerAtSW () {
+        return back_corners[1][0];
+    }
+
+    /**
+     *
+     * @return NO corner
+     */
+    public Corner getCornerAtNW () {
+        return back_corners[0][0];
+    }
+
+    public Corner getCornerAt(int i, int j) {
+        if (i == 0 && j == 0)
+            return this.getCornerAtNW();
+        else if (i == 0 && j == 1)
+            return this.getCornerAtNE();
+        else if (i == 1 && j == 0)
+            return this.getCornerAtSW();
+        else
+            return this.getCornerAtSE();
     }
 
 }

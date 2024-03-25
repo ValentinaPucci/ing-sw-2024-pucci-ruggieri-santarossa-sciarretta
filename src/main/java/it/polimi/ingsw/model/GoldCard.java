@@ -1,8 +1,10 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enumerations.Color;
+import it.polimi.ingsw.model.enumerations.Item;
+import it.polimi.ingsw.model.enumerations.Orientation;
+
 import java.util.Optional;
-import java.util.Set;
-import java.util.HashSet;
 
 public class GoldCard extends ResourceCard {
 
