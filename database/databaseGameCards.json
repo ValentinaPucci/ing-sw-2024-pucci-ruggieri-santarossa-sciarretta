@@ -783,7 +783,7 @@
 
     {
       "id": 40,
-      "type": "Gold",
+      "type": "Resource",
       "visibleCorners": 3,
       "color": "Purple",
       "NE": "Butterfly",

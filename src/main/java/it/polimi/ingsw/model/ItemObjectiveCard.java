@@ -1,9 +1,9 @@
 package it.polimi.ingsw.model;
 
 public class ItemObjectiveCard extends ObjectiveCard {
-    int num_feathers;
-    int num_potions;
-    int num_parchments;
+    private int num_feathers;
+    private int num_potions;
+    private int num_parchments;
 
     /**
      * @param id

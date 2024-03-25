@@ -1,10 +1,10 @@
 package it.polimi.ingsw.model;
 
 public class ResourceObjectiveCard extends ObjectiveCard {
-    int num_mushrooms;
-    int num_leaves;
-    int num_butterflies;
-    int num_wolves;
+    private int num_mushrooms;
+    private int num_leaves;
+    private int num_butterflies;
+    private int num_wolves;
 
     /**
      * @param id
