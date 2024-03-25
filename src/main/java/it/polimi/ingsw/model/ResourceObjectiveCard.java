@@ -14,7 +14,7 @@ public class ResourceObjectiveCard extends ObjectiveCard {
 
     @Override
     public int calculateScore(PersonalBoard personal_board) {
-        return personal_board.getNum_mushrooms() + personal_board.getNum_leaves();
+        return personal_board.getNum_mushrooms() + personal_board.getNum_leaves() + personal_board.getNum_wolves() + personal_board.getNum_butterflies();
     }
 
 }

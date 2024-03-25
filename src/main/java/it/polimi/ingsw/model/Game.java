@@ -116,8 +116,7 @@ public class Game {
 
     public void calculateFinalScores() {
         for(int i= 0; i<players.length - 1; i++)
-            final_scores[i] = players[i].getPersonalBoard().getPoints();
-
+            final_scores[i] = common_board.getPlayerPosition(i)+ players[i].getPersonalBoard().getPoints();
     }
 
     public void placeCard(ResourceCard card_chosen, PersonalBoard personal_board, Coordinate coordinate, ResourceCard already_placed_card) {

@@ -24,10 +24,10 @@ public class Player {
         this.starter_card = null;
     }
 
-    public void setObjectiveCard(ObjectiveCard chosen_objective) {//TODO: deck o no?
+    public void setObjectiveCard(ObjectiveCard chosen_objective) {
         this.chosen_objective = chosen_objective;
     }
-    public String getNickname() {//TODO: deck o no?
+    public String getNickname() {
         return this.nickname;
     }
 

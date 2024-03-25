@@ -84,7 +84,7 @@ public class CommonBoard {
     }
 
     // Method to get the position of a player
-    private int getPlayerPosition(int player_index) {
+    public int getPlayerPosition(int player_index) {
         for (CommonBoardNode node : board_nodes) {
             if (node.isPlayerPresent(player_index)) {
                 return node.getNodeNumber();

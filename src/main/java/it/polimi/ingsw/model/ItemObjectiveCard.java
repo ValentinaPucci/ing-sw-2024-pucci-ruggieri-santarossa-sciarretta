@@ -14,6 +14,6 @@ public class ItemObjectiveCard extends ObjectiveCard {
 
     @Override
     public int calculateScore(PersonalBoard personal_board) {
-        return personal_board.getNum_mushrooms() + personal_board.getNum_leaves();
+        return personal_board.getNum_feathers() + personal_board.getNum_potions() + personal_board.getNum_parchments();
     }
 }

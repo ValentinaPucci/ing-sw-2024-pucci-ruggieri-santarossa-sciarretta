@@ -9,7 +9,6 @@ public class PersonalBoard {
     private int dim1;
     private int dim2;
     private int points;
-    private int delta_points;
     private int num_mushrooms;
     private int num_leaves;
     private int num_butterflies;
@@ -30,7 +29,6 @@ public class PersonalBoard {
         }
 
         this.points = 0;
-        this.delta_points = 20;
         this.num_mushrooms = 0;
         this.num_leaves = 0;
         this.num_butterflies = 0;
@@ -55,7 +53,6 @@ public class PersonalBoard {
         }
 
         this.points = 0;
-        this.delta_points = 20;
         this.num_mushrooms = 0;
         this.num_leaves = 0;
         this.num_butterflies = 0;
@@ -81,7 +78,6 @@ public class PersonalBoard {
         }
 
         this.points = 0;
-        this.delta_points = 20;
         this.num_mushrooms = 0;
         this.num_leaves = 0;
         this.num_butterflies = 0;
@@ -90,8 +86,6 @@ public class PersonalBoard {
         this.num_feathers = 0;
         this.num_potions = 0;
     }
-
-    public int getDeltaPoints(){return delta_points;} //Used in Game
 
     /**
      * @param mushrooms_placed
@@ -149,7 +143,6 @@ public class PersonalBoard {
     public void updatePoints(int points_of_placed_card) {
         //Se piazzo carta oro che mi fa guadagnare punti, ma solo se rispetta i vincoli correttamente.
         this.points += points_of_placed_card;
-        this.delta_points = delta_points - points_of_placed_card;
     }
 
     public int getNum_mushrooms() {
@@ -191,6 +184,12 @@ public class PersonalBoard {
     public int getDim2() {
         return dim2;
     }
+
+    public int getDeltaPoints(){
+        //TODO: to define
+        return 0;
+    }
+
 
     /**
      * @param i
@@ -235,9 +234,6 @@ public class PersonalBoard {
             }
         }
     }
-
-
-
 
     /**
      * We assume that the game_card's corners have a specified board_coordinate,
