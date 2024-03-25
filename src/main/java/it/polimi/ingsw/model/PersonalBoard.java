@@ -1,14 +1,12 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.exceptions.IllegalMoveException;
-
 public class PersonalBoard {
-
-    public static final int BOARD_CENTER = 50;
     public Cell[][] board;
-    private int dim1;
-    private int dim2;
+
+    private final int dim1;
+    private final int dim2;
     private int points;
+    private int delta_points;
     private int num_mushrooms;
     private int num_leaves;
     private int num_butterflies;
@@ -29,6 +27,7 @@ public class PersonalBoard {
         }
 
         this.points = 0;
+        this.delta_points = 20;
         this.num_mushrooms = 0;
         this.num_leaves = 0;
         this.num_butterflies = 0;
@@ -53,6 +52,7 @@ public class PersonalBoard {
         }
 
         this.points = 0;
+        this.delta_points = 20;
         this.num_mushrooms = 0;
         this.num_leaves = 0;
         this.num_butterflies = 0;
@@ -78,6 +78,7 @@ public class PersonalBoard {
         }
 
         this.points = 0;
+        this.delta_points = 20;
         this.num_mushrooms = 0;
         this.num_leaves = 0;
         this.num_butterflies = 0;
@@ -86,6 +87,10 @@ public class PersonalBoard {
         this.num_feathers = 0;
         this.num_potions = 0;
     }
+
+    public int getDeltaPoints() {
+        return delta_points;
+    } //Used in Game
 
     /**
      * @param mushrooms_placed
@@ -143,6 +148,7 @@ public class PersonalBoard {
     public void updatePoints(int points_of_placed_card) {
         //Se piazzo carta oro che mi fa guadagnare punti, ma solo se rispetta i vincoli correttamente.
         this.points += points_of_placed_card;
+        this.delta_points = delta_points - points_of_placed_card;
     }
 
     public int getNum_mushrooms() {
@@ -178,18 +184,12 @@ public class PersonalBoard {
     }
 
     public int getDim1() {
-        return dim1;
+        return this.dim1;
     }
 
     public int getDim2() {
-        return dim2;
+        return this.dim2;
     }
-
-    public int getDeltaPoints(){
-        //TODO: to define
-        return 0;
-    }
-
 
     /**
      * @param i
@@ -201,7 +201,7 @@ public class PersonalBoard {
             for (int h = 0; h < 2; h++) {
                 if (board[i + k][j + h].is_full) {
                     if (!board[i + k][j + h].getCornerFromCell().is_visible
-                            || board[i + k][j + h].level > 2) {
+                            || board[i + k][j + h].level >= 2) {
                         return false;
                     }
                 }
@@ -223,17 +223,11 @@ public class PersonalBoard {
         for (int k = 0; k < 2; k++) {
             for (int h = 0; h < 2; h++) {
                 this.board[i + k][j + h].setCellAsFull(card.getCornerAt(k, h));
+                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
             }
         }
     }
 
-    public void bruteForcePlaceStarterCard(StarterCard card) {
-        for (int k = 0; k < 2; k++) {
-            for (int h = 0; h < 2; h++) {
-                this.board[BOARD_CENTER + k][BOARD_CENTER + h].setCellAsFull(card.getCornerAt(k, h));
-            }
-        }
-    }
 
     /**
      * We assume that the game_card's corners have a specified board_coordinate,
@@ -254,13 +248,13 @@ public class PersonalBoard {
         int i;
         int j;
 
-        Corner corner2 = game_card.getCornerAtNE();
+        Corner corner_aux = game_card.getCornerAtNE();
 
-        if (!corner2.is_visible)
+        if (!corner_aux.is_visible)
             throw new IllegalMoveException();
 
-        i = corner2.board_coordinate.getX();
-        j = corner2.board_coordinate.getY();
+        i = corner_aux.board_coordinate.getX();
+        j = corner_aux.board_coordinate.getY();
 
         /**
          * i + 1 is a technicality: the checker starts always
@@ -279,6 +273,7 @@ public class PersonalBoard {
         for (int k = 1; k >= 0; k--) {
             for (int h = 0; h < 2; h++) {
                 this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
+                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
             }
         }
     }
@@ -295,13 +290,13 @@ public class PersonalBoard {
         int i;
         int j;
 
-        Corner corner2 = game_card.getCornerAtSE();
+        Corner corner_aux = game_card.getCornerAtSE();
 
-        if (!corner2.is_visible)
+        if (!corner_aux.is_visible)
             throw new IllegalMoveException();
 
-        i = corner2.board_coordinate.getX();
-        j = corner2.board_coordinate.getY();
+        i = corner_aux.board_coordinate.getX();
+        j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i, j))
             throw new IllegalMoveException();
@@ -309,6 +304,7 @@ public class PersonalBoard {
         for (int k = 0; k < 2; k++) {
             for (int h = 0; h < 2; h++) {
                 this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
+                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
             }
         }
     }
@@ -325,13 +321,13 @@ public class PersonalBoard {
         int i;
         int j;
 
-        Corner corner2 = game_card.getCornerAtSW();
+        Corner corner_aux = game_card.getCornerAtSW();
 
-        if (!corner2.is_visible)
+        if (!corner_aux.is_visible)
             throw new IllegalMoveException();
 
-        i = corner2.board_coordinate.getX();
-        j = corner2.board_coordinate.getY();
+        i = corner_aux.board_coordinate.getX();
+        j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i, j - 1))
             throw new IllegalMoveException();
@@ -339,6 +335,7 @@ public class PersonalBoard {
         for (int k = 0; k < 2; k++) {
             for (int h = 1; h >= 0; h--) {
                 this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
+                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
             }
         }
     }
@@ -355,13 +352,13 @@ public class PersonalBoard {
         int i;
         int j;
 
-        Corner corner2 = game_card.getCornerAtNW();
+        Corner corner_aux = game_card.getCornerAtNW();
 
-        if (!corner2.is_visible)
+        if (!corner_aux.is_visible)
             throw new IllegalMoveException();
 
-        i = corner2.board_coordinate.getX();
-        j = corner2.board_coordinate.getY();
+        i = corner_aux.board_coordinate.getX();
+        j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i + 1, j - 1))
             throw new IllegalMoveException();
@@ -369,6 +366,7 @@ public class PersonalBoard {
         for (int k = 1; k >= 0; k--) {
             for (int h = 1; h >= 0; h--) {
                 this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
+                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
             }
         }
     }

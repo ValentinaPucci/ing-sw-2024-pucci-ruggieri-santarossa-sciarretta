@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enumerations.Orientation;
-
 public class ItemObjectiveCard extends ObjectiveCard {
     int num_feathers;
     int num_potions;

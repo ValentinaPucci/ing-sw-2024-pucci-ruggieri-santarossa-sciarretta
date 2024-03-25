@@ -1,4 +1,4 @@
-package it.polimi.ingsw.model.exceptions;
+package it.polimi.ingsw.model;
 
 public class IllegalMoveException extends RuntimeException {
     public IllegalMoveException() {
