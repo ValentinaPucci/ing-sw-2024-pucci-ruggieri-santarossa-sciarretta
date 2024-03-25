@@ -1,5 +1,9 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enumerations.Coordinate;
+import it.polimi.ingsw.model.enumerations.Item;
+import it.polimi.ingsw.model.enumerations.Resource;
+
 import java.util.Optional;
 import java.util.NoSuchElementException;
 
@@ -15,9 +19,7 @@ public class Corner {
     private Coordinate coordinate;
     private Optional<Resource> resource;
     private Optional<Item> item;
-    // Why is this attribute not private?
     public boolean is_visible;
-    // Why is this attribute not private?
     public ResourceCard reference_card;
 
     /**
@@ -50,7 +52,8 @@ public class Corner {
         this.item = item;
         this.is_visible = is_visible;
         this.reference_card = card;
-
+        this.board_coordinate = new BoardCellCoordinate(0, 0);
+        this.board_coordinate.setXY(coordinate);
     }
 
     // Set corner
@@ -74,6 +77,20 @@ public class Corner {
      */
     public Resource getResource() throws NoSuchElementException {
         return resource.get();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Corner corner = (Corner) obj;
+        if (this.is_visible && corner.is_visible) {
+            if (this.resource.isPresent() && corner.resource.isPresent()) {
+                return this.resource.get().equals(corner.resource.get());
+            } else {
+                return false;
+            }
+        }
+        else
+            return false;
     }
 
 }

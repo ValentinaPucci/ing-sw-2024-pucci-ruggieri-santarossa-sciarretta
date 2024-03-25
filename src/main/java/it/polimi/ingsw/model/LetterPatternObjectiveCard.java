@@ -1,5 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enumerations.Color;
+import it.polimi.ingsw.model.enumerations.Orientation;
+
 /**
  * The following class describe those objective cards that deal
  * with ** letter ** pattern recognition of cards with respect to the board configuration:

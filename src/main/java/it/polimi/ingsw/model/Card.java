@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
-public class Card {
+import it.polimi.ingsw.model.enumerations.Orientation;
+
+public abstract class Card {
     private int id;
     public Orientation orientation;
 
@@ -9,14 +11,8 @@ public class Card {
      */
     public Card(int id, Orientation orientation) {
         this.id = id;
-        this.orientation = this.ChooseOrientation();
-
+        this.orientation = orientation;
     }
-
-    public Orientation ChooseOrientation(){
-        return orientation;
-    }
-
 }
 
 

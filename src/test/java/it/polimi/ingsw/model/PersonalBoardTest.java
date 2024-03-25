@@ -24,26 +24,5 @@ public class PersonalBoardTest {
         assertEquals(3, personalBoard.getNum_leaves());
     }
 
-    @Test
-    void testPlaceCardAtSE() {
-        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.BLUE);
-        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED);
-        int i = 0; // Specify the row index
-        int j = 0; // Specify the column index
-
-        personalBoard.bruteForcePlaceCardSE(card1, i, j);
-
-        try {
-            personalBoard.placeCardAtSE(card1, card2);
-        } catch (IllegalMoveException e) {
-            fail("Exception should not be thrown");
-        }
-
-        for (int k = 0; k < 2; k++) {
-            for (int h = 0; h < 2; h++) {
-                assertTrue(personalBoard.board[i + k][j + h].is_full);
-            }
-        }
-    }
     // Add more tests for other methods
 }

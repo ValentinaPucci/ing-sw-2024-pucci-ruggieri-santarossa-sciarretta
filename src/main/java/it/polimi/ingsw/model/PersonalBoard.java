@@ -1,8 +1,11 @@
 package it.polimi.ingsw.model;
 
-public class PersonalBoard {
-    public Cell[][] board;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 
+public class PersonalBoard {
+
+    public static final int BOARD_CENTER = 50;
+    public Cell[][] board;
     private int dim1;
     private int dim2;
     private int points;
@@ -87,6 +90,8 @@ public class PersonalBoard {
         this.num_feathers = 0;
         this.num_potions = 0;
     }
+
+    public int getDeltaPoints(){return delta_points;} //Used in Game
 
     /**
      * @param mushrooms_placed
@@ -223,6 +228,17 @@ public class PersonalBoard {
         }
     }
 
+    public void bruteForcePlaceStarterCard(StarterCard card) {
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                this.board[BOARD_CENTER + k][BOARD_CENTER + h].setCellAsFull(card.getCornerAt(k, h));
+            }
+        }
+    }
+
+
+
+
     /**
      * We assume that the game_card's corners have a specified board_coordinate,
      *
@@ -307,13 +323,13 @@ public class PersonalBoard {
      * @ensures card_to_play is attached to another card, specifically in the SO corner
      * of the game_card
      */
-    public void placeCardAtSO(ResourceCard game_card, ResourceCard card_to_play)
+    public void placeCardAtSW(ResourceCard game_card, ResourceCard card_to_play)
             throws IllegalMoveException {
 
         int i;
         int j;
 
-        Corner corner2 = game_card.getCornerAtSO();
+        Corner corner2 = game_card.getCornerAtSW();
 
         if (!corner2.is_visible)
             throw new IllegalMoveException();
@@ -337,13 +353,13 @@ public class PersonalBoard {
      * @ensures card_to_play is attached to another card, specifically in the NO corner
      * of the game_card
      */
-    public void placeCardAtNO(ResourceCard game_card, ResourceCard card_to_play)
+    public void placeCardAtNW(ResourceCard game_card, ResourceCard card_to_play)
             throws IllegalMoveException {
 
         int i;
         int j;
 
-        Corner corner2 = game_card.getCornerAtNO();
+        Corner corner2 = game_card.getCornerAtNW();
 
         if (!corner2.is_visible)
             throw new IllegalMoveException();
