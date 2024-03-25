@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enumerations.Orientation;
-
 public class ResourceObjectiveCard extends ObjectiveCard {
     int num_mushrooms;
     int num_leaves;

@@ -315,7 +315,7 @@ public class PersonalBoard {
      * @ensures card_to_play is attached to another card, specifically in the SO corner
      * of the game_card
      */
-    public void placeCardAtSO(ResourceCard game_card, ResourceCard card_to_play)
+    public void placeCardAtSW(ResourceCard game_card, ResourceCard card_to_play)
             throws IllegalMoveException {
 
         int i;
@@ -346,7 +346,7 @@ public class PersonalBoard {
      * @ensures card_to_play is attached to another card, specifically in the NO corner
      * of the game_card
      */
-    public void placeCardAtNO(ResourceCard game_card, ResourceCard card_to_play)
+    public void placeCardAtNW(ResourceCard game_card, ResourceCard card_to_play)
             throws IllegalMoveException {
 
         int i;

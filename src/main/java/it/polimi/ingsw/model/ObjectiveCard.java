@@ -1,7 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enumerations.Orientation;
-
 public abstract class ObjectiveCard extends Card {
     private int points;
 

@@ -1,8 +1,5 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enumerations.Color;
-import it.polimi.ingsw.model.enumerations.Orientation;
-
 /**
  * The following class describe those objective cards that deal
  * with ** letter ** pattern recognition of cards with respect to the board configuration:
@@ -48,7 +45,7 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
 
         aux_personal_board.bruteForcePlaceCardSE(card1, 0, 0);
         aux_personal_board.bruteForcePlaceCardSE(card3, 3, 1);
-        aux_personal_board.placeCardAtNO(card3, card2);
+        aux_personal_board.placeCardAtNW(card3, card2);
     }
 
     public void init_obj_J() {
@@ -70,7 +67,7 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
 
         aux_personal_board.bruteForcePlaceCardSE(card1, 0, 1);
         aux_personal_board.bruteForcePlaceCardSE(card3, 3, 0);
-        aux_personal_board.placeCardAtSO(card1, card2);
+        aux_personal_board.placeCardAtSW(card1, card2);
     }
 
     public void init_obj_q() {
