@@ -6,6 +6,10 @@ package it.polimi.ingsw.model;
  * description.
  */
 public class BoardCellCoordinate {
+
+    /**
+     * these are the REAL indexes of the matrix that represents the board
+     */
     private int x;
     private int y;
 
@@ -22,25 +26,9 @@ public class BoardCellCoordinate {
         this.y = y;
     }
 
-    public void setXY(Coordinate coord) {
-        switch (coord) {
-            case NE:
-                this.setX(0);
-                this.setY(1);
-                break;
-            case SE:
-                this.setX(1);
-                this.setY(1);
-                break;
-            case SW:
-                this.setX(1);
-                this.setY(0);
-                break;
-            case NW:
-                this.setX(0);
-                this.setY(0);
-                break;
-        }
+    public void setXY(int x, int y) {
+        this.setX(x);
+        this.setY(y);
     }
 
     public int getX() {

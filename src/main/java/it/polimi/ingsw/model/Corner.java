@@ -1,11 +1,11 @@
 package it.polimi.ingsw.model;
 
-import java.util.Optional;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * This class is thought to be complementary to the class Cell.
- * Indeed Corner class has to interact in some way with Cell class.
+ * Indeed, Corner class has to interact in some way with Cell class.
  * Moreover, the importance of this class is mainly related to the fact
  * that we need to 'track' the resources and the items which are present
  * inside the PersonalBoard.
@@ -24,6 +24,11 @@ public class Corner {
      */
     public BoardCellCoordinate board_coordinate;
 
+    public Corner() {
+        this.is_visible = true;
+        this.board_coordinate = new BoardCellCoordinate(0, 0);
+    }
+
     /**
      *
      * @param board_coordinate
@@ -33,41 +38,41 @@ public class Corner {
         this.is_visible = true;
     }
 
-    /**
-     *
-     * @param coordinate
-     * @param resource
-     * @param item
-     * @param is_visible
-     * @param card
-     */
-    public Corner(Coordinate coordinate, Optional<Resource> resource, Optional<Item> item,
-                  boolean is_visible, ResourceCard card) {
-        this.coordinate = coordinate;
-        this.resource = resource;
-        this.item = item;
-        this.is_visible = is_visible;
-        this.reference_card = card;
-        this.board_coordinate = new BoardCellCoordinate(0, 0);
-        this.board_coordinate.setXY(coordinate);
-    }
+//    /**
+//     * @param coordinate
+//     * @param resource
+//     * @param item
+//     * @param is_visible
+//     * @param card
+//     */
+////    public Corner(Coordinate coordinate, Optional<Resource> resource, Optional<Item> item,
+////                  boolean is_visible, ResourceCard card) {
+////        this.coordinate = coordinate;
+////        this.resource = resource;
+////        this.item = item;
+////        this.is_visible = is_visible;
+////        this.reference_card = card;
+////        this.board_coordinate = new BoardCellCoordinate(0, 0);
+////        this.board_coordinate.setXY(coordinate);
+////    }
 
     // Set corner
 // Crea un set resource. per settare resource e poi crea anche un set item per settare item.
-    public void setCornerResource(Resource resource){
+    public void setCornerResource(Resource resource) {
         this.resource = Optional.ofNullable(resource);
     }
 
-    public void setCornerItem(Item item){
+    public void setCornerItem(Item item) {
         this.item = Optional.ofNullable(item);
     }
 
-    public void setBoard_coordinate(Coordinate coord) {
-        this.board_coordinate.setXY(coord);
-    }
+//    public void setBoard_coordinate(Coordinate coord) {
+//        this.board_coordinate.setXY(coord);
+//    }
 
     /**
      * to check
+     *
      * @return
      * @throws NoSuchElementException
      */
@@ -84,8 +89,7 @@ public class Corner {
             } else {
                 return false;
             }
-        }
-        else
+        } else
             return false;
     }
 
