@@ -54,19 +54,20 @@ public class Game {
 
     public void gameFlow(){
         initializeGame();
-        for(Player player: player_queue){
+        for(Player player : player_queue){
             player.playStarterCard();
         }
         while (!isGameOver()) {
             while (!isLastTurn()) {
                 // Loop through players and handle each player's turn
                 for (Player player : player_queue) {
+                    int points_temp = player.getPersonalBoard().getPoints();
                     placeCard(player.getChosenGameCard(), player.getPersonalBoard(), coordinate, already_placed_card);
-                    PersonalBoard current_board = player.getPersonalBoard();
-                    int delta = current_board.getDeltaPoints();
+                    int current_points = player.getPersonalBoard().getPoints();
+                    int delta = current_points - points_temp;
                     common_board.movePlayer(player.getId(), delta);
                     player.addToHand(drawCard(from_where_draw));
-                    if(common_board.getPartialWinner() != -1)
+                    if (common_board.getPartialWinner() != -1)
                         last_turn = true;
                 }
             }
@@ -112,10 +113,10 @@ public class Game {
         }
     }
 
-
+    // TODO: Compute correctly the final scores using ScoreStrategy pattern
     public void calculateFinalScores() {
-        for(int i= 0; i<players.length - 1; i++)
-            final_scores[i] = common_board.getPlayerPosition(i)+ players[i].getPersonalBoard().getPoints();
+        for(int i = 0; i < players.length - 1; i++)
+            final_scores[i] = common_board.getPlayerPosition(i) + players[i].getPersonalBoard().getPoints();
     }
 
     public void placeCard(ResourceCard card_chosen, PersonalBoard personal_board, Coordinate coordinate, ResourceCard already_placed_card) {
@@ -167,7 +168,7 @@ public class Game {
         return last_turn;
     }
 
-    public void lastTurn(){
+    public void lastTurn() {
         for (int i = 0; i < num_players; i++) {
             Player currentPlayer = player_queue.poll();
             //il giocatore gioca
@@ -176,7 +177,7 @@ public class Game {
         game_over = true;
     }
 
-    public void secondLastTurn(){
+    public void secondLastTurn() {
         for (int i = common_board.getPartialWinner(); i < num_players; i++) {
             Player currentPlayer = player_queue.poll();
             //il giocatore gioca
@@ -198,7 +199,7 @@ public class Game {
         int temp_score = 0;
         temp_winner = players[0];
 
-        for(int i= 0; i<players.length - 1; i++)
+        for(int i = 0; i < players.length - 1; i++)
             if (final_scores[i] > temp_score) {
                 temp_score = final_scores[i];
                 temp_winner = players[i];

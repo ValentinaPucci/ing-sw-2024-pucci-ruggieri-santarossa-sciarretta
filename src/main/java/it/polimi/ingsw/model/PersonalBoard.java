@@ -143,10 +143,11 @@ public class PersonalBoard {
     // Sarà necesario anche aggiornare i punti, ma servono i controlli sulla carta da piazzare.
 
     /**
+     * Note that this method has to be overriden by the sublcasses
+     *
      * @param points_of_placed_card
      */
     public void updatePoints(int points_of_placed_card) {
-        //Se piazzo carta oro che mi fa guadagnare punti, ma solo se rispetta i vincoli correttamente.
         this.points += points_of_placed_card;
         this.delta_points = delta_points - points_of_placed_card;
     }
@@ -191,7 +192,98 @@ public class PersonalBoard {
         return this.dim2;
     }
 
+    public void addResource(Resource resource) {
+        switch (resource) {
+            case LEAF:
+                this.num_leaves++;
+                break;
+            case MUSHROOM:
+                this.num_mushrooms++;
+                break;
+            case BUTTERFLY:
+                this.num_butterflies++;
+                break;
+            case WOLF:
+                this.num_wolves++;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void addFixedResource(Color color) {
+        switch (color) {
+            case GREEN:
+                this.num_leaves++;
+                break;
+            case RED:
+                this.num_mushrooms++;
+                break;
+            case PURPLE:
+                this.num_butterflies++;
+                break;
+            case BLUE:
+                this.num_wolves++;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void removeResource(Resource resource) {
+        switch (resource) {
+            case LEAF:
+                this.num_leaves--;
+                break;
+            case MUSHROOM:
+                this.num_mushrooms--;
+                break;
+            case BUTTERFLY:
+                this.num_butterflies--;
+                break;
+            case WOLF:
+                this.num_wolves--;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void addItem(Item item) {
+        switch (item) {
+            case PARCHMENT:
+                this.num_parchments++;
+                break;
+            case FEATHER:
+                this.num_feathers++;
+                break;
+            case POTION:
+                this.num_potions++;
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void removeItem(Item item) {
+        switch (item) {
+            case PARCHMENT:
+                this.num_parchments--;
+                break;
+            case FEATHER:
+                this.num_feathers--;
+                break;
+            case POTION:
+                this.num_potions--;
+                break;
+            default:
+                break;
+        }
+    }
+
     /**
+     * Note that this method has to be overriden by the sublcasses
+     *
      * @param i
      * @param j
      * @return true iff the planed move is doable
@@ -261,7 +353,7 @@ public class PersonalBoard {
          * form the position (0, 0) of the submatrix 2 x 2 it is
          * analyzing.
          */
-        if (!subMatrixCellChecker(i + 1, j))
+        if (!subMatrixCellChecker(i - 1, j))
             throw new IllegalMoveException();
 
         /**
@@ -270,12 +362,7 @@ public class PersonalBoard {
          * because we know every corner in a given cell. Hence, we know the resources
          * and/or the items in every cell.
          */
-        for (int k = 1; k >= 0; k--) {
-            for (int h = 0; h < 2; h++) {
-                this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
-                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
-            }
-        }
+        generalUpdateRoutine(i - 1, j, this.board, card_to_play);
     }
 
     /**
@@ -301,12 +388,7 @@ public class PersonalBoard {
         if (!subMatrixCellChecker(i, j))
             throw new IllegalMoveException();
 
-        for (int k = 0; k < 2; k++) {
-            for (int h = 0; h < 2; h++) {
-                this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
-                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
-            }
-        }
+        generalUpdateRoutine(i, j, this.board, card_to_play);
     }
 
     /**
@@ -332,12 +414,7 @@ public class PersonalBoard {
         if (!subMatrixCellChecker(i, j - 1))
             throw new IllegalMoveException();
 
-        for (int k = 0; k < 2; k++) {
-            for (int h = 1; h >= 0; h--) {
-                this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
-                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
-            }
-        }
+        generalUpdateRoutine(i , j - 1, this.board, card_to_play);
     }
 
     /**
@@ -360,15 +437,36 @@ public class PersonalBoard {
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
-        if (!subMatrixCellChecker(i + 1, j - 1))
+        if (!subMatrixCellChecker(i - 1, j - 1))
             throw new IllegalMoveException();
 
-        for (int k = 1; k >= 0; k--) {
-            for (int h = 1; h >= 0; h--) {
-                this.board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
-                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
-            }
-        }
+        generalUpdateRoutine(i - 1, j - 1, this.board, card_to_play);
     }
 
+    public void generalUpdateRoutine(int i, int j, Cell[][] board, ResourceCard card_to_play) {
+
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+
+                if (board[i + k][j + h].is_full) {
+                    board[i + k][j + h].getCornerFromCell().resource.ifPresent(res -> this.removeResource(res));
+                    board[i + k][j + h].getCornerFromCell().item.ifPresent(it -> this.removeItem(it));
+                }
+
+                // Effective cell-setter
+                board[i + k][j + h].setCellAsFull(card_to_play.getCornerAt(k, h));
+                // Effective coordinate-setter
+                board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
+
+                if (card_to_play.orientation == Orientation.FRONT) {
+                    board[i + k][j + h].getCornerFromCell().resource.ifPresent(res -> this.addResource(res));
+                    board[i + k][j + h].getCornerFromCell().item.ifPresent(it -> this.addItem(it));
+                }
+            }
+        }
+
+        if (card_to_play.orientation == Orientation.BACK)
+            addFixedResource(card_to_play.color);
+        this.updatePoints(card_to_play.points);
+    }
 }

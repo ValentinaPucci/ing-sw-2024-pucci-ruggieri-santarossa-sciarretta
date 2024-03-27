@@ -13,8 +13,8 @@ import java.util.Optional;
 public class Corner {
 
     private Coordinate coordinate;
-    private Optional<Resource> resource;
-    private Optional<Item> item;
+    public Optional<Resource> resource;
+    public Optional<Item> item;
     public boolean is_visible;
     public ResourceCard reference_card;
 
@@ -36,9 +36,8 @@ public class Corner {
     public Corner(BoardCellCoordinate board_coordinate) {
         this.board_coordinate = board_coordinate;
         this.is_visible = true;
-    }
-    public Corner(){
-        this.is_visible = false;
+        this.resource = Optional.empty();
+        this.item = Optional.empty();
     }
 
 //    /**
@@ -81,6 +80,10 @@ public class Corner {
      */
     public Resource getResource() throws NoSuchElementException {
         return resource.get();
+    }
+
+    public Item getItem() throws NoSuchElementException {
+        return item.get();
     }
 
     @Override
