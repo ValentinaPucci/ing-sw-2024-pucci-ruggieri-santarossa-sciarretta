@@ -5,10 +5,6 @@ import java.util.List;
 import java.util.Optional;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.model.enumerations.Color;
-import it.polimi.ingsw.model.enumerations.Item;
-import it.polimi.ingsw.model.enumerations.Orientation;
-import it.polimi.ingsw.model.enumerations.Resource;
 
 import java.io.File;
 

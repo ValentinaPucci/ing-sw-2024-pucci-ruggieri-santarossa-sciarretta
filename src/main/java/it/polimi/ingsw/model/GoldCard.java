@@ -36,14 +36,8 @@ public class GoldCard extends ResourceCard {
         this.wolf_required = wolf_required;
     }
 
-    /**
-     * 'filler' methods must be used every time we have to 'populate' a certain
-     * data structures
-     * @param resources
-     */
-//    public void fillResourcesRequired(Set<Resource> resources) {
-//        resources_required.addAll(resources);
-//    }
+    // TODO: override submatrixChecker (to recognise other illegal moves)
+    // TODO: override updatePoints to adapt it to this class
 
 }
 

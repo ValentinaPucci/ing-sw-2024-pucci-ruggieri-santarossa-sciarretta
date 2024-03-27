@@ -3,11 +3,14 @@ package it.polimi.ingsw.model;
 public class ResourceCard extends Card {
 
     // TODO: you always have to consider the orientation of the card...
-    private int score;
+    public int points;
     public Color color;
     private Corner[][] corners;
 
     /**
+     * Remark: we first initialize the points at 0 for every card
+     * without distinguishing between front or back orientation
+     * without loose of generality.
      *
      * @param id
      * @param orientation
@@ -15,8 +18,9 @@ public class ResourceCard extends Card {
      */
     public ResourceCard(int id, Orientation orientation, Color color) {
         super(id, orientation);
-        this.score = 0;
+        this.points = 0;
         this.color = color;
+
         this.corners = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
@@ -27,12 +31,12 @@ public class ResourceCard extends Card {
 
     /**
      * Second constructor to initialize the cards and the respective corners. We do not need a setter method at the moment.
-     * @param score
+     * @param points
      * @param actual_corners
      */
-    public ResourceCard(int id, Orientation orientation, Color color,int score , Corner[][] actual_corners) {
+    public ResourceCard(int id, Orientation orientation, Color color, int points, Corner[][] actual_corners) {
         super(id, orientation);
-        this.score = score;
+        this.points = points;
         this.color = color;
 
         this.corners = new Corner[2][2];
