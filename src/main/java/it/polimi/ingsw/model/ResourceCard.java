@@ -100,12 +100,12 @@ public class ResourceCard extends Card {
 
     @Override
     public String toString() {
-            return "ResourceCard{" +
-                    "id=" + super.id+
-                    ", orientation=" + orientation +
-                    ", color=" + color +
-                    // Add other attributes here...
-                    '}';
-        }
+        return "ResourceCard{" +
+            "id=" + super.id+
+            ", orientation=" + orientation +
+            ", color=" + color +
+            // Add other attributes here...
+            '}';
+    }
 
 }

@@ -105,7 +105,7 @@ public  class CardsCollection {
                     }
 
                     GoldCard gold_card = new GoldCard(id, orientation, color);
-                    gold_card.setGoldCard(item_for_score, CoverCorners, MushroomRequired, LeafRequired, ButterflyRequired, WolfRequired);
+                    //gold_card.setGoldCard(item_for_score, CoverCorners, MushroomRequired, LeafRequired, ButterflyRequired, WolfRequired);
                     this.addCard(gold_card);
                 }
             }
@@ -236,10 +236,14 @@ public  class CardsCollection {
                 } else {
                     actual_corners_back[1][1].setCornerResource(Resource.valueOf(back_SO.toUpperCase()));}
 
-                // Remark: read carefully the Starter Card class. Here we create at the same moment two cards: the first that is the front, and the second one is the back of the same card.
+                // Remark: read carefully the Starter Card class. Here we create at the same moment two cards:
+                // the first that is the front, and the second one is the back of the same card.
                 // But they are two different objects, they have in common the same id!
 
-                card_front.SetStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()), Resource.valueOf(permanent_resource2.toUpperCase()), Resource.valueOf(permanent_resource3.toUpperCase()), actual_corners_front);
+                card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
+                        Resource.valueOf(permanent_resource2.toUpperCase()),
+                        Resource.valueOf(permanent_resource3.toUpperCase()),
+                        actual_corners_front);
                 card_back.setStarterCardBack(actual_corners_back);
             }
             System.out.println("Starter cards Deck populated successfully.");

@@ -5,5 +5,4 @@ public enum Resource {
     MUSHROOM,
     BUTTERFLY,
     WOLF,
-    EMPTY
 }

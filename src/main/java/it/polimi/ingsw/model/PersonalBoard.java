@@ -143,13 +143,38 @@ public class PersonalBoard {
     // Sarà necesario anche aggiornare i punti, ma servono i controlli sulla carta da piazzare.
 
     /**
-     * Note that this method has to be overriden by the sublcasses
-     *
-     * @param points_of_placed_card
+     * @param card
      */
-    public void updatePoints(int points_of_placed_card) {
-        this.points += points_of_placed_card;
-        this.delta_points = delta_points - points_of_placed_card;
+    public void updatePoints(ResourceCard card) {
+        this.points += card.points;
+        this.delta_points -= card.points;
+    }
+
+    /**
+     * @param card
+     */
+    public void updatePoints(GoldCard card) {
+
+        if (card.getIsFeatherRequired())
+            this.points += card.points * this.num_feathers;
+        else if (card.getIsParchmentRequired())
+            this.points += card.points * this.num_parchments;
+        else if (card.getIsPotionRequired())
+            this.points += card.points * this.num_potions;
+        else if (card.getIsCornerCoverageRequired()) {
+            int darken_corners = 0;
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    int k = card.getCornerAt(i, j).board_coordinate.getX();
+                    int h = card.getCornerAt(i, j).board_coordinate.getY();
+                    if (this.board[k][h].level == 2) {
+                            darken_corners++;
+                    }
+                }
+            }
+            this.points += card.points * darken_corners;
+        }
+
     }
 
     public int getNum_mushrooms() {
@@ -320,6 +345,21 @@ public class PersonalBoard {
         }
     }
 
+    // specific method for starter cards
+    public void bruteForcePlaceCardSE(StarterCard card, int i, int j) {
+
+        card.front_resource1.ifPresent(res -> this.addResource(res));
+        card.front_resource2.ifPresent(res -> this.addResource(res));
+        card.front_resource3.ifPresent(res -> this.addResource(res));
+
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                this.board[i + k][j + h].setCellAsFull(card.getCornerAt(k, h));
+                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
+            }
+        }
+    }
+
 
     /**
      * We assume that the game_card's corners have a specified board_coordinate,
@@ -363,6 +403,44 @@ public class PersonalBoard {
          * and/or the items in every cell.
          */
         generalUpdateRoutine(i - 1, j, this.board, card_to_play);
+        this.updatePoints(card_to_play);
+    }
+
+    /**
+     * @Overloading
+     *
+     * We assume that the game_card's corners have a specified board_coordinate,
+     *
+     * @param game_card    is the card already on the PersonalBoard
+     * @param card_to_play is the card to put on the PersonalBoard
+     * @ensures card_to_play is attached to another card, specifically in the NE corner
+     * of the game_card
+     */
+    public void placeCardAtNE(ResourceCard game_card, GoldCard card_to_play)
+            throws IllegalMoveException {
+
+        int i;
+        int j;
+
+        Corner corner_aux = game_card.getCornerAtNE();
+
+        if (!corner_aux.is_visible)
+            throw new IllegalMoveException();
+
+        if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
+                card_to_play.getLeafRequired() > this.num_leaves ||
+                card_to_play.getButterflyRequired() > this.num_butterflies ||
+                card_to_play.getWolfRequired() > this.num_wolves)
+            throw new IllegalMoveException();
+
+        i = corner_aux.board_coordinate.getX();
+        j = corner_aux.board_coordinate.getY();
+
+        if (!subMatrixCellChecker(i - 1, j))
+            throw new IllegalMoveException();
+
+        generalUpdateRoutine(i - 1, j, this.board, card_to_play);
+        this.updatePoints(card_to_play);
     }
 
     /**
@@ -389,6 +467,34 @@ public class PersonalBoard {
             throw new IllegalMoveException();
 
         generalUpdateRoutine(i, j, this.board, card_to_play);
+        this.updatePoints(card_to_play);
+    }
+
+    public void placeCardAtSE(ResourceCard game_card, GoldCard card_to_play)
+            throws IllegalMoveException {
+
+        int i;
+        int j;
+
+        Corner corner_aux = game_card.getCornerAtNE();
+
+        if (!corner_aux.is_visible)
+            throw new IllegalMoveException();
+
+        if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
+                card_to_play.getLeafRequired() > this.num_leaves ||
+                card_to_play.getButterflyRequired() > this.num_butterflies ||
+                card_to_play.getWolfRequired() > this.num_wolves)
+            throw new IllegalMoveException();
+
+        i = corner_aux.board_coordinate.getX();
+        j = corner_aux.board_coordinate.getY();
+
+        if (!subMatrixCellChecker(i, j))
+            throw new IllegalMoveException();
+
+        generalUpdateRoutine(i, j, this.board, card_to_play);
+        this.updatePoints(card_to_play);
     }
 
     /**
@@ -415,6 +521,34 @@ public class PersonalBoard {
             throw new IllegalMoveException();
 
         generalUpdateRoutine(i , j - 1, this.board, card_to_play);
+        this.updatePoints(card_to_play);
+    }
+
+    public void placeCardAtSW(ResourceCard game_card, GoldCard card_to_play)
+            throws IllegalMoveException {
+
+        int i;
+        int j;
+
+        Corner corner_aux = game_card.getCornerAtNE();
+
+        if (!corner_aux.is_visible)
+            throw new IllegalMoveException();
+
+        if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
+                card_to_play.getLeafRequired() > this.num_leaves ||
+                card_to_play.getButterflyRequired() > this.num_butterflies ||
+                card_to_play.getWolfRequired() > this.num_wolves)
+            throw new IllegalMoveException();
+
+        i = corner_aux.board_coordinate.getX();
+        j = corner_aux.board_coordinate.getY();
+
+        if (!subMatrixCellChecker(i, j - 1))
+            throw new IllegalMoveException();
+
+        generalUpdateRoutine(i, j - 1, this.board, card_to_play);
+        this.updatePoints(card_to_play);
     }
 
     /**
@@ -441,6 +575,34 @@ public class PersonalBoard {
             throw new IllegalMoveException();
 
         generalUpdateRoutine(i - 1, j - 1, this.board, card_to_play);
+        this.updatePoints(card_to_play);
+    }
+
+    public void placeCardAtNW(ResourceCard game_card, GoldCard card_to_play)
+            throws IllegalMoveException {
+
+        int i;
+        int j;
+
+        Corner corner_aux = game_card.getCornerAtNE();
+
+        if (!corner_aux.is_visible)
+            throw new IllegalMoveException();
+
+        if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
+                card_to_play.getLeafRequired() > this.num_leaves ||
+                card_to_play.getButterflyRequired() > this.num_butterflies ||
+                card_to_play.getWolfRequired() > this.num_wolves)
+            throw new IllegalMoveException();
+
+        i = corner_aux.board_coordinate.getX();
+        j = corner_aux.board_coordinate.getY();
+
+        if (!subMatrixCellChecker(i - 1, j - 1))
+            throw new IllegalMoveException();
+
+        generalUpdateRoutine(i - 1, j - 1, this.board, card_to_play);
+        this.updatePoints(card_to_play);
     }
 
     public void generalUpdateRoutine(int i, int j, Cell[][] board, ResourceCard card_to_play) {
@@ -467,6 +629,6 @@ public class PersonalBoard {
 
         if (card_to_play.orientation == Orientation.BACK)
             addFixedResource(card_to_play.color);
-        this.updatePoints(card_to_play.points);
     }
+
 }

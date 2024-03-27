@@ -4,10 +4,11 @@ import java.util.Optional;
 
 public class GoldCard extends ResourceCard {
 
-    // Attributes to calculate the score based on items or darken coordinates on the personal board;
-    private Optional<Item> item_for_score;
-    // 0=false, 1=true, the card has the darken_items requirements to calculate the score.
-    private int coordinate_for_score;
+
+    private boolean isCornerCoverageRequired;
+    private boolean isPotionRequired;
+    private boolean isFeatherRequired;
+    private boolean isParchmentRequired;
     private int mushroom_required;
     private int leaf_required;
     private int butterfly_required;
@@ -23,20 +24,67 @@ public class GoldCard extends ResourceCard {
     }
 
     /**
-     * Setter method for GoldCard.
-     * @param item_for_score
-     * @param coordinate_for_score
+     *
+     * @param mushroom_required
+     * @param leaf_required
+     * @param butterfly_required
+     * @param wolf_required
+     * @param isCornerCoverageRequired
+     * @param isPotionRequired
+     * @param isFeatherRequired
+     * @param isParchmentRequired
      */
-    public void setGoldCard(Optional<Item> item_for_score, int coordinate_for_score, int mushroom_required, int leaf_required, int butterfly_required, int wolf_required) {
-        this.item_for_score = item_for_score;
-        this.coordinate_for_score = coordinate_for_score;
+    public void setGoldCard(int mushroom_required,
+                            int leaf_required,
+                            int butterfly_required,
+                            int wolf_required,
+                            boolean isCornerCoverageRequired,
+                            boolean isPotionRequired,
+                            boolean isFeatherRequired,
+                            boolean isParchmentRequired) {
         this.mushroom_required = mushroom_required;
         this.leaf_required = leaf_required;
         this.butterfly_required = butterfly_required;
         this.wolf_required = wolf_required;
+        this.isCornerCoverageRequired = isCornerCoverageRequired;
+        this.isPotionRequired = isPotionRequired;
+        this.isFeatherRequired = isFeatherRequired;
+        this.isParchmentRequired = isParchmentRequired;
     }
 
-    // TODO: override submatrixChecker (to recognise other illegal moves)
+    public boolean getIsCornerCoverageRequired() {
+        return isCornerCoverageRequired;
+    }
+
+    public boolean getIsPotionRequired() {
+        return isPotionRequired;
+    }
+
+    public boolean getIsFeatherRequired() {
+        return isFeatherRequired;
+    }
+
+    public boolean getIsParchmentRequired() {
+        return isParchmentRequired;
+    }
+
+    public int getMushroomRequired() {
+        return mushroom_required;
+    }
+
+    public int getLeafRequired() {
+        return leaf_required;
+    }
+
+    public int getButterflyRequired() {
+        return butterfly_required;
+    }
+
+    public int getWolfRequired() {
+        return wolf_required;
+    }
+
+
     // TODO: override updatePoints to adapt it to this class
 
 }
