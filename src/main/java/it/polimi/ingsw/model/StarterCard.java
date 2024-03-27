@@ -1,12 +1,14 @@
 package it.polimi.ingsw.model;
 
+import java.util.Optional;
+
 public class StarterCard extends Card {
-    public static final int STARTER_CARD_COORDINATE = 50;
-    private Resource front_resource1;
-    private Resource front_resource2;
-    private Resource front_resource3;
-    private Corner[][] back_corners;
-    private Orientation orientation;
+    public static final int STARTER_CARD_COORDINATE = 500;
+    public Optional<Resource> front_resource1;
+    public Optional<Resource> front_resource2;
+    public Optional<Resource> front_resource3;
+    public Corner[][] corners;
+    public Orientation orientation;
 
     /**
      *
@@ -15,10 +17,16 @@ public class StarterCard extends Card {
      */
     public StarterCard(int id, Orientation orientation) {
         super(id, orientation);
-        this.front_resource1 = null;
-        this.front_resource2 = null;
-        this.front_resource3 = null;
-        this.back_corners = new Corner[4][4];
+        this.front_resource1 = Optional.empty();
+        this.front_resource2 = Optional.empty();
+        this.front_resource3 = Optional.empty();
+
+        this.corners = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                corners[i][j] = new Corner(new BoardCellCoordinate(i, j));
+            }
+        }
     }
 
     /**
@@ -26,35 +34,28 @@ public class StarterCard extends Card {
      * @param resource1
      * @param resource2
      */
-    public void SetStarterCardFront(Resource resource1, Resource resource2, Resource resource3, Corner[][] actual_corners){
-        this.front_resource1 = resource1;
-        this.front_resource2 = resource2;
-        this.front_resource3 = resource3;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                this.back_corners[i][j] = actual_corners[i][j];
+    public void setStarterCardFront(Resource resource1, Resource resource2, Resource resource3, Corner[][] actual_corners){
+        this.front_resource1 = Optional.ofNullable(resource1);
+        this.front_resource2 = Optional.ofNullable(resource1);
+        this.front_resource3 = Optional.ofNullable(resource1);
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                this.corners[i][j] = actual_corners[i][j];
             }
         }
     }
 
-    /**
-     *
-     * @param actual_corners
-     */
-    public void setStarterCardBack(Corner[][] actual_corners) {
-        this.front_resource1 = null;
-        this.front_resource2 = null;
-        this.front_resource3 = null;
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                this.back_corners[i][j] = actual_corners[i][j];
+    public void setStarterCardBack(Corner[][] actual_corners){
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                this.corners[i][j] = actual_corners[i][j];
             }
         }
     }
 
 
     public Corner getCornerAtNE () {
-        return back_corners[0][1];
+        return corners[0][1];
     }
 
     /**
@@ -62,7 +63,7 @@ public class StarterCard extends Card {
      * @return SE corner
      */
     public Corner getCornerAtSE () {
-        return back_corners[1][1];
+        return corners[1][1];
     }
 
     /**
@@ -70,7 +71,7 @@ public class StarterCard extends Card {
      * @return SO corner
      */
     public Corner getCornerAtSW () {
-        return back_corners[1][0];
+        return corners[1][0];
     }
 
     /**
@@ -78,7 +79,7 @@ public class StarterCard extends Card {
      * @return NO corner
      */
     public Corner getCornerAtNW () {
-        return back_corners[0][0];
+        return corners[0][0];
     }
 
     public Corner getCornerAt(int i, int j) {

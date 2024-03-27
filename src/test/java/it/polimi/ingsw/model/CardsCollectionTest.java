@@ -30,7 +30,7 @@ public class CardsCollectionTest {
     @Test
     public void testPopulateDeck() {
         // Assume that `cards.json` is a valid JSON file in the `src/test/resources` directory
-        String jsonFilePath = "...ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseGameCards.json";
+        String jsonFilePath = "ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseGameCards.json";
 
         int initialSize = cardsCollection.size();
 
