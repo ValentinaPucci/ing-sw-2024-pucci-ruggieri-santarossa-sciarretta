@@ -23,6 +23,10 @@ public class GoldCard extends ResourceCard {
         super(id, orientation, color);
     }
 
+    public GoldCard(int id, Orientation orientation, Color color, int points, Corner[][] actual_corners) {
+        super(id, orientation, color, points, actual_corners);
+    }
+
     /**
      *
      * @param mushroom_required

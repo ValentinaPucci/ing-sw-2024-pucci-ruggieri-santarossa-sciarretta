@@ -96,8 +96,8 @@ public class ResourceCard extends Card {
         else
             return this.getCornerAtSE();
     }
-    // To print output.
 
+    // To print output.
     @Override
     public String toString() {
         return "ResourceCard{" +
