@@ -9,7 +9,7 @@ public class PersonalBoardTest {
 
     @BeforeEach
     public void setup() {
-        personalBoard = new PersonalBoard(1001);
+        personalBoard = new PersonalBoard(1000);
     }
 
     @Test
@@ -161,7 +161,7 @@ public class PersonalBoardTest {
         Corner[][] filledCorner = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                filledCorner[i][j] = new Corner(new BoardCellCoordinate(0, 0));
+                filledCorner[i][j] = new Corner(new BoardCellCoordinate(i, j));
                 filledCorner[i][j].setCornerResource(Resource.MUSHROOM);
             }
         }
@@ -203,6 +203,64 @@ public class PersonalBoardTest {
 
         assertEquals(7, personalBoard.getNum_mushrooms());
     }
+
+    @Test
+    void testGoldCardPointsUpdate() {
+
+        Corner[][] filledCorner1 = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(0, 0));
+                filledCorner1[i][j].setCornerResource(Resource.MUSHROOM);
+            }
+        }
+
+        Corner[][] filledCorner2 = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                filledCorner2[i][j] = new Corner(new BoardCellCoordinate(0, 0));
+                filledCorner2[i][j].setCornerResource(Resource.LEAF);
+            }
+        }
+
+        personalBoard.addItem(Item.POTION);
+        personalBoard.addItem(Item.POTION);
+
+        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.BLUE);
+        GoldCard card2 = new GoldCard(2, Orientation.FRONT, Color.RED, 2, filledCorner1);
+        GoldCard card3 = new GoldCard(3, Orientation.FRONT, Color.RED, 3, filledCorner2);
+
+        card2.setGoldCard(0, 0, 0, 0, true, false, false, false);
+        card3.setGoldCard(4, 0, 0, 0, false, true, false, false);
+
+
+        int i = personalBoard.getDim1() / 2; // Specify the row index
+        int j = personalBoard.getDim2() / 2; // Specify the column index
+
+        personalBoard.bruteForcePlaceCardSE(card1, i, j);
+
+        try {
+            personalBoard.placeCardAtSE(card1, card2);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtNE(card2, card3);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtNE(card1, card3);
+        } catch (IllegalMoveException e) {
+            assertEquals("Illegal move attempted.", e.getMessage());
+        }
+
+        assertEquals(8, personalBoard.getPoints());
+
+    }
+
 
     // Add more tests for other methods
 }
