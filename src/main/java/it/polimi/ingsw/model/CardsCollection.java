@@ -196,6 +196,8 @@ public  class CardsCollection {
 
     // populate starter cards draft: it create the starter card collection, both front and back of the card. At the end
     // we have a collections of starter cards, that has size X2.
+
+    // Remark: at the moment the same deck has both front and back of stater cards. Use the flag Orientation.
     public void populateDeckStarterFrontAndBack(String jsonFilePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -220,12 +222,18 @@ public  class CardsCollection {
 
                 StarterCard card_front = new StarterCard(id, Orientation.FRONT);
                 Corner[][] actual_corners_front = new Corner[2][2];
-
+                // Inizializza l'array di Corner
+                for (int i = 0; i < 2; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        actual_corners_front[i][j] = new Corner();
+                    }
+                }
                 // Front of the Starter Card
                 if (front_NE.equals("NonVisible")) {
                     actual_corners_front[0][1].is_visible = false;
                 } else {
                     if(!front_NE.equals("Empty")){
+                        System.out.println(actual_corners_front[0][1].resource);
                         actual_corners_front[0][1].setCornerResource(Resource.valueOf(front_NE.toUpperCase()));}
                 }
                 if (front_SE.equals("NonVisible")) {
@@ -245,11 +253,16 @@ public  class CardsCollection {
                     actual_corners_front[1][1].is_visible = false;
                 } else {
                     if(!front_SO.equals("Empty")){
-                    actual_corners_front[1][1].setCornerResource(Resource.valueOf(front_SO.toUpperCase()));}}
-                // Back of the Starter Card
+                    actual_corners_front[1][1].setCornerResource(Resource.valueOf(front_SO.toUpperCase()));}
+                }
+                // Back of Starter Card
                 StarterCard card_back = new StarterCard(id, Orientation.BACK);
                 Corner[][] actual_corners_back = new Corner[2][2];
-
+                for (int i = 0; i < 2; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        actual_corners_back[i][j] = new Corner();
+                    }
+                }
                 if (back_NE.equals("NonVisible")) {
                     actual_corners_back[0][1].is_visible = false;
                 } else {
@@ -271,11 +284,31 @@ public  class CardsCollection {
                 // the first that is the front, and the second one is the back of the same card.
                 // But they are two different objects, they have in common the same id!
 
-                card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
-                        Resource.valueOf(permanent_resource2.toUpperCase()),
-                        Resource.valueOf(permanent_resource3.toUpperCase()),
-                        actual_corners_front);
+                if("NULL".equals(permanent_resource2.toUpperCase()) && "NULL".equals(permanent_resource3.toUpperCase())) {
+                    card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
+                            null,
+                            null,
+                            actual_corners_front);
+                    this.addCard(card_front);
+                    System.out.println(card_front.toString());
+                } else if ("NULL".equals(permanent_resource3.toUpperCase())) {
+                    card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
+                            Resource.valueOf(permanent_resource2.toUpperCase()),
+                            null,
+                            actual_corners_front);
+                    this.addCard(card_front);
+                    System.out.println(card_front.toString());
+                } else {
+                    card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
+                            Resource.valueOf(permanent_resource2.toUpperCase()),
+                            Resource.valueOf(permanent_resource3.toUpperCase()),
+                            actual_corners_front);
+                    this.addCard(card_front);
+                    System.out.println(card_front.toString());
+                }
                 card_back.setStarterCardBack(actual_corners_back);
+                this.addCard(card_back);
+                System.out.println(card_back.toString());
             }
             System.out.println("Starter cards Deck populated successfully.");
         } catch (Exception e) {

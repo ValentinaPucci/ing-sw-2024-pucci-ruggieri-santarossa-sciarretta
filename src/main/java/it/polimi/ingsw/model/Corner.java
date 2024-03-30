@@ -107,4 +107,12 @@ public class Corner {
             return false;
     }
 
+    @Override
+    public String toString() {
+        return "Corner{" +
+                "is_visible=" + is_visible +
+                ", resource=" + (resource.isPresent() ? resource.get().name() : "null") +
+                '}';
+    }
+
 }
