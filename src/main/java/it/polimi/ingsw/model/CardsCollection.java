@@ -81,6 +81,7 @@ public  class CardsCollection {
                 }
 
                 if (cardNode.path("type").asText().equals("Gold") && type.equals("Gold")){
+                    //TODO: cambia gli attributi di GoldCard, leggi int metti boolean nei nuovi attributi.
                     int MushroomRequired = cardNode.path("MushroomRequired").asInt();
                     int ButterflyRequired = cardNode.path("ButterflyRequired").asInt();
                     int WolfRequired = cardNode.path("WolfRequired").asInt();
@@ -128,42 +129,63 @@ public  class CardsCollection {
                 Orientation orientation = Orientation.FRONT;
                 int points = cardNode.path("points").asInt();
                 String pattern = cardNode.path("pattern").asText();
+               // System.out.println(pattern);
                 if (pattern.equals("L")) {
+                    System.out.println("L pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     card.init_obj_L();
                     // come si implementa?? come si collegano??
                     this.addCard(card);
                 }
                 if (pattern.equals("J")) {
+                    System.out.println("J pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     card.init_obj_J();
                     this.addCard(card);
                 }
                 if (pattern.equals("P")) {
+                    System.out.println("P pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     this.addCard(card);
                 }
                 if (pattern.equals("Q")) {
+                    System.out.println("Q pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     card.init_obj_q();
                     this.addCard(card);
                 }
-                if (pattern.equals("increasingDiagonal")) {
+                if (pattern.equals("increasing_diagonal")) {
                     DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation, points);
                     String color = cardNode.path("color1").asText();
+                    System.out.println(card.toString());  // Print the color string
                     card.init_objIncreasingDiagonal(Color.valueOf(color.toUpperCase()));
                     this.addCard(card);
                 }
-                if (pattern.equals("decreasingDiagonal")) {
+                if (pattern.equals("decreasing_diagonal")) {
                     DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation, points);
                     String color = cardNode.path("color1").asText();
+                    System.out.println(card.toString());
                     card.init_objDecreasingDiagonal(Color.valueOf(color.toUpperCase()));
                     this.addCard(card);
                 }
-                if (pattern== null) {
-                    // Completa quando le classi di objective sono finite.
+                if (pattern.equals("None")) {
+                   int num_feathers = cardNode.path("numFeathers").asInt();
+                   int num_potions = cardNode.path("numPotions").asInt();
+                   int num_parchments = cardNode.path("numParchments").asInt();
+                   int num_mushrooms = cardNode.path("numMushrooms").asInt();
+                   int num_leaves = cardNode.path("numLeaves").asInt();
+                   int num_butterflies = cardNode.path("numButterflies").asInt();
+                   int num_wolves = cardNode.path("numWolves").asInt();
 
-
+                   if(num_feathers != 0 || num_potions != 0 || num_parchments != 0) {
+                       ItemObjectiveCard card = new ItemObjectiveCard(id, orientation, points, num_feathers, num_potions, num_parchments);
+                       System.out.println("item objective card");
+                       this.addCard(card);
+                   } else {
+                       ResourceObjectiveCard card = new ResourceObjectiveCard(id, orientation, points, num_mushrooms, num_leaves, num_butterflies, num_wolves);
+                       System.out.println("Resource objective card");
+                       this.addCard(card);
+                   }
                 }
             }
             System.out.println("Objective cards Deck populated successfully.");
@@ -174,6 +196,8 @@ public  class CardsCollection {
 
     // populate starter cards draft: it create the starter card collection, both front and back of the card. At the end
     // we have a collections of starter cards, that has size X2.
+
+    // Remark: at the moment the same deck has both front and back of stater cards. Use the flag Orientation.
     public void populateDeckStarterFrontAndBack(String jsonFilePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
@@ -198,27 +222,47 @@ public  class CardsCollection {
 
                 StarterCard card_front = new StarterCard(id, Orientation.FRONT);
                 Corner[][] actual_corners_front = new Corner[2][2];
+                // Inizializza l'array di Corner
+                for (int i = 0; i < 2; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        actual_corners_front[i][j] = new Corner();
+                    }
+                }
                 // Front of the Starter Card
                 if (front_NE.equals("NonVisible")) {
                     actual_corners_front[0][1].is_visible = false;
                 } else {
+                    if(!front_NE.equals("Empty")){
+                        System.out.println(actual_corners_front[0][1].resource);
                         actual_corners_front[0][1].setCornerResource(Resource.valueOf(front_NE.toUpperCase()));}
+                }
                 if (front_SE.equals("NonVisible")) {
                     actual_corners_front[1][0].is_visible = false;
                 } else {
-                    actual_corners_front[1][0].setCornerResource(Resource.valueOf(front_SE.toUpperCase()));}
+                    if (!front_SE.equals("Empty")) {
+                        actual_corners_front[1][0].setCornerResource(Resource.valueOf(front_SE.toUpperCase()));
+                    }
+                }
                 if (front_NO.equals("NonVisible")) {
                     actual_corners_front[0][0].is_visible = false;
                 } else {
+                    if(!front_NO.equals("Empty")){
                     actual_corners_front[0][0].setCornerResource(Resource.valueOf(front_NO.toUpperCase()));}
+                }
                 if (front_SO.equals("NonVisible")) {
                     actual_corners_front[1][1].is_visible = false;
                 } else {
+                    if(!front_SO.equals("Empty")){
                     actual_corners_front[1][1].setCornerResource(Resource.valueOf(front_SO.toUpperCase()));}
-                // Back of the Starter Card
+                }
+                // Back of Starter Card
                 StarterCard card_back = new StarterCard(id, Orientation.BACK);
                 Corner[][] actual_corners_back = new Corner[2][2];
-
+                for (int i = 0; i < 2; i++) {
+                    for (int j = 0; j < 2; j++) {
+                        actual_corners_back[i][j] = new Corner();
+                    }
+                }
                 if (back_NE.equals("NonVisible")) {
                     actual_corners_back[0][1].is_visible = false;
                 } else {
@@ -240,11 +284,31 @@ public  class CardsCollection {
                 // the first that is the front, and the second one is the back of the same card.
                 // But they are two different objects, they have in common the same id!
 
-                card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
-                        Resource.valueOf(permanent_resource2.toUpperCase()),
-                        Resource.valueOf(permanent_resource3.toUpperCase()),
-                        actual_corners_front);
+                if("NULL".equals(permanent_resource2.toUpperCase()) && "NULL".equals(permanent_resource3.toUpperCase())) {
+                    card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
+                            null,
+                            null,
+                            actual_corners_front);
+                    this.addCard(card_front);
+                    System.out.println(card_front.toString());
+                } else if ("NULL".equals(permanent_resource3.toUpperCase())) {
+                    card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
+                            Resource.valueOf(permanent_resource2.toUpperCase()),
+                            null,
+                            actual_corners_front);
+                    this.addCard(card_front);
+                    System.out.println(card_front.toString());
+                } else {
+                    card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
+                            Resource.valueOf(permanent_resource2.toUpperCase()),
+                            Resource.valueOf(permanent_resource3.toUpperCase()),
+                            actual_corners_front);
+                    this.addCard(card_front);
+                    System.out.println(card_front.toString());
+                }
                 card_back.setStarterCardBack(actual_corners_back);
+                this.addCard(card_back);
+                System.out.println(card_back.toString());
             }
             System.out.println("Starter cards Deck populated successfully.");
         } catch (Exception e) {
@@ -253,68 +317,5 @@ public  class CardsCollection {
 
     }
 
-
-    public void populateObjectiveCards(String jsonFilePath) {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
-            JsonNode cardsNode = rootNode.path("cards");
-
-            for (JsonNode cardNode : cardsNode) {
-                int id = cardNode.path("id").asInt();
-                String pattern = cardNode.path("pattern").asText();
-                int points = cardNode.path("points").asInt();
-                Orientation orientation = Orientation.FRONT;
-                if (pattern.equals("L")) {
-                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
-                    card.init_obj_L();
-                    this.addCard(card);
-                }
-                if (pattern.equals("J")) {
-                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
-                    card.init_obj_J();
-                    this.addCard(card);
-                }
-                if (pattern.equals("P")) {
-                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
-                    this.addCard(card);
-                }
-                if (pattern.equals("Q")) {
-                    LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
-                    card.init_obj_q();
-                    this.addCard(card);
-                }
-                if (pattern.equals("increasingDiagonal")) {
-                    DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation, points);
-                    String color = cardNode.path("color1").asText();
-                    card.init_objIncreasingDiagonal(Color.valueOf(color.toUpperCase()));
-                    this.addCard(card);
-                }
-                if (pattern.equals("decreasingDiagonal")) {
-                    DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation, points);
-                    String color = cardNode.path("color1").asText();
-                    card.init_objDecreasingDiagonal(Color.valueOf(color.toUpperCase()));
-                    this.addCard(card);
-                }
-                if (pattern == null) {
-                    int num_feathers = cardNode.path("numFeathers").asInt();
-                    int num_potions = cardNode.path("numPotions").asInt();
-                    int num_parchments = cardNode.path("numParchments").asInt();
-                    int num_mushrooms = cardNode.path("numMushrooms").asInt();
-                    int num_leaves = cardNode.path("numLeaves").asInt();
-                    int num_wolves = cardNode.path("numWolves").asInt();
-                    int num_butterflies = cardNode.path("numButterflies").asInt();
-                    if(num_feathers != 0 || num_parchments != 0 || num_potions != 0){
-                        ItemObjectiveCard card = new ItemObjectiveCard(id, orientation, points, num_feathers, num_potions, num_parchments);
-                        this.addCard(card);
-                    }else {
-                        ResourceObjectiveCard card = new ResourceObjectiveCard(id, orientation, points, num_mushrooms, num_leaves, num_butterflies, num_wolves);
-                        this.addCard(card);}
-                }
-            }
-        } catch (Exception e) {
-            System.err.println("Error populating starter cards deck: " + e.getMessage());
-        }
-    }
 
     }
