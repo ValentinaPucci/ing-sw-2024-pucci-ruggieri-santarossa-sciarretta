@@ -174,7 +174,6 @@ public class PersonalBoard {
             }
             this.points += card.points * darken_corners;
         }
-
     }
 
     public int getNum_mushrooms() {

@@ -40,6 +40,14 @@ public class Corner {
         this.item = Optional.empty();
     }
 
+    public Corner(BoardCellCoordinate board_coordinate, ResourceCard reference_card) {
+        this.board_coordinate = board_coordinate;
+        this.is_visible = true;
+        this.resource = Optional.empty();
+        this.item = Optional.empty();
+        this.reference_card = reference_card;
+    }
+
 //    /**
 //     * @param coordinate
 //     * @param resource
