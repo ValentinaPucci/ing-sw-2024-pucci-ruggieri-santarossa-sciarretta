@@ -261,6 +261,42 @@ public class PersonalBoardTest {
 
     }
 
+    @Test
+    void testCalculateScoresObjectivePattern() {
+
+        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.RED);
+        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED);
+        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED);
+        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED);
+        ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.GREEN);
+        ResourceCard card6 = new ResourceCard(6, Orientation.FRONT, Color.GREEN);
+        ResourceCard card7 = new ResourceCard(7, Orientation.FRONT, Color.GREEN);
+        ResourceCard card8 = new ResourceCard(8, Orientation.FRONT, Color.GREEN);
+
+        int i = personalBoard.getDim1() / 2; // Specify the row index
+        int j = personalBoard.getDim2() / 2; // Specify the column index
+
+        personalBoard.bruteForcePlaceCardSE(card1, i, j);
+
+        personalBoard.placeCardAtSE(card1, card2);
+        personalBoard.placeCardAtSE(card2, card3);
+        personalBoard.placeCardAtSE(card3, card4);
+        personalBoard.placeCardAtSW(card4, card5);
+        personalBoard.placeCardAtSW(card5, card6);
+        personalBoard.placeCardAtSW(card6, card7);
+        personalBoard.placeCardAtSW(card7, card8);
+
+        DiagonalPatternObjectiveCard diagonalPatternObjectiveCard1 = new DiagonalPatternObjectiveCard(1, Orientation.FRONT, 1);
+        diagonalPatternObjectiveCard1.init_objDecreasingDiagonal(Color.GREEN);
+
+        DiagonalPatternObjectiveCard diagonalPatternObjectiveCard2 = new DiagonalPatternObjectiveCard(1, Orientation.FRONT, 1);
+        diagonalPatternObjectiveCard2.init_objIncreasingDiagonal(Color.RED);
+
+        assertEquals(2, diagonalPatternObjectiveCard1.calculateScore(personalBoard) +
+                diagonalPatternObjectiveCard2.calculateScore(personalBoard));
+
+    }
+
 
     // Add more tests for other methods
 }

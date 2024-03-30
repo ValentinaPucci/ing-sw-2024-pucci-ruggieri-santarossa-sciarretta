@@ -12,12 +12,25 @@ public class LetterPatternScoreStrategy implements ScoreStrategy {
                                             PersonalBoard personal_board, int l, int m) {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 3; j++) {
-                if (!personal_board.board[l + i][m + j].equals(objectiveCard.aux_personal_board.board[i][j])
-                        && objectiveCard.aux_personal_board.board[i][j].is_full) {
-                    return false;
+                if (objectiveCard.aux_personal_board.board[i][j].is_full) {
+                    if (personal_board.board[l + i][m + j].cell_of_a_found_pattern)
+                        return false;
+                    if (!personal_board.board[l + i][m + j].is_full)
+                        return false;
+                    else if (!personal_board.board[l + i][m + j].equals(objectiveCard.aux_personal_board.board[i][j]))
+                        return false;
                 }
             }
         }
+
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (objectiveCard.aux_personal_board.board[i][j].is_full) {
+                    personal_board.board[l + i][m + j].setCellAsPatternFound();
+                }
+            }
+        }
+
         return true;
     }
 
@@ -42,6 +55,6 @@ public class LetterPatternScoreStrategy implements ScoreStrategy {
     @Override
     public int calculateScore(ObjectiveCard card, PersonalBoard personal_board) {
         return counterOfRecognisedLetterPatterns((LetterPatternObjectiveCard) card, personal_board)
-                * (card).getPoints();
+                * (card.getPoints());
     }
 }

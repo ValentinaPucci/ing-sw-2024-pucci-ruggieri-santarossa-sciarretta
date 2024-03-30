@@ -16,11 +16,13 @@ public class Cell {
     private Corner corner;
     public int level;
     public boolean is_full;
+    public boolean cell_of_a_found_pattern;
 
 
     public Cell() {
         this.level = 0;
         this.is_full = false;
+        this.cell_of_a_found_pattern = false;
     }
 
     /**
@@ -31,6 +33,7 @@ public class Cell {
         this.corner = corner;
         this.level = 0;
         this.is_full = false;
+        this.cell_of_a_found_pattern = false;
     }
 
     /**
@@ -41,6 +44,10 @@ public class Cell {
         this.corner = new_corner;
         this.level++;
         this.is_full = true;
+    }
+
+    public void setCellAsPatternFound() {
+        this.cell_of_a_found_pattern = true;
     }
 
     /**
