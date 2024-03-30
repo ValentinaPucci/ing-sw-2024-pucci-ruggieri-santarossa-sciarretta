@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import java.util.Optional;
+
 public class ResourceObjectiveCard extends ObjectiveCard {
     private int num_mushrooms;
     private int num_leaves;
@@ -10,7 +12,8 @@ public class ResourceObjectiveCard extends ObjectiveCard {
      * @param id
      * @param orientation
      */
-    public ResourceObjectiveCard(int id, Orientation orientation, int points, int num_mushrooms, int num_leaves, int num_butterflies, int num_wolves) {
+    public ResourceObjectiveCard(int id, Orientation orientation, int points,
+                                 int num_mushrooms, int num_leaves, int num_butterflies, int num_wolves) {
         super(id, orientation, points);
         this.num_mushrooms = num_mushrooms;
         this.num_leaves = num_leaves;
@@ -18,9 +21,36 @@ public class ResourceObjectiveCard extends ObjectiveCard {
         this.num_wolves = num_wolves;
     }
 
+    public int getNumResource(Resource resource) {
+        switch (resource) {
+            case MUSHROOM:
+                return num_mushrooms;
+            case LEAF:
+                return num_leaves;
+            case BUTTERFLY:
+                return num_butterflies;
+            case WOLF:
+                return num_wolves;
+            default:
+                return 0;
+        }
+    }
+
+    public Resource getResourceType() {
+        if (num_mushrooms > 0)
+            return Resource.MUSHROOM;
+        else if (num_leaves > 0)
+            return Resource.LEAF;
+        else if (num_butterflies > 0)
+            return Resource.BUTTERFLY;
+        else
+            return Resource.WOLF;
+    }
+
     @Override
     public int calculateScore(PersonalBoard personal_board) {
-        return personal_board.getNum_mushrooms() + personal_board.getNum_leaves() + personal_board.getNum_wolves() + personal_board.getNum_butterflies();
+        return (personal_board.getNumResource(this.getResourceType()) / this.getNumResource(this.getResourceType()))
+                * this.getPoints();
     }
 
 }
