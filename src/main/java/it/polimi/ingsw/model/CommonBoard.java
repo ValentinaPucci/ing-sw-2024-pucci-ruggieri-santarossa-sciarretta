@@ -20,12 +20,11 @@ public class CommonBoard {
                        CardsCollection gold_cards_collection,
                        CardsCollection starter_cards_collection,
                        CardsCollection objective_cards_collection,
-                       String resource_path, String gold_path, String starter_path, String objective_path,
                        String resource_type, String gold_type, String  starter_type, String objective_type) {
-        resource_concrete_deck = new ConcreteDeck(resource_cards_collection, resource_path, resource_type); //resource_concrete_deck
-        gold_concrete_deck = new ConcreteDeck(gold_cards_collection, gold_path, gold_type); //gold_concrete_deck
-        starter_concrete_deck = new ConcreteDeck(starter_cards_collection, starter_path, starter_type);
-        objective_concrete_deck = new ConcreteDeck(objective_cards_collection, objective_path, objective_type); //objective_concrete_deck
+        resource_concrete_deck = new ConcreteDeck(resource_cards_collection, resource_type); //resource_concrete_deck
+        gold_concrete_deck = new ConcreteDeck(gold_cards_collection, gold_type); //gold_concrete_deck
+        starter_concrete_deck = new ConcreteDeck(starter_cards_collection, starter_type);
+        objective_concrete_deck = new ConcreteDeck(objective_cards_collection, objective_type); //objective_concrete_deck
         board_nodes = new CommonBoardNode[29];
         decks = new ConcreteDeck[3]; // Create an array to hold the two decks
         table_cards = new Card[3][2];

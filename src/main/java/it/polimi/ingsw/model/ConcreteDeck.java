@@ -15,7 +15,7 @@ public class ConcreteDeck {
 
 
     // This one is only for Resources cards: type is either "Resource" or "Gold".
-    public ConcreteDeck(CardsCollection concrete_cards_bunch, String path, String type){
+    public ConcreteDeck(CardsCollection concrete_cards_bunch, String type){
         // Path to the .json file
         this.deck_factory = new DeckFactory();
         this.concrete_cards_bunch = concrete_cards_bunch;
