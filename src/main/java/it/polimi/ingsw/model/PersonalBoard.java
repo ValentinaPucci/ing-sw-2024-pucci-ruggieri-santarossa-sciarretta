@@ -174,7 +174,6 @@ public class PersonalBoard {
             }
             this.points += card.points * darken_corners;
         }
-
     }
 
     public int getNum_mushrooms() {
@@ -476,7 +475,7 @@ public class PersonalBoard {
         int i;
         int j;
 
-        Corner corner_aux = game_card.getCornerAtNE();
+        Corner corner_aux = game_card.getCornerAtSE();
 
         if (!corner_aux.is_visible)
             throw new IllegalMoveException();
@@ -530,7 +529,7 @@ public class PersonalBoard {
         int i;
         int j;
 
-        Corner corner_aux = game_card.getCornerAtNE();
+        Corner corner_aux = game_card.getCornerAtSW();
 
         if (!corner_aux.is_visible)
             throw new IllegalMoveException();
@@ -584,7 +583,7 @@ public class PersonalBoard {
         int i;
         int j;
 
-        Corner corner_aux = game_card.getCornerAtNE();
+        Corner corner_aux = game_card.getCornerAtNW();
 
         if (!corner_aux.is_visible)
             throw new IllegalMoveException();
