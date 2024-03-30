@@ -16,8 +16,40 @@ public class ItemObjectiveCard extends ObjectiveCard {
         this.num_parchments = num_parchments;
     }
 
+    public int getNumItem(Item item) {
+        switch (item) {
+            case FEATHER:
+                return num_feathers;
+            case POTION:
+                return num_potions;
+            case PARCHMENT:
+                return num_parchments;
+            default:
+                return 0;
+        }
+    }
+
+    public Item getItemType() {
+        if (num_feathers > 0)
+            return Item.FEATHER;
+        else if (num_potions > 0)
+            return Item.POTION;
+        else
+            return Item.PARCHMENT;
+    }
+
     @Override
     public int calculateScore(PersonalBoard personal_board) {
-        return personal_board.getNum_feathers() + personal_board.getNum_potions() + personal_board.getNum_parchments();
+
+        if (num_feathers > 0 && num_potions > 0 && num_parchments > 0) {
+            int min = Math.min(personal_board.getNum_feathers(),
+                    Math.min(personal_board.getNum_potions(), personal_board.getNum_parchments()));
+            return min * this.getPoints();
+        }
+        else {
+            return (personal_board.getNumItem(this.getItemType()) / this.getNumItem(this.getItemType()))
+                    * this.getPoints();
+        }
     }
+
 }

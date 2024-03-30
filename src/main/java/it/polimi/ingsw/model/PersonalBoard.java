@@ -305,6 +305,34 @@ public class PersonalBoard {
         }
     }
 
+    public int getNumResource(Resource resource) {
+        switch (resource) {
+            case LEAF:
+                return this.num_leaves;
+            case MUSHROOM:
+                return this.num_mushrooms;
+            case BUTTERFLY:
+                return this.num_butterflies;
+            case WOLF:
+                return this.num_wolves;
+            default:
+                return 0;
+        }
+    }
+
+    public int getNumItem(Item item) {
+        switch (item) {
+            case PARCHMENT:
+                return this.num_parchments;
+            case FEATHER:
+                return this.num_feathers;
+            case POTION:
+                return this.num_potions;
+            default:
+                return 0;
+        }
+    }
+
     /**
      * Note that this method has to be overriden by the sublcasses
      *
