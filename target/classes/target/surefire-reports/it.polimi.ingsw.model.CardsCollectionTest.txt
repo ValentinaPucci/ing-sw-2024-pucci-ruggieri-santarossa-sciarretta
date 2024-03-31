@@ -1,12 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: it.polimi.ingsw.model.CardsCollectionTest
 -------------------------------------------------------------------------------
-Tests run: 4, Failures: 2, Errors: 0, Skipped: 0, Time elapsed: 0.104 s <<< FAILURE! - in it.polimi.ingsw.model.CardsCollectionTest
-testPopulateDeckStarterFrontAndBack  Time elapsed: 0.086 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
-	at it.polimi.ingsw.model.CardsCollectionTest.testPopulateDeckStarterFrontAndBack(CardsCollectionTest.java:69)
-
-testPopulateDeckObjectiveCard  Time elapsed: 0.001 s  <<< FAILURE!
-org.opentest4j.AssertionFailedError: expected: <true> but was: <false>
-	at it.polimi.ingsw.model.CardsCollectionTest.testPopulateDeckObjectiveCard(CardsCollectionTest.java:55)
-
+Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.003 s - in it.polimi.ingsw.model.CardsCollectionTest

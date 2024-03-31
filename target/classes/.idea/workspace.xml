@@ -26,6 +26,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 6
 }</component>
@@ -49,6 +52,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
+    "last_directory_selection": "/Users/valentinapucci/Desktop/java/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/src/main/java/it/polimi/ingsw/model",
     "last_opened_file_path": "/Users/valentinapucci/Desktop/java/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -81,8 +85,27 @@
       <recent name="$PROJECT_DIR$/database" />
       <recent name="$PROJECT_DIR$" />
     </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="it.polimi.ingsw.model" />
+    </key>
   </component>
-  <component name="RunManager" selected="JUnit.CommonBoardTest.testInitializeBoard">
+  <component name="RunManager" selected="JUnit.CommonBoardTest.testDecksInitialization">
+    <configuration name="CommonBoardTest.testDecksInitialization" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ing-sw-2024-pucci-santarossa-ruggieri-sciarretta" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.polimi.ingsw.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="it.polimi.ingsw.model" />
+      <option name="MAIN_CLASS_NAME" value="it.polimi.ingsw.model.CommonBoardTest" />
+      <option name="METHOD_NAME" value="testDecksInitialization" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="CommonBoardTest.testInitializeBoard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ing-sw-2024-pucci-santarossa-ruggieri-sciarretta" />
       <extension name="coverage">
@@ -116,6 +139,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.CommonBoardTest.testDecksInitialization" />
         <item itemvalue="JUnit.CommonBoardTest.testInitializeBoard" />
         <item itemvalue="JUnit.PersonalBoardTest" />
       </list>
@@ -166,7 +190,7 @@
       <workItem from="1711816558784" duration="456000" />
       <workItem from="1711817526463" duration="343000" />
       <workItem from="1711818347954" duration="868000" />
-      <workItem from="1711819229971" duration="4180000" />
+      <workItem from="1711819229971" duration="17631000" />
     </task>
     <task id="LOCAL-00001" summary="database iniziali delle carte risorsa, gold e template per carte starter">
       <option name="closed" value="true" />
@@ -296,7 +320,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711376242160</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="CommonBoardTest">
+      <option name="closed" value="true" />
+      <created>1711914568940</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1711914568940</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -329,7 +361,18 @@
     <MESSAGE value="added bruteForcePlaceStartercard" />
     <MESSAGE value="draw starter card, set e get starter card" />
     <MESSAGE value="score calculation updated" />
-    <option name="LAST_COMMIT_MESSAGE" value="score calculation updated" />
+    <MESSAGE value="CommonBoardTest" />
+    <option name="LAST_COMMIT_MESSAGE" value="CommonBoardTest" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.util.EmptyStackException" package="java.util" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

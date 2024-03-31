@@ -30,7 +30,7 @@ public class CardsCollectionTest {
     @Test
     public void testPopulateDeck() {
         // Assume that `cards.json` is a valid JSON file in the `src/test/resources` directory
-        String jsonFilePath = "/Users/lollo/IdeaProjects/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseGameCards.json";
+        String jsonFilePath = "/Users/valentinapucci/Desktop/java/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseGameCards.json";
 
         int initialSize = cardsCollection.size();
 
@@ -44,7 +44,7 @@ public class CardsCollectionTest {
     @Test
     public void testPopulateDeckObjectiveCard() {
         // Assume that `cards.json` is a valid JSON file in the `src/test/resources` directory
-        String jsonFilePath = "/Users/lollo/IdeaProjects/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseObjectiveCards.json";
+        String jsonFilePath = "/Users/valentinapucci/Desktop/java/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseObjectiveCards.json";
 
         int initialSize = cardsCollection.size();
 

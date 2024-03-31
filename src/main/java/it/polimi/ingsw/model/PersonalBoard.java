@@ -6,7 +6,6 @@ public class PersonalBoard {
     private final int dim1;
     private final int dim2;
     private int points;
-    private int delta_points;
     private int num_mushrooms;
     private int num_leaves;
     private int num_butterflies;
@@ -27,7 +26,6 @@ public class PersonalBoard {
         }
 
         this.points = 0;
-        this.delta_points = 20;
         this.num_mushrooms = 0;
         this.num_leaves = 0;
         this.num_butterflies = 0;
@@ -52,7 +50,6 @@ public class PersonalBoard {
         }
 
         this.points = 0;
-        this.delta_points = 20;
         this.num_mushrooms = 0;
         this.num_leaves = 0;
         this.num_butterflies = 0;
@@ -78,7 +75,6 @@ public class PersonalBoard {
         }
 
         this.points = 0;
-        this.delta_points = 20;
         this.num_mushrooms = 0;
         this.num_leaves = 0;
         this.num_butterflies = 0;
@@ -87,10 +83,6 @@ public class PersonalBoard {
         this.num_feathers = 0;
         this.num_potions = 0;
     }
-
-    public int getDeltaPoints() {
-        return delta_points;
-    } //Used in Game
 
     /**
      * @param mushrooms_placed
@@ -147,7 +139,6 @@ public class PersonalBoard {
      */
     public void updatePoints(ResourceCard card) {
         this.points += card.points;
-        this.delta_points -= card.points;
     }
 
     /**
