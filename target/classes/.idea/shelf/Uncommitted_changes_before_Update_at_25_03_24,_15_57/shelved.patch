@@ -1,0 +1,18 @@
+Index: src/main/java/it/polimi/ingsw/model/Corner.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package it.polimi.ingsw.model;\n\nimport it.polimi.ingsw.model.enumerations.Coordinate;\nimport it.polimi.ingsw.model.enumerations.Item;\nimport it.polimi.ingsw.model.enumerations.Resource;\n\nimport java.util.Optional;\nimport java.util.NoSuchElementException;\n\n/**\n * This class is thought to be complementary to the class Cell.\n * Indeed Corner class has to interact in some way with Cell class.\n * Moreover, the importance of this class is mainly related to the fact\n * that we need to 'track' the resources and the items which are present\n * inside the PersonalBoard.\n */\npublic class Corner {\n\n    private Coordinate coordinate;\n    private Optional<Resource> resource;\n    private Optional<Item> item;\n    public boolean is_visible;\n    public ResourceCard reference_card;\n\n    /**\n     * In fact, this attribute make a lot of sense: board_coordinate\n     * is not the effective coordinate of the corner inside the board\n     */\n    public BoardCellCoordinate board_coordinate;\n\n    /**\n     *\n     * @param board_coordinate\n     */\n    public Corner(BoardCellCoordinate board_coordinate) {\n        this.board_coordinate = board_coordinate;\n        this.is_visible = true;\n    }\n\n    /**\n     *\n     * @param coordinate\n     * @param resource\n     * @param item\n     * @param is_visible\n     * @param card\n     */\n    public Corner(Coordinate coordinate, Optional<Resource> resource, Optional<Item> item,\n                  boolean is_visible, ResourceCard card) {\n        this.coordinate = coordinate;\n        this.resource = resource;\n        this.item = item;\n        this.is_visible = is_visible;\n        this.reference_card = card;\n        this.board_coordinate = new BoardCellCoordinate(0, 0);\n        this.board_coordinate.setXY(coordinate);\n    }\n\n    // Set corner\n// Crea un set resource. per settare resource e poi crea anche un set item per settare item.\n    public void setCornerResource(Resource resource){\n        this.resource = Optional.ofNullable(resource);\n    }\n\n    public void setCornerItem(Item item){\n        this.item = Optional.ofNullable(item);\n    }\n\n    public void setBoard_coordinate(Coordinate coord) {\n        this.board_coordinate.setXY(coord);\n    }\n\n    /**\n     * to check\n     * @return\n     * @throws NoSuchElementException\n     */\n    public Resource getResource() throws NoSuchElementException {\n        return resource.get();\n    }\n\n    @Override\n    public boolean equals(Object obj) {\n        Corner corner = (Corner) obj;\n        if (this.is_visible && corner.is_visible) {\n            if (this.resource.isPresent() && corner.resource.isPresent()) {\n                return this.resource.get().equals(corner.resource.get());\n            } else {\n                return false;\n            }\n        }\n        else\n            return false;\n    }\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/it/polimi/ingsw/model/Corner.java b/src/main/java/it/polimi/ingsw/model/Corner.java
+--- a/src/main/java/it/polimi/ingsw/model/Corner.java	(revision b768def31c05efbdf3186644e11a6169ea9a6037)
++++ b/src/main/java/it/polimi/ingsw/model/Corner.java	(date 1711377176299)
+@@ -15,7 +15,6 @@
+  * inside the PersonalBoard.
+  */
+ public class Corner {
+-
+     private Coordinate coordinate;
+     private Optional<Resource> resource;
+     private Optional<Item> item;
