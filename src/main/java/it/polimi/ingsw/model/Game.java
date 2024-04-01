@@ -16,16 +16,13 @@ public class Game {
     private ConcreteDeck objective_deck;
     private ConcreteDeck starter_deck;
     private int[] final_scores;
-    private Player winner;
-    private Player temp_winner;
+    private Player[] winners;
     private Coordinate coordinate;
     private ResourceCard already_placed_card;
     private int from_where_draw;
     private int from_which_deckindex;
     private int col;
     private int row;
-
-
 
 
     public Game(CommonBoard common_board, Player[] players) {
@@ -49,6 +46,7 @@ public class Game {
         this.from_which_deckindex = 0;
         this.col = 0;
         this.row = 0;;
+        this.winners = new Player[0];
 
     }
 
@@ -73,9 +71,14 @@ public class Game {
                     player_queue.offer(current_player); // Add the current player back to the end of the queue
                     if (common_board.getPartialWinner() != -1)
                         second_last_turn = true;
+                    if (common_board.getGoldConcreteDeck().isEmpty() && common_board.getResourceConcreteDeck().isEmpty()){
+                        second_last_turn = true;
+                        common_board.setPartialWinner(current_player.getId());
+                    }
             }
             secondLastTurn();
         }
+        calculateFinalScores();
         setWinner();
     }
 
@@ -174,7 +177,6 @@ public class Game {
             int current_points = current_player.getPersonalBoard().getPoints();
             int delta = current_points - prec_points;
             common_board.movePlayer(current_player.getId(), delta);
-            current_player.addToHand(drawCard(from_where_draw));
             player_queue.offer(current_player);
         }
         game_over = true;
@@ -189,7 +191,8 @@ public class Game {
             int current_points = current_player.getPersonalBoard().getPoints();
             int delta = current_points - prec_points;
             common_board.movePlayer(current_player.getId(), delta);
-            current_player.addToHand(drawCard(from_where_draw));
+            if(!common_board.getResourceConcreteDeck().isEmpty() && !common_board.getGoldConcreteDeck().isEmpty())
+                current_player.addToHand(drawCard(from_where_draw));
             player_queue.offer(current_player);
         }
         lastTurn();
@@ -199,22 +202,39 @@ public class Game {
         return game_over;
     }
 
-    public Player getWinner(){
-        return winner;
+    public Player[] getWinners(){
+        return this.winners;
     }
 
-    public void setWinner(){
-        int temp_score = 0;
-        temp_winner = players[0];
+    public void calculateFinalScores(){
+        for(int i = 0; i < num_players; i++){
+            this.final_scores[i] = players[i].getPersonalBoard().getPoints() +
+                    players[i].getChosenObjectiveCard().calculateScore(players[i].getPersonalBoard()) +
+                    common_board.getCommonObjectives()[0].calculateScore(players[i].getPersonalBoard()) +
+                    common_board.getCommonObjectives()[1].calculateScore(players[i].getPersonalBoard());
+        }
+    }
+
+
+    public void setWinner() {
+        int maxScore = 0;
+        List<Player> winnersList = new ArrayList<>();
         game_over = true;
 
-        for(int i = 0; i < players.length - 1; i++)
-            if (players[i].getPersonalBoard().getPoints() > temp_score) {
-                temp_score = players[i].getPersonalBoard().getPoints();
-                temp_winner = players[i];
+        // find the maximum score
+        for (int score : final_scores) {
+            if (score > maxScore) {
+                maxScore = score;
             }
-        this.winner = temp_winner;
+        }
+        // find players with maximum score
+        for (int i = 0; i < players.length; i++) {
+            if (final_scores[i] == maxScore) {
+                winnersList.add(players[i]);
+            }
+        }
+        // set winners
+        this.winners = winnersList.toArray(new Player[0]);
     }
-
 }
 

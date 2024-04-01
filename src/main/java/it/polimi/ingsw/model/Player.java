@@ -53,6 +53,14 @@ public class Player {
         return this.chosen_card;
     }
 
+    public ObjectiveCard getChosenObjectiveCard() {
+        return this.chosen_objective;
+    }
+
+    public ObjectiveCard[] getCommonObjectiveCard() {
+        return this.;
+    }
+
     public void addToHand(Card card){
        this.card_hand.add(card);
     }
@@ -65,6 +73,7 @@ public class Player {
         secret_objectives[0] = objective1;
         secret_objectives[1] = objective2;
     }
+
 
     public void setFinalWinner(boolean final_winner) { //choose the card you want to play from your hand
         this.final_winner = final_winner;
