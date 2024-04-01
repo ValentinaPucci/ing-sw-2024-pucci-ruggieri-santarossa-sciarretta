@@ -184,7 +184,6 @@ public class CommonBoard {
         return decks;
     }
 
-
     public ObjectiveCard[] getCommonObjectives(){
         ObjectiveCard[] common_objectives = new  ObjectiveCard[2];
         common_objectives[0] = (ObjectiveCard) table_cards[2][0];
@@ -192,7 +191,3 @@ public class CommonBoard {
         return common_objectives;
     }
 }
-
-
-
-

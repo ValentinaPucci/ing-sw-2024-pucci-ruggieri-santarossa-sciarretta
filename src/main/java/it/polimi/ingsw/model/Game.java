@@ -173,6 +173,7 @@ public class Game {
             Player current_player = player_queue.poll();
             assert current_player != null;
             int prec_points = current_player.getPersonalBoard().getPoints();
+
             placeCard(current_player.getChosenGameCard(), current_player.getPersonalBoard(), coordinate, already_placed_card);
             int current_points = current_player.getPersonalBoard().getPoints();
             int delta = current_points - prec_points;
@@ -235,6 +236,14 @@ public class Game {
         }
         // set winners
         this.winners = winnersList.toArray(new Player[0]);
+    }
+
+    public int getFinalScore(int player_index){
+        return final_scores[player_index];
+    }
+
+    public CommonBoard getCommonBoard(){
+        return this.common_board;
     }
 }
 
