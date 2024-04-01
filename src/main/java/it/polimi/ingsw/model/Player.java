@@ -57,9 +57,6 @@ public class Player {
         return this.chosen_objective;
     }
 
-    public ObjectiveCard[] getCommonObjectiveCard() {
-        return this.;
-    }
 
     public void addToHand(Card card){
        this.card_hand.add(card);
