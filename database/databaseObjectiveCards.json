@@ -12,7 +12,7 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "pattern": "increasing_diagonal",
-      "color1": "Red",
+      "color1": "red",
       "color2": "Red",
       "color3": "Red"
     },
@@ -151,7 +151,7 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "pattern": null,
+      "pattern": "None",
       "color1": null,
       "color2": null,
       "color3": null
@@ -169,7 +169,7 @@
       "numLeaves": 3,
       "numButterflies": 0,
       "numWolves": 0,
-      "pattern": null,
+      "pattern": "None",
       "color1": null,
       "color2": null,
       "color3": null
@@ -186,7 +186,7 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 3,
-      "pattern": null,
+      "pattern": "None",
       "color1": null,
       "color2": null,
       "color3": null
@@ -204,7 +204,7 @@
       "numLeaves": 0,
       "numButterflies": 3,
       "numWolves": 0,
-      "pattern": null,
+      "pattern": "None",
       "color1": null,
       "color2": null,
       "color3": null
@@ -221,7 +221,7 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "pattern": null,
+      "pattern": "None",
       "color1": null,
       "color2": null,
       "color3": null
@@ -239,7 +239,7 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "pattern": null,
+      "pattern": "None",
       "color1": null,
       "color2": null,
       "color3": null
@@ -257,7 +257,7 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "pattern": null,
+      "pattern": "None",
       "color1": null,
       "color2": null,
       "color3": null
@@ -275,7 +275,7 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "numWolves": 0,
-      "pattern": null,
+      "pattern": "None",
       "color1": null,
       "color2": null,
       "color3": null

@@ -9,15 +9,14 @@ public class Game {
     private Player[] players;
     private int num_players;
     private boolean game_over;
-    private boolean last_turn;
+    private boolean second_last_turn;
     private CommonBoard common_board;
     private ConcreteDeck resource_deck;
     private ConcreteDeck gold_deck;
     private ConcreteDeck objective_deck;
     private ConcreteDeck starter_deck;
     private int[] final_scores;
-    private Player winner;
-    private Player temp_winner;
+    private Player[] winners;
     private Coordinate coordinate;
     private ResourceCard already_placed_card;
     private int from_where_draw;
@@ -26,14 +25,12 @@ public class Game {
     private int row;
 
 
-
-
     public Game(CommonBoard common_board, Player[] players) {
         this.player_queue = new LinkedList<>();
         this.players = players;
         this.num_players = players.length;
         this.game_over = false;
-        this.last_turn = false;
+        this.second_last_turn = false;
         this.final_scores = new int[num_players];
         this.common_board = common_board;
         this.resource_deck = common_board.getResourceConcreteDeck();
@@ -49,27 +46,35 @@ public class Game {
         this.from_which_deckindex = 0;
         this.col = 0;
         this.row = 0;;
+        this.winners = new Player[0];
 
     }
 
     public void gameFlow(){
         initializeGame();
-        for(Player player : player_queue){
-            player.playStarterCard();
+        for(int i = 0; i < num_players; i++){
+            Player currentPlayer = player_queue.poll(); // Get and remove the first player from the queue
+            assert currentPlayer != null;
+            currentPlayer.playStarterCard(); // Play the starter card for the current player
+            player_queue.offer(currentPlayer); // Add the current player back to the end of the queue
         }
         while (!isGameOver()) {
-            while (!isLastTurn()) {
-                // Loop through players and handle each player's turn
-                for (Player player : player_queue) {
-                    int points_temp = player.getPersonalBoard().getPoints();
-                    placeCard(player.getChosenGameCard(), player.getPersonalBoard(), coordinate, already_placed_card);
-                    int current_points = player.getPersonalBoard().getPoints();
-                    int delta = current_points - points_temp;
-                    common_board.movePlayer(player.getId(), delta);
-                    player.addToHand(drawCard(from_where_draw));
+            while (!isSecondLastTurn()) {
+                    Player current_player = player_queue.poll(); // Get and remove the first player from the queue
+                    assert current_player != null;
+                    int prec_points = current_player.getPersonalBoard().getPoints();
+                    placeCard(current_player.getChosenGameCard(), current_player.getPersonalBoard(), coordinate, already_placed_card);
+                    int current_points = current_player.getPersonalBoard().getPoints();
+                    int delta = current_points - prec_points;
+                    common_board.movePlayer(current_player.getId(), delta);
+                    current_player.addToHand(drawCard(from_where_draw));
+                    player_queue.offer(current_player); // Add the current player back to the end of the queue
                     if (common_board.getPartialWinner() != -1)
-                        last_turn = true;
-                }
+                        second_last_turn = true;
+                    if (common_board.getGoldConcreteDeck().isEmpty() && common_board.getResourceConcreteDeck().isEmpty()){
+                        second_last_turn = true;
+                        common_board.setPartialWinner(current_player.getId());
+                    }
             }
             secondLastTurn();
         }
@@ -113,11 +118,6 @@ public class Game {
         }
     }
 
-    // TODO: Compute correctly the final scores using ScoreStrategy pattern
-    public void calculateFinalScores() {
-        for(int i = 0; i < players.length - 1; i++)
-            final_scores[i] = common_board.getPlayerPosition(i) + players[i].getPersonalBoard().getPoints();
-    }
 
     public void placeCard(ResourceCard card_chosen, PersonalBoard personal_board, Coordinate coordinate, ResourceCard already_placed_card) {
         switch (coordinate){
@@ -164,24 +164,37 @@ public class Game {
         return null;
     }
 
-    public boolean isLastTurn() {
-        return last_turn;
+    public boolean isSecondLastTurn() {
+        return second_last_turn;
     }
 
     public void lastTurn() {
         for (int i = 0; i < num_players; i++) {
-            Player currentPlayer = player_queue.poll();
-            //il giocatore gioca
-            player_queue.offer(currentPlayer); // Rimetti il giocatore corrente in fondo alla coda
+            Player current_player = player_queue.poll();
+            assert current_player != null;
+            int prec_points = current_player.getPersonalBoard().getPoints();
+
+            placeCard(current_player.getChosenGameCard(), current_player.getPersonalBoard(), coordinate, already_placed_card);
+            int current_points = current_player.getPersonalBoard().getPoints();
+            int delta = current_points - prec_points;
+            common_board.movePlayer(current_player.getId(), delta);
+            player_queue.offer(current_player);
         }
         game_over = true;
     }
 
     public void secondLastTurn() {
-        for (int i = common_board.getPartialWinner(); i < num_players; i++) {
-            Player currentPlayer = player_queue.poll();
-            //il giocatore gioca
-            player_queue.offer(currentPlayer); // Rimetti il giocatore corrente in fondo alla coda
+        for (int i = common_board.getPartialWinner(); i < num_players; i++)  {
+            Player current_player = player_queue.poll();
+            assert current_player != null;
+            int prec_points = current_player.getPersonalBoard().getPoints();
+            placeCard(current_player.getChosenGameCard(), current_player.getPersonalBoard(), coordinate, already_placed_card);
+            int current_points = current_player.getPersonalBoard().getPoints();
+            int delta = current_points - prec_points;
+            common_board.movePlayer(current_player.getId(), delta);
+            if(!common_board.getResourceConcreteDeck().isEmpty() && !common_board.getGoldConcreteDeck().isEmpty())
+                current_player.addToHand(drawCard(from_where_draw));
+            player_queue.offer(current_player);
         }
         lastTurn();
     }
@@ -190,22 +203,47 @@ public class Game {
         return game_over;
     }
 
-
-    public Player getWinner(){
-        return winner;
+    public Player[] getWinners(){
+        return this.winners;
     }
 
-    public void setWinner(){
-        int temp_score = 0;
-        temp_winner = players[0];
+    public void calculateFinalScores(){
+        for(int i = 0; i < num_players; i++){
+            this.final_scores[i] = players[i].getPersonalBoard().getPoints() +
+                    players[i].getChosenObjectiveCard().calculateScore(players[i].getPersonalBoard()) +
+                    common_board.getCommonObjectives()[0].calculateScore(players[i].getPersonalBoard()) +
+                    common_board.getCommonObjectives()[1].calculateScore(players[i].getPersonalBoard());
+        }
+    }
 
-        for(int i = 0; i < players.length - 1; i++)
-            if (final_scores[i] > temp_score) {
-                temp_score = final_scores[i];
-                temp_winner = players[i];
+
+    public void setWinner() {
+        int maxScore = 0;
+        List<Player> winnersList = new ArrayList<>();
+        game_over = true;
+
+        // find the maximum score
+        for (int score : final_scores) {
+            if (score > maxScore) {
+                maxScore = score;
             }
-        this.winner = temp_winner;
+        }
+        // find players with maximum score
+        for (int i = 0; i < players.length; i++) {
+            if (final_scores[i] == maxScore) {
+                winnersList.add(players[i]);
+            }
+        }
+        // set winners
+        this.winners = winnersList.toArray(new Player[0]);
     }
 
+    public int getFinalScore(int player_index){
+        return final_scores[player_index];
+    }
+
+    public CommonBoard getCommonBoard(){
+        return this.common_board;
+    }
 }
 

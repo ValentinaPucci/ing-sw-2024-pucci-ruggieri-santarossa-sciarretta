@@ -30,7 +30,7 @@ public class CardsCollectionTest {
     @Test
     public void testPopulateDeck() {
         // Assume that `cards.json` is a valid JSON file in the `src/test/resources` directory
-        String jsonFilePath = "ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseGameCards.json";
+        String jsonFilePath = "/Users/valentinapucci/Desktop/java/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseGameCards.json";
 
         int initialSize = cardsCollection.size();
 
@@ -41,4 +41,34 @@ public class CardsCollectionTest {
         //assertTrue(cardsCollection.size() =  40);
     }
     // Add more tests for other methods
+    @Test
+    public void testPopulateDeckObjectiveCard() {
+        // Assume that `cards.json` is a valid JSON file in the `src/test/resources` directory
+        String jsonFilePath = "/Users/valentinapucci/Desktop/java/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseObjectiveCards.json";
+
+        int initialSize = cardsCollection.size();
+
+        // Call the method under test
+        cardsCollection.populateDeckObjective(jsonFilePath);
+
+        // Check that cards have been added to the collection
+        assertTrue(cardsCollection.size()  ==  16);
+    }
+
+//    @Test
+//    public void testPopulateDeckStarterFrontAndBack() {
+//        // Assume that `starterCards.json` is a valid JSON file in the `src/test/resources` directory
+//        String jsonFilePath = "/Users/lollo/IdeaProjects/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseStarterCards.json";
+//
+//        int initialSize = cardsCollection.size();
+//
+//        // Call the method under test
+//        cardsCollection.populateDeckStarterFrontAndBack(jsonFilePath);
+//
+//        // Check that cards have been added to the collection
+//        assertTrue(cardsCollection.size() > 0);
+//    }
+
+
+
 }

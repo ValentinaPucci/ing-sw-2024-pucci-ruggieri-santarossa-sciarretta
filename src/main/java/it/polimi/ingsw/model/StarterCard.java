@@ -36,8 +36,9 @@ public class StarterCard extends Card {
      */
     public void setStarterCardFront(Resource resource1, Resource resource2, Resource resource3, Corner[][] actual_corners){
         this.front_resource1 = Optional.ofNullable(resource1);
-        this.front_resource2 = Optional.ofNullable(resource1);
-        this.front_resource3 = Optional.ofNullable(resource1);
+        this.front_resource2 = Optional.ofNullable(resource2);
+        this.front_resource3 = Optional.ofNullable(resource3);
+        this.orientation = Orientation.FRONT;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 this.corners[i][j] = actual_corners[i][j];
@@ -46,6 +47,7 @@ public class StarterCard extends Card {
     }
 
     public void setStarterCardBack(Corner[][] actual_corners){
+        this.orientation = Orientation.BACK;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
                 this.corners[i][j] = actual_corners[i][j];
@@ -91,6 +93,16 @@ public class StarterCard extends Card {
             return this.getCornerAtSW();
         else
             return this.getCornerAtSE();
+    }
+    public String toString() {
+
+        return "StarterCard{" +
+                "id=" + id +
+                ", orientation=" + orientation +
+                ", front_resource1=" + front_resource1.orElse(null) +
+                ", front_resource2=" + front_resource2.orElse(null) +
+                ", front_resource3=" + front_resource3.orElse(null) +
+                '}';
     }
 
 }

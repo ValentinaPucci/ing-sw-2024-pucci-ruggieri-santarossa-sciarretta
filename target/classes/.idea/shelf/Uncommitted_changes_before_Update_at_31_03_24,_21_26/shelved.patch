@@ -1,0 +1,18 @@
+Index: src/test/java/it/polimi/ingsw/model/CardsCollectionTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package it.polimi.ingsw.model;\n\nimport org.junit.jupiter.api.BeforeEach;\nimport org.junit.jupiter.api.Test;\nimport static org.junit.jupiter.api.Assertions.*;\n\npublic class CardsCollectionTest {\n    private CardsCollection cardsCollection;\n\n    @BeforeEach\n    public void setup() {\n        cardsCollection = new CardsCollection();\n    }\n\n    @Test\n    public void testAddCard() {\n        Card card = new ResourceCard(1, Orientation.FRONT, Color.BLUE);\n        cardsCollection.addCard(card);\n        assertEquals(1, cardsCollection.size());\n    }\n\n    @Test\n    public void testSize() {\n        assertEquals(0, cardsCollection.size());\n        Card card = new ResourceCard(1, Orientation.FRONT, Color.BLUE);\n        cardsCollection.addCard(card);\n        assertEquals(1, cardsCollection.size());\n    }\n\n//    @Test\n//    public void testPopulateDeck() {\n//        // Assume that `cards.json` is a valid JSON file in the `src/test/resources` directory\n//        String jsonFilePath = \"ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseGameCards.json\";\n//\n//        int initialSize = cardsCollection.size();\n//\n//        // Call the method under test\n//        cardsCollection.populateDeck(jsonFilePath, \"Resource\");\n//\n//        // Check that cards have been added to the collection\n//        //assertTrue(cardsCollection.size() =  40);\n//    }\n    // Add more tests for other methods\n    @Test\n    public void testPopulateDeckObjectiveCard() {\n        // Assume that `cards.json` is a valid JSON file in the `src/test/resources` directory\n        String jsonFilePath = \"/Users/lollo/IdeaProjects/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseObjectiveCards.json\";\n\n        int initialSize = cardsCollection.size();\n\n        // Call the method under test\n        cardsCollection.populateDeckObjective(jsonFilePath);\n\n        // Check that cards have been added to the collection\n        assertTrue(cardsCollection.size()  ==  16);\n    }\n\n    @Test\n    public void testPopulateDeckStarterFrontAndBack() {\n        // Assume that `starterCards.json` is a valid JSON file in the `src/test/resources` directory\n        String jsonFilePath = \"/Users/lollo/IdeaProjects/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseStarterCards.json\";\n\n        int initialSize = cardsCollection.size();\n\n        // Call the method under test\n        cardsCollection.populateDeckStarterFrontAndBack(jsonFilePath);\n\n        // Check that cards have been added to the collection\n        assertTrue(cardsCollection.size() > 0);\n    }\n\n\n\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/test/java/it/polimi/ingsw/model/CardsCollectionTest.java b/src/test/java/it/polimi/ingsw/model/CardsCollectionTest.java
+--- a/src/test/java/it/polimi/ingsw/model/CardsCollectionTest.java	(revision d3b0d61aaabe5b7ebe1fee86a7352f6cda21bd39)
++++ b/src/test/java/it/polimi/ingsw/model/CardsCollectionTest.java	(date 1711913048410)
+@@ -40,6 +40,7 @@
+ //        // Check that cards have been added to the collection
+ //        //assertTrue(cardsCollection.size() =  40);
+ //    }
++
+     // Add more tests for other methods
+     @Test
+     public void testPopulateDeckObjectiveCard() {

@@ -75,6 +75,15 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
         return score_strategy.calculateScore(this, personal_board);
     }
 
+    @Override
+    public String toString() {
+        return "ObjectiveCard{" +
+                "id=" + super.id+
+                ", orientation=" + orientation +
+
+                // Add other attributes here...
+                '}';
+    }
 }
 
 
