@@ -12,6 +12,7 @@ it/polimi/ingsw/model/BoardCellCoordinate.class
 it/polimi/ingsw/model/Resource.class
 it/polimi/ingsw/model/CommonBoardNode.class
 it/polimi/ingsw/model/Item.class
+it/polimi/ingsw/model/ItemObjectiveCard$1.class
 it/polimi/ingsw/model/Game$1.class
 it/polimi/ingsw/model/Cell.class
 it/polimi/ingsw/model/Coordinate.class
@@ -24,5 +25,6 @@ it/polimi/ingsw/model/CardsCollection.class
 it/polimi/ingsw/model/Player.class
 it/polimi/ingsw/model/IllegalMoveException.class
 it/polimi/ingsw/model/DiagonalPatternObjectiveCard.class
+it/polimi/ingsw/model/ResourceObjectiveCard$1.class
 it/polimi/ingsw/model/Corner.class
 it/polimi/ingsw/model/CommonBoard.class
