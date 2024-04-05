@@ -1,0 +1,115 @@
+
+{
+  "cards": [
+    {
+      "id": 81,
+      "type": "Starter",
+      "permanentResource1": "Butterfly",
+      "permanentResource2": null,
+      "permanentResource3": null,
+      "frontVisibleCorners": 4,
+      "frontNE": "Leaf",
+      "frontSE": "Empty",
+      "frontSW": "Butterfly",
+      "frontNW": "Empty",
+      "backVisibleCorners": 4,
+      "backNE": "Leaf",
+      "backSE": "Wolf",
+      "backSW": "Butterfly",
+      "backNW": "Mushroom"
+    },
+
+    {
+      "id": 82,
+      "type": "Starter",
+      "permanentResource1": "Mushroom",
+      "permanentResource2": null,
+      "permanentResource3": null,
+      "frontVisibleCorners": 4,
+      "frontNE": "Empty",
+      "frontSE": "Mushroom",
+      "frontSW": "Empty",
+      "frontNW": "Wolf",
+      "backVisibleCorners": 4,
+      "backNE": "Wolf",
+      "backSE": "Butterfly",
+      "backSW": "Mushroom",
+      "backNW": "Leaf"
+    },
+
+    {
+      "id": 83,
+      "type": "Starter",
+      "permanentResource1": "Leaf",
+      "permanentResource2": "Mushroom",
+      "permanentResource3": null,
+      "frontVisibleCorners": 4,
+      "frontNE": "Empty",
+      "frontSE": "Empty",
+      "frontSW": "Empty",
+      "frontNW": "Empty",
+      "backVisibleCorners": 4,
+      "backNE": "Wolf",
+      "backSE": "Leaf",
+      "backSW": "Mushroom",
+      "backNW": "Butterfly"
+    },
+
+
+    {
+      "id": 84,
+      "type": "Starter",
+      "permanentResource1": "Wolf",
+      "permanentResource2": "Butterfly",
+      "permanentResource3": null,
+      "frontVisibleCorners": 4,
+      "frontNE": "Empty",
+      "frontSE": "Empty",
+      "frontSW": "Empty",
+      "frontNW": "Empty",
+      "backVisibleCorners": 4,
+      "backNE": "Butterfly",
+      "backSE": "Mushroom",
+      "backSW": "Wolf",
+      "backNW": "Leaf"
+    },
+
+
+
+    {
+      "id": 85,
+      "type": "Starter",
+      "permanentResource1": "Wolf",
+      "permanentResource2": "Butterfly",
+      "permanentResource3": "Leaf",
+      "frontVisibleCorners": 2,
+      "frontNE": "Empty",
+      "frontSE": "NonVisible",
+      "frontSW": "NonVisible",
+      "frontNW": "Empty",
+      "backVisibleCorners": 4,
+      "backNE": "Mushroom",
+      "backSE": "Wolf",
+      "backSW": "Leaf",
+      "backNW": "Butterfly"
+    },
+
+    {
+      "id": 86,
+      "type": "Starter",
+      "permanentResource1": "Leaf",
+      "permanentResource2": "Wolf",
+      "permanentResource3": "Mushroom",
+      "frontVisibleCorners": 2,
+      "frontNE": "Empty",
+      "frontSE": "NonVisible",
+      "frontSW": "NonVisible",
+      "frontNW": "Empty",
+      "backVisibleCorners": 4,
+      "backNE": "Wolf",
+      "backSE": "Butterfly",
+      "backSW": "Leaf",
+      "backNW": "Mushroom"
+    }
+  ]
+}

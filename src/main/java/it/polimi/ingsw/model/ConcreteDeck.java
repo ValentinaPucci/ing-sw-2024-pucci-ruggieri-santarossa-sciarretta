@@ -1,5 +1,7 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.cards.Card;
+
 import java.util.Collections;
 import java.util.Stack;
 
@@ -10,7 +12,7 @@ public class ConcreteDeck {
     private Stack<Card> deck;
 
 
-   // To Use this class you call the constructor with the path to the json and the "type" of cards you want in the deck.
+    // To Use this class you call the constructor with the path to the json and the "type" of cards you want in the deck.
     // Then you can use on it methods such as shuffle or pop.
 
 

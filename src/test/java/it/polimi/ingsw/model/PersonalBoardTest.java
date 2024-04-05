@@ -1,5 +1,18 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.board.BoardCellCoordinate;
+import it.polimi.ingsw.model.board.Corner;
+import it.polimi.ingsw.model.board.PersonalBoard;
+import it.polimi.ingsw.model.cards.gameCards.GoldCard;
+import it.polimi.ingsw.model.cards.gameCards.ResourceCard;
+import it.polimi.ingsw.model.cards.objectiveCards.DiagonalPatternObjectiveCard;
+import it.polimi.ingsw.model.cards.objectiveCards.ItemObjectiveCard;
+import it.polimi.ingsw.model.cards.objectiveCards.ResourceObjectiveCard;
+import it.polimi.ingsw.model.enumerations.Color;
+import it.polimi.ingsw.model.enumerations.Item;
+import it.polimi.ingsw.model.enumerations.Orientation;
+import it.polimi.ingsw.model.enumerations.Resource;
+import it.polimi.ingsw.model.exceptions.IllegalMoveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
