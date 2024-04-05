@@ -21,7 +21,7 @@ import it.polimi.ingsw.model.enumerations.Resource;
 
 import java.io.File;
 
-
+// TODO: Correct Gold card upload.
 public  class CardsCollection {
     public List<Card> cards;
 
@@ -39,6 +39,12 @@ public  class CardsCollection {
 
 
     // In this case we are creating only the FRONT, but we need also the back of the card.
+
+    /**
+     *
+     * @param jsonFilePath
+     * @param type
+     */
     public void populateDeck(String jsonFilePath, String type) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
