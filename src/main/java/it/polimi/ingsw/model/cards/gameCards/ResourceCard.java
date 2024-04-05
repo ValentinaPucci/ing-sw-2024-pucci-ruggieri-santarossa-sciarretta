@@ -1,12 +1,13 @@
 package it.polimi.ingsw.model.cards.gameCards;
 
+import it.polimi.ingsw.interfaces.ResourceCardIC;
 import it.polimi.ingsw.model.board.BoardCellCoordinate;
 import it.polimi.ingsw.model.board.Corner;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.enumerations.Color;
 import it.polimi.ingsw.model.enumerations.Orientation;
 
-public class ResourceCard extends Card {
+public class ResourceCard extends Card implements ResourceCardIC {
 
     // TODO: you always have to consider the orientation of the card...
     public int points;

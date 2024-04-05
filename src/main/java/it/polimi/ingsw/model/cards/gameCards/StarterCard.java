@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model.cards.gameCards;
 
+import it.polimi.ingsw.interfaces.StarterCardIC;
 import it.polimi.ingsw.model.board.BoardCellCoordinate;
 import it.polimi.ingsw.model.board.Corner;
 import it.polimi.ingsw.model.cards.Card;
@@ -8,7 +9,7 @@ import it.polimi.ingsw.model.enumerations.Resource;
 
 import java.util.Optional;
 
-public class StarterCard extends Card {
+public class StarterCard extends Card implements StarterCardIC {
     public static final int STARTER_CARD_COORDINATE = 500;
     public Optional<Resource> front_resource1;
     public Optional<Resource> front_resource2;

@@ -1,20 +1,36 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.listener.ListenersHandler;
 import it.polimi.ingsw.model.board.CommonBoard;
 import it.polimi.ingsw.model.board.PersonalBoard;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.ingsw.model.cards.gameCards.ResourceCard;
 import it.polimi.ingsw.model.cards.gameCards.StarterCard;
+import it.polimi.ingsw.model.chat.Chat;
 import it.polimi.ingsw.model.enumerations.Coordinate;
+import it.polimi.ingsw.model.enumerations.GameStatus;
+import it.polimi.ingsw.model.exceptions.MaxPlayerLimitException;
+import it.polimi.ingsw.model.exceptions.PlayerAlreadyConnectedException;
 
 import java.util.*;
 
+public class GameModel {
 
-
-public class Game {
+    /**
+     * It maps the players' indexes in the queue with their position on the score board
+     * 2,1 means the second player came in first place
+     */
+    private Map<Integer, Integer> leaderBoard;
+    private Integer gameId;
+    private Integer current_player;
+    private Chat chat;
+    private GameStatus status;
+    private Integer first_finishing_player = -1;
+    private Integer first_finishing_turn_player = -1;
+    private transient ListenersHandler listenersHandler;
     private Queue<Player> player_queue;
-    private Player[] players;
+    private List<Player> players;
     private int num_players;
     private boolean game_over;
     private boolean second_last_turn;
@@ -33,10 +49,17 @@ public class Game {
     private int row;
 
 
-    public Game(CommonBoard common_board, Player[] players) {
+    public GameModel(CommonBoard common_board, List<Player> players) {
+
+        Random random = new Random();
+        gameId = random.nextInt(1000000);
+        status = GameStatus.WAIT;
+        chat = new Chat();
+        listenersHandler = new ListenersHandler();
+
         this.player_queue = new LinkedList<>();
         this.players = players;
-        this.num_players = players.length;
+        this.num_players = players.size();
         this.game_over = false;
         this.second_last_turn = false;
         this.final_scores = new int[num_players];
@@ -46,6 +69,7 @@ public class Game {
         this.starter_deck = common_board.getStarterConcreteDeck();
         this.objective_deck = common_board.getObjectiveConcreteDeck();
         // Aggiunta dei giocatori alla coda dei giocatori
+        this.current_player = -1;
         for (Player player : players) {
             this.player_queue.offer(player);
         }
@@ -97,10 +121,49 @@ public class Game {
 //        setWinner();
 //    }
 
+    // Getters and Setters
+
+    /**
+     * @return the number of players
+     */
+    public int getNumPlayers() {
+        return players.size();
+    }
+
+    /**
+     * @return the number of player's connected
+     */
+    public int getNumOnlinePlayers() {
+        return players.stream().filter(Player::isConnected).toList().size();
+    }
+
+    /**
+     * @return player's list
+     */
+    public List<Player> getPlayers() {
+        return players;
+    }
+
     public void initializeGame(){
         common_board.initializeBoard();
         dealCards();
     }
+
+//    public void addPlayer(Player player) throws PlayerAlreadyConnectedException, MaxPlayerLimitException {
+//        // We start by checking that the player is not already in the game
+//        // Then, we check weather the maximum number of players has been reached or not
+//        if (players.contains(player)) {
+//            throw new PlayerAlreadyConnectedException();
+//        }
+//        else {
+//            if (players.size() == 6) {
+//                throw new MaxPlayerLimitException();
+//                listenersHandler.notify_playerJoined(this);
+//                // we must implement listener first
+//            }
+//
+//        }
+//    }
 
 
     public void dealCards() {
@@ -181,10 +244,6 @@ public class Game {
         return null;
     }
 
-    public boolean isSecondLastTurn() {
-        return second_last_turn;
-    }
-
     public void lastTurn() {
         for (int i = 0; i < num_players; i++) {
             Player current_player = player_queue.poll();
@@ -216,20 +275,12 @@ public class Game {
         lastTurn();
     }
 
-    public boolean isGameOver() {
-        return game_over;
-    }
-
-    public Player[] getWinners(){
-        return this.winners;
-    }
-
     public void calculateFinalScores(){
         for(int i = 0; i < num_players; i++){
-            this.final_scores[i] = players[i].getPersonalBoard().getPoints() +
-                    players[i].getChosenObjectiveCard().calculateScore(players[i].getPersonalBoard()) +
-                    common_board.getCommonObjectives()[0].calculateScore(players[i].getPersonalBoard()) +
-                    common_board.getCommonObjectives()[1].calculateScore(players[i].getPersonalBoard());
+            this.final_scores[i] = players.get(i).getPersonalBoard().getPoints() +
+                    players.get(i).getChosenObjectiveCard().calculateScore(players.get(i).getPersonalBoard()) +
+                    common_board.getCommonObjectives()[0].calculateScore(players.get(i).getPersonalBoard()) +
+                    common_board.getCommonObjectives()[1].calculateScore(players.get(i).getPersonalBoard());
         }
     }
 
@@ -246,9 +297,9 @@ public class Game {
             }
         }
         // find players with maximum score
-        for (int i = 0; i < players.length; i++) {
+        for (int i = 0; i < players.size(); i++) {
             if (final_scores[i] == maxScore) {
-                winnersList.add(players[i]);
+                winnersList.add(players.get(i));
             }
         }
         // set winners
@@ -259,8 +310,96 @@ public class Game {
         return final_scores[player_index];
     }
 
-    public CommonBoard getCommonBoard(){
+    public Integer getGameId() {
+        return this.gameId;
+    }
+
+    public Integer getCurrentPlayer() {
+        return this.current_player;
+    }
+
+    public Chat getChat() {
+        return this.chat;
+    }
+
+    public GameStatus getStatus() {
+        return this.status;
+    }
+
+    public Integer getFirstFinishingPlayer() {
+        return this.first_finishing_player;
+    }
+
+    public Integer getFirstFinishingTurnPlayer() {
+        return this.first_finishing_turn_player;
+    }
+
+    public ListenersHandler getListenersHandler() {
+        return this.listenersHandler;
+    }
+
+    public Queue<Player> getPlayerQueue() {
+        return this.player_queue;
+    }
+
+    public CommonBoard getCommonBoard() {
         return this.common_board;
+    }
+
+    public ConcreteDeck getResourceDeck() {
+        return this.resource_deck;
+    }
+
+    public ConcreteDeck getGoldDeck() {
+        return this.gold_deck;
+    }
+
+    public ConcreteDeck getObjectiveDeck() {
+        return this.objective_deck;
+    }
+
+    public ConcreteDeck getStarterDeck() {
+        return this.starter_deck;
+    }
+
+    public int[] getFinalScores() {
+        return this.final_scores;
+    }
+
+    public Coordinate getCoordinate() {
+        return this.coordinate;
+    }
+
+    public ResourceCard getAlreadyPlacedCard() {
+        return this.already_placed_card;
+    }
+
+    public int getFromWhereDraw() {
+        return this.from_where_draw;
+    }
+
+    public int getFromWhichDeckIndex() {
+        return this.from_which_deckindex;
+    }
+
+    public boolean isSecondLastTurn() {
+        return second_last_turn;
+    }
+
+    public boolean isGameOver() {
+        return game_over;
+    }
+
+    public Player[] getWinners(){
+        return this.winners;
+    }
+
+    public int getCol() {
+        return this.col;
+    }
+
+    public int getRow() {
+        return this.row;
     }
 }
 
