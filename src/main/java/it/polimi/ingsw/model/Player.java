@@ -6,11 +6,14 @@ import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.ingsw.model.cards.gameCards.ResourceCard;
 import it.polimi.ingsw.model.cards.gameCards.StarterCard;
+import it.polimi.ingsw.listener.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player {
+
+public class Player implements Serializable, PlayerIC {
     private int id;
     private String nickname;
     private List<Card> card_hand;
@@ -26,7 +29,7 @@ public class Player {
     private boolean ready_to_start = false;
     private List<GameListener> listeners;
 
-   public Player(int id, String nickname) {
+    public Player(int id, String nickname) {
         this.id = id;
         this.nickname = nickname;
         this.card_hand = new ArrayList<>();
@@ -44,11 +47,20 @@ public class Player {
     }
 
     public void playStarterCard() {
-       personal_board.bruteForcePlaceCardSE(starter_card, 50, 50);
+        personal_board.bruteForcePlaceCardSE(starter_card, 50, 50);
     }
-    public int getId(){
-       return id;
-   }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
+    }
 
     public PersonalBoard getPersonalBoard() {
         return personal_board;
@@ -64,9 +76,13 @@ public class Player {
         return this.chosen_card;
     }
 
+    /**
+     * @return chosen_objective
+     */
     public ObjectiveCard getChosenObjectiveCard() {
         return this.chosen_objective;
     }
+
 
     public void setScoreBoardPosition() {
         this.score_board_position = game.getCommonBoard().getPlayerPosition(id);
@@ -85,16 +101,16 @@ public class Player {
         this.final_score = game.getFinalScore(id);
     }
 
-    public void addToHand(Card card){
-       this.card_hand.add(card);
+    public void addToHand(Card card) {
+        this.card_hand.add(card);
     }
 
-    public void removeFromHand(Card card){
-       this.card_hand.remove(card);
+    public void removeFromHand(Card card) {
+        this.card_hand.remove(card);
     }
 
 
-    public void setSecretObjectives(ObjectiveCard objective1, ObjectiveCard objective2){
+    public void setSecretObjectives(ObjectiveCard objective1, ObjectiveCard objective2) {
         secret_objectives[0] = objective1;
         secret_objectives[1] = objective2;
     }

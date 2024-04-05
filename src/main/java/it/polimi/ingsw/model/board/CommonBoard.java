@@ -1,4 +1,5 @@
 package it.polimi.ingsw.model.board;
+import it.polimi.ingsw.interfaces.CommonBoardIC;
 import it.polimi.ingsw.model.CardsCollection;
 import it.polimi.ingsw.model.ConcreteDeck;
 import it.polimi.ingsw.model.cards.Card;
@@ -7,7 +8,7 @@ import it.polimi.ingsw.model.exceptions.EmptyStackException;
 
 //NB il giocatore iniziale (pedina nera) è il giocatore 0
 
-public class CommonBoard {
+public class CommonBoard implements CommonBoardIC {
     private ConcreteDeck resource_concrete_deck; // resource_concrete_deck
     private ConcreteDeck gold_concrete_deck; // gold_concrete_deck
     private ConcreteDeck starter_concrete_deck;
