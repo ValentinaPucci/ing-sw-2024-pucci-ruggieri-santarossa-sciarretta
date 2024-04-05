@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model.cards.objectiveCards;
 
+import it.polimi.ingsw.interfaces.ObjectiveCardIC;
 import it.polimi.ingsw.model.board.PersonalBoard;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.enumerations.Orientation;
 
-public abstract class ObjectiveCard extends Card {
+public abstract class ObjectiveCard extends Card implements ObjectiveCardIC {
     private int points;
 
     /**

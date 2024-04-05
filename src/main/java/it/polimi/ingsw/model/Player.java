@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.interfaces.PlayerIC;
 import it.polimi.ingsw.model.board.PersonalBoard;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.objectiveCards.ObjectiveCard;
@@ -20,7 +21,10 @@ public class Player {
     private ResourceCard chosen_card;
     private int score_board_position;
     private int final_score;
-    private Game game;
+    private GameModel game;
+    private boolean connected = true;
+    private boolean ready_to_start = false;
+    private List<GameListener> listeners;
 
    public Player(int id, String nickname) {
         this.id = id;
@@ -95,5 +99,69 @@ public class Player {
         secret_objectives[1] = objective2;
     }
 
+    /**
+     * @return the player's connection status
+     */
+    public boolean isConnected() {
+        return connected;
+    }
+
+    /**
+     * @param connected sets the player's connection status to the param
+     */
+    public void setConnection(boolean connected) {
+        this.connected = connected;
+    }
+
+    /**
+     * @return the player's readiness to start
+     */
+    public boolean getReadyToStart() {
+        return ready_to_start;
+    }
+
+    /**
+     * Sets the player as ready to play
+     */
+    public void setReadyToStart() {
+        ready_to_start = true;
+    }
+
+    /**
+     * Sets the player as not ready to play
+     */
+    public void setNotReadyToStart() {
+        ready_to_start = false;
+    }
+
+    public void addListener(GameListener obj) {
+        listeners.add(obj);
+    }
+
+    /**
+     * @return the list of gameListeners attached to the player
+     */
+    public List<GameListener> getListeners() {
+        return listeners;
+    }
+
+//    public void addPoints(Card card) {
+//        personal_board.updatePoints(card);
+//        notify_addedPoint();
+//
+//    }
+//    private void notify_addedPoint(int point, Game model) {
+//        Iterator<GameListener> i = listeners.iterator();
+//        while (i.hasNext()) {
+//            GameListener l = i.next();
+//            try {
+//                presonal_board.update
+//            } catch (RemoteException e) {
+//                printAsync("During notification of notify_addedPoint, a disconnection has been detected before heartbeat");
+//                i.remove();
+//            }
+//        }
+//    }
+// }
 }
 
