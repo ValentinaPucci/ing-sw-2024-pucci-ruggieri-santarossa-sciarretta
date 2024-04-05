@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import org.junit.jupiter.api.Assertions;
+import it.polimi.ingsw.model.board.CommonBoard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -59,6 +59,7 @@ public class CommonBoardTest {
 
     @Test
     public void testMovePlayer() {
+
         this.commonBoard.initializeBoard();
 
         //testing initial position of players

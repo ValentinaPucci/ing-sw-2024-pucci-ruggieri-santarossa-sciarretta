@@ -1,5 +1,11 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.board.PersonalBoard;
+import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.objectiveCards.ObjectiveCard;
+import it.polimi.ingsw.model.cards.gameCards.ResourceCard;
+import it.polimi.ingsw.model.cards.gameCards.StarterCard;
+
 import java.util.ArrayList;
 import java.util.List;
 

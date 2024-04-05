@@ -5,6 +5,19 @@ import java.util.List;
 import java.util.Optional;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.model.board.Corner;
+import it.polimi.ingsw.model.cards.*;
+import it.polimi.ingsw.model.cards.gameCards.GoldCard;
+import it.polimi.ingsw.model.cards.gameCards.ResourceCard;
+import it.polimi.ingsw.model.cards.gameCards.StarterCard;
+import it.polimi.ingsw.model.cards.objectiveCards.DiagonalPatternObjectiveCard;
+import it.polimi.ingsw.model.cards.objectiveCards.ItemObjectiveCard;
+import it.polimi.ingsw.model.cards.objectiveCards.LetterPatternObjectiveCard;
+import it.polimi.ingsw.model.cards.objectiveCards.ResourceObjectiveCard;
+import it.polimi.ingsw.model.enumerations.Color;
+import it.polimi.ingsw.model.enumerations.Item;
+import it.polimi.ingsw.model.enumerations.Orientation;
+import it.polimi.ingsw.model.enumerations.Resource;
 
 import java.io.File;
 
@@ -49,7 +62,7 @@ public  class CardsCollection {
                 }
 
                 String NE_corner_content = cardNode.path("NE").asText();
-                System.out.println(NE_corner_content);
+                //System.out.println(NE_corner_content);
                 if (NE_corner_content.equals("NonVisible")) {
                     actual_corners[0][1].is_visible = false;
                 } else {
@@ -64,7 +77,7 @@ public  class CardsCollection {
                 }
                 // SE Corner.
                 String SE_corner_content = cardNode.path("SE").asText();
-                System.out.println(SE_corner_content);
+                //System.out.println(SE_corner_content);
                 if (SE_corner_content.equals("NonVisible")) {
                     actual_corners[1][0].is_visible = false;
                 } else {
@@ -78,7 +91,7 @@ public  class CardsCollection {
                     }
                 // NO corner.
                 String NO_corner_content = cardNode.path("NW").asText();
-                System.out.println(NO_corner_content);
+                //System.out.println(NO_corner_content);
                 if (NO_corner_content.equals("NonVisible")) {
                     actual_corners[0][0].is_visible = false;
                 } else {
@@ -91,7 +104,7 @@ public  class CardsCollection {
                 }
                 // SO corner.
                 String SO_corner_content = cardNode.path("SW").asText();
-                System.out.println(SO_corner_content);
+                //System.out.println(SO_corner_content);
                 if (SO_corner_content.equals("NonVisible")) {
                     actual_corners[1][1].is_visible = false;
                 } else {
@@ -140,7 +153,7 @@ public  class CardsCollection {
                     this.addCard(gold_card);
                     }
                 }
-                System.out.println("Deck populated successfully.");
+                //System.out.println("Deck populated successfully.");
             } catch(Exception e){
                 System.err.println("Error populating deck: " + e.getMessage());
             }
@@ -161,25 +174,25 @@ public  class CardsCollection {
                 String pattern = cardNode.path("pattern").asText();
                // System.out.println(pattern);
                 if (pattern.equals("L")) {
-                    System.out.println("L pattern");
+                    //System.out.println("L pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     card.init_obj_L();
                     // come si implementa?? come si collegano??
                     this.addCard(card);
                 }
                 if (pattern.equals("J")) {
-                    System.out.println("J pattern");
+                    //System.out.println("J pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     card.init_obj_J();
                     this.addCard(card);
                 }
                 if (pattern.equals("P")) {
-                    System.out.println("P pattern");
+                    //System.out.println("P pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     this.addCard(card);
                 }
                 if (pattern.equals("Q")) {
-                    System.out.println("Q pattern");
+                    //System.out.println("Q pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
                     card.init_obj_q();
                     this.addCard(card);
@@ -187,14 +200,14 @@ public  class CardsCollection {
                 if (pattern.equals("increasing_diagonal")) {
                     DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation, points);
                     String color = cardNode.path("color1").asText();
-                    System.out.println(card.toString());  // Print the color string
+                    //System.out.println(card.toString());  // Print the color string
                     card.init_objIncreasingDiagonal(Color.valueOf(color.toUpperCase()));
                     this.addCard(card);
                 }
                 if (pattern.equals("decreasing_diagonal")) {
                     DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation, points);
                     String color = cardNode.path("color1").asText();
-                    System.out.println(card.toString());
+                    //System.out.println(card.toString());
                     card.init_objDecreasingDiagonal(Color.valueOf(color.toUpperCase()));
                     this.addCard(card);
                 }
@@ -209,16 +222,16 @@ public  class CardsCollection {
 
                    if(num_feathers != 0 || num_potions != 0 || num_parchments != 0) {
                        ItemObjectiveCard card = new ItemObjectiveCard(id, orientation, points, num_feathers, num_potions, num_parchments);
-                       System.out.println("item objective card");
+                       //System.out.println("item objective card");
                        this.addCard(card);
                    } else {
                        ResourceObjectiveCard card = new ResourceObjectiveCard(id, orientation, points, num_mushrooms, num_leaves, num_butterflies, num_wolves);
-                       System.out.println("Resource objective card");
+                       //System.out.println("Resource objective card");
                        this.addCard(card);
                    }
                 }
             }
-            System.out.println("Objective cards Deck populated successfully.");
+            //System.out.println("Objective cards Deck populated successfully.");
         } catch (Exception e) {
             System.err.println("Error populating objective cards deck: " + e.getMessage());
         }
@@ -263,7 +276,7 @@ public  class CardsCollection {
                     actual_corners_front[0][1].is_visible = false;
                 } else {
                     if(!front_NE.equals("Empty")){
-                        System.out.println(actual_corners_front[0][1].resource);
+                        //System.out.println(actual_corners_front[0][1].resource);
                         actual_corners_front[0][1].setCornerResource(Resource.valueOf(front_NE.toUpperCase()));}
                 }
                 if (front_SE.equals("NonVisible")) {
@@ -320,27 +333,27 @@ public  class CardsCollection {
                             null,
                             actual_corners_front);
                     this.addCard(card_front);
-                    System.out.println(card_front.toString());
+                    //System.out.println(card_front.toString());
                 } else if ("NULL".equals(permanent_resource3.toUpperCase())) {
                     card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
                             Resource.valueOf(permanent_resource2.toUpperCase()),
                             null,
                             actual_corners_front);
                     this.addCard(card_front);
-                    System.out.println(card_front.toString());
+                    //System.out.println(card_front.toString());
                 } else {
                     card_front.setStarterCardFront(Resource.valueOf(permanent_resource1.toUpperCase()),
                             Resource.valueOf(permanent_resource2.toUpperCase()),
                             Resource.valueOf(permanent_resource3.toUpperCase()),
                             actual_corners_front);
                     this.addCard(card_front);
-                    System.out.println(card_front.toString());
+                    //System.out.println(card_front.toString());
                 }
                 card_back.setStarterCardBack(actual_corners_back);
                 this.addCard(card_back);
-                System.out.println(card_back.toString());
+                //System.out.println(card_back.toString());
             }
-            System.out.println("Starter cards Deck populated successfully.");
+            //System.out.println("Starter cards Deck populated successfully.");
         } catch (Exception e) {
             System.err.println("Error populating starter cards deck: " + e.getMessage());
         }

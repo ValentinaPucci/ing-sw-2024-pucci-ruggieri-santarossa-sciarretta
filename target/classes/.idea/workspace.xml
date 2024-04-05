@@ -1,13 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="AnalysisUIOptions">
-    <option name="SCOPE_TYPE" value="3" />
-  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="a8ca864a-4374-415f-a864-e25a5b975bb9" name="Changes" comment="update following attributes's name conventions" />
+    <list default="true" id="226d8d7f-424b-453c-b2b9-9d3d99634362" name="Changes" comment="fix">
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/compiler.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/encodings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/jarRepositories.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/libraries/fasterxml_jackson_core_annotations.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/libraries/fasterxml_jackson_core_databind.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/uiDesigner.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseGameCards.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseObjectiveCards.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/database/databaseStarterCards.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/lib/byte-buddy-1.14.9.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/lib/jackson-annotations-2.17.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/lib/jackson-core-2.17.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/lib/jackson-databind-2.17.0.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/target/surefire-reports/TEST-it.polimi.ingsw.model.CardsCollectionTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/target/surefire-reports/TEST-it.polimi.ingsw.model.PersonalBoardTest.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/target/surefire-reports/it.polimi.ingsw.model.CardsCollectionTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/target/surefire-reports/it.polimi.ingsw.model.PersonalBoardTest.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/uml_DRAFT.drawio.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/uml_DRAFT.drawio.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/model/CommonBoard.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/model/CommonBoard.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/model/ConcreteDeck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/model/ConcreteDeck.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/CommonBoard.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/CommonBoard.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/Game$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/Game$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/Game.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/PersonalBoard$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/PersonalBoard$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/PersonalBoard.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/PersonalBoard.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/it/polimi/ingsw/model/Player.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/surefire-reports/TEST-it.polimi.ingsw.model.CardsCollectionTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/surefire-reports/TEST-it.polimi.ingsw.model.CardsCollectionTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/surefire-reports/TEST-it.polimi.ingsw.model.CommonBoardNodeTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/surefire-reports/TEST-it.polimi.ingsw.model.CommonBoardNodeTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/surefire-reports/TEST-it.polimi.ingsw.model.CommonBoardTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/surefire-reports/TEST-it.polimi.ingsw.model.CommonBoardTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/surefire-reports/TEST-it.polimi.ingsw.model.ConcreteDeckTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/surefire-reports/TEST-it.polimi.ingsw.model.ConcreteDeckTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/surefire-reports/TEST-it.polimi.ingsw.model.PersonalBoardTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/surefire-reports/TEST-it.polimi.ingsw.model.PersonalBoardTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/surefire-reports/it.polimi.ingsw.model.CardsCollectionTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/surefire-reports/it.polimi.ingsw.model.CardsCollectionTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/surefire-reports/it.polimi.ingsw.model.CommonBoardTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/surefire-reports/it.polimi.ingsw.model.CommonBoardTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/surefire-reports/it.polimi.ingsw.model.ConcreteDeckTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/surefire-reports/it.polimi.ingsw.model.ConcreteDeckTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/target/surefire-reports/it.polimi.ingsw.model.PersonalBoardTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/target/surefire-reports/it.polimi.ingsw.model.PersonalBoardTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-it.polimi.ingsw.model.CardsCollectionTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-it.polimi.ingsw.model.CardsCollectionTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-it.polimi.ingsw.model.CommonBoardNodeTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-it.polimi.ingsw.model.CommonBoardNodeTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-it.polimi.ingsw.model.CommonBoardTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-it.polimi.ingsw.model.CommonBoardTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-it.polimi.ingsw.model.ConcreteDeckTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-it.polimi.ingsw.model.ConcreteDeckTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/TEST-it.polimi.ingsw.model.PersonalBoardTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/TEST-it.polimi.ingsw.model.PersonalBoardTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/it.polimi.ingsw.model.CardsCollectionTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/it.polimi.ingsw.model.CardsCollectionTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/it.polimi.ingsw.model.CommonBoardNodeTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/it.polimi.ingsw.model.CommonBoardNodeTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/it.polimi.ingsw.model.ConcreteDeckTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/it.polimi.ingsw.model.ConcreteDeckTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/surefire-reports/it.polimi.ingsw.model.PersonalBoardTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/target/surefire-reports/it.polimi.ingsw.model.PersonalBoardTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/test-classes/it/polimi/ingsw/model/CommonBoardTest.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/it/polimi/ingsw/model/CommonBoardTest.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -16,6 +79,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="JUnit5 Test Class" />
+        <option value="Interface" />
         <option value="Class" />
       </list>
     </option>
@@ -23,89 +88,79 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="mock:///ing-sw-2024-pucci-santarossa-ruggieri-sciarretta-effective-pom.xml" root0="FORCE_HIGHLIGHTING" />
+  </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
-  </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 6
+  &quot;associatedIndex&quot;: 4
 }</component>
-  <component name="ProjectId" id="2dajexXglWEJLRHYVzXz8kvU2e4" />
+  <component name="ProjectId" id="2e8B3xpNNhAYQoT03bmutqXm0kz" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
-    <option name="showMembers" value="true" />
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Downloaded.Files.Path.Enabled": "false",
-    "JUnit.CommonBoardTest.testInitializeBoard.executor": "Run",
+    "JUnit.CardsCollectionTest.testPopulateDeck.executor": "Run",
+    "JUnit.ConcreteDeckTest.executor": "Run",
+    "JUnit.ConcreteDeckTest.testPop.executor": "Run",
+    "JUnit.ConcreteDeckTest.testShuffle.executor": "Run",
+    "JUnit.PersonalBoardTest (1).executor": "Run",
     "JUnit.PersonalBoardTest.executor": "Run",
+    "JUnit.PersonalBoardTest.testBruteForcePlaceCardSE.executor": "Run",
+    "JUnit.PersonalBoardTest.testCalculateResourceItemObjective.executor": "Run",
+    "JUnit.PersonalBoardTest.testPlaceCardAtSE.executor": "Run",
+    "JUnit.PersonalBoardTest.testPlaceCardAtSEException.executor": "Coverage",
+    "JUnit.PersonalBoardTest.testUpdateLeaves.executor": "Run",
+    "JUnit.PersonalBoardTest.testUpdateMushrooms.executor": "Run",
+    "JUnit.PersonalBoardTest.updateMushrooms.executor": "Run",
+    "JUnit.PersonalBoardTest.updateMushroomsNegative.executor": "Run",
+    "Maven.ing-sw-2024-pucci-santarossa-ruggieri-sciarretta [clean].executor": "Run",
+    "Maven.ing-sw-2024-pucci-santarossa-ruggieri-sciarretta [compile].executor": "Run",
+    "Maven.ing-sw-2024-pucci-santarossa-ruggieri-sciarretta [install].executor": "Run",
+    "Maven.ing-sw-2024-pucci-santarossa-ruggieri-sciarretta [org.apache.maven.plugins:maven-surefire-plugin:2.22.2:test].executor": "Run",
+    "Maven.ing-sw-2024-pucci-santarossa-ruggieri-sciarretta [package].executor": "Run",
     "Maven.ing-sw-2024-pucci-santarossa-ruggieri-sciarretta [test].executor": "Run",
     "Repository.Attach.Annotations": "false",
     "Repository.Attach.JavaDocs": "false",
     "Repository.Attach.Sources": "false",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
+    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_directory_selection": "/Users/valentinapucci/Desktop/java/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta/src/main/java/it/polimi/ingsw/model",
-    "last_opened_file_path": "/Users/valentinapucci/Desktop/java/ing-sw-2024-pucci-santarossa-ruggieri-sciarretta",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "project.structure.last.edited": "Facets",
+    "project.structure.last.edited": "SDKs",
     "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "configurable.group.editor",
+    "project.structure.side.proportion": "0.30357143",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "coverage",
     "vue.rearranger.settings.migration": "true"
-  },
-  "keyToStringList": {
-    "GitStage.ChangesTree.GroupingKeys": [
-      "directory",
-      "module",
-      "repository"
-    ],
-    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
-      "PLAIN_TEXT"
-    ]
   }
 }]]></component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$" />
-      <recent name="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/model" />
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/database" />
-      <recent name="$PROJECT_DIR$" />
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="it.polimi.ingsw.model" />
     </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
+    <key name="CreateTestDialog.RecentsKey">
       <recent name="it.polimi.ingsw.model" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.CommonBoardTest.testDecksInitialization">
-    <configuration name="CommonBoardTest.testDecksInitialization" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="ing-sw-2024-pucci-santarossa-ruggieri-sciarretta" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="it.polimi.ingsw.model.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="it.polimi.ingsw.model" />
-      <option name="MAIN_CLASS_NAME" value="it.polimi.ingsw.model.CommonBoardTest" />
-      <option name="METHOD_NAME" value="testDecksInitialization" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
+  <component name="RunManager" selected="JUnit.CommonBoardTest.testInitializeBoard">
     <configuration name="CommonBoardTest.testInitializeBoard" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ing-sw-2024-pucci-santarossa-ruggieri-sciarretta" />
       <extension name="coverage">
@@ -122,11 +177,42 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="ConcreteDeckTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ing-sw-2024-pucci-santarossa-ruggieri-sciarretta" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.polimi.ingsw.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="it.polimi.ingsw.model" />
+      <option name="MAIN_CLASS_NAME" value="it.polimi.ingsw.model.ConcreteDeckTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ConcreteDeckTest.testShuffle" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ing-sw-2024-pucci-santarossa-ruggieri-sciarretta" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.polimi.ingsw.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="it.polimi.ingsw.model" />
+      <option name="MAIN_CLASS_NAME" value="it.polimi.ingsw.model.ConcreteDeckTest" />
+      <option name="METHOD_NAME" value="testShuffle" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="PersonalBoardTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ing-sw-2024-pucci-santarossa-ruggieri-sciarretta" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="it.polimi.ingsw.model.exceptions.*" />
+          <option name="PATTERN" value="it.polimi.ingsw.model.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -137,18 +223,89 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="PersonalBoardTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ing-sw-2024-pucci-santarossa-ruggieri-sciarretta" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.polimi.ingsw.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="it.polimi.ingsw.model" />
+      <option name="MAIN_CLASS_NAME" value="it.polimi.ingsw.model.PersonalBoardTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="PersonalBoardTest.testCalculateResourceItemObjective" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ing-sw-2024-pucci-santarossa-ruggieri-sciarretta" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.polimi.ingsw.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="it.polimi.ingsw.model" />
+      <option name="MAIN_CLASS_NAME" value="it.polimi.ingsw.model.PersonalBoardTest" />
+      <option name="METHOD_NAME" value="testCalculateResourceItemObjective" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ing-sw-2024-pucci-santarossa-ruggieri-sciarretta [test]" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="test" />
+                <option value="-Dtest=CommonBoardTest" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" value="pom.xml" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="JUnit.CommonBoardTest.testInitializeBoard" />
+      <item itemvalue="JUnit.ConcreteDeckTest" />
+      <item itemvalue="JUnit.ConcreteDeckTest.testShuffle" />
+      <item itemvalue="JUnit.PersonalBoardTest.testCalculateResourceItemObjective" />
+      <item itemvalue="JUnit.PersonalBoardTest" />
+      <item itemvalue="Maven.ing-sw-2024-pucci-santarossa-ruggieri-sciarretta [test]" />
+    </list>
     <recent_temporary>
       <list>
-        <item itemvalue="JUnit.CommonBoardTest.testDecksInitialization" />
         <item itemvalue="JUnit.CommonBoardTest.testInitializeBoard" />
+        <item itemvalue="JUnit.PersonalBoardTest.testCalculateResourceItemObjective" />
         <item itemvalue="JUnit.PersonalBoardTest" />
+        <item itemvalue="JUnit.ConcreteDeckTest" />
+        <item itemvalue="JUnit.ConcreteDeckTest.testShuffle" />
       </list>
     </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="jdk-21.0.2-corretto-21.0.2-4caba194b151-221dcadf" />
         <option value="jdk-21.0.2-openjdk-21.0.2-4caba194b151-322ed176" />
       </set>
     </attachedChunks>
@@ -156,179 +313,132 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a8ca864a-4374-415f-a864-e25a5b975bb9" name="Changes" comment="" />
-      <created>1710253182823</created>
+      <changelist id="226d8d7f-424b-453c-b2b9-9d3d99634362" name="Changes" comment="" />
+      <created>1711276130694</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1710253182823</updated>
-      <workItem from="1710253183969" duration="957000" />
-      <workItem from="1710336795262" duration="599000" />
-      <workItem from="1710414764832" duration="9794000" />
-      <workItem from="1710520774093" duration="2046000" />
-      <workItem from="1710522835460" duration="3022000" />
-      <workItem from="1710687962069" duration="2270000" />
-      <workItem from="1710690510484" duration="3924000" />
-      <workItem from="1710694445343" duration="1311000" />
-      <workItem from="1710695764341" duration="317000" />
-      <workItem from="1710696590207" duration="754000" />
-      <workItem from="1710757312586" duration="601000" />
-      <workItem from="1710856230403" duration="1943000" />
-      <workItem from="1710861555715" duration="16175000" />
-      <workItem from="1711100665664" duration="571000" />
-      <workItem from="1711199299845" duration="713000" />
-      <workItem from="1711200029081" duration="1756000" />
-      <workItem from="1711269993636" duration="5732000" />
-      <workItem from="1711290757303" duration="1593000" />
-      <workItem from="1711292366710" duration="5788000" />
-      <workItem from="1711299994016" duration="19056000" />
-      <workItem from="1711378786696" duration="14000" />
-      <workItem from="1711378815626" duration="26000" />
-      <workItem from="1711735242406" duration="809000" />
-      <workItem from="1711814042837" duration="233000" />
-      <workItem from="1711814283147" duration="77000" />
-      <workItem from="1711815840092" duration="562000" />
-      <workItem from="1711816558784" duration="456000" />
-      <workItem from="1711817526463" duration="343000" />
-      <workItem from="1711818347954" duration="868000" />
-      <workItem from="1711819229971" duration="17631000" />
+      <updated>1711276130694</updated>
+      <workItem from="1711276132471" duration="58000" />
+      <workItem from="1711276320556" duration="5752000" />
+      <workItem from="1711291988981" duration="309000" />
+      <workItem from="1711361684064" duration="10081000" />
+      <workItem from="1711460221235" duration="13852000" />
+      <workItem from="1711530231403" duration="810000" />
+      <workItem from="1711549573138" duration="6828000" />
+      <workItem from="1711718320669" duration="338000" />
+      <workItem from="1711718671156" duration="7561000" />
+      <workItem from="1711795980804" duration="1799000" />
+      <workItem from="1711797795698" duration="1788000" />
+      <workItem from="1711810569978" duration="3783000" />
+      <workItem from="1712234145785" duration="610000" />
+      <workItem from="1712234765340" duration="81000" />
+      <workItem from="1712235240930" duration="3185000" />
     </task>
-    <task id="LOCAL-00001" summary="database iniziali delle carte risorsa, gold e template per carte starter">
+    <task id="LOCAL-00001" summary="fix">
       <option name="closed" value="true" />
-      <created>1710428321439</created>
+      <created>1711281424972</created>
       <option name="number" value="00001" />
       <option name="presentableId" value="LOCAL-00001" />
       <option name="project" value="LOCAL" />
-      <updated>1710428321439</updated>
+      <updated>1711281424973</updated>
     </task>
-    <task id="LOCAL-00002" summary="starterCardsFront">
+    <task id="LOCAL-00002" summary="bux fixes + some test in PersonalBoardTest">
       <option name="closed" value="true" />
-      <created>1710522781060</created>
+      <created>1711380738883</created>
       <option name="number" value="00002" />
       <option name="presentableId" value="LOCAL-00002" />
       <option name="project" value="LOCAL" />
-      <updated>1710522781060</updated>
+      <updated>1711380738883</updated>
     </task>
-    <task id="LOCAL-00003" summary="objectiveCardsFront">
+    <task id="LOCAL-00003" summary="bux fixes + some test in PersonalBoardTest">
       <option name="closed" value="true" />
-      <created>1710524622519</created>
+      <created>1711380822646</created>
       <option name="number" value="00003" />
       <option name="presentableId" value="LOCAL-00003" />
       <option name="project" value="LOCAL" />
-      <updated>1710524622519</updated>
+      <updated>1711380822646</updated>
     </task>
-    <task id="LOCAL-00004" summary="commonBoard implementation and CommonBoardNode definition and implementation">
+    <task id="LOCAL-00004" summary="fix">
       <option name="closed" value="true" />
-      <created>1710693170287</created>
+      <created>1711380973111</created>
       <option name="number" value="00004" />
       <option name="presentableId" value="LOCAL-00004" />
       <option name="project" value="LOCAL" />
-      <updated>1710693170287</updated>
+      <updated>1711380973111</updated>
     </task>
-    <task id="LOCAL-00005" summary="final CommonBoard + UML updated">
+    <task id="LOCAL-00005" summary="fix + added a test class dor PersonalBoardTest checking for overlapping">
       <option name="closed" value="true" />
-      <created>1710695698635</created>
+      <created>1711381805456</created>
       <option name="number" value="00005" />
       <option name="presentableId" value="LOCAL-00005" />
       <option name="project" value="LOCAL" />
-      <updated>1710695698635</updated>
+      <updated>1711381805456</updated>
     </task>
-    <task id="LOCAL-00006" summary="deletion of the .drawio file">
+    <task id="LOCAL-00006" summary="fix + added a test class dor PersonalBoardTest checking for overlapping">
       <option name="closed" value="true" />
-      <created>1710696684518</created>
+      <created>1711460278656</created>
       <option name="number" value="00006" />
       <option name="presentableId" value="LOCAL-00006" />
       <option name="project" value="LOCAL" />
-      <updated>1710696684518</updated>
+      <updated>1711460278656</updated>
     </task>
-    <task id="LOCAL-00007" summary="UPDATED 'points' DatabaseGameCard">
+    <task id="LOCAL-00007" summary="Modified all placeCardAt- methods in order to take into consideration the whole game dynamics. Added a method in PersonalBoardTest to take into test the new implementations. Bug fixes.">
       <option name="closed" value="true" />
-      <created>1710757766173</created>
+      <created>1711530327273</created>
       <option name="number" value="00007" />
       <option name="presentableId" value="LOCAL-00007" />
       <option name="project" value="LOCAL" />
-      <updated>1710757766173</updated>
+      <updated>1711530327273</updated>
     </task>
-    <task id="LOCAL-00008" summary="update following attributes's name conventions">
+    <task id="LOCAL-00008" summary="added some methods in PersonalBoard, managed different points update, changed some names to the database of gameCards">
       <option name="closed" value="true" />
-      <created>1710857692265</created>
+      <created>1711555798348</created>
       <option name="number" value="00008" />
       <option name="presentableId" value="LOCAL-00008" />
       <option name="project" value="LOCAL" />
-      <updated>1710857692265</updated>
+      <updated>1711555798348</updated>
     </task>
-    <task id="LOCAL-00009" summary="draft end game, deck empty, Game">
+    <task id="LOCAL-00009" summary="Implement a quasi-final version of PersonalBoard. Now, all the methods concerning card placement of both ResourceCards and GoldCards are correctly working, realizing the correct points, resources and items update. Test class for PersonalBoard is partially completed. What remains to test is the correct implementation of the pattern recognition objectives.">
       <option name="closed" value="true" />
-      <created>1711037832082</created>
+      <created>1711727420959</created>
       <option name="number" value="00009" />
       <option name="presentableId" value="LOCAL-00009" />
       <option name="project" value="LOCAL" />
-      <updated>1711037832082</updated>
+      <updated>1711727420959</updated>
     </task>
-    <task id="LOCAL-00010" summary="fixed CommonBoard, Player, Game">
+    <task id="LOCAL-00010" summary="Modified DiagonalPatternScoreStrategy and LetterPatternScoreStrategy classes in order to not count repetitive patterns (as the game rules state). Tested LetterPatternScoreStrategy class with a simple example dealing with overlapped pattern to effectively test the correct response of the method calculateScore.">
       <option name="closed" value="true" />
-      <created>1711302457898</created>
+      <created>1711799458682</created>
       <option name="number" value="00010" />
       <option name="presentableId" value="LOCAL-00010" />
       <option name="project" value="LOCAL" />
-      <updated>1711302457898</updated>
+      <updated>1711799458682</updated>
     </task>
-    <task id="LOCAL-00011" summary="fixed CommonBoard, Player, Game. packages enum e exc creation">
+    <task id="LOCAL-00011" summary="Finished the implementation of every subclass of ObjectiveCard class. Tested the computation of points associated with ResourceObjectiveCard or ItemObjectiveCard.">
       <option name="closed" value="true" />
-      <created>1711308726519</created>
+      <created>1711814090866</created>
       <option name="number" value="00011" />
       <option name="presentableId" value="LOCAL-00011" />
       <option name="project" value="LOCAL" />
-      <updated>1711308726519</updated>
+      <updated>1711814090866</updated>
     </task>
-    <task id="LOCAL-00012" summary="fixed CommonBoard, Player, Game. packages enum e exc creation">
+    <task id="LOCAL-00012" summary="Finished the implementation of every subclass of ObjectiveCard class. Tested the computation of points associated with ResourceObjectiveCard or ItemObjectiveCard.">
       <option name="closed" value="true" />
-      <created>1711369207181</created>
+      <created>1712234340091</created>
       <option name="number" value="00012" />
       <option name="presentableId" value="LOCAL-00012" />
       <option name="project" value="LOCAL" />
-      <updated>1711369207181</updated>
+      <updated>1712234340091</updated>
     </task>
-    <task id="LOCAL-00013" summary="fixed database ObjectiveCard">
+    <task id="LOCAL-00013" summary="fix">
       <option name="closed" value="true" />
-      <created>1711369757712</created>
+      <created>1712235553782</created>
       <option name="number" value="00013" />
       <option name="presentableId" value="LOCAL-00013" />
       <option name="project" value="LOCAL" />
-      <updated>1711369757712</updated>
+      <updated>1712235553782</updated>
     </task>
-    <task id="LOCAL-00014" summary="added bruteForcePlaceStartercard">
-      <option name="closed" value="true" />
-      <created>1711371197696</created>
-      <option name="number" value="00014" />
-      <option name="presentableId" value="LOCAL-00014" />
-      <option name="project" value="LOCAL" />
-      <updated>1711371197696</updated>
-    </task>
-    <task id="LOCAL-00015" summary="draw starter card, set e get starter card">
-      <option name="closed" value="true" />
-      <created>1711373370423</created>
-      <option name="number" value="00015" />
-      <option name="presentableId" value="LOCAL-00015" />
-      <option name="project" value="LOCAL" />
-      <updated>1711373370423</updated>
-    </task>
-    <task id="LOCAL-00016" summary="score calculation updated">
-      <option name="closed" value="true" />
-      <created>1711376242160</created>
-      <option name="number" value="00016" />
-      <option name="presentableId" value="LOCAL-00016" />
-      <option name="project" value="LOCAL" />
-      <updated>1711376242160</updated>
-    </task>
-    <task id="LOCAL-00017" summary="CommonBoardTest">
-      <option name="closed" value="true" />
-      <created>1711914568940</created>
-      <option name="number" value="00017" />
-      <option name="presentableId" value="LOCAL-00017" />
-      <option name="project" value="LOCAL" />
-      <updated>1711914568940</updated>
-    </task>
-    <option name="localTasksCounter" value="18" />
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -346,30 +456,22 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="database iniziali delle carte risorsa, gold e template per carte starter" />
-    <MESSAGE value="starterCardsFront" />
-    <MESSAGE value="objectiveCardsFront" />
-    <MESSAGE value="commonBoard implementation and CommonBoardNode definition and implementation" />
-    <MESSAGE value="final CommonBoard + UML updated" />
-    <MESSAGE value="deletion of the .drawio file" />
-    <MESSAGE value="UPDATED 'points' DatabaseGameCard" />
-    <MESSAGE value="update following attributes's name conventions" />
-    <MESSAGE value="draft end game, deck empty, Game" />
-    <MESSAGE value="fixed CommonBoard, Player, Game" />
-    <MESSAGE value="fixed CommonBoard, Player, Game. packages enum e exc creation" />
-    <MESSAGE value="fixed database ObjectiveCard" />
-    <MESSAGE value="added bruteForcePlaceStartercard" />
-    <MESSAGE value="draw starter card, set e get starter card" />
-    <MESSAGE value="score calculation updated" />
-    <MESSAGE value="CommonBoardTest" />
-    <option name="LAST_COMMIT_MESSAGE" value="CommonBoardTest" />
+    <MESSAGE value="bux fixes + some test in PersonalBoardTest" />
+    <MESSAGE value="fix + added a test class dor PersonalBoardTest checking for overlapping" />
+    <MESSAGE value="Modified all placeCardAt- methods in order to take into consideration the whole game dynamics. Added a method in PersonalBoardTest to take into test the new implementations. Bug fixes." />
+    <MESSAGE value="added some methods in PersonalBoard, managed different points update, changed some names to the database of gameCards" />
+    <MESSAGE value="Implement a quasi-final version of PersonalBoard. Now, all the methods concerning card placement of both ResourceCards and GoldCards are correctly working, realizing the correct points, resources and items update. Test class for PersonalBoard is partially completed. What remains to test is the correct implementation of the pattern recognition objectives." />
+    <MESSAGE value="Modified DiagonalPatternScoreStrategy and LetterPatternScoreStrategy classes in order to not count repetitive patterns (as the game rules state). Tested LetterPatternScoreStrategy class with a simple example dealing with overlapped pattern to effectively test the correct response of the method calculateScore." />
+    <MESSAGE value="Finished the implementation of every subclass of ObjectiveCard class. Tested the computation of points associated with ResourceObjectiveCard or ItemObjectiveCard." />
+    <MESSAGE value="fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <breakpoint enabled="true" type="java-exception">
-          <properties class="java.util.EmptyStackException" package="java.util" />
-          <option name="timeStamp" value="1" />
+          <properties class="org.opentest4j.AssertionFailedError" package="org.opentest4j" />
+          <option name="timeStamp" value="4" />
         </breakpoint>
       </breakpoints>
     </breakpoint-manager>

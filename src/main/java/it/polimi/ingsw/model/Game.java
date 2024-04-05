@@ -1,5 +1,13 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.board.CommonBoard;
+import it.polimi.ingsw.model.board.PersonalBoard;
+import it.polimi.ingsw.model.cards.Card;
+import it.polimi.ingsw.model.cards.objectiveCards.ObjectiveCard;
+import it.polimi.ingsw.model.cards.gameCards.ResourceCard;
+import it.polimi.ingsw.model.cards.gameCards.StarterCard;
+import it.polimi.ingsw.model.enumerations.Coordinate;
+
 import java.util.*;
 
 
@@ -50,37 +58,44 @@ public class Game {
 
     }
 
-    public void gameFlow(){
-        initializeGame();
-        for(int i = 0; i < num_players; i++){
-            Player currentPlayer = player_queue.poll(); // Get and remove the first player from the queue
-            assert currentPlayer != null;
-            currentPlayer.playStarterCard(); // Play the starter card for the current player
-            player_queue.offer(currentPlayer); // Add the current player back to the end of the queue
-        }
-        while (!isGameOver()) {
-            while (!isSecondLastTurn()) {
-                    Player current_player = player_queue.poll(); // Get and remove the first player from the queue
-                    assert current_player != null;
-                    int prec_points = current_player.getPersonalBoard().getPoints();
-                    placeCard(current_player.getChosenGameCard(), current_player.getPersonalBoard(), coordinate, already_placed_card);
-                    int current_points = current_player.getPersonalBoard().getPoints();
-                    int delta = current_points - prec_points;
-                    common_board.movePlayer(current_player.getId(), delta);
-                    current_player.addToHand(drawCard(from_where_draw));
-                    player_queue.offer(current_player); // Add the current player back to the end of the queue
-                    if (common_board.getPartialWinner() != -1)
-                        second_last_turn = true;
-                    if (common_board.getGoldConcreteDeck().isEmpty() && common_board.getResourceConcreteDeck().isEmpty()){
-                        second_last_turn = true;
-                        common_board.setPartialWinner(current_player.getId());
-                    }
-            }
-            secondLastTurn();
-        }
-        calculateFinalScores();
-        setWinner();
-    }
+//    public void gameFlow() {
+//
+//        initializeGame();
+//
+//        for (int i = 0; i < num_players; i++) {
+//            Player currentPlayer = player_queue.poll(); // Get and remove the first player from the queue
+//            assert currentPlayer != null;
+//            currentPlayer.playStarterCard(); // Play the starter card for the current player
+//            player_queue.offer(currentPlayer); // Add the current player back to the end of the queue
+//        }
+//
+//        while (!isGameOver()) {
+//            while (!isSecondLastTurn()) {
+//                    Player current_player = player_queue.poll(); // Get and remove the first player from the queue
+//                    assert current_player != null;
+//                    int prec_points = current_player.getPersonalBoard().getPoints();
+//                    placeCard(current_player.getChosenGameCard(),
+//                            current_player.getPersonalBoard(),
+//                            coordinate,
+//                            already_placed_card);
+//                    int current_points = current_player.getPersonalBoard().getPoints();
+//                    int delta = current_points - prec_points;
+//                    common_board.movePlayer(current_player.getId(), delta);
+//                    current_player.addToHand(drawCard(from_where_draw));
+//                    player_queue.offer(current_player); // Add the current player back to the end of the queue
+//                    if (common_board.getPartialWinner() != -1)
+//                        second_last_turn = true;
+//                    if (common_board.getGoldConcreteDeck().isEmpty() &&
+//                            common_board.getResourceConcreteDeck().isEmpty()){
+//                        second_last_turn = true;
+//                        common_board.setPartialWinner(current_player.getId());
+//                    }
+//            }
+//            secondLastTurn();
+//        }
+//        calculateFinalScores();
+//        setWinner();
+//    }
 
     public void initializeGame(){
         common_board.initializeBoard();
@@ -119,7 +134,10 @@ public class Game {
     }
 
 
-    public void placeCard(ResourceCard card_chosen, PersonalBoard personal_board, Coordinate coordinate, ResourceCard already_placed_card) {
+    public void placeCard(ResourceCard card_chosen,
+                          PersonalBoard personal_board,
+                          Coordinate coordinate,
+                          ResourceCard already_placed_card) {
         switch (coordinate){
             case NE:
                 personal_board.placeCardAtNE(already_placed_card, card_chosen);
@@ -130,7 +148,6 @@ public class Game {
             case NW:
                 personal_board.placeCardAtNW(already_placed_card, card_chosen);
         }
-
     }
     public void setCoordinate(Coordinate coordinate) {
         this.coordinate = coordinate;
