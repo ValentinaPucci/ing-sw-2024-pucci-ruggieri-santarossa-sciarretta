@@ -1,7 +1,7 @@
 package it.polimi.ingsw.model.exceptions;
 
-public class MaxPlayerLimitException extends RuntimeException {
-    public MaxPlayerLimitException() {
+public class MaxPlayersLimitException extends RuntimeException {
+    public MaxPlayersLimitException() {
         super("Max player limit reached! Cannot add more players!");
     }
 }

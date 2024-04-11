@@ -8,6 +8,6 @@ import java.io.Serializable;
 public enum GameStatus implements Serializable {
     WAIT,
     RUNNING,
-    LAST_ROUND,
+    LAST_TURN,
     ENDED
 }
