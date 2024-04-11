@@ -8,12 +8,17 @@ import it.polimi.ingsw.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.ingsw.model.cards.gameCards.ResourceCard;
 import it.polimi.ingsw.model.cards.gameCards.StarterCard;
 import it.polimi.ingsw.model.chat.Chat;
+import it.polimi.ingsw.model.chat.Message;
 import it.polimi.ingsw.model.enumerations.Coordinate;
 import it.polimi.ingsw.model.enumerations.GameStatus;
-import it.polimi.ingsw.model.exceptions.MaxPlayerLimitException;
+import it.polimi.ingsw.model.exceptions.GameEndedException;
+import it.polimi.ingsw.model.exceptions.MaxPlayersLimitException;
+import it.polimi.ingsw.model.exceptions.NotReadyToRunException;
 import it.polimi.ingsw.model.exceptions.PlayerAlreadyConnectedException;
 
 import java.util.*;
+
+import static it.polimi.ingsw.networking.PrintAsync.printAsync;
 
 public class GameModel {
 
@@ -149,21 +154,119 @@ public class GameModel {
         dealCards();
     }
 
-//    public void addPlayer(Player player) throws PlayerAlreadyConnectedException, MaxPlayerLimitException {
-//        // We start by checking that the player is not already in the game
-//        // Then, we check weather the maximum number of players has been reached or not
-//        if (players.contains(player)) {
-//            throw new PlayerAlreadyConnectedException();
-//        }
-//        else {
-//            if (players.size() == 6) {
-//                throw new MaxPlayerLimitException();
-//                listenersHandler.notify_playerJoined(this);
-//                // we must implement listener first
-//            }
-//
-//        }
-//    }
+    /**
+     * add a player to the game<br>
+     *
+     * @param p player to add
+     * @throws PlayerAlreadyConnectedException if the player is already in the game
+     * @throws MaxPlayersLimitException    if the game is full
+     */
+    public void addPlayer(Player p) throws PlayerAlreadyConnectedException, MaxPlayersLimitException {
+        // First I check that the player is not already in the game
+        // then I check if the game is already full
+        if (!players.contains(p)) {
+            if (players.size() < DefaultValues.MaxNumOfPlayer) {
+                players.add(p);
+                listenersHandler.notify_playerJoined(this);
+            } else {
+                listenersHandler.notify_JoinUnableGameFull(p, this);
+                throw new MaxPlayersLimitException();
+            }
+        } else {
+            listenersHandler.notify_JoinUnableNicknameAlreadyIn(p);
+            throw new PlayerAlreadyConnectedException();
+        }
+
+    }
+
+    /**
+     * @param nick removes this player from the game
+     */
+    public void removePlayer(String nick) {
+        players.remove(players.stream().filter(x -> x.getNickname().equals(nick)).toList().get(0));
+        listenersHandler.notify_playerLeft(this, nick);
+
+        if (this.status.equals(GameStatus.RUNNING) &&
+                players.stream()
+                        .filter(Player::isConnected)
+                        .toList()
+                        .size() <= 1) {
+            // Not enough players to keep playing
+            this.setStatus(GameStatus.ENDED);
+        }
+    }
+
+    /**
+     * @param p player is reconnected
+     * @throws PlayerAlreadyConnectedException player is already in
+     * @throws MaxPlayersLimitException there's already 4 players in game
+     * @throws GameEndedException the game has ended
+     */
+    public boolean reconnectPlayer(Player p) throws PlayerAlreadyConnectedException, MaxPlayersLimitException, GameEndedException {
+
+        Player pIn = players.stream()
+                .filter(x -> x.equals(p))
+                .toList()
+                .get(0);
+
+        if (!pIn.isConnected()) {
+            pIn.setConnected(true);
+            listenersHandler.notify_playerReconnected(this, p.getNickname());
+
+            if (!isTheCurrentPlayerOnline()) {
+                nextTurn();
+            }
+            return true;
+
+        } else {
+            printAsync("ERROR: Trying to reconnect a player not offline!");
+            return false;
+        }
+    }
+
+    /**
+     * @param nick player to set as disconnected
+     */
+    public void setAsDisconnected(String nick) {
+
+        getPlayerEntity(nick).setConnected(false);
+        getPlayerEntity(nick).setNotReadyToStart();
+
+        if (getNumOfOnlinePlayers() != 0) {
+
+            listenersHandler.notify_playerDisconnected(this, nick);
+
+            if (getNumOfOnlinePlayers() != 1 && !isTheCurrentPlayerOnline()) {
+                try {
+                    nextTurn();
+                } catch (GameEndedException e) {
+
+                }
+            }
+
+            if ((this.status.equals(GameStatus.RUNNING) || this.status.equals(GameStatus.LAST_TURN)) && getNumOfOnlinePlayers() == 1) {
+                listenersHandler.notify_onlyOnePlayerConnected(this, DefaultValues.secondsToWaitReconnection);
+            }
+        }//else the game is empty
+    }
+
+    /**
+     * @param p is set as ready, then everyone is notified
+     */
+    public void playerIsReadyToStart(Player p) {
+        p.setReadyToStart();
+        listenersHandler.notify_PlayerIsReadyToStart(this, p.getNickname());
+    }
+
+    /**
+     * @return true if there are enough players to start, and if every one of them is ready
+     */
+    public boolean arePlayersReadyToStartAndEnough() {
+        //If every player is ready, the game starts
+        return players.stream().filter(Player::getReadyToStart)
+                .count() == players.size() && players.size() >= DefaultValues.MinNumOfPlayer;
+    }
+
 
 
     public void dealCards() {
@@ -195,7 +298,6 @@ public class GameModel {
             }
         }
     }
-
 
     public void placeCard(ResourceCard card_chosen,
                           PersonalBoard personal_board,
@@ -306,6 +408,21 @@ public class GameModel {
         this.winners = winnersList.toArray(new Player[0]);
     }
 
+    /**
+     * Sends a message
+     *
+     * @param m message sent
+     */
+    public void sentMessage(Message m) {
+        if (players.stream().filter(x -> x.equals(m.getSender())).count() == 1) {
+            chat.addMsg(m);
+            listenersHandler.notify_SentMessage(this, chat.getLastMessage());
+        } else {
+            throw new ActionPerformedByAPlayerNotPlayingException();
+        }
+
+    }
+
     public int getFinalScore(int player_index){
         return final_scores[player_index];
     }
@@ -314,8 +431,26 @@ public class GameModel {
         return this.gameId;
     }
 
+    /**
+     * Sets the game id
+     *
+     * @param gameId new game id
+     */
+    public void setGameId(Integer gameId) {
+        this.gameId = gameId;
+    }
+
     public Integer getCurrentPlayer() {
         return this.current_player;
+    }
+
+    /**
+     * Sets the current playing player to the param
+     *
+     * @param current_player active playing player
+     */
+    public void setCurrentPlayer(Integer current_player) {
+        this.current_player = current_player;
     }
 
     public Chat getChat() {
@@ -324,6 +459,33 @@ public class GameModel {
 
     public GameStatus getStatus() {
         return this.status;
+    }
+
+    /**
+     * Sets the game status
+     *
+     * @param status
+     */
+    public void setStatus(GameStatus status) {
+        //If I want to set the gameStatus to "RUNNING", there needs to be at least
+        // DefaultValue.minNumberOfPlayers -> (2) in lobby
+        if (status.equals(GameStatus.RUNNING) &&
+                ((players.size() < DefaultValues.MinNumOfPlayer)
+                        || current_player == -1)) {
+            throw new NotReadyToRunException();
+        } else {
+            this.status = status;
+
+            if (status == GameStatus.RUNNING) {
+                listenersHandler.notify_GameStarted(this);
+                listenersHandler.notify_nextTurn(this);
+            } else if (status == GameStatus.ENDED) {
+                findWinner(); //Find winner
+                listenersHandler.notify_GameEnded(this);
+            } else if (status == GameStatus.LAST_TURN) {
+                listenersHandler.notify_LastTurn(this);
+            }
+        }
     }
 
     public Integer getFirstFinishingPlayer() {

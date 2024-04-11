@@ -125,7 +125,7 @@ public class Player implements Serializable, PlayerIC {
     /**
      * @param connected sets the player's connection status to the param
      */
-    public void setConnection(boolean connected) {
+    public void setConnected(boolean connected) {
         this.connected = connected;
     }
 

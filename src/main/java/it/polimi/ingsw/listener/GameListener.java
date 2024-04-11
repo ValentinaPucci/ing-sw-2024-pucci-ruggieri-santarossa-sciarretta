@@ -1,5 +1,7 @@
 package it.polimi.ingsw.listener;
 
+import it.polimi.ingsw.model.board.CommonBoard;
+import it.polimi.ingsw.model.board.PersonalBoard;
 import it.polimi.ingsw.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.chat.Message;
@@ -72,6 +74,102 @@ public interface GameListener extends Remote {
     void playerIsReadyToStart(GameModelImmutable game_model, String nickname) throws IOException;
 
     /**
+     * This method is used to notify the client that the common objective cards have been
+     * extracted in the game. It is a part of the GameListener interface and is expected
+     * to be implemented by the client-side game listener.
+     *
+     * @param gamemodel The immutable version of the game model, which provides a snapshot of the game state at the time of the method call.
+     * @throws RemoteException If a remote communication error occurs. This is a checked exception that must be declared in the method signature or caught within the method.
+     */
+    void commonObjectiveCardsExtracted(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
+     * This method is used to notify the client that a resource cards have been
+     * extracted from the deck and add that card to his hand.
+     *
+     * @param gamemodel The immutable version of the game model,
+     *                  which provides a snapshot of the game state at the time of the method call.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    void resourceCardExtractedFromDeck(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
+     * This method is used to notify the client that a resource card have been
+     * extracted from the table and add that card to his hand.
+     *
+     * @param gamemodel The immutable version of the game model.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    void resourceCardExtractedFromTable(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
+     * This method is used to notify the client that a gold card have been
+     * extracted from the deck and add that card to his hand.
+     *
+     * @param gamemodel The immutable version of the game model.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    void goldCardExtractedFromDeck(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
+     * This method is used to notify the client that a gold card have been
+     * extracted from the table and add that card to his hand.
+     *
+     * @param gamemodel The immutable version of the game model.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    void goldCardExtractedFromTable(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
+     * This method is used to notify the client that he has tried to extract an objective card
+     * from an empty deck.
+     * @param gamemodel The immutable version of the game model.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    void objectiveCardExtractedFromEmptyDeck(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
+     * This method is used to notify the client that he has tried to extract a resource card
+     * from an empty deck.
+     * @param gamemodel The immutable version of the game model.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    void resourceCardExtractedFromEmptyDeck(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
+     * This method is used to notify the client that he has tried to extract a resource card
+     * from an empty table.
+     * @param gamemodel The immutable version of the game model.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    void resourceCardExtractedFromEmptyTable(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
+     * This method is used to notify the client that he has tried to extract a gold card
+     * from an empty deck.
+     * @param gamemodel The immutable version of the game model.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    void goldCardExtractedFromEmptyDeck(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
+     * This method is used to notify the client that he has tried to extract a gold card
+     * from an empty table.
+     * @param gamemodel The immutable version of the game model.
+     * @throws RemoteException If a remote communication error occurs.
+     */
+    void goldCardExtractedFromEmptyTable(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
+     * This method is used to notify the client that a card has been placed on a player's personal board.
+     * It is a part of the GameListener interface and is expected to be implemented by the client-side game listener.
+     *
+     * @param gamemodel The immutable version of the game model, which provides a snapshot of the game state at the time of the method call.
+     * @throws RemoteException If a remote communication error occurs. This is a checked exception that must be declared in the method signature or caught within the method.
+     */
+    void cardPlacedOnPersonalBoard(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
      * This method is used to notify the client that the game has started
      * @param game_model is the game model
      * @throws RemoteException if the reference could not be accessed
@@ -95,28 +193,28 @@ public interface GameListener extends Remote {
 
 
     /**
+     * This method is used to notify that a player has disconnected
+     * @param gameModel is the game model {@link GameModelImmutable}
+     * @param nickname is the nickname of the player that has disconnected
+     * @throws RemoteException if the reference could not be accessed
+     */
+    void playerDisconnected(GameModelImmutable gameModel, String nickname) throws RemoteException;
+
+    /**
      * This method is used to notify that the next turn triggered
      * @param game_model is the game model
      * @throws RemoteException if the reference could not be accessed
      */
     void nextTurn(GameModelImmutable game_model) throws RemoteException;
 
-//    /**
-//     * This method is used to notify that points have been added
-//     * @param p is the player that has added the points
-//     * @param point is the number of points that have been added
-//     * @param gamemodel is the game model
-//     * @throws RemoteException if the reference could not be accessed
-//     */
-//    void addedPoint(Player p, Point point, GameModelImmutable gamemodel) throws RemoteException;
-
     /**
-     * This method is used to notify that a player has disconnected
-     * @param gameModel is the game model
-     * @param nick is the nickname of the player that has disconnected
-     * @throws RemoteException if the reference could not be accessed
+     * This method is used to notify the client that a player has moved on the common board.
+     * It is a part of the GameListener interface and is expected to be implemented by the client-side game listener.
+     *
+     * @param game_model The immutable version of the game model, which provides a snapshot of the game state at the time of the method call.
+     * @throws RemoteException If a remote communication error occurs. This is a checked exception that must be declared in the method signature or caught within the method.
      */
-    void playerDisconnected(GameModelImmutable gameModel, String nick) throws RemoteException;
+    void playerHasMovedOnCommonBoard(GameModelImmutable game_model) throws RemoteException;
 
     /**
      * This method is used to notify that only one player is connected
@@ -132,6 +230,14 @@ public interface GameListener extends Remote {
      * @param game_model is the game model
      * @throws RemoteException if the reference could not be accessed
      */
-    void lastRound(GameModelImmutable game_model) throws RemoteException;
+    void lastTurn(GameModelImmutable game_model) throws RemoteException;
+
+    /**
+     * This method is used to notify that the second last round has started
+     * It is the moment when a player reaches 20 points
+     * @param game_model is the game model
+     * @throws RemoteException if the reference could not be accessed
+     */
+    void secondLastTurn(GameModelImmutable game_model) throws RemoteException;
 
 }
