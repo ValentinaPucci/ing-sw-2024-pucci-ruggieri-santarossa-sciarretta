@@ -1,5 +1,5 @@
 package it.polimi.ingsw.model.board;
-import it.polimi.ingsw.interfaces.CommonBoardIC;
+import it.polimi.ingsw.model.interfaces.CommonBoardIC;
 import it.polimi.ingsw.model.CardsCollection;
 import it.polimi.ingsw.model.ConcreteDeck;
 import it.polimi.ingsw.model.cards.Card;

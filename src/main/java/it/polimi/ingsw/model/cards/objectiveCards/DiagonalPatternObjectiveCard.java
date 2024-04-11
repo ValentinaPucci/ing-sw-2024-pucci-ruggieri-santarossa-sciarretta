@@ -24,9 +24,9 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
     public ScoreStrategy score_strategy;
 
     /**
-     * @param id
-     * @param orientation
-     * @param points
+     * @param id;
+     * @param orientation;
+     * @param points;
      */
     public DiagonalPatternObjectiveCard(int id, Orientation orientation, int points) {
         super(id, orientation, points);
@@ -45,7 +45,7 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
      *
      * @requires
      *      color == RED || color == BLUE
-     * @param color
+     * @param color;
      */
     public void init_objIncreasingDiagonal(Color color) {
 
@@ -65,7 +65,7 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
      * @requires
      *      color == GREEN || color == PURPLE
      *
-     * @param color
+     * @param color;
      */
     public void init_objDecreasingDiagonal(Color color) {
         ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, color);

@@ -10,8 +10,8 @@ public class ItemObjectiveCard extends ObjectiveCard {
     private int num_parchments;
 
     /**
-     * @param id
-     * @param orientation
+     * @param id;
+     * @param orientation;
      */
     public ItemObjectiveCard(int id, Orientation orientation, int points, int num_feathers, int num_potions, int num_parchments) {
         super(id, orientation, points);
