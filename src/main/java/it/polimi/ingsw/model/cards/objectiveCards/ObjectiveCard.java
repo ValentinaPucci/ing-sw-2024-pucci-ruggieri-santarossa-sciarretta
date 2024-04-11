@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.cards.objectiveCards;
 
-import it.polimi.ingsw.interfaces.ObjectiveCardIC;
+import it.polimi.ingsw.model.interfaces.ObjectiveCardIC;
 import it.polimi.ingsw.model.board.PersonalBoard;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.enumerations.Orientation;

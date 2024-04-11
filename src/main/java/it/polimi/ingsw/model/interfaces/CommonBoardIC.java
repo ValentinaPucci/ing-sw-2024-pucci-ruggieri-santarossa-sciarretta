@@ -1,4 +1,4 @@
-package it.polimi.ingsw.interfaces;
+package it.polimi.ingsw.model.interfaces;
 
 import it.polimi.ingsw.model.ConcreteDeck;
 import it.polimi.ingsw.model.board.CommonBoardNode;

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.cards.gameCards;
 
-import it.polimi.ingsw.interfaces.ResourceCardIC;
+import it.polimi.ingsw.model.interfaces.ResourceCardIC;
 import it.polimi.ingsw.model.board.BoardCellCoordinate;
 import it.polimi.ingsw.model.board.Corner;
 import it.polimi.ingsw.model.cards.Card;
@@ -102,6 +102,21 @@ public class ResourceCard extends Card implements ResourceCardIC {
             return this.getCornerAtSW();
         else
             return this.getCornerAtSE();
+    }
+
+    /**
+     * @return color
+     */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @return points
+     */
+
+    public int getPoints() {
+        return points;
     }
 
     // To print output.

@@ -8,8 +8,9 @@ import it.polimi.ingsw.model.enumerations.Item;
 import it.polimi.ingsw.model.enumerations.Orientation;
 import it.polimi.ingsw.model.enumerations.Resource;
 import it.polimi.ingsw.model.exceptions.IllegalMoveException;
+import it.polimi.ingsw.model.interfaces.PersonalBoardIC;
 
-public class PersonalBoard {
+public class PersonalBoard implements PersonalBoardIC {
     public Cell[][] board;
 
     private final int dim1;

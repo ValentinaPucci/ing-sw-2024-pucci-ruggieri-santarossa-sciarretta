@@ -1,4 +1,4 @@
-package it.polimi.ingsw.interfaces;
+package it.polimi.ingsw.model.interfaces;
 import it.polimi.ingsw.listener.GameListener;
 import it.polimi.ingsw.model.board.PersonalBoard;
 import it.polimi.ingsw.model.cards.Card;
@@ -38,59 +38,54 @@ public interface PlayerIC {
     boolean isConnected();
 
     /**
-     *
-     * @return
+     * This method is used to get the player's id
+     * @return id
      */
      int getId();
 
     /**
-     *
-     * @return
+     * This method is used to get the player's personal_board
+     * @return player's personal_board
      */
     PersonalBoard getPersonalBoard();
 
     /**
-     *
-     * @return
+     *  This method is used to get the card that the player wants to place
+     * @return chosen_card
      */
     ResourceCard getChosenGameCard();
 
     /**
-     *
-     * @return
+     * This method is used to get the ObjectiveCard that the player chose
+     * @return chosen_objective
      */
     ObjectiveCard getChosenObjectiveCard();
 
     /**
-     *
-     * @return
+     * This method is used to get the player's position on common board
+     * @return score_board_position
      */
     int getScoreBoardPosition();
 
     /**
-     *
-     * @return
+     * This method is used to get the player's score at the end of the game
+     * @return final_score
      */
     int getFinalScore();
 
     /**
-     *
-     * @param card
+     * This method is used to add a card to those held by the player
+     * @param card;
      */
     void addToHand(Card card);
 
     /**
-     *
-     * @param card
+     * This method is used to remove a card to those held by the player.
+     * This card is the one that will be placed on personal board
+     * @param card;
      */
     void removeFromHand(Card card);
 
-    /**
-     *
-     * @param objective1
-     * @param objective2
-     */
-    void setSecretObjectives(ObjectiveCard objective1, ObjectiveCard objective2);
 
     /**
      *

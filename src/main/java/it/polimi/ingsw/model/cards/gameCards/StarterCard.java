@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.cards.gameCards;
 
-import it.polimi.ingsw.interfaces.StarterCardIC;
+import it.polimi.ingsw.model.interfaces.StarterCardIC;
 import it.polimi.ingsw.model.board.BoardCellCoordinate;
 import it.polimi.ingsw.model.board.Corner;
 import it.polimi.ingsw.model.cards.Card;
@@ -112,6 +112,23 @@ public class StarterCard extends Card implements StarterCardIC {
                 '}';
     }
 
+
+
+    public Optional<Resource> getFront_resource1() {
+        return front_resource1;
+    }
+
+    public Optional<Resource> getFront_resource2() {
+        return front_resource2;
+    }
+
+    public Optional<Resource> getFront_resource3() {
+        return front_resource3;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
 }
 
 
