@@ -24,8 +24,8 @@ public class LetterPatternObjectiveCard extends ObjectiveCard {
     public ScoreStrategy score_strategy;
 
     /**
-     * @param id
-     * @param orientation
+     * @param id;
+     * @param orientation;
      */
     public LetterPatternObjectiveCard(int id, Orientation orientation, int points) {
         super(id, orientation, points);

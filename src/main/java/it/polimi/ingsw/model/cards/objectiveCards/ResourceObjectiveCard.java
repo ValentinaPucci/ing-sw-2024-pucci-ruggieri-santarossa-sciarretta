@@ -55,4 +55,5 @@ public class ResourceObjectiveCard extends ObjectiveCard {
                 * this.getPoints();
     }
 
+
 }

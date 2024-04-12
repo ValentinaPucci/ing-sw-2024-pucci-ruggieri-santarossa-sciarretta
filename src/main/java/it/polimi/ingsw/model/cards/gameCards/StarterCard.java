@@ -112,6 +112,23 @@ public class StarterCard extends Card implements StarterCardIC {
                 '}';
     }
 
+
+
+    public Optional<Resource> getFront_resource1() {
+        return front_resource1;
+    }
+
+    public Optional<Resource> getFront_resource2() {
+        return front_resource2;
+    }
+
+    public Optional<Resource> getFront_resource3() {
+        return front_resource3;
+    }
+
+    public Orientation getOrientation() {
+        return orientation;
+    }
 }
 
 

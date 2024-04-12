@@ -104,6 +104,21 @@ public class ResourceCard extends Card implements ResourceCardIC {
             return this.getCornerAtSE();
     }
 
+    /**
+     * @return color
+     */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @return points
+     */
+
+    public int getPoints() {
+        return points;
+    }
+
     // To print output.
     @Override
     public String toString() {
