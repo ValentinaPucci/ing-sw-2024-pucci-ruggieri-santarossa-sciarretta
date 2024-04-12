@@ -1,4 +1,4 @@
-package it.polimi.ingsw.interfaces;
+package it.polimi.ingsw.model.interfaces;
 
 import it.polimi.ingsw.model.cards.gameCards.GoldCard;
 import it.polimi.ingsw.model.cards.gameCards.ResourceCard;

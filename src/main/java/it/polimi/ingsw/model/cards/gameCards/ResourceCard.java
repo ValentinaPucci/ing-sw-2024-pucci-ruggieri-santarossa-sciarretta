@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model.cards.gameCards;
 
-import it.polimi.ingsw.interfaces.ResourceCardIC;
+import it.polimi.ingsw.model.interfaces.ResourceCardIC;
 import it.polimi.ingsw.model.board.BoardCellCoordinate;
 import it.polimi.ingsw.model.board.Corner;
 import it.polimi.ingsw.model.cards.Card;

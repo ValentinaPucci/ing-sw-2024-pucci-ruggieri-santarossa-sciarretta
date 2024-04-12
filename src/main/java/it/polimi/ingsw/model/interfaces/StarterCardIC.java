@@ -1,4 +1,4 @@
-package it.polimi.ingsw.interfaces;
+package it.polimi.ingsw.model.interfaces;
 
 public interface StarterCardIC {
 }

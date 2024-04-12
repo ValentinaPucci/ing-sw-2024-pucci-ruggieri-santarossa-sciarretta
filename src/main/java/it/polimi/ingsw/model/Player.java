@@ -1,6 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.interfaces.PlayerIC;
+import it.polimi.ingsw.model.interfaces.PlayerIC;
 import it.polimi.ingsw.model.board.PersonalBoard;
 import it.polimi.ingsw.model.cards.Card;
 import it.polimi.ingsw.model.cards.objectiveCards.ObjectiveCard;
@@ -29,8 +29,8 @@ public class Player implements Serializable, PlayerIC {
     private boolean ready_to_start = false;
     private List<GameListener> listeners;
 
-    public Player(int id, String nickname) {
-        this.id = id;
+    public Player(String nickname) {
+        //this.id = id;
         this.nickname = nickname;
         this.card_hand = new ArrayList<>();
         this.personal_board = new PersonalBoard();
@@ -152,6 +152,15 @@ public class Player implements Serializable, PlayerIC {
 
     public void addListener(GameListener obj) {
         listeners.add(obj);
+    }
+
+    /**
+     * Remove said listener from the player
+     *
+     * @param lis listener to remove
+     */
+    public void removeListener(GameListener lis) {
+        listeners.remove(lis);
     }
 
     /**

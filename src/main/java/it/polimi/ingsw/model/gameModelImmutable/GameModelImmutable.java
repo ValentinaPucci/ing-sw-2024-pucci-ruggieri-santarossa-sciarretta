@@ -21,7 +21,6 @@ public class GameModelImmutable implements Serializable {
     private final Queue<Player> player_queue;
     private final List<Player> players;
     private final int num_players;
-    private final boolean game_over;
     private final boolean second_last_turn;
     private final CommonBoard common_board;
     private final ConcreteDeck resource_deck;
@@ -47,7 +46,6 @@ public class GameModelImmutable implements Serializable {
         this.player_queue = new LinkedList<>();
         this.players = players;
         this.num_players = players.size();
-        this.game_over = false;
         this.second_last_turn = false;
         this.final_scores = new int[num_players];
         this.common_board = common_board;
@@ -80,8 +78,7 @@ public class GameModelImmutable implements Serializable {
         this.listenersHandler = modelToCopy.getListenersHandler();
         this.player_queue = modelToCopy.getPlayerQueue();
         this.players = modelToCopy.getPlayers();
-        this.num_players = modelToCopy.getNumPlayers();
-        this.game_over = modelToCopy.isGameOver();
+        this.num_players = modelToCopy.getNumOfPlayers();
         this.second_last_turn = modelToCopy.isSecondLastTurn();
         this.common_board = modelToCopy.getCommonBoard();
         this.resource_deck = modelToCopy.getResourceDeck();
@@ -132,9 +129,6 @@ public class GameModelImmutable implements Serializable {
         return this.num_players;
     }
 
-    public boolean isGameOver() {
-        return this.game_over;
-    }
 
     public boolean isSecondLastTurn() {
         return this.second_last_turn;

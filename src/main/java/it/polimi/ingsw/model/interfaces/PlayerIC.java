@@ -1,4 +1,4 @@
-package it.polimi.ingsw.interfaces;
+package it.polimi.ingsw.model.interfaces;
 import it.polimi.ingsw.listener.GameListener;
 import it.polimi.ingsw.model.board.PersonalBoard;
 import it.polimi.ingsw.model.cards.Card;
