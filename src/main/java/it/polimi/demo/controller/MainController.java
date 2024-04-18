@@ -9,6 +9,7 @@ import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.rmi.remoteInterfaces.VirtualServer;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import static it.polimi.demo.networking.PrintAsync.*;
  * Allowing players to create, join, reconnect, leave and delete games
  * Therefore, the MainController is unique across the app and thus implements the Singleton Pattern
  */
-public class MainController implements MainControllerInterface{
+public class MainController implements MainControllerInterface, VirtualServer {
     //Singleton
     /**
      * Singleton Pattern, instance of the class
@@ -39,7 +40,7 @@ public class MainController implements MainControllerInterface{
      * Init an empty List of GameController
      * For implementing AF: "Multiple games"
      */
-    private MainController() {
+    public MainController() {
         runningGames = new ArrayList<>();
     }
 
@@ -55,6 +56,11 @@ public class MainController implements MainControllerInterface{
         return instance;
     }
 
+    @Override
+    public void receive(String message) throws RemoteException {
+
+    }
+
     /**
      * Create a new game and join to it
      *
@@ -64,7 +70,7 @@ public class MainController implements MainControllerInterface{
      * @throws RemoteException
      */
     @Override
-    public synchronized GameControllerInterface createGame(GameListener lis, String nick) throws RemoteException {
+    public synchronized GameControllerInterface createGame(GameListener lis, String nick, int numOfPlayers) throws RemoteException {
         Player p = new Player(nick);
 
         GameController c = new GameController();
@@ -225,6 +231,11 @@ public class MainController implements MainControllerInterface{
         return null;
     }
 
+    @Override
+    public void showError(String err) throws RemoteException {
+
+    }
+
     /**
      * Remove the @param idGame from the {@link MainController#runningGames}
      *
@@ -250,5 +261,36 @@ public class MainController implements MainControllerInterface{
         printAsyncNoLine("\t\trunningGames: ");
         runningGames.stream().forEach(x -> printAsync(x.getGameId() + " "));
         printAsync("");
+    }
+
+
+    @Override
+    public void login(MainControllerInterface cc) throws RemoteException {
+
+    }
+
+    @Override
+    public void send(String message) throws RemoteException {
+
+    }
+
+    @Override
+    public void addPlayerToGame(int gameID, String username) throws RemoteException {
+
+    }
+
+    @Override
+    public void create(int numberOfPlayers, String username) throws RemoteException {
+
+    }
+
+    @Override
+    public void getGamesList() throws RemoteException {
+
+    }
+
+    @Override
+    public void performTurn() throws RemoteException {
+
     }
 }
