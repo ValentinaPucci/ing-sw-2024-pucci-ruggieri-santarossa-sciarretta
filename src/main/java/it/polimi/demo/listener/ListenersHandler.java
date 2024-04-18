@@ -405,12 +405,12 @@ public class ListenersHandler {
      * The notify_lastCircle method notifies that the last circle has started <br>
      * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable}
      */
-    public void notify_LastTurn(GameModel model) {
+    public void notify_LastRound(GameModel model) {
         Iterator<GameListener> i = listeners.iterator();
         while (i.hasNext()) {
             GameListener l = i.next();
             try {
-                l.lastTurn(new GameModelImmutable(model));
+                l.lastRound(new GameModelImmutable(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_LastCircle, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -418,12 +418,12 @@ public class ListenersHandler {
         }
     }
 
-    public void notify_SecondLastTurn(GameModel model) {
+    public void notify_SecondLastRound(GameModel model) {
         Iterator<GameListener> i = listeners.iterator();
         while (i.hasNext()) {
             GameListener l = i.next();
             try {
-                l.secondLastTurn(new GameModelImmutable(model));
+                l.secondLastRound(new GameModelImmutable(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_SecondLastCircle, a disconnection has been detected before heartbeat");
                 i.remove();

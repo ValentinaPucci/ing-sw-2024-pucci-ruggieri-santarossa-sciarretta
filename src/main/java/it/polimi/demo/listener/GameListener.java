@@ -228,7 +228,7 @@ public interface GameListener extends Remote {
      * @param game_model is the game model
      * @throws RemoteException if the reference could not be accessed
      */
-    void lastTurn(GameModelImmutable game_model) throws RemoteException;
+    void lastRound(GameModelImmutable game_model) throws RemoteException;
 
     /**
      * This method is used to notify that the second last round has started
@@ -236,6 +236,6 @@ public interface GameListener extends Remote {
      * @param game_model is the game model
      * @throws RemoteException if the reference could not be accessed
      */
-    void secondLastTurn(GameModelImmutable game_model) throws RemoteException;
+    void secondLastRound(GameModelImmutable game_model) throws RemoteException;
 
 }

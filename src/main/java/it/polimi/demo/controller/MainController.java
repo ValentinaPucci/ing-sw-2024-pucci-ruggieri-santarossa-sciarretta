@@ -218,7 +218,7 @@ public class MainController implements MainControllerInterface{
             printAsync("\t>Game " + ris.get(0).getGameId() + " player: \"" + nick + "\" decided to leave");
             printRunningGames();
 
-            if (ris.get(0).getNumOnlinePlayers() == 0) {
+            if (ris.get(0).getNumConnectedPlayers() == 0) {
                 deleteGame(idGame);
             }
         }
