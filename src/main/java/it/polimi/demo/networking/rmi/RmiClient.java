@@ -33,7 +33,13 @@ public class RmiClient implements MainControllerInterface, Serializable {
      * @throws Exception if an error occurs while connecting to the server
      */
     private void startClient() throws Exception {
-        // Code for connecting to the server
+        // Getting the registry
+        Registry registry;
+        registry = LocateRegistry.getRegistry(DefaultValues.SERVER_NAME, DefaultValues.PORT);
+// Looking up the registry for the remote object
+        this.vs = (VirtualServer) registry.lookup("ServerTest");
+        this.vs.login(this);
+        inputLoop();
     }
 
     /**
@@ -52,17 +58,29 @@ public class RmiClient implements MainControllerInterface, Serializable {
      * Input loop to send messages to the server.
      */
     void inputLoop() {
-        // Code to read user input and send messages to the server
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        String message;
+        try {
+            while ((message = br.readLine()) != null) {
+                vs.send(message);
+            }
+        } catch (IOException e) {
+            System.err.println("Errore di input/output: " + e.getMessage());
+        } finally {
+            try {
+                br.close();
+            } catch (IOException e) {
+                System.err.println("Errore durante la chiusura del BufferedReader: " + e.getMessage());
+            }
+        }
     }
-
-    // Methods implemented from the MainControllerInterface
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void receive(String message) throws RemoteException {
-        // Implementation of the method to receive messages from the server
+        System.out.println(message);
     }
 
     /**
