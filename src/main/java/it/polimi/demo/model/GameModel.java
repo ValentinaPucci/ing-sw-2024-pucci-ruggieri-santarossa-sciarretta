@@ -19,82 +19,50 @@ import it.polimi.demo.model.interfaces.PlayerIC;
 import java.util.*;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
+//TODO: Check how first_finished_player is set.
 
 public class GameModel {
 
-    private Map<Player, Integer> leaderBoard;
-    private Integer gameId;
-    private int index_current_player;
-    private List<Player> players;
-    private Chat chat;
-    private GameStatus status;
+    // the first list let us keep the order of players.
+    // aux_order_player.size() always >= players_connected.size()
+    private List<Player> aux_order_players;
+    // the second one is used as a queue and let us know which player
+    // is connected (and actively playing).
+    private LinkedList<Player> players_connected;
+
     private ListenersHandler listener_handler;
-    private List<Integer> final_scores;
-    private Integer first_finished_player = -1;
-    private List<Player> winners;
     private CommonBoard common_board;
-    private Player first_player = null;
+
+    private Integer gameId;
+    private GameStatus status;
+    private Chat chat;
+    private Player first_finishing_player = null;
+    private List<Player> winners;
+    private Map<Player, Integer> leaderboard;
 
     public GameModel() {
-        leaderBoard = new HashMap<>();
+        aux_order_players = new ArrayList<>();
+        players_connected = new LinkedList<>();
+        listener_handler = new ListenersHandler();
+        common_board = new CommonBoard();
+
         Random random = new Random();
         gameId = random.nextInt(1000000);
-        index_current_player = -1;
-        players = new ArrayList<>();
-        chat = new Chat();
         status = GameStatus.WAIT;
-        listener_handler = new ListenersHandler();
-        final_scores = new ArrayList<>();
+        chat = new Chat();
         winners = new ArrayList<>();
-        common_board = new CommonBoard();
-    }
-
-    public GameModel(List<Player> players, CommonBoard common_board, Integer gameId) {
-        this.players = new ArrayList<>(players);
-        this.common_board = common_board;
-        this.gameId = gameId;
-        this.index_current_player = -1;
-        this.chat = new Chat();
-        this.status = GameStatus.WAIT;
-        this.listener_handler = new ListenersHandler();
+        leaderboard = new HashMap<>();
     }
 
     //------------------------------------methods for players-----------------------
 
     /**
-     * @return the number of players
-     */
-    public int getNumPlayers() {
-        return players.size();
-    }
-
-    /**
-     * Finds the index of the player with the specified nickname.
-     * @return The index of the player in the players list, or -1 if not found.
-     */
-    public int getPlayerIndex(Player p1) {
-        // Iterate through the players list
-        for (int i = 0; i < players.size(); i++) {
-            Player p2 = players.get(i);
-            // Check if the player's nickname matches the specified nickname
-            if (p2.equals(p1)) {
-                return i; // Return the index of the matching player
-            }
-        }
-        return -1; // Return -1 if the player with the specified nickname is not found
-    }
-
-    /**
-     * Retrieves the number of players who are currently connected.
+     * Checks if there are enough players online to start the game.
      *
-     * @return The number of connected players.
+     * @return True if there are enough players online, otherwise false.
      */
-    public int getNumOnlinePlayers() {
-        return (int) players.stream().filter(Player::getIsConnected).count();
-    }
-
-    public boolean areOnlinePlayersEnough() {
-        return getNumOnlinePlayers() >= DefaultValues.MinNumOfPlayer;
+    public boolean areConnectedPlayersEnough() {
+        return players_connected.size() >= DefaultValues.MinNumOfPlayer;
     }
 
     /**
@@ -102,110 +70,30 @@ public class GameModel {
      *
      * @return True if the player in turn is online, otherwise false.
      */
-    private boolean isTheCurrentPlayerOnline() {
-        return players.get(index_current_player).getIsConnected();
+    private boolean isTheCurrentPlayerConnected() {
+        return players_connected.peek() != null;
     }
 
     /**
-     * Retrieves the first player of the game.
+     * Retrieves the beginner player of the game.
      *
      * @return The first player.
      */
-    public Player getFirstPlayer() {
-        return first_player;
+    public Player getBeginnerPlayer() {
+        return aux_order_players.getFirst();
     }
 
     /**
-     * Sets the first player of the game.
-     *
-     * @param player The player to set as the first player.
-     */
-    public void setFirstPlayer(Player player) {
-        this.first_player = player;
-    }
-
-    /**
-     * Retrieves the list of players participating in the game.
+     * Retrieves the list of players participating in the game even if they are connected or not.
      *
      * @return The list of players.
      */
-    public List<Player> getPlayers() {
-        return players;
+    public List<Player> getAllPlayers() {
+        return aux_order_players;
     }
 
-    /**
-     * Sets the current playing player to the specified player.
-     *
-     * @param player The player to set as the current player.
-     */
-    public void setCurrentPlayer(Player player) {
-        this.index_current_player = getPlayerIndex(player);
-    }
-
-    /**
-     * Retrieves the index of the current playing player.
-     *
-     * @return The index of the current playing player.
-     */
-    public int getIndexCurrentPlayer() {
-        return this.index_current_player;
-    }
-
-    /**
-     * Adds a player to the game.
-     *
-     * @param player The player to add to the game.
-     * @throws PlayerAlreadyConnectedException If the player is already connected to the game.
-     * @throws MaxPlayersLimitException If the game is already full and cannot accept more players.
-     */
-    public void addPlayer(Player player) {
-        // Checking if the game is already full
-        if (players.size() >= DefaultValues.MaxNumOfPlayer) {
-            // Notifying listeners that the game is full
-            // and throwing an exception
-            listener_handler.notify_JoinUnableGameFull(player, this);
-            throw new MaxPlayersLimitException();
-        }
-
-        // Checking if the player is not already in the game
-        // Note that .contains calls .equals, which we override in Player class
-        // Thus, this is the same as checking if there is already a player with the same nickname
-        if (players.contains(player)) {
-            // Notifying listeners that the player is already connected
-            // and throwing an exception
-            listener_handler.notify_JoinUnableNicknameAlreadyIn(player);
-            throw new PlayerAlreadyConnectedException();
-        } else {
-            // Adding the player to the game and notifying listeners
-            players.add(player);
-            listener_handler.notify_playerJoined(this);
-        }
-    }
-
-    /**
-     * Removes the player with the specified nickname from the game.
-     *
-     * @param nick The nickname of the player to remove.
-     */
-    public void removePlayer(String nick) {
-
-        players.stream()
-                .filter(player -> player.getNickname().equals(nick))
-                .findFirst()
-                .ifPresent(playerToRemove -> {
-                    players.remove(playerToRemove);
-                    listener_handler.notify_playerLeft(this, nick);
-                });
-
-        if (this.status.equals(GameStatus.RUNNING)) {
-            long connectedPlayersCount = players.stream()
-                    .filter(Player::getIsConnected)
-                    .count();
-            if (connectedPlayersCount <= 1) {
-                // Not enough players to keep playing
-                this.setStatus(GameStatus.ENDED);
-            }
-        }
+    public LinkedList<Player> getPlayersConnected() {
+        return players_connected;
     }
 
     /**
@@ -220,9 +108,9 @@ public class GameModel {
      * @return true if there are enough players to start, and if every one of them is ready
      */
     public boolean arePlayersReadyToStartAndEnough() {
-        //If every player is ready, the game starts
-        return players.stream().filter(Player::getReadyToStart)
-                .count() == players.size() && players.size() >= DefaultValues.MinNumOfPlayer;
+        List<Player> p = aux_order_players.stream().filter(Player::getReadyToStart).toList();
+        // If every player is ready, the game starts
+        return p.containsAll(aux_order_players) && p.size() >= DefaultValues.MinNumOfPlayer;
     }
 
     /**
@@ -230,28 +118,10 @@ public class GameModel {
      * @return player with the given nickname, or null if not found
      */
     public Player getPlayerEntity(String nick) {
-        return players.stream()
+        return aux_order_players.stream()
                 .filter(x -> x.getNickname().equals(nick))
                 .findFirst()
                 .orElse(null);
-    }
-
-    /**
-     * Set the index of the player playing the first turn
-     *
-     * @param index of the player
-     */
-    public void setFirstTurnIndex(int index) {
-        first_player = players.get(index);
-    }
-
-    /**
-     * Retrieves the index of the player who took the first turn in the game.
-     *
-     * @return The index of the player who took the first turn.
-     */
-    public Integer getFirstTurnIndex() {
-        return this.getPlayerIndex(first_player);
     }
 
     /**
@@ -259,8 +129,56 @@ public class GameModel {
      *
      * @return The index of the first player who finished the game, or -1 if no player has finished yet.
      */
-    public Integer getFirstFinishingPlayer() {
-        return this.first_finished_player;
+    public Player getFirstFinishingPlayer() {
+        return this.first_finishing_player;
+    }
+
+
+    /**
+     * It sets the first player that finishes.
+     * @param p
+     */
+    public void setFirst_finished_player(Player p){ this.first_finishing_player = p;}
+
+
+    /**
+     * Adds a new player to the game. Recall that if a player was previously playing,
+     * then we are able to retrieve him/her from the auxiliary ordered list.
+     * Thus, this method is meant as an adder of new players, not as an adder of disconnected players
+     * @param p player to add
+     */
+    public void addPlayer(Player p) {
+
+        if (aux_order_players.contains(p)) {
+            listener_handler.notify_JoinUnableNicknameAlreadyIn(p);
+            throw new PlayerAlreadyConnectedException();
+        }
+        else if (aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
+            listener_handler.notify_JoinUnableGameFull(p, this);
+            throw new MaxPlayersLimitException();
+        }
+        else {
+            aux_order_players.add(p);
+        }
+    }
+
+    /**
+     * Removes the player with the specified nickname from the game.
+     * It is meant as a brute force routine, because in general a player is
+     * only disconnected, not removed from the game.
+     * @param p The nickname of the player to remove.
+     */
+    public void removePlayer(Player p) {
+
+        players_connected.remove(p);
+        aux_order_players.remove(p);
+
+        if (this.status.equals(GameStatus.RUNNING)) {
+            if (players_connected.size() < DefaultValues.MinNumOfPlayer) {
+                // Not enough players to keep playing
+                this.setStatus(GameStatus.ENDED);
+            }
+        }
     }
 
     //-------------------------listeners---------------------------------------------
@@ -314,7 +232,7 @@ public class GameModel {
      * @throws ActionPerformedByAPlayerNotPlayingException If the sender of the message is not a player in the game.
      */
     public void sendMessage(Message m) throws ActionPerformedByAPlayerNotPlayingException {
-        if (players.contains(m.getSender())) {
+        if (players_connected.contains(m.getSender())) {
             // Add the message to the chat
             chat.addMsg(m);
             // Notify listeners about the sent message
@@ -324,45 +242,48 @@ public class GameModel {
             throw new ActionPerformedByAPlayerNotPlayingException();
         }
     }
+
     //-------------------------connection/disconnection management---------------------------------------------
 
     /**
-     * Sets the player with the specified nickname as disconnected.
-     *
-     * @param nick The nickname of the player to set as disconnected.
+     * Sets the player p as disconnected, it removes p from the players_connected list.
+     * @param p player to disconnect
      */
-    // TODO: revision (write an original code)
-    public void setAsDisconnected(String nick) throws GameEndedException {
+    public void setPlayerAsDisconnected(Player p) {
 
-        if (players.contains(getPlayerEntity(nick))) {
-            // Set the player as not connected and not ready to start
-            getPlayerEntity(nick).setAsNotConnected();
-            getPlayerEntity(nick).setAsNotReadyToStart();
-        }
-        else
-            throw new IllegalArgumentException("Player not in the game!");
-
-        // If there is at least one player online remained, we notify the disconnection
-        if (getNumOnlinePlayers() >= 1)
-            listener_handler.notify_playerDisconnected(this, nick);
-
-        // If there are at least two online players and the current player is offline, proceed to the next turn
-        if (areOnlinePlayersEnough() && !isTheCurrentPlayerOnline()) {
-            nextTurn();
+        if (players_connected.contains(p)) {
+            p.setAsNotConnected();
+            p.setAsNotReadyToStart();
+            players_connected.remove();
+            listener_handler.notify_playerDisconnected(this, p.getNickname());
         }
 
-        // If the game is in progress and only one player is online,
-        // notify and set a timeout for reconnection
         if ((this.status.equals(GameStatus.RUNNING) ||
                 this.status.equals(GameStatus.SECOND_LAST_ROUND) ||
                 this.status.equals(GameStatus.LAST_ROUND))
-                && getNumOnlinePlayers() == 1) {
-            listener_handler.notify_onlyOnePlayerConnected(this,
-                    DefaultValues.secondsToWaitReconnection);
+                && aux_order_players.size() == 1) {
+            listener_handler.notify_onlyOnePlayerConnected(this, DefaultValues.secondsToWaitReconnection);
         }
     }
 
     /**
+     * It requires player.isConnected() == true.
+     * Add the player, that is connected, to the players_connected list, notify that the player is connected.
+     * If the player is already connected, it throws exception.
+     * @param p player to set as connected
+     */
+    public void setPlayerAsConnected(Player p) {
+        if (aux_order_players.contains(p) && p.getIsConnected()) {
+            players_connected.offer(p);
+            listener_handler.notify_playerJoined(this);
+        }
+        else {
+            throw new IllegalArgumentException("Player not in the game!");
+        }
+    }
+
+    /**
+     *
      * @param p player is reconnected
      * @throws PlayerAlreadyConnectedException player is already in
      * @throws MaxPlayersLimitException there's already 4 players in game
@@ -370,25 +291,45 @@ public class GameModel {
      */
     public void reconnectPlayer(Player p) throws GameEndedException {
 
-        if (isPlayerAlreadyConnected(p)) {
+        if (players_connected.contains(p)) {
             printAsync("ERROR: Trying to reconnect a player not offline!");
             throw new PlayerAlreadyConnectedException();
         }
 
         p.setAsConnected();
-        listener_handler.notify_playerReconnected(this, p.getNickname());
+        connectPlayerInOrder(p);
 
-        if (!isTheCurrentPlayerOnline()) {
-            nextTurn();
+        listener_handler.notify_playerReconnected(this, p.getNickname());
+    }
+
+    /**
+     * It connects a player in the right place (by order), that had already joined the game, but was disconnected,
+     * so that the game will continue with the correct order of the game (aux_order_players).
+     * (It also cares about the limit case of the first element).
+     * @param p
+     */
+    public void connectPlayerInOrder(Player p) {
+        // index of previous player in aux_order_players
+
+        Player q;
+
+        if (!aux_order_players.contains(p)) {
+            throw new IllegalArgumentException("Trying to connect a player which is not in the game!");
+        }
+
+        int index = aux_order_players.indexOf(p) - 1;
+
+        if (index < 0)
+            q = aux_order_players.getLast();
+        else
+            q = aux_order_players.get(index);
+
+        for (Player s : players_connected) {
+            if (s.equals(q))
+                index = players_connected.indexOf(s);
+            players_connected.add(index, p);
         }
     }
-
-    public boolean isPlayerAlreadyConnected(Player p) {
-        // Check if the player is already in the list of connected players
-        return players.stream()
-                .anyMatch(x -> x.equals(p) && x.getIsConnected());
-    }
-
 
     //-------------------------managing status---------------------------------------------
 
@@ -426,12 +367,12 @@ public class GameModel {
      * @throws NotReadyToRunException If attempting to set the game status to "RUNNING" but the lobby
      * does not have at least the minimum number of players or the current player index is not set.
      */
-    // TODO: revision (write an original code)
     public void setStatus(GameStatus status) throws NotReadyToRunException {
         // Check if the game status can be set to "RUNNING"
-        boolean canSetRunning = status.equals(GameStatus.RUNNING) &&
-                (players.size() >= DefaultValues.MinNumOfPlayer) &&
-                index_current_player != -1;
+        boolean canSetRunning =
+                status.equals(GameStatus.RUNNING) &&
+                (aux_order_players.size() >= DefaultValues.MinNumOfPlayer) &&
+                !players_connected.isEmpty();
 
         // Set the game status and notify listeners based on the new status
         if (canSetRunning) {
@@ -442,10 +383,10 @@ public class GameModel {
                     listener_handler.notify_nextTurn(this);
                     break;
                 case SECOND_LAST_ROUND:
-                    listener_handler.notify_SecondLastTurn(this);
+                    listener_handler.notify_SecondLastRound(this);
                     break;
                 case LAST_ROUND:
-                    listener_handler.notify_LastTurn(this);
+                    listener_handler.notify_LastRound(this);
                     break;
                 case ENDED:
                     listener_handler.notify_GameEnded(this);
@@ -481,8 +422,9 @@ public class GameModel {
      * - 2 secret objective cards from the objective deck
      */
     public void dealCards() {
-        // Deal cards to players
-        for (Player player : players) {
+        // Deal cards to players, recall that at this stage
+        // aux_order_players and players_connected are the same
+        for (Player player : aux_order_players) {
             // Deal 1 starter card
             if (!common_board.getStarterConcreteDeck().isEmpty()) {
                 StarterCard starterCard = (StarterCard) common_board.getStarterConcreteDeck().pop();
@@ -515,8 +457,7 @@ public class GameModel {
         }
     }
 
-    public void placeCard(ResourceCard card_chosen, Player p, int x, int y) throws
-            IllegalMoveException {
+    public void placeCard(ResourceCard card_chosen, Player p, int x, int y)  {
         PersonalBoard personal_board = p.getPersonalBoard();
 
         if (!personal_board.board[x][y].is_full) {
@@ -580,17 +521,12 @@ public class GameModel {
      */
     public void calculateFinalScores() {
         // Iterate over all players to calculate their final scores
-        for (int i = 0; i < getNumPlayers(); i++) {
+        for (Player p : aux_order_players) {
             // Calculate the final score for the current player
-            int finalScore = players.get(i).getPersonalBoard().getPoints() +
-                    players.get(i).getChosenObjectiveCard().calculateScore(players.get(i).getPersonalBoard()) +
-                    common_board.getCommonObjectives().get(0).calculateScore(players.get(i).getPersonalBoard()) +
-                    common_board.getCommonObjectives().get(1).calculateScore(players.get(i).getPersonalBoard());
-
-            // Update the final score for the current player
-            // final_scores[i] is the final score of player indexed by i in players list
-            this.final_scores.add(i, finalScore);
-            players.get(i).setFinalScore(finalScore);
+            p.setFinalScore(p.getPersonalBoard().getPoints() +
+                    p.getChosenObjectiveCard().calculateScore(p.getPersonalBoard()) +
+                    common_board.getCommonObjectives().get(0).calculateScore(p.getPersonalBoard()) +
+                    common_board.getCommonObjectives().get(1).calculateScore(p.getPersonalBoard()));
         }
     }
 
@@ -599,24 +535,25 @@ public class GameModel {
      * Updates the leaderboard and the list of winners accordingly.
      */
     public void declareWinners() {
-        // Initialize variables
-        int maxScore = 0;
-        List<Player> ordered_players = new ArrayList<>(players);
+
+        int maxScore;
+        List<Player> ordered_players = new ArrayList<>(aux_order_players);
+
+        calculateFinalScores();
+
         ordered_players.sort(Comparator.comparingInt(Player::getFinalScore).reversed());
 
-        maxScore = players.stream()
+        maxScore = aux_order_players.stream()
                 .mapToInt(Player::getFinalScore)
                 .max()
                 .getAsInt();
 
-        for (Player player : players) {
-            if (player.getFinalScore() >= maxScore) {
-                this.winners.add(player);
-            }
-        }
+        aux_order_players.stream()
+                .filter(player -> player.getFinalScore() >= maxScore)
+                .forEach(this.winners::add);
 
         for (Player orderedPlayer : ordered_players) {
-            leaderBoard.put(orderedPlayer, orderedPlayer.getFinalScore());
+            leaderboard.put(orderedPlayer, orderedPlayer.getFinalScore());
         }
     }
 
@@ -636,7 +573,7 @@ public class GameModel {
      * @return The leaderboard map with player indexes as keys and scores as values.
      */
     public Map<Player, Integer> getLeaderboard() {
-        return this.leaderBoard;
+        return this.leaderboard;
     }
 
     /**
@@ -648,7 +585,7 @@ public class GameModel {
      */
     public void nextTurn() throws GameEndedException, GameNotStartedException {
 
-        if (status.equals(GameStatus.ENDED) || first_finished_player != -1) {
+        if (status.equals(GameStatus.ENDED) || first_finishing_player != null) {
             throw new GameEndedException();
         } else if (!status.equals(GameStatus.FIRST_ROUND) &&
                 !status.equals(GameStatus.RUNNING) &&
@@ -657,23 +594,16 @@ public class GameModel {
             throw new GameNotStartedException();
         }
 
-        if (!areOnlinePlayersEnough()) {
-            // we proceed, but we need to wait for the next player to reconnect
-            index_current_player = (index_current_player + 1) % players.size();
+        while (players_connected.size() <= 1) {
+            // we wait for another player to connect
+            // IDEA: look for timeout in the requirements of disconnection
         }
-        else {
-            index_current_player = nextPlayerConnectedIndex();
-        }
+
+        Player q = players_connected.poll();
+        players_connected.offer(q);
+
         // Notify listeners about the next turn
         listener_handler.notify_nextTurn(this);
-    }
-
-    public int nextPlayerConnectedIndex() {
-        int next_index = (index_current_player + 1) % players.size();
-        while (!players.get(next_index).getIsConnected()) {
-            next_index = (index_current_player + 1) % players.size();
-        }
-        return next_index;
     }
 
     /**
@@ -719,15 +649,6 @@ public class GameModel {
      */
     public ConcreteDeck getStarterDeck() {
         return this.common_board.getStarterConcreteDeck();
-    }
-
-    /**
-     * Retrieves the final scores of the players.
-     *
-     * @return An array containing the final scores of the players.
-     */
-    public List<Integer> getFinalScores() {
-        return this.final_scores;
     }
 
 }

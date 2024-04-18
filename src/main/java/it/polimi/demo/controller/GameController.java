@@ -68,7 +68,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
                             disconnectPlayer(heartbeat.getNick(), listener);
                             printAsync("Disconnection detected by heartbeat of player: " + heartbeat.getNick() + " ");
 
-                            if (getNumOnlinePlayers() == 0) {
+                            if (getNumConnectedPlayers() == 0) {
                                 stopReconnectionTimer();
                                 MainController.getInstance().deleteGame(getGameId());
                             }
@@ -126,16 +126,17 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
             if (model.getStatus().equals(GameStatus.WAIT)) {
                 // The game is in Wait (game not started yet), the player disconnected, so I remove him from the game)
-                model.removePlayer(nick);
+                model.removePlayer(p);
             } else {
                 // The game is running, so I set him as disconnected (He can reconnect soon)
-                model.setAsDisconnected(nick);
+                model.setPlayerAsDisconnected(p);
             }
 
             // Check if there is only one player playing
             if ((model.getStatus().equals(GameStatus.RUNNING) ||
                     model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
-                    model.getStatus().equals(GameStatus.LAST_ROUND)) && model.getNumOnlinePlayers() == 1) {
+                    model.getStatus().equals(GameStatus.LAST_ROUND)) &&
+                    model.getPlayersConnected().size() == 1) {
                 // Starting a th for waiting until reconnection at least of 1 client to keep playing
                 if (reconnection_thread == null) {
                     startReconnectionTimer();
@@ -166,10 +167,10 @@ public class GameController implements GameControllerInterface, Runnable, Serial
                     }
                     printAsync("Timer for reconnection ended");
 
-                    if (model.getNumOnlinePlayers() == 0) {
+                    if (model.getPlayersConnected().isEmpty()) {
                         //No players online, I delete the games
                         MainController.getInstance().deleteGame(model.getGameId());
-                    } else if (model.getNumOnlinePlayers() == 1) {
+                    } else if (model.getPlayersConnected().size() == 1) {
                         printAsync("\tNo player reconnected on time, set game to ended!");
                         model.setStatus(GameStatus.ENDED);
                     } else {
@@ -204,9 +205,9 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     public void reconnectPlayer(Player p) throws
             PlayerAlreadyConnectedException, MaxPlayersLimitException, GameEndedException, RemoteException {
 
-        if (!model.isPlayerAlreadyConnected(p)) {
+        if (!model.getPlayersConnected().contains(p)) {
             model.reconnectPlayer(p);
-            if (getNumOnlinePlayers() >= 2) {
+            if (getNumConnectedPlayers() >= 2) {
                 stopReconnectionTimer();
             }
             // else nobody was connected and now one player has reconnected before the timer expires
@@ -223,7 +224,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     @Override
     public synchronized void leave(GameListener lis, String nick) throws RemoteException {
         removeListener(lis, model.getPlayerEntity(nick));
-        model.removePlayer(nick);
+        model.removePlayer(model.getPlayerEntity(nick));
     }
 
     //------------------------------------ management of players -----------------------------------------------
@@ -242,7 +243,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * @return the list of the players currently playing (online and offline)
      */
     public List<Player> getPlayers() {
-        return model.getPlayers();
+        return model.getAllPlayers();
     }
 
     /**
@@ -251,35 +252,17 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * @return num of current players
      */
     public int getNumPlayers() {
-        return model.getNumPlayers();
+        return model.getAllPlayers().size();
     }
 
-    /**
-     * Return the index of the player who is currently playing the turn
-     *
-     * @return index of the player who is moving
-     */
-    public int getIndexCurrentPlayer() {
-        return model.getIndexCurrentPlayer();
-    }
-
-    /**
-     * Return the player who is currently playing the turn
-     *
-     * @param p the player that you want to know if is the current playing
-     * @return true if the player is the current playing, false else
-     */
-    private boolean isPlayerTheCurrentPlaying(Player p) {
-        return whoIsPlaying().equals(p);
-    }
     /**
      * Return the entity of the player associated with the nickname @param
      *
-     * @param playerNick
+     * @param nick
      * @return the player by nickname @param
      */
-    public Player getPlayer(String playerNick) {
-        return model.getPlayerEntity(playerNick);
+    public Player getPlayer(String nick) {
+        return model.getPlayerEntity(nick);
     }
 
     /**
@@ -288,7 +271,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * @return the player who is playing the turn
      */
     public Player whoIsPlaying() {
-        return model.getPlayers().get(model.getIndexCurrentPlayer());
+        return model.getPlayersConnected().peek();
     }
 
     // Section: Overrides
@@ -324,7 +307,8 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      */
     @Override
     public synchronized boolean isThisMyTurn(String nick) throws RemoteException {
-        return model.getPlayers().get(model.getIndexCurrentPlayer()).getNickname().equals(nick);
+        assert model.getPlayersConnected().peek() != null;
+        return model.getPlayersConnected().peek().getNickname().equals(nick);
     }
 
     /**
@@ -332,8 +316,8 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * @throws RemoteException
      */
     @Override
-    public int getNumOnlinePlayers() throws RemoteException {
-        return model.getNumOnlinePlayers();
+    public int getNumConnectedPlayers() throws RemoteException {
+        return model.getPlayersConnected().size();
     }
 
     //------------------------------------ logic management -----------------------------------------------
@@ -351,9 +335,14 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * Extract pseudo-randomly the player who has the first move (first turn)
      */
     private void extractFirstTurn() {
-        int ris = random.nextInt(model.getNumPlayers());
-        model.setFirstTurnIndex(ris);
-        model.setCurrentPlayer(getPlayers().get(ris));
+        int ris = random.nextInt(getPlayers().size());
+        Player first_player = getPlayers().get(ris);
+
+        model.getAllPlayers().remove(first_player);
+        model.getAllPlayers().addFirst(first_player);
+
+        model.getPlayersConnected().remove(first_player);
+        model.getPlayersConnected().addFirst(first_player);
     }
 
     /**
@@ -424,7 +413,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         for (GameListener othersListener : model.getListeners()) {
             p.addListener(othersListener);
         }
-        for (Player otherPlayer : model.getPlayers()) {
+        for (Player otherPlayer : getPlayers()) {
             if (!otherPlayer.equals(p)) {
                 otherPlayer.addListener(l);
             }
@@ -442,14 +431,12 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         model.removeListener(lis);
         p.getListeners().clear();
 
-        for (Player otherPlayer : model.getPlayers()) {
+        for (Player otherPlayer : getPlayers()) {
             if (!otherPlayer.equals(p)) {
                 otherPlayer.removeListener(lis);
             }
         }
     }
-
-
 
     //-------------------------------chat management----------------------------
     /**

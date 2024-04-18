@@ -30,9 +30,9 @@ public class CommonBoardTest {
             }
         }
         // Verify that the decks are correctly positioned on the table.
-        assertNotNull(commonBoard.getDecks()[0]);
-        assertNotNull(commonBoard.getDecks()[1]);
-        assertNotNull(commonBoard.getDecks()[2]);
+        assertNotNull(commonBoard.getDecks().get(0));
+        assertNotNull(commonBoard.getDecks().get(1));
+        assertNotNull(commonBoard.getDecks().get(2));
 
         //Verify the pop of Resource and Gold decks
         assertNotNull(commonBoard.drawFromConcreteDeck(0));

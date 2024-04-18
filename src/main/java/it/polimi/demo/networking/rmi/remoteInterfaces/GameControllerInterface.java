@@ -85,7 +85,7 @@ public interface GameControllerInterface extends Remote {
      * @return the number of the online players
      * @throws RemoteException if the connection fails
      */
-    int getNumOnlinePlayers() throws RemoteException;
+    int getNumConnectedPlayers() throws RemoteException;
 
     /**
      * This method remove a player from the GameListener list {@link GameListener} and from the game

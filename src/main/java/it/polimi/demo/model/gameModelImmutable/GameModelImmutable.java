@@ -18,35 +18,37 @@ import java.util.*;
  */
 public class GameModelImmutable implements Serializable {
 
-    private final Map<PlayerIC, Integer> leaderBoard;
+    private final List<PlayerIC> aux_order_players;
+    private final LinkedList<PlayerIC> players_connected;
     private final Integer gameId;
-    private final int index_current_player;
-    private final List<PlayerIC> players;
+    private final ListenersHandler listener_handler;
+
     private final ChatIC chat;
     private final GameStatus status;
-    private final ListenersHandler listener_handler;
-    private final List<Integer> final_scores;
-    private final Integer first_finished_player = -1;
+    private final Player first_finishing_player;
     private final List<PlayerIC> winners;
     private final CommonBoardIC common_board;
     private final PlayerIC first_player;
+    private final Map<PlayerIC, Integer> leaderBoard;
 
     /**
      * This is the constructor which is called by the view and in the Observer pattern
      * @param model_to_copy is the GameModel instance from which we create the immutable version
      */
     public GameModelImmutable(GameModel model_to_copy) {
-        this.leaderBoard = new HashMap<>(model_to_copy.getLeaderboard());
-        this.players = new ArrayList<>(model_to_copy.getPlayers());
+
+        this.aux_order_players = new ArrayList<>(model_to_copy.getAllPlayers());
+        this.players_connected = new LinkedList<>(model_to_copy.getPlayersConnected());
         this.common_board = model_to_copy.getCommonBoard();
+        this.listener_handler = model_to_copy.getListenersHandler();
+
         this.gameId = model_to_copy.getGameId();
-        this.index_current_player = model_to_copy.getIndexCurrentPlayer();
         this.chat = model_to_copy.getChat();
         this.status = model_to_copy.getStatus();
-        this.listener_handler = model_to_copy.getListenersHandler();
-        this.final_scores = model_to_copy.getFinalScores();
+        this.first_finishing_player = model_to_copy.getFirstFinishingPlayer();
         this.winners = new ArrayList<>(model_to_copy.getWinners());
-        this.first_player = model_to_copy.getFirstPlayer();
+        this.first_player = model_to_copy.getBeginnerPlayer();
+        this.leaderBoard = new HashMap<>(model_to_copy.getLeaderboard());
     }
 
     public Map<PlayerIC, Integer> getLeaderBoard() {
@@ -57,12 +59,12 @@ public class GameModelImmutable implements Serializable {
         return gameId;
     }
 
-    public int getIndexCurrentPlayer() {
-        return index_current_player;
+    public List<PlayerIC> getPlayers() {
+        return aux_order_players;
     }
 
-    public List<PlayerIC> getPlayers() {
-        return players;
+    public LinkedList<PlayerIC> getPlayersConnected() {
+        return players_connected;
     }
 
     public ChatIC getChat() {
@@ -77,12 +79,8 @@ public class GameModelImmutable implements Serializable {
         return listener_handler;
     }
 
-    public List<Integer> getFinalScores() {
-        return final_scores;
-    }
-
-    public Integer getFirstFinishedPlayer() {
-        return first_finished_player;
+    public Player getFirstFinishedPlayer() {
+        return first_finishing_player;
     }
 
     public List<PlayerIC> getWinners() {
@@ -98,15 +96,17 @@ public class GameModelImmutable implements Serializable {
     }
 
     public List<ResourceCardIC> getHandCurrentPlayer() {
-        return players.get(index_current_player).getHandIC();
+        assert players_connected.peek() != null;
+        return players_connected.peek().getHandIC();
     }
 
     public String getNicknameCurrentPlayer() {
-        return players.get(index_current_player).getNickname();
+        assert players_connected.peek() != null;
+        return players_connected.peek().getNickname();
     }
 
     public PlayerIC getPlayerEntity(String nickname) {
-        for (PlayerIC player : players) {
+        for (PlayerIC player : aux_order_players) {
             if (player.getNickname().equals(nickname)) {
                 return player;
             }
@@ -115,7 +115,7 @@ public class GameModelImmutable implements Serializable {
     }
 
     public PlayerIC getCurrentPlayerEntity() {
-        return players.get(index_current_player);
+        return players_connected.peek();
     }
 
 }
