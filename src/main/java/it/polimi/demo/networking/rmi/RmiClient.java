@@ -3,6 +3,7 @@ package it.polimi.demo.networking.rmi;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.DefaultValues;
+import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.VirtualServer;
@@ -28,21 +29,6 @@ public class RmiClient implements MainControllerInterface, Serializable {
     private VirtualServer vs;
 
     /**
-     * Starts the RMI client.
-     * Connects to the remote server and initiates the input loop to send messages to the server.
-     * @throws Exception if an error occurs while connecting to the server
-     */
-    private void startClient() throws Exception {
-        // Getting the registry
-        Registry registry;
-        registry = LocateRegistry.getRegistry(DefaultValues.SERVER_NAME, DefaultValues.PORT);
-// Looking up the registry for the remote object
-        this.vs = (VirtualServer) registry.lookup("ServerTest");
-        this.vs.login(this);
-        inputLoop();
-    }
-
-    /**
      * Main method to start the RMI client.
      * @param args the command-line arguments (not used)
      */
@@ -55,9 +41,24 @@ public class RmiClient implements MainControllerInterface, Serializable {
     }
 
     /**
+     * Starts the RMI client.
+     * Connects to the remote server and initiates the input loop to send messages to the server.
+     * @throws Exception if an error occurs while connecting to the server
+     */
+    private void startClient() throws Exception {
+        // Getting the registry
+        Registry registry;
+        registry = LocateRegistry.getRegistry(DefaultValues.SERVER_NAME, DefaultValues.PORT);
+// Looking up the registry for the remote object
+        this.vs = (VirtualServer) registry.lookup("ServerTest");
+        this.vs.login(this);
+        run();
+    }
+
+    /**
      * Input loop to send messages to the server.
      */
-    void inputLoop() {
+    void run() {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String message;
         try {
@@ -83,13 +84,20 @@ public class RmiClient implements MainControllerInterface, Serializable {
         System.out.println(message);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public GameControllerInterface createGame(GameListener lis, String nick) throws RemoteException {
+    public GameControllerInterface createGame(GameListener lis, String nick, int num_players) throws RemoteException {
+        try {
+            this.vs.create(num_players, nick);
+        } catch (GameNotStartedException e) {
+            try {
+                this.showError(e.getMessage());}
+            catch (RemoteException e1) {
+                System.err.println("Network error while creating game.");
+            }
+        }
         return null;
     }
+
 
     @Override
     public GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException {
@@ -108,7 +116,14 @@ public class RmiClient implements MainControllerInterface, Serializable {
 
     @Override
     public GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException {
+        System.exit(0);
         return null;
+    }
+
+
+    @Override
+    public void showError(String err) throws RemoteException {
+        System.out.println("[ERRORE]: "+ err);
     }
 
 }

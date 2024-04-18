@@ -20,7 +20,7 @@ public interface MainControllerInterface extends Remote {
      * @return the GameControllerInterface of the game {@link GameControllerInterface}
      * @throws RemoteException if the connection fails
      */
-    GameControllerInterface createGame(GameListener lis, String nick) throws RemoteException;
+    GameControllerInterface createGame(GameListener lis, String nick, int num_payers) throws RemoteException;
 
     /**
      * This method joins the first available game
@@ -62,5 +62,9 @@ public interface MainControllerInterface extends Remote {
      */
     GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException;
 
-
+    /**
+     * This method is called by the server when there is an error to show.
+     * @param err the error message
+     */
+    void showError(String err) throws RemoteException;
 }

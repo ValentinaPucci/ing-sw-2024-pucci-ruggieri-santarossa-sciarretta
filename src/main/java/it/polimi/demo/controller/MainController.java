@@ -70,7 +70,7 @@ public class MainController implements MainControllerInterface, VirtualServer {
      * @throws RemoteException
      */
     @Override
-    public synchronized GameControllerInterface createGame(GameListener lis, String nick) throws RemoteException {
+    public synchronized GameControllerInterface createGame(GameListener lis, String nick, int numOfPlayers) throws RemoteException {
         Player p = new Player(nick);
 
         GameController c = new GameController();
@@ -231,6 +231,11 @@ public class MainController implements MainControllerInterface, VirtualServer {
         return null;
     }
 
+    @Override
+    public void showError(String err) throws RemoteException {
+
+    }
+
     /**
      * Remove the @param idGame from the {@link MainController#runningGames}
      *
@@ -266,6 +271,26 @@ public class MainController implements MainControllerInterface, VirtualServer {
 
     @Override
     public void send(String message) throws RemoteException {
+
+    }
+
+    @Override
+    public void addPlayerToGame(int gameID, String username) throws RemoteException {
+
+    }
+
+    @Override
+    public void create(int numberOfPlayers, String username) throws RemoteException {
+
+    }
+
+    @Override
+    public void getGamesList() throws RemoteException {
+
+    }
+
+    @Override
+    public void performTurn() throws RemoteException {
 
     }
 }
