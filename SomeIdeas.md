@@ -24,10 +24,14 @@ Before going on, look at lines 298 (to 311). The RMI client is in fact our physi
 For other information, look directly at GameControllerInterface class. Remember the only methods an rmi client can use are inside this interface. For a more general view of what a client can do and cannot do you can inspect the interface called *CommonClientActions*.
 So, in order to summarize what we have seen, we can say that a client (whose possible actions are described in CommonClientActions) uses an interface called GameControllerInterface, which is implemented by the GameController.
 
+# The concept of reconnection
+
+We would like to implement this advanced functionality on our program. Namely, we want that if for some reason a client loses the connection to the server, then it is able to reacquire it thanks to our implementation. An issue is the following: the *run* method inside *GameController* class performs some actions with respect to a map. This map has the following meaning: everyone who is currently playing is identified as a listener (the domain of the map), and we define a function from this domain to a set of heartbeats (the codomain). In other words, every player (listener) is associated to a specific heartbeat, which contains the information required from the server to determine whether a client is still connected (a 'fresh' heartbeat) or not. Now, the problem is that it is not so simple to find, inside the code of *Saccani et al.* where the update caller routine (which must be called 'frequently' the update of these heartbeats) is located. At a first glance, it seems that the code we are searching for is inside the *RMI Client* class, but it is commented by the authors. At this stage, this appears to me as an open problem!
+
 # ToDo
 
 - Change Listener
 - Change Chat
 - Multiple Games
 - Disconnections
-
+- Change all the methods related to connection resilience except from *reconnectPlayer*
