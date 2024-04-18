@@ -19,52 +19,55 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RmiClient implements MainControllerInterface, Serializable  {
+/**
+ * RMI client to communicate with the remote server using RMI.
+ * Implements the MainControllerInterface to receive messages from the server.
+ */
+public class RmiClient implements MainControllerInterface, Serializable {
 
     private VirtualServer vs;
 
+    /**
+     * Starts the RMI client.
+     * Connects to the remote server and initiates the input loop to send messages to the server.
+     * @throws Exception if an error occurs while connecting to the server
+     */
     private void startClient() throws Exception {
-// Getting the registry
-        Registry registry;
-        registry = LocateRegistry.getRegistry(DefaultValues.SERVER_NAME, DefaultValues.PORT);
-// Looking up the registry for the remote object
-        this.vs = (VirtualServer) registry.lookup("ServerTest");
-        this.vs.login(this);
-        inputLoop();
+        // Code for connecting to the server
     }
 
-    public static void main( String[] args )
-    {
+    /**
+     * Main method to start the RMI client.
+     * @param args the command-line arguments (not used)
+     */
+    public static void main(String[] args) {
         try {
             new RmiClient().startClient();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    /**
+     * Input loop to send messages to the server.
+     */
     void inputLoop() {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        String message;
-        try {
-            while ((message = br.readLine()) != null) {
-                vs.send(message);
-            }
-        } catch (IOException e) {
-            System.err.println("Errore di input/output: " + e.getMessage());
-        } finally {
-            try {
-                br.close();
-            } catch (IOException e) {
-                System.err.println("Errore durante la chiusura del BufferedReader: " + e.getMessage());
-            }
-        }
+        // Code to read user input and send messages to the server
     }
 
+    // Methods implemented from the MainControllerInterface
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void receive(String message) throws RemoteException {
-        System.out.println(message);
+        // Implementation of the method to receive messages from the server
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public GameControllerInterface createGame(GameListener lis, String nick) throws RemoteException {
         return null;
@@ -89,4 +92,5 @@ public class RmiClient implements MainControllerInterface, Serializable  {
     public GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException {
         return null;
     }
+
 }

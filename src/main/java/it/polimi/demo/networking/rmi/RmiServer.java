@@ -15,42 +15,68 @@ import it.polimi.demo.model.DefaultValues;
 import java.util.Map;
 import java.util.Scanner;
 
-//
+
+/**
+ * RMI server implementation that provides remote access to clients.
+ * Implements the VirtualServer interface to handle client connections and message transmission.
+ */
 public class RmiServer extends UnicastRemoteObject implements VirtualServer {
 
+    /** List of connected client interfaces */
     final List<MainControllerInterface> virtualClients;
 
+    /**
+     * Constructor for the RMI server.
+     * Initializes the list of virtualClients.
+     * @throws RemoteException if an RMI error occurs
+     */
     protected RmiServer() throws RemoteException {
         this.virtualClients = new ArrayList<>();
     }
 
-    public void login(MainControllerInterface vc){
+    /**
+     * Logs in a client by adding its MainControllerInterface to the list of virtualClients.
+     * @param vc the MainControllerInterface of the client to be logged in
+     */
+    public void login(MainControllerInterface vc) {
         this.virtualClients.add(vc);
     }
 
+    /**
+     * Sends a message to all connected clients.
+     * @param message the message to be sent
+     * @throws RemoteException if an RMI error occurs during message transmission
+     */
     public void send(String message) throws RemoteException {
         System.out.println("Server received: " + message);
-        for(MainControllerInterface vc: virtualClients){
+        for (MainControllerInterface vc : virtualClients) {
             vc.receive(message);
         }
     }
 
-    public static void main(String args[]){
-        try{
+    /**
+     * Main method to start the RMI server.
+     * @param args the command-line arguments (not used)
+     */
+    public static void main(String args[]) {
+        try {
             new RmiServer().startServer();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Starts the RMI server by binding its stub in the registry.
+     * @throws RemoteException if an RMI error occurs during server startup
+     */
     private void startServer() throws RemoteException {
-// Bind the remote object's stub in the registry
-//DO NOT CALL Registry registry = LocateRegistry.getRegistry();
+        // Create or get the registry
         Registry registry = LocateRegistry.createRegistry(DefaultValues.PORT);
         try {
+            // Bind the server object in the registry
             registry.bind("ServerTest", this);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         System.out.println("Server ready");
