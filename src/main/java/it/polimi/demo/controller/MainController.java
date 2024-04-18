@@ -131,9 +131,12 @@ public class MainController implements MainControllerInterface{
 
         if (ris.size() == 1) {
             if(ris.get(0).getStatus().equals(GameStatus.WAIT) ||
-                    ((ris.get(0).getStatus().equals(GameStatus.RUNNING) || ris.get(0).getStatus().equals(GameStatus.LAST_ROUND)) &&
-                            ris.get(0).getPlayers().stream().filter(x->x.getNickname().equals(nick)).toList().size()==1)
-            ) {
+                    ((ris.get(0).getStatus().equals(GameStatus.RUNNING) ||
+                            ris.get(0).getStatus().equals(GameStatus.LAST_ROUND)) &&
+                            ris.get(0).getPlayers()
+                                    .stream()
+                                    .filter(x->x.getNickname().equals(nick))
+                                    .toList().size()==1)) {
                 try {
                     ris.get(0).addListener(lis, p);
                     ris.get(0).addPlayer(p);

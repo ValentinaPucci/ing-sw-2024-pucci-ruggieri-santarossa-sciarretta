@@ -7,6 +7,7 @@ import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.listener.*;
+import it.polimi.demo.model.interfaces.ResourceCardIC;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.List;
 public class Player implements PlayerIC {
 
     private String nickname;
-    private List<Card> card_hand;
+    private List<ResourceCard> card_hand;
     private PersonalBoard personal_board;
     private ObjectiveCard[] secret_objectives;
     private ObjectiveCard chosen_objective;
@@ -116,13 +117,13 @@ public class Player implements PlayerIC {
         this.final_score = final_score;
     }
 
-    @Override
     public void addToHand(Card card) {
-        card_hand.add(card);
+        card_hand.add((ResourceCard) card);
     }
 
-    public void setHand(List<Card> card_hand) {
-        this.card_hand = card_hand;
+    public void setHand(List<ResourceCard> card_hand) {
+        this.card_hand.clear();
+        this.card_hand.addAll(card_hand);
     }
 
     @Override
@@ -130,8 +131,9 @@ public class Player implements PlayerIC {
         card_hand.remove(card);
     }
 
-    public List<Card> getHand() {
-        return card_hand;
+    @Override
+    public List<ResourceCardIC> getHandIC() {
+        return new ArrayList<>(card_hand);
     }
 
     @Override

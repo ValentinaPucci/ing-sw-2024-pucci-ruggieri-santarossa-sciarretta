@@ -2,6 +2,7 @@ package it.polimi.demo.model.chat;
 
 import it.polimi.demo.model.DefaultValues;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.model.interfaces.ChatIC;
 //import it.polimi.demo.model.interfaces.ChatIC;
 
 import java.io.Serializable;
@@ -11,7 +12,8 @@ import java.util.List;
 import static org.fusesource.jansi.Ansi.ansi;
 
 //public class Chat  { implements ChatIC
-public class Chat  {
+public class Chat implements ChatIC {
+
     private List<Message> msgs;
 
     /**

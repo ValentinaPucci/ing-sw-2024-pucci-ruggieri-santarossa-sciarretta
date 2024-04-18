@@ -16,22 +16,20 @@ import java.rmi.RemoteException;
 public interface GameControllerInterface extends Remote {
 
     /**
-     * This method is used to check if the player is ready to start
-     * @param p the nickname of the player
-     * @return true if the player is ready to start
+     * This method is used to draw a card from the deck
+     * @param index the index of the card to draw
+     * @return the card drawn
      * @throws RemoteException if the connection fails
      */
-    boolean playerIsReadyToStart(String p) throws RemoteException;
-
     Card drawCard(int index) throws RemoteException;
 
     /**
      * This method place a card in the commonboard.
-     * @param card_chosen
-     * @param p
-     * @param x
-     * @param y
-     * @throws RemoteException
+     * @param card_chosen the card to place
+     * @param p the player that place the card
+     * @param x the x coordinate of the card on his/her personal board
+     * @param y the y coordinate of the card on his/her personal board
+     * @throws RemoteException if the connection fails
      */
     void placeCard(ResourceCard card_chosen, Player p, int x, int y) throws RemoteException, GameEndedException;
 
@@ -43,6 +41,13 @@ public interface GameControllerInterface extends Remote {
      */
     boolean isThisMyTurn(String nick) throws RemoteException;
 
+    /**
+     * This method is used to check if the player is ready to start
+     * @param p the nickname of the player
+     * @return true if the player is ready to start
+     * @throws RemoteException if the connection fails
+     */
+    boolean setPlayerAsReadyToStart(String p) throws RemoteException;
 
     /**
      * This method disconnect a player and remove him from the GameListener list{@link GameListener}
@@ -50,7 +55,7 @@ public interface GameControllerInterface extends Remote {
      * @param listOfClient the GameListener of the player {@link GameListener}
      * @throws RemoteException if the connection fails
      */
-    void disconnectPlayer(String nick, GameListener listOfClient) throws RemoteException;
+    void disconnectPlayer(String nick, GameListener listOfClient) throws RemoteException, GameEndedException;
 
 
     /**

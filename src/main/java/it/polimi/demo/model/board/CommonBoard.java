@@ -6,6 +6,9 @@ import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.exceptions.EmptyStackException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //NB il giocatore iniziale (pedina nera) è il giocatore 0
 
 public class CommonBoard implements CommonBoardIC {
@@ -14,7 +17,7 @@ public class CommonBoard implements CommonBoardIC {
     private ConcreteDeck gold_concrete_deck; // gold_concrete_deck
     private ConcreteDeck starter_concrete_deck;
     private ConcreteDeck objective_concrete_deck; // objective_concrete_deck
-    private ConcreteDeck[] decks;
+    private List<ConcreteDeck> decks;
     int num_players;
     private CommonBoardNode[] board_nodes; // Array of nodes representing the board
     private Card[][] table_cards; // Cards on the table
@@ -26,7 +29,7 @@ public class CommonBoard implements CommonBoardIC {
         this.starter_concrete_deck = new ConcreteDeck("Starter");
         this.objective_concrete_deck = new ConcreteDeck("Objective"); //objective_concrete_deck
         this.board_nodes = new CommonBoardNode[29];
-        this.decks = new ConcreteDeck[3]; // Create an array to hold the three decks
+        this.decks = new ArrayList<>(3); // Create an array to hold the three decks
         this.table_cards = new Card[3][2]; // And a matrix to hold the table cards
     }
 
@@ -70,9 +73,9 @@ public class CommonBoard implements CommonBoardIC {
                 System.err.println("Empty deck: " + e.getMessage());
             }
         }
-        decks[0] = this.resource_concrete_deck;
-        decks[1] = this.gold_concrete_deck;
-        decks[2] = this.objective_concrete_deck;
+        decks.add(0, this.resource_concrete_deck);
+        decks.add(1, this.gold_concrete_deck);
+        decks.add(2, this.objective_concrete_deck);
     }
 
 
@@ -80,10 +83,10 @@ public class CommonBoard implements CommonBoardIC {
     //        decks[0] = this.resource_concrete_deck;
     //        decks[1] = this.gold_concrete_deck;
     //        decks[2] = this.objective_concrete_deck;
-    public Card drawFromConcreteDeck(int ConcreteDeckIndex) {
-        if (ConcreteDeckIndex >= 0 && ConcreteDeckIndex < 2) {
+    public Card drawFromConcreteDeck(int concrete_deck_index) {
+        if (concrete_deck_index >= 0 && concrete_deck_index < 2) {
             try {
-                return decks[ConcreteDeckIndex].pop(); //the return of this function is the card that will be taken by the player
+                return decks.get(concrete_deck_index).pop(); //the return of this function is the card that will be taken by the player
             } catch (EmptyStackException e) {
                 System.err.println("Empty deck: " + e.getMessage());
             }
@@ -93,13 +96,13 @@ public class CommonBoard implements CommonBoardIC {
 
 
     // Method to draw a card from the table and replace it with a card from the corresponding ConcreteDeck
-    public Card drawFromTable(int row, int col, int ConcreteDeckIndex) {
-        if (row >= 0 && row < 2 && col >= 0 && col < 2 && ConcreteDeckIndex >= 0 && ConcreteDeckIndex < 2) {
+    public Card drawFromTable(int row, int col, int concrete_deck_index) {
+        if (row >= 0 && row < 2 && col >= 0 && col < 2 && concrete_deck_index >= 0 && concrete_deck_index < 2) {
             // Remove the card from the table and store it
             Card drawnCard = table_cards[row][col];
             try {
                 // Draw a card from the corresponding ConcreteDeck and replace it on the table
-                table_cards[row][col] = decks[ConcreteDeckIndex].pop();
+                table_cards[row][col] = decks.get(concrete_deck_index).pop();
             } catch (EmptyStackException e) {
                 System.err.println("Empty deck: " + e.getMessage());
             }
@@ -183,14 +186,14 @@ public class CommonBoard implements CommonBoardIC {
         }
     }
 
-    public ConcreteDeck[] getDecks(){
-        return decks;
+    public List<ConcreteDeck> getDecks(){
+        return this.decks;
     }
 
-    public ObjectiveCard[] getCommonObjectives(){
-        ObjectiveCard[] common_objectives = new  ObjectiveCard[2];
-        common_objectives[0] = (ObjectiveCard) table_cards[2][0];
-        common_objectives[1] = (ObjectiveCard) table_cards[2][1];
+    public List<ObjectiveCard> getCommonObjectives() {
+        List<ObjectiveCard> common_objectives = new ArrayList<>(2);
+        common_objectives.add(0, (ObjectiveCard) table_cards[2][0]);
+        common_objectives.add(1, (ObjectiveCard) table_cards[2][1]);
         return common_objectives;
     }
 }

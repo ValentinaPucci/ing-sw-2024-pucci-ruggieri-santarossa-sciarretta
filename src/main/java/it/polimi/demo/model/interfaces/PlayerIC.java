@@ -75,12 +75,15 @@ public interface PlayerIC {
      */
     void removeFromHand(Card card);
 
+    /**
+     *
+     * @return the player's hand
+     */
+    List<ResourceCardIC> getHandIC();
 
     void addListener(GameListener obj);
 
-
     public void removeListener(GameListener obj);
-
 
     List<GameListener> getListeners();
 
@@ -102,5 +105,4 @@ public interface PlayerIC {
      * @return true if the object p is equals to the player
      */
     boolean equals(Object p);
-
 }

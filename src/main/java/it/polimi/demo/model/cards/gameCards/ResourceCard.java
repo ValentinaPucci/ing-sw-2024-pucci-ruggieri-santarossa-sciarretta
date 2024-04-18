@@ -7,9 +7,8 @@ import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.enumerations.Color;
 import it.polimi.demo.model.enumerations.Orientation;
 
-public class ResourceCard extends Card {
+public class ResourceCard extends Card implements ResourceCardIC {
 
-    // TODO: you always have to consider the orientation of the card...
     public int points;
     public Color color;
     private Corner[][] corners;
@@ -102,6 +101,16 @@ public class ResourceCard extends Card {
             return this.getCornerAtSW();
         else
             return this.getCornerAtSE();
+    }
+
+    @Override
+    public Color getColor() {
+        return this.color;
+    }
+
+    @Override
+    public int getPoints() {
+        return this.points;
     }
 
     // To print output.

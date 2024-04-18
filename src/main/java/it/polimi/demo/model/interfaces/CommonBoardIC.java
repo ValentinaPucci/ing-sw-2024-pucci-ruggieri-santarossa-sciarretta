@@ -5,6 +5,8 @@ import it.polimi.demo.model.board.CommonBoardNode;
 import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 
+import java.util.List;
+
 public interface CommonBoardIC {
     /**
      *
@@ -91,6 +93,15 @@ public interface CommonBoardIC {
      */
     int getPlayerCount();
 
-    ConcreteDeck[] getDecks();
-    ObjectiveCard[] getCommonObjectives();
+    /**
+     *
+     * @return all the concrete decks in the board
+     */
+    List<ConcreteDeck> getDecks();
+
+    /**
+     *
+     * @return the list of common objectives in the board
+     */
+    List<ObjectiveCard> getCommonObjectives();
 }

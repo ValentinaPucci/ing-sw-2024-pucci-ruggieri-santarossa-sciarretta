@@ -2,125 +2,120 @@ package it.polimi.demo.model.gameModelImmutable;
 
 import it.polimi.demo.model.*;
 import it.polimi.demo.listener.ListenersHandler;
-import it.polimi.demo.model.board.CommonBoard;
+import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
-import it.polimi.demo.model.chat.Chat;
-import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.interfaces.ChatIC;
+import it.polimi.demo.model.interfaces.CommonBoardIC;
+import it.polimi.demo.model.interfaces.PlayerIC;
+import it.polimi.demo.model.interfaces.ResourceCardIC;
 
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * This class is used to create an immutable version of the GameModel
+ */
 public class GameModelImmutable implements Serializable {
-    private  final Map<Integer, Integer> leader_board;
+
+    private final Map<PlayerIC, Integer> leaderBoard;
     private final Integer gameId;
-    private final Integer current_player;
-    private final Chat chat;
+    private final int index_current_player;
+    private final List<PlayerIC> players;
+    private final ChatIC chat;
     private final GameStatus status;
-    private final transient ListenersHandler listenersHandler;
-    private final List<Player> players;
-    private final int num_players;
-    private final CommonBoard common_board;
-    private final ConcreteDeck resource_deck;
-    private final ConcreteDeck gold_deck;
-    private final ConcreteDeck objective_deck;
-    private final ConcreteDeck starter_deck;
-    private final int[] final_scores;
-    private final List<Player> winners;
-    public GameModelImmutable(CommonBoard common_board, List<Player> players) {
+    private final ListenersHandler listener_handler;
+    private final List<Integer> final_scores;
+    private final Integer first_finished_player = -1;
+    private final List<PlayerIC> winners;
+    private final CommonBoardIC common_board;
+    private final PlayerIC first_player;
 
-        Random random = new Random();
-        gameId = random.nextInt(1000000);
-        status = GameStatus.WAIT;
-        chat = new Chat();
-        listenersHandler = new ListenersHandler();
-
-        this.players = players;
-        this.num_players = players.size();
-        this.final_scores = new int[num_players];
-        this.common_board = common_board;
-        this.resource_deck = common_board.getResourceConcreteDeck();
-        this.gold_deck = common_board.getGoldConcreteDeck();
-        this.starter_deck = common_board.getStarterConcreteDeck();
-        this.objective_deck = common_board.getObjectiveConcreteDeck();
-        this.leader_board = new HashMap<>();
-        this.current_player = -1;
-        this.winners = new ArrayList<>();
+    /**
+     * This is the constructor which is called by the view and in the Observer pattern
+     * @param model_to_copy is the GameModel instance from which we create the immutable version
+     */
+    public GameModelImmutable(GameModel model_to_copy) {
+        this.leaderBoard = new HashMap<>(model_to_copy.getLeaderboard());
+        this.players = new ArrayList<>(model_to_copy.getPlayers());
+        this.common_board = model_to_copy.getCommonBoard();
+        this.gameId = model_to_copy.getGameId();
+        this.index_current_player = model_to_copy.getIndexCurrentPlayer();
+        this.chat = model_to_copy.getChat();
+        this.status = model_to_copy.getStatus();
+        this.listener_handler = model_to_copy.getListenersHandler();
+        this.final_scores = model_to_copy.getFinalScores();
+        this.winners = new ArrayList<>(model_to_copy.getWinners());
+        this.first_player = model_to_copy.getFirstPlayer();
     }
 
-    public GameModelImmutable(GameModel modelToCopy) {
-        this.gameId = modelToCopy.getGameId();
-        this.current_player = modelToCopy.getCurrentPlayer();
-        this.chat = modelToCopy.getChat();
-        this.status = modelToCopy.getStatus();
-        this.listenersHandler = modelToCopy.getListenersHandler();
-        this.players = modelToCopy.getPlayers();
-        this.num_players = modelToCopy.getNumPlayers();
-        this.common_board = modelToCopy.getCommonBoard();
-        this.resource_deck = modelToCopy.getResourceDeck();
-        this.gold_deck = modelToCopy.getGoldDeck();
-        this.objective_deck = modelToCopy.getObjectiveDeck();
-        this.starter_deck = modelToCopy.getStarterDeck();
-        this.final_scores = modelToCopy.getFinalScores();
-        this.winners = modelToCopy.getWinners();
-        this.leader_board = new HashMap<>();
+    public Map<PlayerIC, Integer> getLeaderBoard() {
+        return leaderBoard;
     }
 
     public Integer getGameId() {
-        return this.gameId;
+        return gameId;
     }
 
-    public Integer getCurrentPlayer() {
-        return this.current_player;
+    public int getIndexCurrentPlayer() {
+        return index_current_player;
     }
 
-    public Chat getChat() {
-        return this.chat;
+    public List<PlayerIC> getPlayers() {
+        return players;
+    }
+
+    public ChatIC getChat() {
+        return chat;
     }
 
     public GameStatus getStatus() {
-        return this.status;
+        return status;
     }
 
     public ListenersHandler getListenersHandler() {
-        return this.listenersHandler;
+        return listener_handler;
     }
 
-    public List<Player> getPlayers() {
-        return this.players;
+    public List<Integer> getFinalScores() {
+        return final_scores;
     }
 
-    public int getNumPlayers() {
-        return this.num_players;
+    public Integer getFirstFinishedPlayer() {
+        return first_finished_player;
     }
 
-    public CommonBoard getCommonBoard() {
-        return this.common_board;
+    public List<PlayerIC> getWinners() {
+        return winners;
     }
 
-    public ConcreteDeck getResourceDeck() {
-        return this.resource_deck;
+    public CommonBoardIC getCommonBoard() {
+        return common_board;
     }
 
-    public ConcreteDeck getGoldDeck() {
-        return this.gold_deck;
+    public PlayerIC getFirstPlayer() {
+        return first_player;
     }
 
-    public ConcreteDeck getObjectiveDeck() {
-        return this.objective_deck;
+    public List<ResourceCardIC> getHandCurrentPlayer() {
+        return players.get(index_current_player).getHandIC();
     }
 
-    public ConcreteDeck getStarterDeck() {
-        return this.starter_deck;
+    public String getNicknameCurrentPlayer() {
+        return players.get(index_current_player).getNickname();
     }
 
-    public int[] getFinalScores() {
-        return this.final_scores;
+    public PlayerIC getPlayerEntity(String nickname) {
+        for (PlayerIC player : players) {
+            if (player.getNickname().equals(nickname)) {
+                return player;
+            }
+        }
+        return null;
     }
 
-    public List<Player> getWinners() {
-        return this.winners;
+    public PlayerIC getCurrentPlayerEntity() {
+        return players.get(index_current_player);
     }
-
 
 }
