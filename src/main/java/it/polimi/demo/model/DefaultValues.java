@@ -21,8 +21,8 @@ public class DefaultValues {
     public final static int timeoutConnection_millis = 3000;
     public final static int secondToWaitToSend_heartbeat =500;
     public final static String Default_servername_RMI = "CodexNaturalis";
-    public static String serverIp = "127.0.0.1";
-    public final static String Remote_ip = "127.0.0.1";
+    public static final int PORT =  1234;
+    public static String SERVER_NAME = "127.0.0.1";
     public final static int row_chat = 16;
     public final static int col_chat = 96;
 
