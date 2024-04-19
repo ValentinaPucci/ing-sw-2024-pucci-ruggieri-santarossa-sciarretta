@@ -11,9 +11,38 @@ public class CommonBoardTest {
 
     @BeforeEach
     public void setUp() {
-        int num_players = 3;
         this.commonBoard = new CommonBoard();
+        this.commonBoard.setPlayerCount(3);
     }
+
+    @Test
+    public void testDrawFromConcreteDeck() {
+        this.commonBoard.initializeBoard();
+
+        // Test per estrarre una carta da un deck valido
+        assertNotNull(commonBoard.drawFromConcreteDeck(0)); // Deck delle risorse
+        assertNotNull(commonBoard.drawFromConcreteDeck(1)); // Deck dell'oro
+
+        // Test per estrarre una carta da un deck non valido
+        assertNull(commonBoard.drawFromConcreteDeck(-1)); // Indice negativo
+        assertNull(commonBoard.drawFromConcreteDeck(2)); // Indice troppo grande
+    }
+
+    @Test
+    public void testDrawFromTable() {
+        this.commonBoard.initializeBoard();
+
+        // Test per estrarre una carta dalla tabella con indici validi
+        assertNotNull(commonBoard.drawFromTable(0, 0, 0)); // Estrazione dalla riga 0, colonna 0, deck delle risorse
+        assertNotNull(commonBoard.drawFromTable(1, 1, 1)); // Estrazione dalla riga 1, colonna 1, deck dell'oro
+
+        // Test per estrarre una carta dalla tabella con indici non validi
+        assertNull(commonBoard.drawFromTable(-1, 0, 0)); // Riga negativa
+        assertNull(commonBoard.drawFromTable(0, 2, 0)); // Colonna troppo grande
+        assertNull(commonBoard.drawFromTable(0, 0, -1)); // Deck negativo
+        assertNull(commonBoard.drawFromTable(0, 0, 2)); // Deck troppo grande
+    }
+
 
     @Test
     public void testInitializeBoard() {
@@ -59,13 +88,15 @@ public class CommonBoardTest {
         assertTrue(commonBoard.getBoardNode(0).getPlayers()[1]);
         assertTrue(commonBoard.getBoardNode(0).getPlayers()[2]);
         assertFalse(commonBoard.getBoardNode(1).getPlayers()[0]);
+        assertTrue(commonBoard.getBoardNode(0).isPlayerPresent(0));
+        assertFalse(commonBoard.getBoardNode(1).isPlayerPresent(0));
 
         //testing players moves
         commonBoard.movePlayer(0, 5);
         assertEquals(5, commonBoard.getPlayerPosition(0));
         // Test moving beyond the board bounds
         commonBoard.movePlayer(0, 30);
-        assertEquals(6, commonBoard.getPlayerPosition(0));
+        assertEquals(5, commonBoard.getPlayerPosition(0));
 
         // Testing partial winner
         commonBoard.movePlayer(1, 21);

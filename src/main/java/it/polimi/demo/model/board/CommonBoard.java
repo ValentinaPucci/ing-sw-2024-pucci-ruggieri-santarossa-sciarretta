@@ -138,7 +138,7 @@ public class CommonBoard implements CommonBoardIC {
         }
         // Moving beyond the board bounds
         if (new_position > 29){
-            int new_new_position = new_position - 29;
+            int new_new_position = new_position % 30;
             board_nodes[current_position].setPlayer(playerIndex, false);
             // Set the player to the new position
             board_nodes[new_new_position].setPlayer(playerIndex, true);
@@ -178,6 +178,10 @@ public class CommonBoard implements CommonBoardIC {
 
     public int getPlayerCount() {
         return num_players;
+    }
+
+    public void setPlayerCount(int num_players){
+        this.num_players = num_players;
     }
 
     public void setInitialPosition() {

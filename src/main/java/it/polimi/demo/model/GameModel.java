@@ -70,7 +70,7 @@ public class GameModel {
      *
      * @return True if the player in turn is online, otherwise false.
      */
-    private boolean isTheCurrentPlayerConnected() {
+    public boolean isTheCurrentPlayerConnected() {
         return players_connected.peek() != null;
     }
 
@@ -406,6 +406,7 @@ public class GameModel {
      * we need to use a certain constructor of this class instead of another.
      */
     public void initializeGame() {
+        common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
     }
