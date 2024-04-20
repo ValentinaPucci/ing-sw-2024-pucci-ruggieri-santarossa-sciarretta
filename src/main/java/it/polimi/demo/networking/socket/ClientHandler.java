@@ -7,8 +7,8 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 
-//scopo della classe: avere un oggetto che mi fa da interfaccia con il client --> STESSA FUNZIONE DELLO STUB IN RMI (VIRTUAL CLIENT SUL SERVER)
-// CONTIENE LA LOGICA CON CIUI LEGGGO I MESSAGGI CHE MI ARRIVANO DAL CLIENT
+// scopo della classe: avere un oggetto che mi fa da interfaccia con il client --> STESSA FUNZIONE DELLO STUB IN RMI (VIRTUAL CLIENT SUL SERVER)
+// CONTIENE LA LOGICA CON CUI LEGGGO I MESSAGGI CHE MI ARRIVANO DAL CLIENT
 public class ClientHandler implements SocketVirtualClient {
     final MainController controller;
     final SocketServer server;
