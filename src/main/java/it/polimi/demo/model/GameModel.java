@@ -5,6 +5,7 @@ import it.polimi.demo.listener.ListenersHandler;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.Card;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
@@ -458,7 +459,30 @@ public class GameModel {
         }
     }
 
+    // for resource cards
     public void placeCard(ResourceCard card_chosen, Player p, int x, int y)  {
+        PersonalBoard personal_board = p.getPersonalBoard();
+
+        if (!personal_board.board[x][y].is_full) {
+            throw new IllegalMoveException();
+        }
+        else {
+            if (DefaultValues.NW_StarterCard_index[1] <= x && x <= DefaultValues.NE_StarterCard_index[1] &&
+                    DefaultValues.NW_StarterCard_index[0] <= y && y <= DefaultValues.SW_StarterCard_index[0]) {
+                StarterCard already_placed_card = p.getStarterCard();
+                Coordinate coord = already_placed_card.getCoordinateAt(x, y);
+                personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+            }
+            else {
+                ResourceCard already_placed_card = personal_board.board[x][y].getCornerFromCell().reference_card;
+                Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
+                personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+            }
+        }
+    }
+
+    // for gold cards
+    public void placeCard(GoldCard card_chosen, Player p, int x, int y)  {
         PersonalBoard personal_board = p.getPersonalBoard();
 
         if (!personal_board.board[x][y].is_full) {
@@ -510,6 +534,40 @@ public class GameModel {
                 return common_board.drawFromTable(1, 0, 1); // Draw first Gold Card from table
             case 6:
                 return common_board.drawFromTable(1, 1, 1); // Draw second Gold Card from table
+            default:
+                return null;
+        }
+    }
+
+    public ResourceCard drawResourceCard(int index) {
+        if (index < 1 || index > 3) {
+            throw new IllegalArgumentException("It is not possible to draw a card from here");
+        }
+
+        switch (index) {
+            case 1:
+                return (ResourceCard) common_board.drawFromConcreteDeck(0); // Draw from Resource Deck
+            case 2:
+                return (ResourceCard) common_board.drawFromTable(0, 0, 0); // Draw first Resource Card from table
+            case 3:
+                return (ResourceCard) common_board.drawFromTable(0, 1, 0); // Draw second Resource Card from table
+            default:
+                return null;
+        }
+    }
+
+    public GoldCard drawGoldCard(int index) {
+        if (index < 2 || index > 6) {
+            throw new IllegalArgumentException("It is not possible to draw a card from here");
+        }
+
+        switch (index) {
+            case 4:
+                return (GoldCard) common_board.drawFromConcreteDeck(1); // Draw from Gold Deck
+            case 5:
+                return (GoldCard) common_board.drawFromTable(1, 0, 1); // Draw first Gold Card from table
+            case 6:
+                return (GoldCard) common_board.drawFromTable(1, 1, 1); // Draw second Gold Card from table
             default:
                 return null;
         }

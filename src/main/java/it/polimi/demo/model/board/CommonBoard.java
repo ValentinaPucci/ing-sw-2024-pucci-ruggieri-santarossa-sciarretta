@@ -1,5 +1,7 @@
 package it.polimi.demo.model.board;
 
+import it.polimi.demo.model.cards.gameCards.GoldCard;
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.interfaces.CommonBoardIC;
 import it.polimi.demo.model.ConcreteDeck;
 import it.polimi.demo.model.cards.Card;
@@ -86,7 +88,8 @@ public class CommonBoard implements CommonBoardIC {
     public Card drawFromConcreteDeck(int concrete_deck_index) {
         if (concrete_deck_index >= 0 && concrete_deck_index < 2) {
             try {
-                return decks.get(concrete_deck_index).pop(); //the return of this function is the card that will be taken by the player
+                return decks.get(concrete_deck_index).pop();
+                // the return of this function is the card that will be taken by the player
             } catch (EmptyStackException e) {
                 System.err.println("Empty deck: " + e.getMessage());
             }
@@ -94,6 +97,39 @@ public class CommonBoard implements CommonBoardIC {
         return null;
     }
 
+//    /**
+//     * Method to draw a card from the Resource ConcreteDeck
+//     * @param index the index of the deck to pop
+//     * @return the card drawn
+//     */
+//    public ResourceCard drawFromConcreteResourceDeck(int index) {
+//        if (index == 0) {
+//            try {
+//                return decks.get(index).popResourceCard();
+//                // the return of this function is the card that will be taken by the player
+//            } catch (EmptyStackException e) {
+//                System.err.println("Empty deck: " + e.getMessage());
+//            }
+//        }
+//        return null;
+//    }
+//
+//    /**
+//     * Method to draw a card from the Gold ConcreteDeck
+//     * @param index the index of the deck to pop
+//     * @return the card drawn
+//     */
+//    public GoldCard drawFromConcreteGoldDeck(int index) {
+//        if (index == 1) {
+//            try {
+//                return decks.get(index).popGoldCard();
+//                // the return of this function is the card that will be taken by the player
+//            } catch (EmptyStackException e) {
+//                System.err.println("Empty deck: " + e.getMessage());
+//            }
+//        }
+//        return null;
+//    }
 
     // Method to draw a card from the table and replace it with a card from the corresponding ConcreteDeck
     public Card drawFromTable(int row, int col, int concrete_deck_index) {
@@ -111,6 +147,8 @@ public class CommonBoard implements CommonBoardIC {
         }
         return null;
     }
+
+
 
     // Method to get the position of a player
     public int getPlayerPosition(int player_index) {
@@ -137,7 +175,7 @@ public class CommonBoard implements CommonBoardIC {
             board_nodes[new_position].setPlayer(playerIndex, true);
         }
         // Moving beyond the board bounds
-        if (new_position > 29){
+        if (new_position > 29) {
             int new_new_position = new_position % 30;
             board_nodes[current_position].setPlayer(playerIndex, false);
             // Set the player to the new position

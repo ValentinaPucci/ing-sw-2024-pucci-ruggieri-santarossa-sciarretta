@@ -32,6 +32,7 @@ it/polimi/demo/model/enumerations/Resource.class
 it/polimi/demo/listener/GameListener.class
 it/polimi/demo/model/Player.class
 it/polimi/demo/model/DeckFactory.class
+it/polimi/demo/view/flow/ClientActionsAllowed.class
 it/polimi/demo/model/board/Corner.class
 it/polimi/demo/model/board/CommonBoardNode.class
 it/polimi/demo/model/enumerations/Coordinate.class

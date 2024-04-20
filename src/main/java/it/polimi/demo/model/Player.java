@@ -202,7 +202,5 @@ public class Player implements PlayerIC {
         return personal_board.getPoints();
     }
 
-
-
 }
 
