@@ -6,7 +6,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * IT SI THE SKELETON --> VIRTUAL VIEW
+ * IT IS THE SKELETON --> VIRTUAL VIEW
  * This interface contains the events regarding the list of games
  */
 
@@ -20,7 +20,7 @@ public interface MainControllerInterface extends Remote {
      * @return the GameControllerInterface of the game {@link GameControllerInterface}
      * @throws RemoteException if the connection fails
      */
-    GameControllerInterface createGame(GameListener lis, String nick, int num_payers) throws RemoteException;
+    GameControllerInterface createGame(GameListener lis, String nick, int num_players) throws RemoteException;
 
     /**
      * This method joins the first available game
@@ -67,4 +67,6 @@ public interface MainControllerInterface extends Remote {
      * @param err the error message
      */
     void showError(String err) throws RemoteException;
+
+    String sayHello() throws RemoteException;
 }

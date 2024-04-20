@@ -512,64 +512,27 @@ public class GameModel {
      *              4: Gold Deck
      *              5: First Gold Card on the table
      *              6: Second Gold Card on the table
-     * @return The drawn card.
      * @throws IllegalArgumentException If the index is less than 1 or greater than 6.
      */
-    public Card drawCard(int index) {
 
+    public void drawCard(int index) {
         if (index < 1 || index > 6) {
             throw new IllegalArgumentException("It is not possible to draw a card from here");
         }
 
         switch (index) {
             case 1:
-                return common_board.drawFromConcreteDeck(0); // Draw from Resource Deck
+                common_board.drawFromConcreteDeck(0); // Draw from Resource Deck
             case 2:
-                return common_board.drawFromTable(0, 0, 0); // Draw first Resource Card from table
+                common_board.drawFromTable(0, 0, 0); // Draw first Resource Card from table
             case 3:
-                return common_board.drawFromTable(0, 1, 0); // Draw second Resource Card from table
+                common_board.drawFromTable(0, 1, 0); // Draw second Resource Card from table
             case 4:
-                return common_board.drawFromConcreteDeck(1); // Draw from Gold Deck
+                common_board.drawFromConcreteDeck(1); // Draw from Gold Deck
             case 5:
-                return common_board.drawFromTable(1, 0, 1); // Draw first Gold Card from table
+                common_board.drawFromTable(1, 0, 1); // Draw first Gold Card from table
             case 6:
-                return common_board.drawFromTable(1, 1, 1); // Draw second Gold Card from table
-            default:
-                return null;
-        }
-    }
-
-    public ResourceCard drawResourceCard(int index) {
-        if (index < 1 || index > 3) {
-            throw new IllegalArgumentException("It is not possible to draw a card from here");
-        }
-
-        switch (index) {
-            case 1:
-                return (ResourceCard) common_board.drawFromConcreteDeck(0); // Draw from Resource Deck
-            case 2:
-                return (ResourceCard) common_board.drawFromTable(0, 0, 0); // Draw first Resource Card from table
-            case 3:
-                return (ResourceCard) common_board.drawFromTable(0, 1, 0); // Draw second Resource Card from table
-            default:
-                return null;
-        }
-    }
-
-    public GoldCard drawGoldCard(int index) {
-        if (index < 2 || index > 6) {
-            throw new IllegalArgumentException("It is not possible to draw a card from here");
-        }
-
-        switch (index) {
-            case 4:
-                return (GoldCard) common_board.drawFromConcreteDeck(1); // Draw from Gold Deck
-            case 5:
-                return (GoldCard) common_board.drawFromTable(1, 0, 1); // Draw first Gold Card from table
-            case 6:
-                return (GoldCard) common_board.drawFromTable(1, 1, 1); // Draw second Gold Card from table
-            default:
-                return null;
+                common_board.drawFromTable(1, 1, 1); // Draw second Gold Card from table
         }
     }
 

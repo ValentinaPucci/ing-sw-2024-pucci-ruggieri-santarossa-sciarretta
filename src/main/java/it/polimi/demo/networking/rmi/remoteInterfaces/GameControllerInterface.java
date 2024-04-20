@@ -42,15 +42,7 @@ public interface GameControllerInterface extends Remote {
      * @return the card drawn
      * @throws RemoteException if the connection fails
      */
-    ResourceCard drawResourceCard(int index) throws RemoteException;
-
-    /**
-     * This method is used to draw a gold card from the deck
-     * @param index the index of the card to draw
-     * @return the card drawn
-     * @throws RemoteException if the connection fails
-     */
-    GoldCard drawGoldCard(int index) throws RemoteException;
+    void drawCard(int index) throws RemoteException;
 
     /**
      * this method must be called every time a player finishes his/her turn,
@@ -67,6 +59,8 @@ public interface GameControllerInterface extends Remote {
      * @throws RemoteException if the connection fails
      */
     boolean isThisMyTurn(String nick) throws RemoteException;
+
+    Player getPlayerEntity(String nickname);
 
     /**
      * This method is used to check if the player is ready to start

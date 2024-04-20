@@ -299,7 +299,11 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      */
     @Override
     public synchronized void setPlayerAsReadyToStart(String nickname) {
-        model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
+        model.setPlayerAsReadyToStart(getPlayerEntity(nickname));
+    }
+
+    public Player getPlayerEntity(String nickname){
+        return model.getPlayerEntity(nickname);
     }
 
     /**
@@ -449,20 +453,10 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * requires 1 <= index <= 3
      */
     @Override
-    public ResourceCard drawResourceCard(int index) {
-        if (!(1 <= index && index <= 3))
+    public void drawCard(int index) {
+        if (!(1 <= index && index <= 6))
             throw new IllegalArgumentException("invalid index");
-        return model.drawResourceCard(index);
-    }
-
-    /**
-     * requires 3 <= index <= 6
-     */
-    @Override
-    public GoldCard drawGoldCard(int index) {
-        if (!(3 <= index && index <= 6))
-            throw new IllegalArgumentException("invalid index");
-        return model.drawGoldCard(index);
+        model.drawCard(index);
     }
 
     @Override
