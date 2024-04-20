@@ -35,3 +35,4 @@ We would like to implement this advanced functionality on our program. Namely, w
 - Multiple Games
 - Disconnections
 - Change all the methods related to connection resilience except from *reconnectPlayer*
+- Define the winner based on the number of objective realized
