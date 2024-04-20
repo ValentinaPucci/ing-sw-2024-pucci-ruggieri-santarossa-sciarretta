@@ -2,6 +2,7 @@ package it.polimi.demo.controller;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.cards.Card;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.chat.Message;
@@ -230,7 +231,6 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     //------------------------------------ management of players -----------------------------------------------
     /**
      * Add player @param p to the Game
-     * <br>
      *
      * @throws PlayerAlreadyConnectedException when in the game there is already another Player with the same nickname
      * @throws MaxPlayersLimitException    when the game has already reached its full capability
@@ -244,6 +244,13 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      */
     public List<Player> getPlayers() {
         return model.getAllPlayers();
+    }
+
+    /**
+     * @return the list of the players currently connected
+     */
+    public LinkedList<Player> getConnectedPlayers() {
+        return model.getPlayersConnected();
     }
 
     /**
@@ -270,7 +277,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      *
      * @return the player who is playing the turn
      */
-    public Player whoIsPlaying() {
+    public Player currentPlayer() {
         return model.getPlayersConnected().peek();
     }
 
@@ -284,18 +291,31 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * @return true if the game has started, false else
      */
     @Override
-    public synchronized boolean setPlayerAsReadyToStart(String nickname) {
-        // Set the player as ready to start
+    public synchronized void setPlayerAsReadyToStart(String nickname) {
         model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
+    }
 
-        if (!model.arePlayersReadyToStartAndEnough()) {
-            return false;
+    /**
+     * Check if the game is ready to start
+     * @return true if the game is ready to start, false else
+     */
+    @Override
+    public boolean isTheGameReadyToStart() {
+        return model.arePlayersReadyToStartAndEnough();
+    }
+
+    /**
+     * Start the game if it's ready
+     */
+    @Override
+    public void startGame() {
+        if (!isTheGameReadyToStart()) {
+            throw new IllegalStateException("The game is not ready to start");
         }
         else {
             model.initializeGame();
             model.setStatus(GameStatus.RUNNING);
         }
-        return true;
     }
 
     /**
@@ -307,8 +327,11 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      */
     @Override
     public synchronized boolean isThisMyTurn(String nick) throws RemoteException {
-        assert model.getPlayersConnected().peek() != null;
-        return model.getPlayersConnected().peek().getNickname().equals(nick);
+        if (model.getPlayersConnected().isEmpty()) {
+            return false;
+        }
+        else
+            return model.getPlayersConnected().peek().getNickname().equals(nick);
     }
 
     /**
@@ -332,11 +355,10 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     }
 
     /**
-     * Extract pseudo-randomly the player who has the first move (first turn)
+     * Re-orders the players lists and sets the first player in both lists
      */
-    private void extractFirstTurn() {
-        int ris = random.nextInt(getPlayers().size());
-        Player first_player = getPlayers().get(ris);
+    private void extractFirstPlayerToPlay() {
+        Player first_player = getPlayers().get(random.nextInt(getPlayers().size()));
 
         model.getAllPlayers().remove(first_player);
         model.getAllPlayers().addFirst(first_player);
@@ -346,7 +368,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     }
 
     /**
-     * Return the {@link GameStatus} of the model
+     * Return the status of the model
      *
      * @return status
      */
@@ -357,14 +379,33 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     // Section: Overrides
 
     /**
-     * Draw a card from the deck
-     * @param index
-     * @return
-     * @throws RemoteException
+     * Place a card in the commonboard
+     *
+     * @param card_chosen the card to place
+     * @param p           the player that places the card
+     * @param x           the x coordinate
+     * @param y           the y coordinate
+     * @throws RemoteException if there is an  error.
      */
     @Override
-    public Card drawCard(int index) throws RemoteException {
-        return model.drawCard(index);
+    public void placeCard(ResourceCard card_chosen, Player p, int x, int y)
+            throws RemoteException {
+
+        if (!getConnectedPlayers().contains(p))
+            throw new RemoteException("Player not connected");
+        else if (!isThisMyTurn(p.getNickname()))
+            throw new RemoteException("It's not your turn");
+
+        try {
+            // Call the placeCard method in GameModel
+            model.placeCard(card_chosen, p, x, y);
+        } catch (IllegalMoveException e) {
+            throw new RemoteException("Illegal move");
+        }
+
+        if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
+            model.setStatus(GameStatus.SECOND_LAST_ROUND);
+        }
     }
 
     /**
@@ -377,18 +418,56 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * @throws RemoteException if there is an  error.
      */
     @Override
-    public void placeCard(ResourceCard card_chosen, Player p,int x, int y) throws RemoteException{
+    public void placeCard(GoldCard card_chosen, Player p, int x, int y)
+            throws RemoteException {
+
+        if (!getConnectedPlayers().contains(p))
+            throw new RemoteException("Player not connected");
+        else if (!isThisMyTurn(p.getNickname()))
+            throw new RemoteException("It's not your turn");
+
         try {
-            // Retrieve the Player object using the provided nickname
-            if (p == null) {
-                throw new RemoteException("Player not found");
-            }
             // Call the placeCard method in GameModel
             model.placeCard(card_chosen, p, x, y);
         } catch (IllegalMoveException e) {
-            throw new RemoteException("Illegal move", e);
+            throw new RemoteException("Illegal move");
+        }
+
+        if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
+            model.setStatus(GameStatus.SECOND_LAST_ROUND);
         }
     }
+
+    /**
+     * requires 1 <= index <= 3
+     */
+    @Override
+    public ResourceCard drawResourceCard(int index) {
+        if (!(1 <= index && index <= 3))
+            throw new IllegalArgumentException("invalid index");
+        return model.drawResourceCard(index);
+    }
+
+    /**
+     * requires 3 <= index <= 6
+     */
+    @Override
+    public GoldCard drawGoldCard(int index) {
+        if (!(3 <= index && index <= 6))
+            throw new IllegalArgumentException("invalid index");
+        return model.drawGoldCard(index);
+    }
+
+    @Override
+    public void myTurnIsFinished() {
+        try {
+            model.nextTurn();
+        } catch (GameEndedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    // game ended exception in draw card!!!
 
     /**
      * @return the ID of the game
@@ -446,7 +525,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * @throws RemoteException if there is an error
      */
     @Override
-    public synchronized void sentMessage(Message msg) throws RemoteException {
+    public synchronized void sendMessage(Message msg) throws RemoteException {
         model.sendMessage(msg);
     }
 

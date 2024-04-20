@@ -3,6 +3,7 @@ package it.polimi.demo.networking.rmi.remoteInterfaces;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.cards.Card;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
@@ -16,12 +17,14 @@ import java.rmi.RemoteException;
 public interface GameControllerInterface extends Remote {
 
     /**
-     * This method is used to draw a card from the deck
-     * @param index the index of the card to draw
-     * @return the card drawn
+     * This method place a card in the commonboard.
+     * @param card_chosen the card to place
+     * @param p the player that place the card
+     * @param x the x coordinate of the card on his/her personal board
+     * @param y the y coordinate of the card on his/her personal board
      * @throws RemoteException if the connection fails
      */
-    Card drawCard(int index) throws RemoteException;
+    void placeCard(ResourceCard card_chosen, Player p, int x, int y) throws RemoteException;
 
     /**
      * This method place a card in the commonboard.
@@ -31,7 +34,31 @@ public interface GameControllerInterface extends Remote {
      * @param y the y coordinate of the card on his/her personal board
      * @throws RemoteException if the connection fails
      */
-    void placeCard(ResourceCard card_chosen, Player p, int x, int y) throws RemoteException, GameEndedException;
+    void placeCard(GoldCard card_chosen, Player p, int x, int y) throws RemoteException;
+
+    /**
+     * This method is used to draw a resource card from the deck
+     * @param index the index of the card to draw
+     * @return the card drawn
+     * @throws RemoteException if the connection fails
+     */
+    ResourceCard drawResourceCard(int index) throws RemoteException;
+
+    /**
+     * This method is used to draw a gold card from the deck
+     * @param index the index of the card to draw
+     * @return the card drawn
+     * @throws RemoteException if the connection fails
+     */
+    GoldCard drawGoldCard(int index) throws RemoteException;
+
+    /**
+     * this method must be called every time a player finishes his/her turn,
+     * i.e. whenever he/she has placed a card on his/her personal board and has also
+     * drawn a new game card from the deck/table
+     * @throws RemoteException if the connection fails
+     */
+    void myTurnIsFinished() throws RemoteException;
 
     /**
      * This method checks if it's the turn of the player
@@ -47,7 +74,22 @@ public interface GameControllerInterface extends Remote {
      * @return true if the player is ready to start
      * @throws RemoteException if the connection fails
      */
-    boolean setPlayerAsReadyToStart(String p) throws RemoteException;
+    void setPlayerAsReadyToStart(String p) throws RemoteException;
+
+    /**
+     * This method is used to check if the game is ready to start, i.e.
+     * if there are enough players to start the game
+     * @return true if the game is ready to start
+     * @throws RemoteException if the connection fails
+     */
+    boolean isTheGameReadyToStart() throws RemoteException;
+
+    /**
+     * This method starts the game
+     * @throws IllegalStateException if the game is not ready to start
+     * @throws RemoteException if the connection fails
+     */
+    void startGame() throws IllegalStateException, RemoteException;
 
     /**
      * This method disconnect a player and remove him from the GameListener list{@link GameListener}
@@ -56,7 +98,6 @@ public interface GameControllerInterface extends Remote {
      * @throws RemoteException if the connection fails
      */
     void disconnectPlayer(String nick, GameListener listOfClient) throws RemoteException, GameEndedException;
-
 
     /**
      * This method is used to check if the client is connected, every x seconds the server send a ping to the client
@@ -71,7 +112,7 @@ public interface GameControllerInterface extends Remote {
      * @param msg the message to send {@link Message}
      * @throws RemoteException if the connection fails
      */
-    void sentMessage(Message msg) throws RemoteException;
+    void sendMessage(Message msg) throws RemoteException;
 
     /**
      * This method return the id of the game

@@ -1,6 +1,8 @@
 package it.polimi.demo.model;
 
 import it.polimi.demo.model.cards.Card;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
 
 import java.util.Collections;
 import java.util.Stack;
@@ -33,7 +35,15 @@ public class ConcreteDeck {
 
     public Card pop() {
         return this.deck.pop();
-        }
+    }
+
+    public ResourceCard popResourceCard() {
+        return (ResourceCard) this.deck.pop();
+    }
+
+    public GoldCard popGoldCard() {
+        return (GoldCard) this.deck.pop();
+    }
 
     // TODO: Implement this method in other classes.
     public void shuffle() {
