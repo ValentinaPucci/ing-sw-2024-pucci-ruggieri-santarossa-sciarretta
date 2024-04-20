@@ -9,7 +9,6 @@ import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.VirtualServer;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import static it.polimi.demo.networking.PrintAsync.*;
  * Allowing players to create, join, reconnect, leave and delete games
  * Therefore, the MainController is unique across the app and thus implements the Singleton Pattern
  */
-public class MainController implements MainControllerInterface, VirtualServer {
+public class MainController implements MainControllerInterface {
     //Singleton
     /**
      * Singleton Pattern, instance of the class
@@ -236,6 +235,11 @@ public class MainController implements MainControllerInterface, VirtualServer {
 
     }
 
+    @Override
+    public String sayHello() throws RemoteException {
+        return null;
+    }
+
     /**
      * Remove the @param idGame from the {@link MainController#runningGames}
      *
@@ -261,36 +265,5 @@ public class MainController implements MainControllerInterface, VirtualServer {
         printAsyncNoLine("\t\trunningGames: ");
         runningGames.stream().forEach(x -> printAsync(x.getGameId() + " "));
         printAsync("");
-    }
-
-
-    @Override
-    public void login(MainControllerInterface cc) throws RemoteException {
-
-    }
-
-    @Override
-    public void send(String message) throws RemoteException {
-
-    }
-
-    @Override
-    public void addPlayerToGame(int gameID, String username) throws RemoteException {
-
-    }
-
-    @Override
-    public void create(int numberOfPlayers, String username) throws RemoteException {
-
-    }
-
-    @Override
-    public void getGamesList() throws RemoteException {
-
-    }
-
-    @Override
-    public void performTurn() throws RemoteException {
-
     }
 }

@@ -9,7 +9,6 @@ import it.polimi.demo.model.exceptions.IllegalMoveException;
 public class PersonalBoard {
 
     public Cell[][] board;
-
     private final int dim1;
     private final int dim2;
     private int points;
