@@ -23,6 +23,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * The {@link GameModel} to control
      */
     private GameModel model;
+    private Timer timer = new Timer();
 
     /**
      * A random object for implementing pseudo-random choice
@@ -49,64 +50,66 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
     //------------------------------------connection/reconnection management-----------------------------------------------
 
-    /**
-     * Override of the run method of the Runnable interface
-     */
-    @Override
-    public void run() {
-        while (!Thread.interrupted()) {
-            // checks all the heartbeat to detect disconnection
-            synchronized (listeners_to_heartbeats) {
+//    /**
+//     * Override of the run method of the Runnable interface
+//     */
+//    @Override
+//    public void run() {
+//        while (!Thread.interrupted()) {
+//            // checks all the heartbeat to detect disconnection
+//            synchronized (listeners_to_heartbeats) {
+//
+//                for (Map.Entry<GameListener, Heartbeat> entry : listeners_to_heartbeats.entrySet()) {
+//
+//                    GameListener listener = entry.getKey();
+//                    Heartbeat heartbeat = entry.getValue();
+//
+//                    if (System.currentTimeMillis() - heartbeat.getBeat() >
+//                            DefaultValues.timeout_for_detecting_disconnection) {
+//                        try {
+//                            disconnectPlayer(heartbeat.getNick(), listener);
+//                            printAsync("Disconnection detected by heartbeat of player: " + heartbeat.getNick() + " ");
+//
+//                            if (getNumConnectedPlayers() == 0) {
+//                                stopReconnectionTimer();
+//                                MainController.getInstance().deleteGame(getGameId());
+//                            }
+//                        } catch (RemoteException | GameEndedException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                        // Remove the disconnected player's heartbeat entry
+//                        listeners_to_heartbeats.remove(listener);
+//                    }
+//                }
+//            }
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
 
-                for (Map.Entry<GameListener, Heartbeat> entry : listeners_to_heartbeats.entrySet()) {
+//    /**
+//     * Add a hearthbeat to the list of listeners_to_heartbeats.
+//     *
+//     * Remark: this method is quite fundamental for the right behavior of the game, since we expect
+//     * to call it frequently to check if the players are still connected. In fact, looking at the run method,
+//     * it is clear that if the heartbeat related to a certain player is not 'fresh' in some sense, then indeed
+//     * the player will appear to us as disconnected.
+//     *
+//     * @param nick the player's nickname associated to the heartbeat
+//     * @param me   the player's GameListener associated to the heartbeat
+//     * @throws RemoteException
+//     */
+//    @Override
+//    public synchronized void heartbeat(String nick, GameListener me) throws RemoteException {
+//        synchronized (listeners_to_heartbeats) {
+//            listeners_to_heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), nick));
+//        }
+//    }
 
-                    GameListener listener = entry.getKey();
-                    Heartbeat heartbeat = entry.getValue();
 
-                    if (System.currentTimeMillis() - heartbeat.getBeat() >
-                            DefaultValues.timeout_for_detecting_disconnection) {
-                        try {
-                            disconnectPlayer(heartbeat.getNick(), listener);
-                            printAsync("Disconnection detected by heartbeat of player: " + heartbeat.getNick() + " ");
-
-                            if (getNumConnectedPlayers() == 0) {
-                                stopReconnectionTimer();
-                                MainController.getInstance().deleteGame(getGameId());
-                            }
-                        } catch (RemoteException | GameEndedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        // Remove the disconnected player's heartbeat entry
-                        listeners_to_heartbeats.remove(listener);
-                    }
-                }
-            }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    /**
-     * Add a hearthbeat to the list of listeners_to_heartbeats.
-     *
-     * Remark: this method is quite fundamental for the right behavior of the game, since we expect
-     * to call it frequently to check if the players are still connected. In fact, looking at the run method,
-     * it is clear that if the heartbeat related to a certain player is not 'fresh' in some sense, then indeed
-     * the player will appear to us as disconnected.
-     *
-     * @param nick the player's nickname associated to the heartbeat
-     * @param me   the player's GameListener associated to the heartbeat
-     * @throws RemoteException
-     */
-    @Override
-    public synchronized void heartbeat(String nick, GameListener me) throws RemoteException {
-        synchronized (listeners_to_heartbeats) {
-            listeners_to_heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), nick));
-        }
-    }
 
     /**
      * Disconnect the player, if the game is in  status, the player is removed from the game
@@ -122,18 +125,22 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         //Player has just disconnected, so I remove the notifications for him
         Player p = model.getPlayerEntity(nick);
 
-        if (p != null) {
+        if (p != null && model.getPlayersConnected().contains(p)){
             removeListener(listOfClient, p);
 
-            if (model.getStatus().equals(GameStatus.WAIT)) {
-                // The game is in Wait (game not started yet), the player disconnected, so I remove him from the game)
-                model.removePlayer(p);
+            if (model.getStatus().equals(GameStatus.WAIT)){
+                    // The game is in Wait (game not started yet), the player disconnected, so I remove him from the game)
+                    model.removePlayer(p);
+            } else if (model.getStatus().equals(GameStatus.ENDED)) {
+                    throw new GameEndedException();
             } else {
-                // The game is running, so I set him as disconnected (He can reconnect soon)
-                model.setPlayerAsDisconnected(p);
+                    // The game is running, so I set him as disconnected (He can reconnect soon)
+                    model.setPlayerAsDisconnected(p);
             }
 
             // Check if there is only one player playing
+            // If getPlayersConnected().size() == 1 and getPlayersConnected().contains(p), he is the only player! so the game end after a timer.
+
             if ((model.getStatus().equals(GameStatus.RUNNING) ||
                     model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
                     model.getStatus().equals(GameStatus.LAST_ROUND)) &&

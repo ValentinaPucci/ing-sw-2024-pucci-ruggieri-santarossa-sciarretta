@@ -22,22 +22,22 @@ public class SocketServer {
 
     private void runServer() throws IOException {
         Socket clientSocket = null; //TIPO DI JAVA
-        //PROVO AD ACCETTARE CONNESSIONI, NEL MOMENTO IN CUI ARRIVANO LE INSERISCO NEL SOCKET, PER PARLARE CON IL CLIENT
+        // PROVO AD ACCETTARE CONNESSIONI, NEL MOMENTO IN CUI ARRIVANO LE INSERISCO NEL SOCKET, PER PARLARE CON IL CLIENT
         while ((clientSocket = this.listenSocket.accept()) != null) {
 
-            //OSS: SOCKET è MOLTO SIMILE A STANDARD INPUT E STANDARD OUTPUT -> HO UN MODO PER LEGGERE E UN MODO PER SCRIVERE
+            // OSS: SOCKET è MOLTO SIMILE A STANDARD INPUT E STANDARD OUTPUT -> HO UN MODO PER LEGGERE E UN MODO PER SCRIVERE
             InputStreamReader socketRx = new InputStreamReader(clientSocket.getInputStream());
             OutputStreamWriter socketTx = new OutputStreamWriter(clientSocket.getOutputStream());
 
-            //PASSO UN CLIENT HANDLER AL SERVER IN MODO CHE SE, DOPO AVER INTERAGITO CON IN CONTROLLER DEVO PROPAGARE UNA MODIFICA A TUTTI I CLIENT, è PIù SEMPLICE FARLO
+            // PASSO UN CLIENT HANDLER AL SERVER IN MODO CHE SE, DOPO AVER INTERAGITO CON IN CONTROLLER DEVO PROPAGARE UNA MODIFICA A TUTTI I CLIENT, è PIù SEMPLICE FARLO
             ClientHandler handler = new ClientHandler(this.controller, this, new BufferedReader(socketRx), new BufferedWriter(socketTx));
 
             synchronized (this.clients) {
-                //AGGIUNGO IL NUOVO HANDLER ALL'ELENCO DI HANDLER CHE CONOSCEVO GIà
+                // AGGIUNGO IL NUOVO HANDLER ALL'ELENCO DI HANDLER CHE CONOSCEVO GIà
                 clients.add(handler);
             }
 
-            //NUOVO THREAD CHE GESTISCE GLI INPUT DEL NUOVO CLIENT
+            // NUOVO THREAD CHE GESTISCE GLI INPUT DEL NUOVO CLIENT
             new Thread(() -> {
                 try {
                     handler.runVirtualView();
@@ -48,7 +48,7 @@ public class SocketServer {
         }
     }
 
-    //BROADCAST DEGLI UPDATE A TUTTI I CLIENT
+    // BROADCAST DEGLI UPDATE A TUTTI I CLIENT
     public void broadcastUpdate(Integer value) {
         synchronized (this.clients) {
             for (var client : this.clients) {
