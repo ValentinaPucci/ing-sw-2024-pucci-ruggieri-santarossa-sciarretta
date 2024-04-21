@@ -11,36 +11,37 @@ import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
 
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static it.polimi.demo.networking.PrintAsync.*;
 
 /**
  * MainController Class
- * Is the Controller of the controllers, it manages all the available games that are running
+ * It is the controller of the controllers, it manages all the available games that are running
  * Allowing players to create, join, reconnect, leave and delete games
  * Therefore, the MainController is unique across the app and thus implements the Singleton Pattern
  */
 public class MainController implements MainControllerInterface {
-    //Singleton
+
     /**
      * Singleton Pattern, instance of the class
      */
     private static MainController instance = null;
 
     /**
-     * List of running games
+     * Map of games which are currently running. For simplicity, the key is the game ID
+     * and the value is the GameController associated to the game. By doing so, we can easily retrieve
+     * the GameController of a specific game by its ID
      * For implementing AF: "Multiple games"
      */
-    private List<GameController> runningGames;
+    private final Map<Integer, GameController> games;
 
     /**
      * Init an empty List of GameController
      * For implementing AF: "Multiple games"
      */
     public MainController() {
-        runningGames = new ArrayList<>();
+        games = new HashMap<>();
     }
 
     /**
@@ -55,180 +56,218 @@ public class MainController implements MainControllerInterface {
         return instance;
     }
 
-    @Override
-    public void receive(String message) throws RemoteException {
-
-    }
-
     /**
-     * Create a new game and join to it
+     * Every player can create a game. By doing so, he/her joins the game as the first player
      *
-     * @param lis GameListener of the player who is creating the game
-     * @param nick Nickname of the player who is creating the game
+     * @param listener of the player who is creating the game
+     * @param nickname  of the player who is creating the game
      * @return GameControllerInterface associated to the created game
-     * @throws RemoteException
+     * @throws RemoteException if the connection fails
      */
     @Override
-    public synchronized GameControllerInterface createGame(GameListener lis, String nick, int numOfPlayers) throws RemoteException {
-        Player p = new Player(nick);
+    public GameControllerInterface createGame(GameListener listener, String nickname, int numOfPlayers)
+            throws RemoteException {
+        Player player = new Player(nickname);
+        GameController game = new GameController();
+        int id = game.getGameId();
 
-        GameController c = new GameController();
-        c.addListener(lis, p);
-        runningGames.add(c);
+        synchronized (games) {
+            // By adding this check, we avoid the possibility of having two games with the same ID.
+            if (games.containsKey(id)) {
+                throw new RuntimeException("Game ID already exists");
+            }
+            games.put(id, game);
+        }
 
-        printAsync("\t>Game " + c.getGameId() + " added to runningGames, created by player:\"" + nick + "\"");
+        game.addListener(listener, player);
+
+        printAsync("\t>Player:\"" + nickname + "\"" + " created game " + id);
         printRunningGames();
 
         try {
-            c.addPlayer(p);
+            game.addPlayer(player);
         } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-            lis.genericErrorWhenEnteringGame(e.getMessage());
+            listener.genericErrorWhenEnteringGame(e.getMessage());
         }
 
-        return c;
-    }
-
-    /**
-     * Join to the first available game
-     *
-     * @param lis GameListener of the player who is trying to join to a game
-     * @param nick Nickname of the player who is trying to join to a game
-     * @return GameControllerInterface associated to the game, null if no games are available
-     * @throws RemoteException
-     */
-    @Override
-    public synchronized GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException {
-        List<GameController> ris = runningGames.stream().filter(x -> (x.getStatus().equals(GameStatus.WAIT) && x.getNumPlayers() < DefaultValues.MaxNumOfPlayer)).toList();
-        Player p = new Player(nick);
-        if (ris.size() > 0) {
-            try {
-                ris.get(0).addListener(lis, p);
-                ris.get(0).addPlayer(p);
-
-                printAsync("\t>Game " + ris.get(0).getGameId() + " player:\"" + nick + "\" entered player");
-                printRunningGames();
-                return ris.get(0);
-            } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-                ris.get(0).removeListener(lis, p);
-                lis.genericErrorWhenEnteringGame(e.getMessage());
-            }
-        } else {
-            //This is the only call not inside the model
-            lis.genericErrorWhenEnteringGame("No games currently available to join...");
-        }
-        return null;
+        return game;
     }
 
 
     /**
-     * Join to a specific game by @param idGame
+     * Allows a player to join the first available game.
+     * If there are no available games (i.e., all games are either full or not in the waiting state),
+     * an error message is sent to the provided GameListener.
      *
-     * @param lis GameListener of the player who is trying to join to a specific game by id
-     * @param nick Nickname of the player who is trying to join to a specific game by id
-     * @param idGame the game ID to be connected
-     * @return GameControllerInterface associated to the game, null if the specific game not exists or is unable to let players in
-     * @throws RemoteException
+     * @param listener The GameListener representing the player attempting to join the game.
+     * @param nickname The nickname of the player attempting to join the game.
+     * @return The GameControllerInterface associated with the game if the player successfully joins,
+     *         or null if no available games are found.
+     * @throws RemoteException If there is a communication-related issue during the method execution.
      */
     @Override
-    public synchronized GameControllerInterface joinGame(GameListener lis, String nick, int idGame) throws RemoteException {
-        List<GameController> ris = runningGames.stream().filter(x -> (x.getGameId() == idGame)).toList();
-        Player p = new Player(nick);
+    public GameControllerInterface joinFirstAvailableGame(GameListener listener, String nickname)
+            throws RemoteException {
 
-        if (ris.size() == 1) {
-            if(ris.get(0).getStatus().equals(GameStatus.WAIT) ||
-                    ((ris.get(0).getStatus().equals(GameStatus.RUNNING) ||
-                            ris.get(0).getStatus().equals(GameStatus.LAST_ROUND)) &&
-                            ris.get(0).getPlayers()
-                                    .stream()
-                                    .filter(x->x.getNickname().equals(nick))
-                                    .toList().size()==1)) {
+        Player player = new Player(nickname);
+
+        synchronized (games) {
+            Optional<GameController> firstAvailableGame = games.values().stream()
+                    .filter(game -> game.getStatus() == GameStatus.WAIT && game.getNumPlayers() < DefaultValues.MaxNumOfPlayer)
+                    .findFirst();
+
+            if (firstAvailableGame.isPresent()) {
+                GameController game = firstAvailableGame.get();
                 try {
-                    ris.get(0).addListener(lis, p);
-                    ris.get(0).addPlayer(p);
-                    printAsync("\t>Game " + ris.get(0).getGameId() + " player:\"" + nick + "\" entered player");
+                    game.addListener(listener, player);
+                    game.addPlayer(player);
+
+                    printAsync("Player \"" + nickname + "\" joined Game " + game.getGameId());
                     printRunningGames();
-                    return ris.get(0);
+
+                    return game;
                 } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-                    ris.get(0).removeListener(lis, p);
-                    lis.genericErrorWhenEnteringGame(e.getMessage());
+                    game.removeListener(listener, player);
+                    listener.genericErrorWhenEnteringGame("Failed to join the game: " + e.getMessage());
                 }
-            }else{
-                lis.gameIdNotExists(idGame);
+            } else {
+                listener.genericErrorWhenEnteringGame("No available games to join.");
             }
-        } else {
-            //This is the only call not inside the model
-            lis.gameIdNotExists(idGame);
         }
-        return null;
 
+        return null;
     }
 
     /**
-     * Reconnect a player to a game @param idGame
+     * Allows a player to join a specific game by its ID.
      *
-     * @param lis GameListener of the player who is trying to rejoin to a game
-     * @param nick Nickname of the player who is trying to rejoin to a game
-     * @param idGame the game ID to be reconnected
-     * @return GameControllerInterface associated to the game, null if the game not exists or is unable to let players in
-     * @throws RemoteException
+     * @param listener The GameListener of the player attempting to join the game.
+     * @param nickname The nickname of the player attempting to join the game.
+     * @param gameId The ID of the game to join.
+     * @return The GameControllerInterface associated with the game if the player successfully joins,
+     *         or null if the specific game does not exist or is unable to accept players.
+     * @throws RemoteException If there is a communication-related issue during the method execution.
      */
     @Override
-    public synchronized GameControllerInterface reconnect(GameListener lis, String nick, int idGame) throws RemoteException {
-        List<GameController> ris = runningGames.stream().filter(x -> (x.getGameId() == idGame)).toList();
-        List<Player> players = new ArrayList<>();
-        if (ris.size() == 1) {
-            try {
-                players = ris.get(0).getPlayers()
-                        .stream()
-                        .filter(x -> x.getNickname().equals(nick))
-                        .toList();
-                //The game exists, check if nickname exists
-                if (players.size() == 1) {
-                    ris.get(0).addListener(lis, players.get(0));
-                    ris.get(0).reconnectPlayer(players.get(0));
-                    return ris.get(0);
-                } else {
-                    //Game exists but the nick no
-                    lis.genericErrorWhenEnteringGame("The nickname used was not connected in a running game");
+    public synchronized GameControllerInterface joinGame(GameListener listener, String nickname, int gameId)
+            throws RemoteException {
+
+        Player player = new Player(nickname);
+        GameController game = games.get(gameId);
+
+        return Optional.ofNullable(game)
+                .filter(g -> g.getStatus() == GameStatus.WAIT ||
+                        g.getStatus() == GameStatus.RUNNING ||
+                        g.getStatus() == GameStatus.SECOND_LAST_ROUND ||
+                        g.getStatus() == GameStatus.LAST_ROUND)
+                .filter(g -> g.getNumPlayers() < DefaultValues.MaxNumOfPlayer &&
+                        g.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname)))
+                .map(g -> {
+                    try {
+                        g.addListener(listener, player);
+                        g.addPlayer(player);
+                        printAsync("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
+                        printRunningGames();
+                        return g;
+                    } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
+                        try {
+                            listener.genericErrorWhenEnteringGame(e.getMessage());
+                        } catch (RemoteException ex) {
+                            throw new RuntimeException(ex);
+                        }
+                        return null;
+                    }
+                })
+                .orElseGet(() -> {
+                    try {
+                        listener.gameIdNotExists(gameId);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
                     return null;
-                }
+                });
 
-            } catch (MaxPlayersLimitException e) {
-                ris.get(0).removeListener(lis, players.get(0));
-                lis.genericErrorWhenEnteringGame(e.getMessage());
-            } catch (GameEndedException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            //This is the only call not inside the model
-            lis.gameIdNotExists(idGame);
-        }
-        return null;
     }
 
     /**
-     * Leave a player from a game
+     * Reconnects a player to a game specified by its ID.
      *
-     * @param lis GameListener of the player who wants to leave
-     * @param nick Nickname of the player who wants to leave
-     * @param idGame the game ID to leave
-     * @return
-     * @throws RemoteException
+     * @param listener The GameListener of the player attempting to reconnect to the game.
+     * @param nickname The nickname of the player attempting to reconnect to the game.
+     * @param gameId The ID of the game to reconnect to.
+     * @return The GameControllerInterface associated with the game if the player successfully reconnects,
+     *         or null if the game does not exist or the player was not previously connected.
+     * @throws RemoteException If there is a communication-related issue during the method execution.
      */
     @Override
-    public synchronized GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException {
-        List<GameController> ris = runningGames.stream().filter(x -> x.getGameId() == idGame).toList();
-        if (ris.size() == 1) {
-            ris.get(0).leave(lis, nick);
-            printAsync("\t>Game " + ris.get(0).getGameId() + " player: \"" + nick + "\" decided to leave");
-            printRunningGames();
+    public synchronized GameControllerInterface reconnect(GameListener listener, String nickname, int gameId)
+            throws RemoteException {
 
-            if (ris.get(0).getNumConnectedPlayers() == 0) {
-                deleteGame(idGame);
-            }
-        }
-        return null;
+        return games.values().stream()
+                .filter(game -> game.getGameId() == gameId)
+                .findFirst()
+                .flatMap(game -> game.getPlayers().stream()
+                        .filter(player -> player.getNickname().equals(nickname))
+                        .findFirst()
+                        .map(player -> {
+                            try {
+                                game.addListener(listener, player);
+                                game.reconnectPlayer(player);
+                                return game;
+                            } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
+                                try {
+                                    listener.genericErrorWhenEnteringGame(e.getMessage());
+                                } catch (RemoteException ex) {
+                                    throw new RuntimeException(ex);
+                                }
+                                return null;
+                            } catch (GameEndedException | RemoteException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }))
+                .orElseGet(() -> {
+                    try {
+                        listener.gameIdNotExists(gameId);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return null;
+                });
+
     }
+
+    /**
+     * Allows a player to leave a game.
+     *
+     * @param listener The GameListener of the player who wants to leave.
+     * @param nickname The nickname of the player who wants to leave.
+     * @param gameId The ID of the game to leave.
+     * @return The GameControllerInterface associated with the game.
+     * @throws RemoteException If there is a communication-related issue during the method execution.
+     */
+    @Override
+    public synchronized GameControllerInterface leaveGame(GameListener listener, String nickname, int gameId)
+            throws RemoteException, RuntimeException {
+        return games.values().stream()
+                .filter(game -> game.getGameId() == gameId)
+                .findFirst()
+                .map(game -> {
+                    try {
+                        game.leave(listener, nickname);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                    printAsync("\t>Game " + game.getGameId() + " player: \"" + nickname + "\" decided to leave");
+                    printRunningGames();
+
+                    if (game.getConnectedPlayers().isEmpty()) {
+                        deleteGame(gameId);
+                    }
+                    return game;
+                })
+                .orElse(null);
+    }
+
 
     @Override
     public void showError(String err) throws RemoteException {
@@ -241,29 +280,33 @@ public class MainController implements MainControllerInterface {
     }
 
     /**
-     * Remove the @param idGame from the {@link MainController#runningGames}
+     * Removes the game with the specified ID from the MainController's games.
      *
-     * @param idGame Game ID to delete
+     * @param gameId The ID of the game to delete.
      */
-    public synchronized void deleteGame(int idGame) {
-        List<GameController> gameToRemove = runningGames.stream().filter(x -> x.getGameId() == idGame).toList();
+    public synchronized void deleteGame(int gameId) {
 
-        if (gameToRemove.size()>0) {
-            runningGames.remove(gameToRemove.get(0));
-
-            printAsync("\t>Game " + idGame + " removed from runningGames");
-            printRunningGames();
-        }
-
+        games.values().stream()
+                .filter(game -> game.getGameId() == gameId)
+                .findFirst()
+                .ifPresent(game -> {
+                    games.remove(gameId);
+                    printAsync("\t>Game " + gameId + " removed from games");
+                    printRunningGames();
+                });
     }
 
-
     /**
-     * Print all games currently running
+     * Prints the IDs of all games currently running.
      */
     private void printRunningGames() {
-        printAsyncNoLine("\t\trunningGames: ");
-        runningGames.stream().forEach(x -> printAsync(x.getGameId() + " "));
+        printAsyncNoLine("\t\tgames: ");
+        games.values().forEach(game -> printAsync(game.getGameId() + " "));
         printAsync("");
+    }
+
+    @Override
+    public void receive(String message) throws RemoteException {
+
     }
 }

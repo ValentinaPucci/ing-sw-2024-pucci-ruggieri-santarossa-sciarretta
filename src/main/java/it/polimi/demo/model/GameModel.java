@@ -194,10 +194,10 @@ public class GameModel {
     }
 
     /**
-     * @param obj adds the listener to the list
+     * @param lis adds the listener to the list
      */
-    public void addListener(GameListener obj) {
-        listener_handler.addListener(obj);
+    public void addListener(GameListener lis) {
+        listener_handler.addListener(lis);
     }
 
     /**
@@ -210,7 +210,7 @@ public class GameModel {
     /**
      * @return the list of listeners
      */
-    public List<GameListener> getListeners() {
+    public Set<GameListener> getListeners() {
         return listener_handler.getListeners();
     }
 
@@ -519,24 +519,24 @@ public class GameModel {
      * @throws IllegalArgumentException If the index is less than 1 or greater than 6.
      */
 
-    public void drawCard(int index) {
+    public void drawCard(Player p, int index) {
         if (index < 1 || index > 6) {
             throw new IllegalArgumentException("It is not possible to draw a card from here");
         }
 
         switch (index) {
             case 1:
-                common_board.drawFromConcreteDeck(0); // Draw from Resource Deck
+                p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0)); // Draw from Resource Deck
             case 2:
-                common_board.drawFromTable(0, 0, 0); // Draw first Resource Card from table
+                p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0)); // Draw first Resource Card from table
             case 3:
-                common_board.drawFromTable(0, 1, 0); // Draw second Resource Card from table
+                p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0)); // Draw second Resource Card from table
             case 4:
-                common_board.drawFromConcreteDeck(1); // Draw from Gold Deck
+                p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1)); // Draw from Gold Deck
             case 5:
-                common_board.drawFromTable(1, 0, 1); // Draw first Gold Card from table
+                p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1)); // Draw first Gold Card from table
             case 6:
-                common_board.drawFromTable(1, 1, 1); // Draw second Gold Card from table
+                p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1)); // Draw second Gold Card from table
         }
     }
 

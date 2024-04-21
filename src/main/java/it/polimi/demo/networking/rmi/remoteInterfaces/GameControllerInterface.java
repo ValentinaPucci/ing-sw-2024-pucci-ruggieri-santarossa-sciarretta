@@ -42,7 +42,7 @@ public interface GameControllerInterface extends Remote {
      * @return the card drawn
      * @throws RemoteException if the connection fails
      */
-    void drawCard(int index) throws RemoteException;
+    void drawCard(String player_nickname, int index) throws RemoteException;
 
     /**
      * this method must be called every time a player finishes his/her turn,
