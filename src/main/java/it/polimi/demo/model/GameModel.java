@@ -255,7 +255,7 @@ public class GameModel {
         if (players_connected.contains(p)) {
             p.setAsNotConnected();
             p.setAsNotReadyToStart();
-            players_connected.remove();
+            players_connected.remove(p);
             listener_handler.notify_playerDisconnected(this, p.getNickname());
         }
 
@@ -313,6 +313,7 @@ public class GameModel {
         // index of previous player in aux_order_players
 
         Player q;
+        int index_to_add = -1;
 
         if (!aux_order_players.contains(p)) {
             throw new IllegalArgumentException("Trying to connect a player which is not in the game!");
@@ -327,9 +328,12 @@ public class GameModel {
 
         for (Player s : players_connected) {
             if (s.equals(q))
-                index = players_connected.indexOf(s);
-            players_connected.add(index, p);
+                index_to_add = players_connected.indexOf(s) + 1;
+
         }
+        if(index_to_add != -1)
+            players_connected.add(index_to_add , p);
+
     }
 
     //-------------------------managing status---------------------------------------------
