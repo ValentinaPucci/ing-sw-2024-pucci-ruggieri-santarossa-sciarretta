@@ -1,8 +1,9 @@
 package it.polimi.demo.networking.rmi;
 
 import it.polimi.demo.controller.MainController;
+import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.VirtualServer;
 
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
@@ -16,101 +17,84 @@ import it.polimi.demo.model.DefaultValues;
 import java.util.Map;
 import java.util.Scanner;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Scanner;
+
+import static org.fusesource.jansi.Ansi.ansi;
+import static it.polimi.demo.networking.PrintAsync.printAsync;
+
 
 /**
  * RMI server implementation that provides remote access to clients.
  * Implements the VirtualServer interface to handle client connections and message transmission.
  */
-public class RmiServer extends UnicastRemoteObject implements VirtualServer {
-    /**
-     * RMIServer object
-     */
+public class RmiServer extends UnicastRemoteObject implements MainControllerInterface {
 
-
-    final MainController controller;
-    /** List of connected client interfaces */
-    final List<MainControllerInterface> virtualClients;
-
-    /**
-     * Constructor for the RMI server.
-     * Initializes the list of virtualClients.
-     * @throws RemoteException if an RMI error occurs
-     */
-    protected RmiServer(MainController controller) throws RemoteException {
-        this.virtualClients = new ArrayList<>();
-        this.controller = controller;
+    public RmiServer() throws RemoteException {
+        super();
     }
 
-    /**
-     * Logs in a client by adding its MainControllerInterface to the list of virtualClients.
-     * @param vc the MainControllerInterface of the client to be logged in
-     */
-    public void login(MainControllerInterface vc) throws RemoteException {
-        System.err.println("new client connected");
-        synchronized (virtualClients) {
-            this.virtualClients.add(vc);
-        }
-    }
-
-    /**
-     * Sends a message to all connected clients.
-     * @param message the message to be sent
-     * @throws RemoteException if an RMI error occurs during message transmission
-     */
-    public void send(String message) throws RemoteException {
-        System.out.println("Server received: " + message);
-        for (MainControllerInterface vc : virtualClients) {
-            vc.receive(message);
-        }
-    }
-
-    @Override
-    public void addPlayerToGame(int gameID, String username) throws RemoteException {
-
-    }
-
-    @Override
-    public void create(int numberOfPlayers, String username) throws RemoteException {
-
-    }
-
-    @Override
-    public void getGamesList() throws RemoteException {
-
-    }
-
-    @Override
-    public void performTurn() throws RemoteException {
-
-    }
-
-    /**
-     * Main method to start the RMI server.
-     * @param args the command-line arguments (not used)
-     */
     public static void main(String[] args) {
         try {
-            new RmiServer(new MainController()).startServer();
+            // Creazione del registro RMI sulla porta 1099
+            Registry registry = LocateRegistry.createRegistry(1099);
+
+            // Creazione dell'istanza del server RMI
+            RmiServer server = new RmiServer();
+
+            // Pubblicazione del server nel registro RMI
+            registry.rebind("Server", server);
+
+            System.out.println("Server RMI pronto.");
         } catch (Exception e) {
+            System.err.println("Errore nel server RMI: " + e.toString());
             e.printStackTrace();
         }
     }
 
-    /**
-     * Starts the RMI server by binding its stub in the registry.
-     * @throws RemoteException if an RMI error occurs during server startup
-     */
-    private void startServer() throws RemoteException {
-        // Create or get the registry
-        Registry registry = LocateRegistry.createRegistry(DefaultValues.PORT);
-        try {
-            // Bind the server object in the registry
-            registry.bind("ServerTest", this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("Server ready");
+    // Metodi remoti che verrno chiamati dai client
+    @Override
+    public String sayHello() throws RemoteException {
+        return "Ciao!";
     }
 
 
+    @Override
+    public void receive(String message) throws RemoteException {
+
+    }
+
+    @Override
+    public GameControllerInterface createGame(GameListener lis, String nick, int num_players) throws RemoteException {
+        System.out.println("Inizia una nuova partita con " + num_players + " giocatori.");
+        printAsync("[RMI] " + nick + " has created a new game");
+        return null;
+    }
+
+    @Override
+    public GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public GameControllerInterface joinGame(GameListener lis, String nick, int idGame) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public GameControllerInterface reconnect(GameListener lis, String nick, int idGame) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException {
+        return null;
+    }
+
+    @Override
+    public void showError(String err) throws RemoteException {
+
+    }
 }
