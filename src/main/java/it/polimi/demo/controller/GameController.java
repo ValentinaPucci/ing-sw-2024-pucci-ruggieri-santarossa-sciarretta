@@ -46,82 +46,88 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     }
 
     //------------------------------------connection/reconnection management-----------------------------------------------
-
-//    /**
-//     * Override of the run method of the Runnable interface, checks if the last ping is too old.
-//     * if so, the player is disconnected.
-//     */
-//    @Override
-//    public void run() {
-//        while (!Thread.interrupted()) {
-//            // Here now we check if there are any disconnections
-//            synchronized (listeners_to_heartbeats) {
-//
-//                for (Map.Entry<GameListener, Heartbeat> entry : listeners_to_heartbeats.entrySet()) {
-//
-//                    GameListener listener = entry.getKey();
-//                    Heartbeat heartbeat = entry.getValue();
-//                    // If the heartbeat is not recent (i.e. the last ping was sent after the time-out),
-//                    // then the player is disconnected
-//                    if (System.currentTimeMillis() - heartbeat.getBeat() >
-//                            DefaultValues.timeout_for_detecting_disconnection) {
-//                        try {
-//                            disconnectPlayer(heartbeat.getPlayer(), listener);
-//                            printAsync("Disconnection detected by heartbeat of player: " + heartbeat.getPlayer().getNickname() + " ");
-//
-//                            if (getNumConnectedPlayers() == 0) {
-//                                stopTimer();
-//                                // if no one is playing, we delete the game.
-//                                MainController.getInstance().deleteGame(getGameId());
-//                            }
-//                        } catch (RemoteException | GameEndedException e) {
-//                            throw new RuntimeException(e);
-//                        }
-//                        // Remove the disconnected player's heartbeat entry
-//                        listeners_to_heartbeats.remove(listener);
-//                    }
-//                }
-//            }
-//            try {
-//                Thread.sleep(500);
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
-
+    // Threads management ---------------------------------------
+    /**
+     * This method is called when the thread is started.
+     */
     @Override
     public void run() {
-        while (!Thread.interrupted()) {
-            synchronized (listeners_to_heartbeats) {
-                listeners_to_heartbeats.entrySet().stream()
-                        .filter(entry -> System.currentTimeMillis() - entry.getValue().getBeat() >
-                                DefaultValues.timeout_for_detecting_disconnection)
-                        .forEach(entry -> {
-                            try {
-                                GameListener listener = entry.getKey();
-                                Heartbeat heartbeat = entry.getValue();
-                                disconnectPlayer(heartbeat.getPlayer(), listener);
-                                printAsync("Disconnection detected by heartbeat of player: " +
-                                        heartbeat.getPlayer().getNickname());
+        while (!Thread.currentThread().isInterrupted()) {
+            checkForDisconnections();
+            pauseThread();
+        }
+    }
 
-                                if (getConnectedPlayers().isEmpty()) {
-                                    stopTimer();
-                                    MainController.getInstance().deleteGame(getGameId());
-                                }
+    /**
+     * It pauses the thread for 500 milliseconds
+     */
+    private void pauseThread() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    // -------------------------------------------------------
 
-                            } catch (RemoteException | GameEndedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        });
-            }
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+    /**
+     * Check if a player is disconnected by checking the heartbeat freshness, if it is expired, the player is disconnected
+     * and handleDisconecction will deal with it.
+     */
+    private void checkForDisconnections() {
+        synchronized (listeners_to_heartbeats) {
+            Iterator<Map.Entry<GameListener, Heartbeat>> iterator = listeners_to_heartbeats.entrySet().iterator();
+
+            while (iterator.hasNext()) {
+                Map.Entry<GameListener, Heartbeat> entry = iterator.next();
+                GameListener listener = entry.getKey();
+                Heartbeat heartbeat = entry.getValue();
+
+                if (isHeartbeatExpired(heartbeat)) {
+                    handleDisconnection(heartbeat, listener, iterator);
+                }
             }
         }
     }
+
+    /**
+     * It checks if the heartbeat is expired.
+     * It returns true if the difference between the current time and the last ping time is greater than the timeout.
+     * @param heartbeat
+     * @return
+     */
+    private boolean isHeartbeatExpired(Heartbeat heartbeat) {
+        long currentTime = System.currentTimeMillis();
+        long lastBeatTime = heartbeat.getPing();
+        // Timeout =
+        return currentTime - lastBeatTime > DefaultValues.timeout;
+    }
+
+    /**
+     * It handles the disconnection of a player.
+     * This is the key method for the disconnection management, it calss the disconnectPlayer method and
+     * removes the listener from the list of listeners_to_heartbeats.
+     * @param heartbeat
+     * @param listener
+     * @param iterator
+     */
+    private void handleDisconnection(Heartbeat heartbeat, GameListener listener, Iterator<Map.Entry<GameListener, Heartbeat>> iterator) {
+        try {
+            disconnectPlayer(heartbeat.getPlayer(), listener);
+            printAsync("Disconnection of player: " + heartbeat.getPlayer().getNickname() +" detected " + " ");
+
+            // Now check
+            if (getNumConnectedPlayers() == 0) {
+                stopTimer();
+                MainController.getInstance().deleteGame(getGameId());
+            }
+        } catch (RemoteException | GameEndedException e) {
+            throw new RuntimeException(e);
+        }
+
+        iterator.remove();
+    }
+
 
     /**
      * Add a Ping to the list of listeners_to_heartbeats.
