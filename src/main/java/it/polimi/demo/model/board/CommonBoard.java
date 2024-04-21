@@ -80,7 +80,6 @@ public class CommonBoard implements CommonBoardIC {
         decks.add(2, this.objective_concrete_deck);
     }
 
-
     // Method to draw a card directly from a ConcreteDeck
     //        decks[0] = this.resource_concrete_deck;
     //        decks[1] = this.gold_concrete_deck;

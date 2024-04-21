@@ -101,7 +101,7 @@ public interface VirtualClient extends Remote {
      boolean isMyTurn() throws RemoteException;
 
 
-     void drawCard(int i) throws IOException;
+     void drawCard(String player_nickname, int index) throws IOException;
 
 
      void placeCard(ResourceCard card_chosen, int x, int y) throws IOException, GameEndedException;

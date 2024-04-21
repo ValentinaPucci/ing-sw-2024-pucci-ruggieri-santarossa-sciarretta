@@ -137,6 +137,10 @@ public class Player implements PlayerIC {
         card_hand.remove(card);
     }
 
+    public List<ResourceCard> getHand() {
+        return card_hand;
+    }
+
     @Override
     public List<ResourceCardIC> getHandIC() {
         return new ArrayList<>(card_hand);

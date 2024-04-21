@@ -13,6 +13,7 @@ import java.rmi.RemoteException;
 public interface MainControllerInterface extends Remote {
 
     void receive (String message) throws RemoteException;
+
     /**
      * This method creates a new game and add it to the GameListener list
      * @param lis the GameListener of the player {@link GameListener}
