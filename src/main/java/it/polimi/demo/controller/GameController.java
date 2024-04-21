@@ -123,7 +123,6 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         }
     }
 
-
     /**
      * Add a Ping to the list of listeners_to_heartbeats.
      *
@@ -142,7 +141,6 @@ public class GameController implements GameControllerInterface, Runnable, Serial
             listeners_to_heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), player));
         }
     }
-
 
     /**
      * Disconnect the player, if the game is in status, the player is removed from the game
@@ -244,13 +242,21 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     public void reconnectPlayer(Player p) throws
             PlayerAlreadyConnectedException, MaxPlayersLimitException, GameEndedException, RemoteException {
 
-        if (!model.getPlayersConnected().contains(p)) {
-            model.reconnectPlayer(p);
-            if (getNumConnectedPlayers() >= 2) {
-                stopTimer();
+        Optional<Player> optionalPlayer = Optional.of(p);
+
+        optionalPlayer.ifPresent(player -> {
+            if (!model.getPlayersConnected().contains(player)) {
+                try {
+                    model.reconnectPlayer(player);
+                    if (getNumConnectedPlayers() >= 2) {
+                        stopTimer();
+                    }
+                    // else nobody was connected and now one player has reconnected before the timer expires
+                } catch (PlayerAlreadyConnectedException | MaxPlayersLimitException | GameEndedException | RemoteException e) {
+                    e.printStackTrace(); // Handle exception accordingly
+                }
             }
-            // else nobody was connected and now one player has reconnected before the timer expires
-        }
+        });
     }
 
     /**
@@ -400,6 +406,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * Re-orders the players lists and sets the first player in both lists
      */
     private void extractFirstPlayerToPlay() {
+
         Player first_player = getPlayers().get(random.nextInt(getPlayers().size()));
 
         model.getAllPlayers().remove(first_player);
@@ -490,6 +497,9 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         model.drawCard(getPlayerEntity(player_nickname), index);
     }
 
+    /**
+     * You call this after placeCard and drawCard, ALWAYS
+     */
     @Override
     public void myTurnIsFinished() {
         try {
@@ -518,17 +528,15 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * @param p entity of the player
      */
     public void addListener(GameListener l, Player p) {
-        
+
         model.addListener(l);
-        
-        for (GameListener othersListener : model.getListeners()) {
-            p.addListener(othersListener);
-        }
-        for (Player otherPlayer : getPlayers()) {
-            if (!otherPlayer.equals(p)) {
-                otherPlayer.addListener(l);
-            }
-        }
+        Optional.ofNullable(model.getListeners()).ifPresent(listeners ->
+                listeners.forEach(p::addListener)
+        );
+
+        getPlayers().stream()
+                .filter(otherPlayer -> !otherPlayer.equals(p))
+                .forEach(otherPlayer -> otherPlayer.addListener(l));
     }
 
     /**
@@ -538,15 +546,13 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * @param p   entity of the player to remove
      */
     public void removeListener(GameListener lis, Player p) {
-        
-        model.removeListener(lis);
-        p.getListeners().clear();
 
-        for (Player otherPlayer : getPlayers()) {
-            if (!otherPlayer.equals(p)) {
-                otherPlayer.removeListener(lis);
-            }
-        }
+        model.removeListener(lis);
+        Optional.ofNullable(p.getListeners()).ifPresent(List::clear);
+
+        getPlayers().stream()
+                .filter(otherPlayer -> !otherPlayer.equals(p))
+                .forEach(otherPlayer -> otherPlayer.removeListener(lis));
     }
 
     //-------------------------------chat management----------------------------
