@@ -15,7 +15,7 @@ public class DefaultValues {
     public final static int MaxNumOfPlayer = 4;
     public final static int MinNumOfPlayer = 2;
     public final static int secondsToWaitReconnection = 30;
-    public final static Long timeout_for_detecting_disconnection = 4000L;
+    public final static Long timeout = 4000L;
     public final static int max_num_of_last_event_tobe_showed = 6;
 
     public final static int num_points_for_second_last_round = 20;
