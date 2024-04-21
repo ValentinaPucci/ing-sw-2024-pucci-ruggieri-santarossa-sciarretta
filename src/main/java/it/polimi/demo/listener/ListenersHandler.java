@@ -23,107 +23,97 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
  * All methods are synchronized to prevent concurrent modification issues.
  */
 public class ListenersHandler {
-    private List<GameListener> listeners;
+
+    private final Set<GameListener> listeners;
 
     public ListenersHandler() {
-        listeners = new ArrayList<>();
+        listeners = Collections.synchronizedSet(new HashSet<>());
     }
 
     /**
-     * The addListener method adds a new GameListener
-     * to the List of GameListener
-     *
-     * @param obj is the GameListener to add
+     * The addListener method adds a listener to the set of listeners
+     * @param lis is the GameListener to add
      */
-    public synchronized void addListener(GameListener obj) {
-        listeners.add(obj);
+    public void addListener(GameListener lis) {
+        listeners.add(lis);
     }
 
     /**
-     * The getListeners method returns the List of GameListener
-     *
-     * @return the List of GameListener
+     * The getListeners method returns the set of listeners
+     * @return the set of listeners
      */
-    public synchronized List<GameListener> getListeners() {
+    public Set<GameListener> getListeners() {
         return listeners;
     }
 
     /**
-     * The notify_playerJoined method notifies the view that a player has joined the game
-     * @param model is the GameModel to pass as a new GameModelImmutable
+     * Notifies the listeners that a player has joined the game.
+     *
+     * @param model the GameModel representing the current game state.
      */
     public synchronized void notify_playerJoined(GameModel model) {
-
-        // Temporary list to hold listeners that need to be removed
-        List<GameListener> toRemove = new ArrayList<>();
-
-        // Using enhanced for-loop
-        for (GameListener l : listeners) {
+        // Use removeIf method with lambda expression to handle removals
+        listeners.removeIf(listener -> {
             try {
-                l.playerJoined(new GameModelImmutable(model));
+                listener.playerJoined(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_playerJoined, " +
-                        "a disconnection has been detected before heartbeat");
-                // Add to temporary list instead of removing directly
-                toRemove.add(l);
+                printAsync("ListenerHandler: Disconnection detected during notify_playerJoined");
+                return true; // Remove the listener
             }
-        }
-
-        // Remove all listeners that encountered RemoteException
-        listeners.removeAll(toRemove);
+        });
     }
-
 
     /**
-     * The notify_playerReconnected method notifies the view that a player has reconnected to the game
-     * @param model is the GameModel to pass as a new GameModelImmutable
-     * @param nickPlayerReconnected is the nickname of the player that has left the game and now is reconnected
+     * Notifies the listeners that a player has reconnected to the game.
+     *
+     * @param model the GameModel representing the current game state.
+     * @param nick the nickname of the player who has reconnected.
      */
-    public synchronized void notify_playerReconnected(GameModel model, String nickPlayerReconnected) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+    public synchronized void notify_playerReconnected(GameModel model, String nick) {
+        // Use removeIf method with lambda expression to handle removals
+        listeners.removeIf(listener -> {
             try {
-                l.playerReconnected(new GameModelImmutable(model), nickPlayerReconnected);
+                listener.playerReconnected(new GameModelImmutable(model), nick);
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_playerReconnected, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_playerReconnected");
+                return true; // Remove the listener
             }
-        }
+        });
     }
-
 
     /**
-     * The notify_JoinUnableGameFull method notifies that a player cannot join the game because the game is full
-     * @param playerWantedToJoin is the player that wanted to join the game
-     * @param model is the GameModel to pass as a new GameModelImmutable
+     * Notifies the listeners that a player cannot join the game because the game is full.
+     *
+     * @param p the player who wanted to join the game.
+     * @param model               the GameModel representing the current game state.
      */
-    public synchronized void notify_JoinUnableGameFull(Player playerWantedToJoin, GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+    public synchronized void notify_JoinUnableGameFull(Player p, GameModel model) {
+        // Use removeIf method with lambda expression to handle removals
+        listeners.removeIf(listener -> {
             try {
-                l.joinUnableGameFull(playerWantedToJoin, new GameModelImmutable(model));
+                listener.joinUnableGameFull(p, new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_JoinUnableGameFull, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_joinUnableGameFull");
+                return true; // Remove the listener
             }
-        }
+        });
     }
+
 
     /**
      * The notify_JoinUnableNicknameAlreadyIn method notifies that a player cannot join the game because
      * the nickname is already in use
-     * @param playerWantedToJoin is the player that wanted to join the game
+     * @param p is the player that wanted to join the game
      */
-    public synchronized void notify_JoinUnableNicknameAlreadyIn(Player playerWantedToJoin) {
+    public synchronized void notify_JoinUnableNicknameAlreadyIn(Player p) {
         Iterator<GameListener> i = listeners.iterator();
         while (i.hasNext()) {
             GameListener l = i.next();
             try {
-                l.joinUnableNicknameAlreadyIn(playerWantedToJoin);
+                l.joinUnableNicknameAlreadyIn(p);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_JoinUnableNicknameAlreadyIn, " +
                         "a disconnection has been detected before heartbeat");

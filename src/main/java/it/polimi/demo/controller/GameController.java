@@ -19,9 +19,10 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 public class GameController implements GameControllerInterface, Runnable, Serializable {
 
     /**
-     * The {@link GameModel} to control
+     * The model to control
      */
     private GameModel model;
+
     /**
      * A random object for implementing pseudo-random choice
      */
@@ -46,38 +47,73 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
     //------------------------------------connection/reconnection management-----------------------------------------------
 
-    /**
-     * Override of the run method of the Runnable interface, checks the last ping if it is too old, the player is disconnected.
-     */
+//    /**
+//     * Override of the run method of the Runnable interface, checks if the last ping is too old.
+//     * if so, the player is disconnected.
+//     */
+//    @Override
+//    public void run() {
+//        while (!Thread.interrupted()) {
+//            // Here now we check if there are any disconnections
+//            synchronized (listeners_to_heartbeats) {
+//
+//                for (Map.Entry<GameListener, Heartbeat> entry : listeners_to_heartbeats.entrySet()) {
+//
+//                    GameListener listener = entry.getKey();
+//                    Heartbeat heartbeat = entry.getValue();
+//                    // If the heartbeat is not recent (i.e. the last ping was sent after the time-out),
+//                    // then the player is disconnected
+//                    if (System.currentTimeMillis() - heartbeat.getBeat() >
+//                            DefaultValues.timeout_for_detecting_disconnection) {
+//                        try {
+//                            disconnectPlayer(heartbeat.getPlayer(), listener);
+//                            printAsync("Disconnection detected by heartbeat of player: " + heartbeat.getPlayer().getNickname() + " ");
+//
+//                            if (getNumConnectedPlayers() == 0) {
+//                                stopTimer();
+//                                // if no one is playing, we delete the game.
+//                                MainController.getInstance().deleteGame(getGameId());
+//                            }
+//                        } catch (RemoteException | GameEndedException e) {
+//                            throw new RuntimeException(e);
+//                        }
+//                        // Remove the disconnected player's heartbeat entry
+//                        listeners_to_heartbeats.remove(listener);
+//                    }
+//                }
+//            }
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
+//    }
+
     @Override
     public void run() {
         while (!Thread.interrupted()) {
-            // Here now we check if there are any disconnections
             synchronized (listeners_to_heartbeats) {
+                listeners_to_heartbeats.entrySet().stream()
+                        .filter(entry -> System.currentTimeMillis() - entry.getValue().getBeat() >
+                                DefaultValues.timeout_for_detecting_disconnection)
+                        .forEach(entry -> {
+                            try {
+                                GameListener listener = entry.getKey();
+                                Heartbeat heartbeat = entry.getValue();
+                                disconnectPlayer(heartbeat.getPlayer(), listener);
+                                printAsync("Disconnection detected by heartbeat of player: " +
+                                        heartbeat.getPlayer().getNickname());
 
-                for (Map.Entry<GameListener, Heartbeat> entry : listeners_to_heartbeats.entrySet()) {
+                                if (getConnectedPlayers().isEmpty()) {
+                                    stopTimer();
+                                    MainController.getInstance().deleteGame(getGameId());
+                                }
 
-                    GameListener listener = entry.getKey();
-                    Heartbeat heartbeat = entry.getValue();
-                    // If the heartbeat is not recent (i.e. the last ping was sent after the time-out), then the player is disconnected
-                    if (System.currentTimeMillis() - heartbeat.getBeat() >
-                            DefaultValues.timeout_for_detecting_disconnection) {
-                        try {
-                            disconnectPlayer(heartbeat.getPlayer(), listener);
-                            printAsync("Disconnection detected by heartbeat of player: " + heartbeat.getPlayer().getNickname() + " ");
-
-                            if (getNumConnectedPlayers() == 0) {
-                                stopTimer();
-                                // if no one is playing, we delete the game.
-                                MainController.getInstance().deleteGame(getGameId());
+                            } catch (RemoteException | GameEndedException e) {
+                                throw new RuntimeException(e);
                             }
-                        } catch (RemoteException | GameEndedException e) {
-                            throw new RuntimeException(e);
-                        }
-                        // Remove the disconnected player's heartbeat entry
-                        listeners_to_heartbeats.remove(listener);
-                    }
-                }
+                        });
             }
             try {
                 Thread.sleep(500);
@@ -86,6 +122,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
             }
         }
     }
+
 
     /**
      * Add a Ping to the list of listeners_to_heartbeats.
@@ -108,7 +145,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
 
     /**
-     * Disconnect the player, if the game is in  status, the player is removed from the game
+     * Disconnect the player, if the game is in status, the player is removed from the game
      * If only one player is connected, a timer of  will be started
      *
      * @param p        the player
@@ -118,7 +155,8 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     @Override
     public void disconnectPlayer(Player p, GameListener listOfClient) throws RemoteException, GameEndedException {
 
-        if (p != null && model.getPlayersConnected().contains(p)){
+        if (p != null && model.getPlayersConnected().contains(p)) {
+
             removeListener(listOfClient, p);
 
             if (model.getStatus().equals(GameStatus.WAIT)){
@@ -443,13 +481,13 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     }
 
     /**
-     * requires 1 <= index <= 3
+     * Draw a card from the common board
      */
     @Override
-    public void drawCard(int index) {
+    public void drawCard(String player_nickname, int index) {
         if (!(1 <= index && index <= 6))
             throw new IllegalArgumentException("invalid index");
-        model.drawCard(index);
+        model.drawCard(getPlayerEntity(player_nickname), index);
     }
 
     @Override
