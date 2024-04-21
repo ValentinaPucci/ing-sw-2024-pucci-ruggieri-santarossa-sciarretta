@@ -30,6 +30,8 @@ public class ConcreteDeckTest {
         // Shuffling is random, so we can't predict the order.
         // But we can at least check that the cards are still there.
     }
+
+
 /*
     @Test
     public void testIsEmpty() {

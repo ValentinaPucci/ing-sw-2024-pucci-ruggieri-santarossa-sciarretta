@@ -54,5 +54,7 @@ public class ConcreteDeck {
         return deck.isEmpty();
     }
 
+    public int size(){return deck.size();}
+
 }
 
