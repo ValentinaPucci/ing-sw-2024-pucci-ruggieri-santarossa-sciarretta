@@ -83,6 +83,10 @@ public class Player implements PlayerIC {
         return chosen_objective;
     }
 
+    public ObjectiveCard[] getSecretObjectiveCards() {
+        return secret_objectives ;
+    }
+
     public void setChosenObjectiveCard(ObjectiveCard chosen_objective) {
         this.chosen_objective = chosen_objective;
     }
@@ -120,6 +124,8 @@ public class Player implements PlayerIC {
     public void addToHand(Card card) {
         card_hand.add((ResourceCard) card);
     }
+
+    public List<ResourceCard> getCardHand(){ return card_hand; }
 
     public void setHand(List<ResourceCard> card_hand) {
         this.card_hand.clear();
