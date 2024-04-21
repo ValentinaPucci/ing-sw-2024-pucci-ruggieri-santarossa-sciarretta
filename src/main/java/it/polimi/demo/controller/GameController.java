@@ -53,8 +53,14 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            checkForDisconnections();
-            pauseThread();
+            if (model.getStatus().equals(GameStatus.RUNNING) ||
+                    model.getStatus().equals(GameStatus.LAST_ROUND) ||
+                    model.getStatus().equals(GameStatus.ENDED) ||
+                    model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
+                    model.getStatus().equals(GameStatus.WAIT)) {
+                checkForDisconnections();
+                pauseThread();
+            }
         }
     }
 
@@ -76,15 +82,12 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      */
     private void checkForDisconnections() {
         synchronized (listeners_to_heartbeats) {
-            Iterator<Map.Entry<GameListener, Heartbeat>> iterator = listeners_to_heartbeats.entrySet().iterator();
-
-            while (iterator.hasNext()) {
-                Map.Entry<GameListener, Heartbeat> entry = iterator.next();
+            for (Map.Entry<GameListener, Heartbeat> entry : listeners_to_heartbeats.entrySet()) {
                 GameListener listener = entry.getKey();
                 Heartbeat heartbeat = entry.getValue();
 
                 if (isHeartbeatExpired(heartbeat)) {
-                    handleDisconnection(heartbeat, listener, iterator);
+                    handleDisconnection(heartbeat, listener);
                 }
             }
         }
@@ -109,25 +112,23 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * removes the listener from the list of listeners_to_heartbeats.
      * @param heartbeat
      * @param listener
-     * @param iterator
      */
-    private void handleDisconnection(Heartbeat heartbeat, GameListener listener, Iterator<Map.Entry<GameListener, Heartbeat>> iterator) {
-        try {
-            disconnectPlayer(heartbeat.getPlayer(), listener);
-            printAsync("Disconnection of player: " + heartbeat.getPlayer().getNickname() +" detected " + " ");
+   private void handleDisconnection(Heartbeat heartbeat, GameListener listener) {
+    try {
+        disconnectPlayer(heartbeat.getPlayer(), listener);
+        printAsync("Disconnection of player: " + heartbeat.getPlayer().getNickname() + " detected ");
 
-            // Now check
-            if (getNumConnectedPlayers() == 0) {
-                stopTimer();
-                MainController.getInstance().deleteGame(getGameId());
-            }
-        } catch (RemoteException | GameEndedException e) {
-            throw new RuntimeException(e);
+        // Now check
+        if (getNumConnectedPlayers() == 0) {
+            stopTimer();
+            MainController.getInstance().deleteGame(getGameId());
         }
-
-        iterator.remove();
+    } catch (RemoteException | GameEndedException e) {
+        throw new RuntimeException(e);
     }
 
+    listeners_to_heartbeats.remove(listener);
+    }
 
     /**
      * Add a Ping to the list of listeners_to_heartbeats.
