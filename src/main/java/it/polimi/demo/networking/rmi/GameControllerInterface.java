@@ -40,7 +40,7 @@ public interface GameControllerInterface extends Remote {
      * @return the card drawn
      * @throws RemoteException if the connection fails
      */
-    void drawCard(int index) throws RemoteException;
+    void drawCard(String player_nickname, int index) throws RemoteException;
 
     /**
      * this method must be called every time a player finishes his/her turn,
@@ -84,20 +84,21 @@ public interface GameControllerInterface extends Remote {
     void startGame() throws IllegalStateException, RemoteException;
 
     /**
+     * This method is used by the server to add a ping every x second in order to check for disconnections.
+     * @param player
+     * @param me
+     * @throws RemoteException
+     */
+
+    void addPing(Player player, GameListener me) throws RemoteException;
+
+    /**
      * This method disconnect a player and remove him from the GameListener list{@link GameListener}
-     * @param nick the nickname of the player
+     * @param p the player to disconnect
      * @param listOfClient the GameListener of the player {@link GameListener}
      * @throws RemoteException if the connection fails
      */
-    void disconnectPlayer(String nick, GameListener listOfClient) throws RemoteException, GameEndedException;
-
-    /**
-     * This method is used to check if the client is connected, every x seconds the server send a ping to the client
-     * @param nick the nickname of the player
-     * @param me the GameListener of the player {@link GameListener}
-     * @throws RemoteException if the connection fails
-     */
-    void heartbeat(String nick, GameListener me) throws RemoteException;
+    void disconnectPlayer( Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
 
     /**
      * This method sends a message

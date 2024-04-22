@@ -181,9 +181,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     }
 
     @Override
-    public void drawCard(int x) throws IOException {
-        gameController.drawCard(x);
-
+    public void drawCard(String player_nickname, int index) throws IOException {
+        gameController.drawCard(player_nickname, index);
     }
 
     @Override

@@ -1,36 +1,36 @@
 package it.polimi.demo.model;
 
 /**
- * Heartbeat's class<br>
- * This class implements the method we used to ping the server<br>
- * to let him know that we are still connected (needed for rmi connection)<br>
+ * We use this class as a structure to have the ping connected to the nick of a player.
+ * A ping is a 'signal' the client sends to the server regularly to check
+ * if the connection is still alive. It is common practice to use it in multiplayer games.
  */
 public class Heartbeat {
-    private final Long beat;
-    private final String nick;
+    private final Long ping;
+    private final Player p;
 
     /**
      * Constructor
      *
-     * @param beat
-     * @param nick
+     * @param ping
+     * @param p
      */
-    public Heartbeat(Long beat, String nick) {
-        this.beat = beat;
-        this.nick = nick;
+    public Heartbeat(Long ping, Player p) {
+        this.ping = ping;
+        this.p = p;
     }
 
     /**
      * @return the heartbeat
      */
-    public Long getBeat() {
-        return beat;
+    public Long getPing() {
+        return ping;
     }
 
     /**
      * @return the nickname of the player pinging the server
      */
-    public String getNick() {
-        return nick;
+    public Player getPlayer() {
+        return p;
     }
 }
