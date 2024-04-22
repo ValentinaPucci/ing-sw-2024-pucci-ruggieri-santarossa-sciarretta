@@ -23,7 +23,7 @@ public class Heartbeat {
     /**
      * @return the heartbeat
      */
-    public Long getBeat() {
+    public Long getPing() {
         return ping;
     }
 
