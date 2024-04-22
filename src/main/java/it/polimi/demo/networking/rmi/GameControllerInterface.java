@@ -1,11 +1,9 @@
-package it.polimi.demo.networking.rmi.remoteInterfaces;
+package it.polimi.demo.networking.rmi;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
-import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.chat.Message;
 
@@ -58,7 +56,7 @@ public interface GameControllerInterface extends Remote {
      * @return true if it's the turn of the player
      * @throws RemoteException if the connection fails
      */
-    boolean isThisMyTurn(String nick) throws RemoteException;
+    boolean isMyTurn(String nick) throws RemoteException;
 
     Player getPlayerEntity(String nickname);
 

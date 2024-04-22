@@ -1,7 +1,6 @@
 package it.polimi.demo.controller;
 
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
@@ -9,7 +8,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.*;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.rmi.GameControllerInterface;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -330,7 +329,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * @throws RemoteException if there is a connection error (RMI)
      */
     @Override
-    public synchronized boolean isThisMyTurn(String nick) throws RemoteException {
+    public synchronized boolean isMyTurn(String nick) throws RemoteException {
         if (model.getPlayersConnected().isEmpty()) {
             return false;
         }
@@ -397,7 +396,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
         if (!getConnectedPlayers().contains(p))
             throw new RemoteException("Player not connected");
-        else if (!isThisMyTurn(p.getNickname()))
+        else if (!isMyTurn(p.getNickname()))
             throw new RemoteException("It's not your turn");
 
         try {
@@ -427,7 +426,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
         if (!getConnectedPlayers().contains(p))
             throw new RemoteException("Player not connected");
-        else if (!isThisMyTurn(p.getNickname()))
+        else if (!isMyTurn(p.getNickname()))
             throw new RemoteException("It's not your turn");
 
         try {

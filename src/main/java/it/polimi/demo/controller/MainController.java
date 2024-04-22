@@ -7,8 +7,8 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.MaxPlayersLimitException;
 import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.rmi.GameControllerInterface;
+import it.polimi.demo.networking.rmi.MainControllerInterface;
 
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -22,6 +22,7 @@ import static it.polimi.demo.networking.PrintAsync.*;
  * Allowing players to create, join, reconnect, leave and delete games
  * Therefore, the MainController is unique across the app and thus implements the Singleton Pattern
  */
+
 public class MainController implements MainControllerInterface {
     //Singleton
     /**
@@ -55,10 +56,10 @@ public class MainController implements MainControllerInterface {
         return instance;
     }
 
-    @Override
-    public void receive(String message) throws RemoteException {
-
-    }
+//    @Override
+//    public void receive(String message) throws RemoteException {
+//
+//    }
 
     /**
      * Create a new game and join to it
@@ -69,7 +70,7 @@ public class MainController implements MainControllerInterface {
      * @throws RemoteException
      */
     @Override
-    public synchronized GameControllerInterface createGame(GameListener lis, String nick, int numOfPlayers) throws RemoteException {
+    public synchronized GameControllerInterface createGame(GameListener lis, String nick) throws RemoteException {
         Player p = new Player(nick);
 
         GameController c = new GameController();
@@ -230,15 +231,10 @@ public class MainController implements MainControllerInterface {
         return null;
     }
 
-    @Override
-    public void showError(String err) throws RemoteException {
-
-    }
-
-    @Override
-    public String sayHello() throws RemoteException {
-        return null;
-    }
+//    @Override
+//    public String sayHello() throws RemoteException {
+//        return null;
+//    }
 
     /**
      * Remove the @param idGame from the {@link MainController#runningGames}
