@@ -15,7 +15,7 @@ import java.rmi.RemoteException;
 public interface GameControllerInterface extends Remote {
 
     /**
-     * This method place a card in the commonboard.
+     * This method place a RESOURCECARD in the commonboard.
      * @param card_chosen the card to place
      * @param p the player that place the card
      * @param x the x coordinate of the card on his/her personal board
@@ -25,20 +25,19 @@ public interface GameControllerInterface extends Remote {
     void placeCard(ResourceCard card_chosen, Player p, int x, int y) throws RemoteException;
 
     /**
-     * This method place a card in the commonboard.
+     * This method place a GOLDCARD in the commonboard.
      * @param card_chosen the card to place
      * @param p the player that place the card
      * @param x the x coordinate of the card on his/her personal board
-     * @param y the y coordinate of the card on his/her personal board
+     * @param y the y coordinate of the card on his/her drawpersonal board
      * @throws RemoteException if the connection fails
      */
     void placeCard(GoldCard card_chosen, Player p, int x, int y) throws RemoteException;
 
     /**
-     * This method is used to draw a resource card from the deck
+     * Draw a card from the deck in commonBoard
+     * @param player_nickname
      * @param index the index of the card to draw
-     * @return the card drawn
-     * @throws RemoteException if the connection fails
      */
     void drawCard(String player_nickname, int index) throws RemoteException;
 
@@ -46,33 +45,39 @@ public interface GameControllerInterface extends Remote {
      * this method must be called every time a player finishes his/her turn,
      * i.e. whenever he/she has placed a card on his/her personal board and has also
      * drawn a new game card from the deck/table
-     * @throws RemoteException if the connection fails
+     * @throws RuntimeException if the connection fails
      */
-    void myTurnIsFinished() throws RemoteException;
+    void myTurnIsFinished() throws RuntimeException;
 
     /**
-     * This method checks if it's the turn of the player
+     * This method checks if it's the turn of player named 'nick'.
      * @param nick the nickname of the player
      * @return true if it's the turn of the player
      * @throws RemoteException if the connection fails
      */
     boolean isMyTurn(String nick) throws RemoteException;
 
+
+    /**
+     * Gets the player entity
+     * @param nickname
+     * @return
+     */
     Player getPlayerEntity(String nickname);
 
     /**
-     * This method is used to check if the player is ready to start
-     * @param p the nickname of the player
+     * Set the @param p player ready to start
+     * When all the players are ready to start, the game starts (game status changes to running)
+     *
+     * @param nickname the nickname of the player
      * @return true if the player is ready to start
      * @throws RemoteException if the connection fails
      */
-    void setPlayerAsReadyToStart(String p) throws RemoteException;
+    void setPlayerAsReadyToStart(String nickname) throws RemoteException;
 
     /**
-     * This method is used to check if the game is ready to start, i.e.
-     * if there are enough players to start the game
-     * @return true if the game is ready to start
-     * @throws RemoteException if the connection fails
+     * Check if the game is ready to start
+     * @return true if the game is ready to start, false else
      */
     boolean isTheGameReadyToStart() throws RemoteException;
 
@@ -81,15 +86,15 @@ public interface GameControllerInterface extends Remote {
      * @throws IllegalStateException if the game is not ready to start
      * @throws RemoteException if the connection fails
      */
-    void startGame() throws IllegalStateException, RemoteException;
+    void startGame() throws IllegalStateException;
 
     /**
-     * This method is used by the server to add a ping every x second in order to check for disconnections.
+     * This method is used by the server to add a ping every
+     * x second in order to check for disconnections.
      * @param player
      * @param me
      * @throws RemoteException
      */
-
     void addPing(Player player, GameListener me) throws RemoteException;
 
     /**
@@ -101,28 +106,26 @@ public interface GameControllerInterface extends Remote {
     void disconnectPlayer( Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
 
     /**
-     * This method sends a message
-     * @param msg the message to send {@link Message}
+     * Add a message to the chat list
+     * @param mess the message to send {@link Message}
      * @throws RemoteException if the connection fails
      */
-    void sendMessage(Message msg) throws RemoteException;
+    void sendMessage(Message mess) throws RemoteException;
 
     /**
      * This method return the id of the game
      * @return the id of the game
-     * @throws RemoteException if the connection fails
      */
-    int getGameId() throws RemoteException;
+    int getGameId();
 
     /**
-     * This method return the number of the online players
      * @return the number of the online players
      * @throws RemoteException if the connection fails
      */
     int getNumConnectedPlayers() throws RemoteException;
 
     /**
-     * This method remove a player from the GameListener list {@link GameListener} and from the game
+     * It removes a player by nickname @param nick from the game including the associated listeners
      * @param lis the GameListener of the player {@link GameListener}
      * @param nick the nickname of the player
      * @throws RemoteException if the connection fails
