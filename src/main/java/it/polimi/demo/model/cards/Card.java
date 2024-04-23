@@ -12,6 +12,8 @@ public abstract class Card {
         this.id = id;
         this.orientation = orientation;
     }
+
+    public int getId(){return this.id;}
 }
 
 

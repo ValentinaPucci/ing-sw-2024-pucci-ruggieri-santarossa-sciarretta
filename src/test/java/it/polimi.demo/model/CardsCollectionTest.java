@@ -51,27 +51,31 @@ public class CardsCollectionTest {
         String jsonFilePath = "src/main/resources/database/databaseObjectiveCards.json";
 
         int initialSize = cardsCollection.size();
+        assertEquals(0, initialSize);
 
         // Call the method under test
         cardsCollection.populateDeckObjective(jsonFilePath);
 
         // Check that cards have been added to the collection
         assertTrue(cardsCollection.size()  ==  16);
+
     }
 
-//    @Test
-//    public void testPopulateDeckStarterFrontAndBack() {
-//        // Assume that `starterCards.json` is a valid JSON file in the `src/test/resources` directory
-//        String jsonFilePath = "src/main/resources/database/databaseStarterCards.json";
-//
-//        int initialSize = cardsCollection.size();
-//
-//        // Call the method under test
-//        cardsCollection.populateDeckStarterFrontAndBack(jsonFilePath);
-//
-//        // Check that cards have been added to the collection
-//        assertTrue(cardsCollection.size() > 0);
-//    }
+    @Test
+    public void testPopulateDeckStarterFrontAndBack() {
+        // Assume that `starterCards.json` is a valid JSON file in the `src/test/resources` directory
+        String jsonFilePath = "src/main/resources/database/databaseStarterCards.json";
+
+        int initialSize = cardsCollection.size();
+
+        // Call the method under test
+        cardsCollection.populateDeckStarterFrontAndBack(jsonFilePath);
+
+        // Check that cards have been added to the collection
+        assertTrue(cardsCollection.size() > 0);
+        assertEquals(12, cardsCollection.size());
+
+    }
 
 
 

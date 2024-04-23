@@ -30,7 +30,7 @@ public class CommonBoard implements CommonBoardIC {
         this.gold_concrete_deck = new ConcreteDeck("Gold"); //gold_concrete_deck
         this.starter_concrete_deck = new ConcreteDeck("Starter");
         this.objective_concrete_deck = new ConcreteDeck("Objective"); //objective_concrete_deck
-        this.board_nodes = new CommonBoardNode[29];
+        this.board_nodes = new CommonBoardNode[30];
         this.decks = new ArrayList<>(3); // Create an array to hold the three decks
         this.table_cards = new Card[3][2]; // And a matrix to hold the table cards
     }
@@ -45,7 +45,7 @@ public class CommonBoard implements CommonBoardIC {
      */
     public void initializeBoard() {
 
-        for (int i = 0; i < 29; i++) {
+        for (int i = 0; i <= 29; i++) {
             board_nodes[i] = new CommonBoardNode(i);
         }
         setInitialPosition();
