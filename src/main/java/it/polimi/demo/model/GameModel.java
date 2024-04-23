@@ -163,7 +163,7 @@ public class GameModel {
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() > num_required_players_to_start ||
-                aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
+                aux_order_players.size() > DefaultValues.MaxNumOfPlayer) {
             listener_handler.notify_JoinUnableGameFull(p, this);
             throw new MaxPlayersLimitException();
         }
