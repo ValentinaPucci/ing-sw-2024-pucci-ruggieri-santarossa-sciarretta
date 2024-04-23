@@ -436,6 +436,7 @@ public class GameModel {
      * - 1 gold card from the gold deck
      * - 2 secret objective cards from the objective deck
      */
+
     public void dealCards() {
         // Deal cards to players, recall that at this stage
         // aux_order_players and players_connected are the same
