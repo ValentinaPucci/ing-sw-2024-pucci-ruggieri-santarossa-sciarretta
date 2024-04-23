@@ -139,7 +139,7 @@ public class GameModel {
      * It sets the first player that finishes.
      * @param p
      */
-    public void setFirst_finished_player(Player p){ this.first_finishing_player = p;}
+    public void setFirst_finished_player(Player p) { this.first_finishing_player = p;}
 
 
     /**
@@ -331,7 +331,7 @@ public class GameModel {
                 index_to_add = players_connected.indexOf(s) + 1;
 
         }
-        if(index_to_add != -1)
+        if (index_to_add != -1)
             players_connected.add(index_to_add , p);
 
     }

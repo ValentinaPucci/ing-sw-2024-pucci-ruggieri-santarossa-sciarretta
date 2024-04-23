@@ -7,8 +7,8 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.MaxPlayersLimitException;
 import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.rmi.GameControllerInterface;
+import it.polimi.demo.networking.rmi.MainControllerInterface;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -77,6 +77,7 @@ public class MainController implements MainControllerInterface {
                 throw new RuntimeException("Game ID already exists");
             }
             games.put(id, game);
+
         }
 
         game.addListener(listener, player);

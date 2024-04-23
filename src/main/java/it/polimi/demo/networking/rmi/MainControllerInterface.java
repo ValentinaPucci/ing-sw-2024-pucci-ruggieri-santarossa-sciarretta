@@ -1,4 +1,4 @@
-package it.polimi.demo.networking.rmi.remoteInterfaces;
+package it.polimi.demo.networking.rmi;
 
 import it.polimi.demo.listener.GameListener;
 
@@ -9,7 +9,6 @@ import java.rmi.RemoteException;
  * IT IS THE SKELETON --> VIRTUAL VIEW
  * This interface contains the events regarding the list of games
  */
-
 public interface MainControllerInterface extends Remote {
 
     void receive (String message) throws RemoteException;
