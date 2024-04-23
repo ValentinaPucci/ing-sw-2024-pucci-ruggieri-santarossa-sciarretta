@@ -1,4 +1,4 @@
-package it.polimi.demo.networking.rmi.remoteInterfaces;
+package it.polimi.demo.networking.rmi;
 
 import it.polimi.demo.listener.GameListener;
 
