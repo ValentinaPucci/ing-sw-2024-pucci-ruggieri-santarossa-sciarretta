@@ -138,14 +138,14 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      * it is clear that if the heartbeat related to a certain player is not 'fresh' in some sense, then indeed
      * the player will appear to us as disconnected.
      *
-     * @param player the player's nickname associated to the heartbeat
+     * @param nickname the player's nickname associated to the heartbeat
      * @param me   the player's GameListener associated to the heartbeat
      * @throws RemoteException
      */
     @Override
-    public synchronized void addPing(Player player, GameListener me) throws RemoteException {
+    public synchronized void addPing(String nickname, GameListener me) throws RemoteException {
         synchronized (listeners_to_heartbeats) {
-            listeners_to_heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), player));
+            listeners_to_heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), getPlayerEntity(nickname)));
         }
     }
 
@@ -330,6 +330,14 @@ public class GameController implements GameControllerInterface, Runnable, Serial
      */
     public Player currentPlayer() {
         return model.getPlayersConnected().peek();
+    }
+
+    public void setNumPlayersToPlay(int numPlayersToPlay) {
+        model.setNumPlayersToPlay(numPlayersToPlay);
+    }
+
+    public int getNumPlayersToPlay() {
+        return model.getNumPlayersToPlay();
     }
 
     // Section: Overrides

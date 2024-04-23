@@ -65,7 +65,7 @@ public class MainController implements MainControllerInterface {
      * @throws RemoteException if the connection fails
      */
     @Override
-    public GameControllerInterface createGame(GameListener listener, String nickname, int numOfPlayers)
+    public GameControllerInterface createGame(GameListener listener, String nickname, int num_of_players)
             throws RemoteException {
         Player player = new Player(nickname);
         GameController game = new GameController();
@@ -77,6 +77,7 @@ public class MainController implements MainControllerInterface {
                 throw new RuntimeException("Game ID already exists");
             }
             games.put(id, game);
+            games.get(id).setNumPlayersToPlay(num_of_players);
         }
 
         game.addListener(listener, player);
@@ -268,17 +269,6 @@ public class MainController implements MainControllerInterface {
                 .orElse(null);
     }
 
-
-    @Override
-    public void showError(String err) throws RemoteException {
-
-    }
-
-    @Override
-    public String sayHello() throws RemoteException {
-        return null;
-    }
-
     /**
      * Removes the game with the specified ID from the MainController's games.
      *
@@ -303,10 +293,5 @@ public class MainController implements MainControllerInterface {
         printAsyncNoLine("\t\tgames: ");
         games.values().forEach(game -> printAsync(game.getGameId() + " "));
         printAsync("");
-    }
-
-    @Override
-    public void receive(String message) throws RemoteException {
-
     }
 }

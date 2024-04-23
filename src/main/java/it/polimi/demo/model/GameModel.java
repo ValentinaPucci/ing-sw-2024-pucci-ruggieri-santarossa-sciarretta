@@ -24,9 +24,9 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 public class GameModel {
 
-    // the first list let us keep the order of players.
+    // the first list let us keep the order of players. It is immutable!!
     // aux_order_player.size() always >= players_connected.size()
-    private List<Player> aux_order_players;
+    private final List<Player> aux_order_players;
     // the second one is used as a queue and let us know which player
     // is connected (and actively playing).
     private LinkedList<Player> players_connected;
@@ -35,6 +35,7 @@ public class GameModel {
     private CommonBoard common_board;
 
     private Integer gameId;
+    private Integer num_required_players_to_start;
     private GameStatus status;
     private Chat chat;
     private Player first_finishing_player = null;
@@ -49,6 +50,7 @@ public class GameModel {
 
         Random random = new Random();
         gameId = random.nextInt(1000000);
+        num_required_players_to_start = -1; // invalid value on purpose
         status = GameStatus.WAIT;
         chat = new Chat();
         winners = new ArrayList<>();
@@ -111,7 +113,7 @@ public class GameModel {
     public boolean arePlayersReadyToStartAndEnough() {
         List<Player> p = aux_order_players.stream().filter(Player::getReadyToStart).toList();
         // If every player is ready, the game starts
-        return p.containsAll(aux_order_players) && p.size() >= DefaultValues.MinNumOfPlayer;
+        return p.containsAll(aux_order_players) && p.size() == num_required_players_to_start;
     }
 
     /**
@@ -134,13 +136,19 @@ public class GameModel {
         return this.first_finishing_player;
     }
 
-
     /**
      * It sets the first player that finishes.
      * @param p
      */
-    public void setFirst_finished_player(Player p){ this.first_finishing_player = p;}
+    public void setFirst_finished_player(Player p) { this.first_finishing_player = p;}
 
+    public void setNumPlayersToPlay(int n) {
+        num_required_players_to_start = n;
+    }
+
+    public int getNumPlayersToPlay() {
+        return num_required_players_to_start;
+    }
 
     /**
      * Adds a new player to the game. Recall that if a player was previously playing,
@@ -154,7 +162,8 @@ public class GameModel {
             listener_handler.notify_JoinUnableNicknameAlreadyIn(p);
             throw new PlayerAlreadyConnectedException();
         }
-        else if (aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
+        else if (aux_order_players.size() > num_required_players_to_start ||
+                aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
             listener_handler.notify_JoinUnableGameFull(p, this);
             throw new MaxPlayersLimitException();
         }
@@ -331,7 +340,7 @@ public class GameModel {
                 index_to_add = players_connected.indexOf(s) + 1;
 
         }
-        if(index_to_add != -1)
+        if (index_to_add != -1)
             players_connected.add(index_to_add , p);
 
     }
