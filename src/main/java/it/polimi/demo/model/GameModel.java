@@ -432,16 +432,31 @@ public class GameModel {
         // Deal cards to players, recall that at this stage
         // aux_order_players and players_connected are the same
         for (Player player : aux_order_players) {
+
             // Deal 1 starter card
+
+            /*
             if (!common_board.getStarterConcreteDeck().isEmpty()) {
                 StarterCard starterCard = (StarterCard) common_board.getStarterConcreteDeck().pop();
                 player.setStarterCard(starterCard);
+            }*/
+            StarterCard starterCard1 = null;
+            StarterCard starterCard2 = null;
+
+            if (!common_board.getStarterConcreteDeck().isEmpty()) {
+                starterCard1 = (StarterCard) common_board.getStarterConcreteDeck().pop();
             }
+
+            if (!common_board.getStarterConcreteDeck().isEmpty()) {
+                starterCard2 = (StarterCard) common_board.getStarterConcreteDeck().pop();
+            }
+            player.setStarterCardToChose(starterCard1, starterCard2);
+
 
             // Deal 2 resource cards
             for (int i = 0; i < 2; i++) {
                 if (!common_board.getResourceConcreteDeck().isEmpty()) {
-                    Card resourceCard = common_board.getResourceConcreteDeck().pop();
+                    Card resourceCard = common_board.getDecks().getFirst().pop();
                     player.addToHand(resourceCard);
                 }
             }
@@ -452,14 +467,20 @@ public class GameModel {
                 player.addToHand(goldCard);
             }
 
+
             // Deal 2 secret objective cards
-            for (int i = 0; i < 2; i++) {
+            ObjectiveCard objectiveCard1 = null;
+            ObjectiveCard objectiveCard2 = null;
+
                 if (!common_board.getObjectiveConcreteDeck().isEmpty()) {
-                    ObjectiveCard objectiveCard1 = (ObjectiveCard) common_board.getObjectiveConcreteDeck().pop();
-                    ObjectiveCard objectiveCard2 = (ObjectiveCard) common_board.getObjectiveConcreteDeck().pop();
-                    player.setSecretObjectives(objectiveCard1, objectiveCard2);
+                    objectiveCard1  = (ObjectiveCard) common_board.getObjectiveConcreteDeck().pop();
                 }
-            }
+
+                if (!common_board.getObjectiveConcreteDeck().isEmpty()) {
+                    objectiveCard2 = (ObjectiveCard) common_board.getObjectiveConcreteDeck().pop();
+                }
+
+            player.setSecretObjectives(objectiveCard1, objectiveCard2);
 
         }
     }

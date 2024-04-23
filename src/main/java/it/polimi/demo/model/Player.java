@@ -18,6 +18,8 @@ public class Player implements PlayerIC {
     private List<ResourceCard> card_hand;
     private PersonalBoard personal_board;
     private ObjectiveCard[] secret_objectives;
+
+    private StarterCard[] starter_card_to_chose;
     private ObjectiveCard chosen_objective;
     private StarterCard starter_card;
     private ResourceCard chosen_card;
@@ -32,6 +34,7 @@ public class Player implements PlayerIC {
         this.card_hand = new ArrayList<>();
         this.personal_board = new PersonalBoard();
         this.secret_objectives = new ObjectiveCard[2];
+        this.starter_card_to_chose = new StarterCard[2];
         this.chosen_objective = null;
         this.starter_card = null;
         this.chosen_card = null;
@@ -102,6 +105,13 @@ public class Player implements PlayerIC {
         secret_objectives[0] = objective1;
         secret_objectives[1] = objective2;
     }
+
+    public void setStarterCardToChose(StarterCard starterCard1, StarterCard starterCard2){
+        starter_card_to_chose[0] = starterCard1;
+        starter_card_to_chose[1] = starterCard2;
+    }
+
+    public StarterCard[] getStarterCardToChose(){ return this.starter_card_to_chose;}
 
     @Override
     public int getScoreBoardPosition() {
@@ -211,6 +221,8 @@ public class Player implements PlayerIC {
     public int getCurrentPoints() {
         return personal_board.getPoints();
     }
+
+
 
 }
 
