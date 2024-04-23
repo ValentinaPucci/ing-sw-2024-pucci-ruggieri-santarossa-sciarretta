@@ -1,7 +1,5 @@
 package it.polimi.demo.model;
 
-import java.io.Serializable;
-
 /**
  * This class contains the default values for the game
  */
@@ -22,13 +20,15 @@ public class DefaultValues {
 
     public final static int timeoutConnection_millis = 3000;
     public final static int secondToWaitToSend_heartbeat =500;
-    public final static String Default_servername_RMI = "CodexNaturalis";
-    public static final int PORT =  1234;
-    public static String SERVER_NAME = "127.0.0.1";
+    public final static String RMI_ServerName = "CodexNaturalis";
+
+    public static final int defaultRMIRegistryPort = java.rmi.registry.Registry.REGISTRY_PORT;
+    public final static int Default_port_RMI = 4321;
+    public final static int Default_port_SOCKET = 4320;
+    public static String Server_ip = "127.0.0.1";
+    public final static String Remote_ip = "127.0.0.1";
     public final static int row_chat = 16;
     public final static int col_chat = 96;
 
-    public final static int num_of_attempt_to_connect_toServer_before_giveup = 5;
-    public final static int seconds_between_reconnection = 5;
     public final static int max_messagesShown = 5;
 }

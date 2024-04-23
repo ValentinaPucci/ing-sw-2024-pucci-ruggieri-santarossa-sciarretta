@@ -643,6 +643,7 @@ public class GameModel {
 
         while (players_connected.size() <= 1) {
             // we wait for another player to connect
+            //TODO:
             // IDEA: look for timeout in the requirements of disconnection
         }
 

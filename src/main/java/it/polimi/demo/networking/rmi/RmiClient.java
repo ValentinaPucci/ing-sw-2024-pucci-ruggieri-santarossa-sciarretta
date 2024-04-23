@@ -2,17 +2,15 @@ package it.polimi.demo.networking.rmi;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.DefaultValues;
-import it.polimi.demo.model.Player;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.VirtualClient;
+import it.polimi.demo.networking.ConnectionType;
+import it.polimi.demo.view.UIType;
+import javafx.application.Application;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 
 import java.rmi.NotBoundException;
@@ -25,8 +23,9 @@ import java.util.List;
 import java.util.Scanner;
 
 
+import static it.polimi.demo.networking.ConnectionType.RMI;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
-import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
+import static it.polimi.demo.view.UIType.GUI;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
@@ -34,6 +33,11 @@ import static org.fusesource.jansi.Ansi.ansi;
  * Implements the MainControllerInterface to receive messages from the server.
  */
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, Serializable {
+
+    private static ConnectionType connectionType;
+    private static UIType uiType;
+    private static String ip;
+    private static int port;
 
     /**
      * The remote object returned by the registry that represents the main controller
@@ -61,101 +65,90 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     }
 
 
-    @Override
-    public void login(MainControllerInterface cc) throws RemoteException {
-
-    }
-
-    @Override
-    public void send(String message) throws RemoteException {
-
-    }
-
     /**
-     * Request the creation of a Game to the server
+     * Requests the creation of a game on the server.
      *
-     * @param nick of the player who wants to create a game
-     * @throws RemoteException
-     * @throws NotBoundException
+     * @param nick        the nickname of the player creating the game
+     * @param num_players the number of players in the game
+     * @throws RemoteException if a remote exception occurs
+     * @throws NotBoundException if the requested object is not bound in the registry
      */
     @Override
     public void createGame(String nick, int num_players) throws RemoteException, NotBoundException {
-        registry = LocateRegistry.getRegistry(DefaultValues.SERVER_NAME, DefaultValues.PORT);
-        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-        gameController = requests.createGame(modelInvokedEvents, nick, num_players);
+        connectToRegistry();
+        gameController = requests.createGame(modelInvokedEvents, nick);
         nickname = nick;
     }
 
     /**
-     * Request to join a server game (first game available)
+     * Requests to join the first available game on the server.
      *
-     * @param nick of the player who wants to join a game
-     * @throws RemoteException
-     * @throws NotBoundException
+     * @param nick the nickname of the player joining the game
+     * @throws RemoteException if a remote exception occurs
+     * @throws NotBoundException if the requested object is not bound in the registry
      */
     @Override
     public void joinFirstAvailable(String nick) throws RemoteException, NotBoundException {
-        registry = LocateRegistry.getRegistry(DefaultValues.SERVER_NAME, DefaultValues.PORT);
-        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        connectToRegistry();
         gameController = requests.joinFirstAvailableGame(modelInvokedEvents, nick);
         nickname = nick;
     }
 
-
-
     /**
-     * Request to join a specific server game
+     * Requests to join a specific game on the server.
      *
-     * @param nick of the player who wants to join a specific game
-     * @throws RemoteException
-     * @throws NotBoundException
+     * @param nick   the nickname of the player joining the game
+     * @param idGame the ID of the game to join
+     * @throws RemoteException if a remote exception occurs
+     * @throws NotBoundException if the requested object is not bound in the registry
      */
+    @Override
     public void joinGame(String nick, int idGame) throws RemoteException, NotBoundException {
-
-        registry = LocateRegistry.getRegistry(DefaultValues.SERVER_NAME, DefaultValues.PORT);
-        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        connectToRegistry();
         gameController = requests.joinGame(modelInvokedEvents, nick, idGame);
-
         nickname = nick;
-
     }
 
     /**
-     * Request the reconnection of a player @param nick to a game @param idGame
+     * Requests to reconnect to a specific game on the server.
      *
-     * @param nick of the player who wants to be reconnected
-     * @param idGame of the game to be reconnected
-     * @throws RemoteException
-     * @throws NotBoundException
+     * @param nick   the nickname of the player reconnecting
+     * @param idGame the ID of the game to reconnect to
+     * @throws RemoteException if a remote exception occurs
+     * @throws NotBoundException if the requested object is not bound in the registry
      */
     @Override
     public void reconnect(String nick, int idGame) throws RemoteException, NotBoundException {
-        registry = LocateRegistry.getRegistry(DefaultValues.SERVER_NAME, DefaultValues.PORT);
-        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        connectToRegistry();
         gameController = requests.reconnect(modelInvokedEvents, nick, idGame);
-
         nickname = nick;
-
     }
 
     /**
-     * Request to leave a game without the possibility to be reconnected
-     * Calling leave means that the player wants to quit forever the game
+     * Requests to leave a game on the server.
      *
-     * @param nick of the player that wants to leave
-     * @param idGame of the game to leave
-     * @throws IOException
-     * @throws NotBoundException
+     * @param nick   the nickname of the player leaving the game
+     * @param idGame the ID of the game to leave
+     * @throws IOException if an I/O exception occurs
+     * @throws NotBoundException if the requested object is not bound in the registry
      */
     @Override
     public void leave(String nick, int idGame) throws IOException, NotBoundException {
-
-        registry = LocateRegistry.getRegistry(DefaultValues.SERVER_NAME, DefaultValues.PORT);
-        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-
+        connectToRegistry();
         requests.leaveGame(modelInvokedEvents, nick, idGame);
         gameController = null;
         nickname = null;
+    }
+
+    /**
+     * Connects to the RMI registry.
+     *
+     * @throws RemoteException if a remote exception occurs
+     * @throws NotBoundException if the requested object is not bound in the registry
+     */
+    private void connectToRegistry() throws RemoteException, NotBoundException {
+        registry = LocateRegistry.getRegistry(DefaultValues.Server_ip, DefaultValues.Default_port_RMI);
+        requests = (MainControllerInterface) registry.lookup(DefaultValues.RMI_ServerName);
     }
 
 
@@ -182,15 +175,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
         }
     }
 
-    /**
-     * Ask the server if it is currently my turn
-     *
-     * @return
-     * @throws RemoteException
-     */
     @Override
     public boolean isMyTurn() throws RemoteException {
-        return gameController.isThisMyTurn(nickname);
+        return gameController.isMyTurn(nickname);
     }
 
     @Override
@@ -199,38 +186,152 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     }
 
     @Override
-    public void placeCard(ResourceCard card_chosen, int x, int y) throws IOException, GameEndedException {
+    public void placeCard(ResourceCard card_chosen, int x, int y) throws IOException{
         gameController.placeCard(card_chosen, gameController.getPlayerEntity(nickname), x, y);
     }
 
     @Override
-    public void heartbeat() throws RemoteException {
+    public void placeCard(GoldCard card_chosen, int x, int y) throws IOException{
+        gameController.placeCard(card_chosen, gameController.getPlayerEntity(nickname), x, y);
+    }
 
+    /**
+     * Send a heartbeat to the server
+     *
+     * @throws RemoteException
+     */
+    @Override
+    public void heartbeat() throws RemoteException {
+        if (gameController != null) {
+            gameController.heartbeat(nickname, modelInvokedEvents);
+        }
     }
 
     public static void main(String[] args) {
-        try {
-            // Ottieni il riferimento al registro RMI
-            Registry registry = LocateRegistry.getRegistry("localhost", 1099);
+        Scanner scanner = new Scanner(System.in);
 
-            // Ottieni il riferimento al server RMI utilizzando il nome binding specificato durante la registrazione
-            MainControllerInterface server = (MainControllerInterface) registry.lookup("Server");
-
-            // Chiamata al metodo remoto del server
-            String response = server.sayHello();
-
-            // Visualizza la risposta del server
-            System.out.println("Risposta dal server: " + response);
-
-            Scanner scanner = new Scanner(System.in);
-            System.out.print("Inserisci il numero di giocatori: ");
-            int numberOfPlayers = scanner.nextInt();
-            server.createGame(modelInvokedEvents, nickname, numberOfPlayers);
+        //Inizializza ip e port
+        askConnectionType(scanner);
+        askArgs(scanner);
+        askUIType(scanner);
+        printAsync("Connecting to " + ip + ":" + port + " using " + connectionType + "...");
 
 
-        } catch (Exception e) {
-            System.err.println("Errore nel client RMI: " + e.toString());
-            e.printStackTrace();
+        switch (uiType) {
+            case GUI:
+                //Application.launch(GUIApplication.class, connectionType.toString());
+                printAsync("GUI + " + connectionType + " CHOSEN");
+                break;
+            case TUI:
+                printAsync("TUI + " + connectionType + " CHOSEN");
+                //new GameFlow(connectionType);
+                break;
+        }
+
+//        try {
+//            switch (uiType) {
+//                case GUI:
+//                    //Application.launch(GUIApplication.class, connectionType.toString());
+//                    printAsync("GUI + " + connectionType + "CHOSEN");
+//                    break;
+//                case TUI:
+//                    printAsync("TUI + " + connectionType + "CHOSEN");
+//                    //new GameFlow(connectionType);
+//                    break;
+//            }
+//        } catch (RemoteException | NotBoundException e) {
+//            System.err.println("Cannot connect to server. Exiting...");
+//            System.exit(1);
+//        }
+    }
+
+    private static void askConnectionType(Scanner in) {
+        printAsync("Select connection type:");
+        for (ConnectionType value : ConnectionType.values()) {
+            printAsync((value.ordinal() + 1) + ". " + value);
+        }
+
+        int clientTypeInt = getNumericInput(in, "Invalid connection type. Please retry: ");
+        connectionType = ConnectionType.values()[clientTypeInt - 1];
+    }
+
+    private static void askArgs(Scanner in) {
+        System.out.print("Enter server IP (blank for localhost): ");
+        ip = getInputWithMessage(in, "Invalid IP address. Please retry: ");
+        if (ip.isBlank()) {
+            ip = "localhost";
+        }
+
+        System.out.print("Enter server port (blank for default): ");
+        String portString = in.nextLine();
+        if (portString.isBlank()) {
+            if (connectionType == RMI)
+                port = DefaultValues.Default_port_RMI; // Set to default port
+            else
+                port = DefaultValues.Default_port_SOCKET; // Set to default port
+        } else {
+            port = Integer.parseInt(portString);
         }
     }
+
+
+    private static void askUIType(Scanner in) {
+        printAsync("Select UI type:");
+        for (UIType value : UIType.values()) {
+            printAsync((value.ordinal() + 1) + ". " + value);
+        }
+
+        int uiTypeInt = getNumericInput(in, "Invalid UI type. Please retry: ") - 1;
+        uiType = UIType.values()[uiTypeInt];
+    }
+
+
+    private static int getNumericInput(Scanner scanner, String errorMessage) {
+        int selection = -1;
+        String input;
+        do {
+            input = scanner.nextLine();
+            try {
+                selection = Integer.parseInt(input);
+                if (selection < 1 || selection > 2) {
+                    printAsync(errorMessage);
+                }
+            } catch (NumberFormatException e) {
+                printAsync("Invalid input");
+            }
+        } while (selection < 1 || selection > 2);
+        return selection;
+    }
+
+    private static String getInputWithMessage(Scanner scanner, String message) {
+        String input;
+        do {
+            input = scanner.nextLine();
+            if (!input.isEmpty() && !isValidIPAddress(input)) {
+                printAsync(message);
+            }
+        } while (!input.isEmpty() && !isValidIPAddress(input));
+        return input;
+    }
+
+    private static boolean isValidIPAddress(String input) {
+        List<String> parts = Arrays.asList(input.split("\\."));
+        if (parts.size() != 4) {
+            return false;
+        }
+        for (String part : parts) {
+            try {
+                int value = Integer.parseInt(part);
+                if (value < 0 || value > 255) {
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+
 }

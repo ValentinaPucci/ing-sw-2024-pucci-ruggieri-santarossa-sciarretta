@@ -1,4 +1,4 @@
-package it.polimi.demo.networking.rmi.remoteInterfaces;
+package it.polimi.demo.networking.rmi;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -6,6 +6,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 import it.polimi.demo.model.Player;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.exceptions.*;
@@ -17,21 +18,6 @@ import it.polimi.demo.model.exceptions.*;
  */
 
 public interface VirtualClient extends Remote {
-
-     /**
-      * Logs in a client to the server.
-      * @param cc the MainControllerInterface of the client to be logged in
-      * @throws RemoteException if an RMI error occurs during the login process
-      */
-     void login(MainControllerInterface cc) throws RemoteException;
-
-     /**
-      * Sends a message to all connected clients.
-      * @param message the message to be sent
-      * @throws RemoteException if an RMI error occurs during message transmission
-      */
-     void send(String message) throws RemoteException;
-
 
      /**
       * Creates a new game
@@ -104,7 +90,9 @@ public interface VirtualClient extends Remote {
      void drawCard(String player_nickname, int index) throws IOException;
 
 
-     void placeCard(ResourceCard card_chosen, int x, int y) throws IOException, GameEndedException;
+     void placeCard(ResourceCard card_chosen, int x, int y) throws IOException;
+
+     void placeCard(GoldCard card_chosen, int x, int y) throws IOException;
 
      /**
       * Sends a message in chat
