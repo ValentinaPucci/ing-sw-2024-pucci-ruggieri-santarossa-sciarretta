@@ -159,8 +159,8 @@ public class RmiServer extends UnicastRemoteObject implements MainControllerInte
      * @throws RemoteException if there is an RMI-related exception
      */
     @Override
-    public GameControllerInterface createGame(GameListener lis, String nick) throws RemoteException {
-        GameControllerInterface gameController = serverObject.mainController.createGame(lis, nick);
+    public GameControllerInterface createGame(GameListener lis, String nick, int num_of_players) throws RemoteException {
+        GameControllerInterface gameController = serverObject.mainController.createGame(lis, nick, num_of_players);
         exportObject(gameController);
         return gameController;
     }

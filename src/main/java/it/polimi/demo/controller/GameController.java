@@ -332,6 +332,14 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         return model.getPlayersConnected().peek();
     }
 
+    public void setNumPlayersToPlay(int numPlayersToPlay) {
+        model.setNumPlayersToPlay(numPlayersToPlay);
+    }
+
+    public int getNumPlayersToPlay() {
+        return model.getNumPlayersToPlay();
+    }
+
     // Section: Overrides
 
     /**

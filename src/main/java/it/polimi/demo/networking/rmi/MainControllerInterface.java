@@ -11,8 +11,6 @@ import java.rmi.RemoteException;
  */
 public interface MainControllerInterface extends Remote {
 
-    void receive (String message) throws RemoteException;
-
     /**
      * This method creates a new game and add it to the GameListener list
      * @param lis the GameListener of the player {@link GameListener}
@@ -62,11 +60,4 @@ public interface MainControllerInterface extends Remote {
      */
     GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException;
 
-    /**
-     * This method is called by the server when there is an error to show.
-     * @param err the error message
-     */
-    void showError(String err) throws RemoteException;
-
-    String sayHello() throws RemoteException;
 }

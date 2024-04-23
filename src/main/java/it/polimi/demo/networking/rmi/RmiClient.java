@@ -76,7 +76,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     @Override
     public void createGame(String nick, int num_players) throws RemoteException, NotBoundException {
         connectToRegistry();
-        gameController = requests.createGame(modelInvokedEvents, nick);
+        gameController = requests.createGame(modelInvokedEvents, nick, num_players);
         nickname = nick;
     }
 
