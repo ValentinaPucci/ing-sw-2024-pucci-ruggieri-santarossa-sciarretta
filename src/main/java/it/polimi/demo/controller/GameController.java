@@ -346,6 +346,11 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         model.setPlayerAsReadyToStart(getPlayerEntity(nickname));
     }
 
+    /**
+     * Gets the player entity
+     * @param nickname
+     * @return
+     */
     public Player getPlayerEntity(String nickname){
         return model.getPlayerEntity(nickname);
     }
@@ -361,9 +366,10 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
     /**
      * Start the game if it's ready
+     *
      */
     @Override
-    public void startGame() {
+    public void startGame() throws IllegalStateException {
         if (!isTheGameReadyToStart()) {
             throw new IllegalStateException("The game is not ready to start");
         }
@@ -495,7 +501,9 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     }
 
     /**
-     * Draw a card from the common board
+     * Draw a card from the deck in commonBoard
+     * @param player_nickname
+     * @param index the index of the card to draw
      */
     @Override
     public void drawCard(String player_nickname, int index) {
@@ -505,10 +513,13 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     }
 
     /**
-     * You call this after placeCard and drawCard, ALWAYS
+     * this method must be called every time a player finishes his/her turn,
+     * i.e. whenever he/she has placed a card on his/her personal board and has also
+     * drawn a new game card from the deck/table
+     * @throws RuntimeException if the connection fails
      */
     @Override
-    public void myTurnIsFinished() {
+    public void myTurnIsFinished() throws RuntimeException {
         try {
             model.nextTurn();
         } catch (GameEndedException e) {
@@ -566,12 +577,12 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     /**
      * Add a message to the chat list
      *
-     * @param msg to add
+     * @param mess to add
      * @throws RemoteException if there is an error
      */
     @Override
-    public synchronized void sendMessage(Message msg) throws RemoteException {
-        model.sendMessage(msg);
+    public synchronized void sendMessage(Message mess) throws RemoteException {
+        model.sendMessage(mess);
     }
 
 
