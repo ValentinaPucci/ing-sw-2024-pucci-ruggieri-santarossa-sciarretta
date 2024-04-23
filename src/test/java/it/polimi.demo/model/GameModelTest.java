@@ -19,11 +19,13 @@ import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.model.ConcreteDeck;
 import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Stack;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -283,27 +285,49 @@ public class GameModelTest {
     @Test
     public void testDealCards() {
         addPlayersToGameModel(3);
-        CommonBoard common_board = new CommonBoard();
-        common_board.setPlayerCount(gameModel.getAllPlayers().size());
-        common_board.initializeBoard();
+
+        gameModel.getCommonBoard().setPlayerCount(gameModel.getAllPlayers().size());
+        assertEquals(3, gameModel.getAllPlayers().size());
+        gameModel.getCommonBoard().initializeBoard();
+
+
+        //verify that common_board is initialized correctly
+        assertTrue(gameModel.getCommonBoard().getBoardNodes()[0].isPlayerPresent(0));
+        assertNotNull(gameModel.getCommonBoard().getDecks().getFirst());
+        assertNotNull(gameModel.getCommonBoard().getDecks().get(1));
+        assertNotNull(gameModel.getCommonBoard().getDecks().get(2));
+
+        //assertNotNull(gameModel.getCommonBoard().drawFromConcreteDeck(0));
+        assertEquals(14, gameModel.getCommonBoard().getObjectiveConcreteDeck().size());
+
         gameModel.dealCards();
+
 
         // Verify that all players has received the correct cards
 
         for (int i = 0; i < gameModel.getAllPlayers().size(); i++) {
             Player player = gameModel.getAllPlayers().get(i);
             {
-                assertNotNull(player.getStarterCard());
+                assertNull(player.getStarterCard());
                 assertEquals(3, player.getCardHand().size());
                 assertEquals(2, player.getSecretObjectiveCards().length);
             }
         }
 
-        // Verifica che i mazzi comuni siano stati ridotti di carte correttamente
-        //assertEquals(3, gameModel.getCommonBoard().getStarterConcreteDeck().size());
-        assertEquals(34, gameModel.getCommonBoard().getResourceConcreteDeck().size());
-        assertEquals(37, gameModel.getCommonBoard().getGoldConcreteDeck().size());
-        //assertEquals(/* expected size */, gameModel.getCommonBoard().getObjectiveConcreteDeck().size());
+
+        //Verify that the common decks have been correctly reduced of cards
+        assertEquals(32, gameModel.getCommonBoard().getResourceConcreteDeck().size());
+        assertEquals(35, gameModel.getCommonBoard().getGoldConcreteDeck().size());
+
+        assertEquals(8, gameModel.getCommonBoard().getObjectiveConcreteDeck().size());
+
+        assertEquals(6, gameModel.getCommonBoard().getStarterConcreteDeck().size()); //PROBLEM
+        //per come abbiamo fatto lo starter deck è giusto che sia 9 (mazzo ha 12 carte FRONT + BACK) ma è sbagliato:
+
+        assertEquals(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().getFirst().getStarterCardToChose()[1].getId());
+        assertEquals(gameModel.getAllPlayers().get(1).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(1).getStarterCardToChose()[1].getId());
+        assertEquals(gameModel.getAllPlayers().get(2).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(2).getStarterCardToChose()[1].getId());
+
     }
 
 

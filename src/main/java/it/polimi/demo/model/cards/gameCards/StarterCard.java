@@ -150,6 +150,11 @@ public class StarterCard extends Card {
                 '}';
     }
 
+    @Override
+    public int getId(){
+        return super.getId();
+    }
+
 }
 
 
