@@ -203,7 +203,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     @Override
     public void heartbeat() throws RemoteException {
         if (gameController != null) {
-            gameController.heartbeat(nickname, modelInvokedEvents);
+            gameController.addPing(nickname, modelInvokedEvents);
         }
     }
 

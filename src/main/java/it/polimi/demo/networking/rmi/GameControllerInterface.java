@@ -85,12 +85,12 @@ public interface GameControllerInterface extends Remote {
 
     /**
      * This method is used by the server to add a ping every x second in order to check for disconnections.
-     * @param player
+     * @param nickname
      * @param me
      * @throws RemoteException
      */
 
-    void addPing(Player player, GameListener me) throws RemoteException;
+    void addPing(String nickname, GameListener me) throws RemoteException;
 
     /**
      * This method disconnect a player and remove him from the GameListener list{@link GameListener}
