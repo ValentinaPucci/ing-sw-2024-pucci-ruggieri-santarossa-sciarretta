@@ -36,3 +36,12 @@ We would like to implement this advanced functionality on our program. Namely, w
 - Disconnections
 - Change all the methods related to connection resilience except from *reconnectPlayer*
 - Define the winner based on the number of objective realized
+
+
+- CodeReview: MainControllerInterface 
+- CodeReview: Listeners (listenerHandler) --> MARGHE
+- Testing --> MARGHE
+- Ricontrollare GameController e MainController --> VALE
+- Inizio del gioco e creazione sessione --> VALE
+- GameView di Tarantino et al + GameFlow --> RIK E LOLLO
+- 
