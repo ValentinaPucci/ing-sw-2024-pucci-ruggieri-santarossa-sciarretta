@@ -71,6 +71,8 @@ public interface VirtualClient extends Remote {
       */
      void leave(String nick, int idGame) throws IOException, NotBoundException;
 
+     //------------------------------------------------------------------------------------------------------
+
      /**
       * Sets the invoker as ready
       *
@@ -107,6 +109,6 @@ public interface VirtualClient extends Remote {
       *
       * @throws RemoteException
       */
-     void heartbeat() throws RemoteException;
+     void addPing() throws RemoteException;
 
 }

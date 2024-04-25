@@ -64,6 +64,38 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     protected RmiClient() throws RemoteException {
     }
 
+    public static int getPort() {
+        return port;
+    }
+
+    public static void setPort(int port) {
+        RmiClient.port = port;
+    }
+
+    public static String getIp() {
+        return ip;
+    }
+
+    public static void setIp(String ip) {
+        RmiClient.ip = ip;
+    }
+
+    public static UIType getUiType() {
+        return uiType;
+    }
+
+    public static void setUiType(UIType uiType) {
+        RmiClient.uiType = uiType;
+    }
+
+    public static ConnectionType getConnectionType() {
+        return connectionType;
+    }
+
+    public static void setConnectionType(ConnectionType connectionType) {
+        RmiClient.connectionType = connectionType;
+    }
+
 
     /**
      * Requests the creation of a game on the server.
@@ -201,135 +233,10 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
      * @throws RemoteException
      */
     @Override
-    public void heartbeat() throws RemoteException {
+    public void addPing() throws RemoteException {
         if (gameController != null) {
             gameController.addPing(nickname, modelInvokedEvents);
         }
-    }
-
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-
-        //Inizializza ip e port
-        askConnectionType(scanner);
-        askArgs(scanner);
-        askUIType(scanner);
-        printAsync("Connecting to " + ip + ":" + port + " using " + connectionType + "...");
-
-
-        switch (uiType) {
-            case GUI:
-                //Application.launch(GUIApplication.class, connectionType.toString());
-                printAsync("GUI + " + connectionType + " CHOSEN");
-                break;
-            case TUI:
-                printAsync("TUI + " + connectionType + " CHOSEN");
-                //new GameFlow(connectionType);
-                break;
-        }
-
-//        try {
-//            switch (uiType) {
-//                case GUI:
-//                    //Application.launch(GUIApplication.class, connectionType.toString());
-//                    printAsync("GUI + " + connectionType + "CHOSEN");
-//                    break;
-//                case TUI:
-//                    printAsync("TUI + " + connectionType + "CHOSEN");
-//                    //new GameFlow(connectionType);
-//                    break;
-//            }
-//        } catch (RemoteException | NotBoundException e) {
-//            System.err.println("Cannot connect to server. Exiting...");
-//            System.exit(1);
-//        }
-    }
-
-    private static void askConnectionType(Scanner in) {
-        printAsync("Select connection type:");
-        for (ConnectionType value : ConnectionType.values()) {
-            printAsync((value.ordinal() + 1) + ". " + value);
-        }
-
-        int clientTypeInt = getNumericInput(in, "Invalid connection type. Please retry: ");
-        connectionType = ConnectionType.values()[clientTypeInt - 1];
-    }
-
-    private static void askArgs(Scanner in) {
-        System.out.print("Enter server IP (blank for localhost): ");
-        ip = getInputWithMessage(in, "Invalid IP address. Please retry: ");
-        if (ip.isBlank()) {
-            ip = "localhost";
-        }
-
-        System.out.print("Enter server port (blank for default): ");
-        String portString = in.nextLine();
-        if (portString.isBlank()) {
-            if (connectionType == RMI)
-                port = DefaultValues.Default_port_RMI; // Set to default port
-            else
-                port = DefaultValues.Default_port_SOCKET; // Set to default port
-        } else {
-            port = Integer.parseInt(portString);
-        }
-    }
-
-
-    private static void askUIType(Scanner in) {
-        printAsync("Select UI type:");
-        for (UIType value : UIType.values()) {
-            printAsync((value.ordinal() + 1) + ". " + value);
-        }
-
-        int uiTypeInt = getNumericInput(in, "Invalid UI type. Please retry: ") - 1;
-        uiType = UIType.values()[uiTypeInt];
-    }
-
-
-    private static int getNumericInput(Scanner scanner, String errorMessage) {
-        int selection = -1;
-        String input;
-        do {
-            input = scanner.nextLine();
-            try {
-                selection = Integer.parseInt(input);
-                if (selection < 1 || selection > 2) {
-                    printAsync(errorMessage);
-                }
-            } catch (NumberFormatException e) {
-                printAsync("Invalid input");
-            }
-        } while (selection < 1 || selection > 2);
-        return selection;
-    }
-
-    private static String getInputWithMessage(Scanner scanner, String message) {
-        String input;
-        do {
-            input = scanner.nextLine();
-            if (!input.isEmpty() && !isValidIPAddress(input)) {
-                printAsync(message);
-            }
-        } while (!input.isEmpty() && !isValidIPAddress(input));
-        return input;
-    }
-
-    private static boolean isValidIPAddress(String input) {
-        List<String> parts = Arrays.asList(input.split("\\."));
-        if (parts.size() != 4) {
-            return false;
-        }
-        for (String part : parts) {
-            try {
-                int value = Integer.parseInt(part);
-                if (value < 0 || value > 255) {
-                    return false;
-                }
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        }
-        return true;
     }
 
 
