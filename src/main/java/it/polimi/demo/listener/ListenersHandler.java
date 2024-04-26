@@ -1,3 +1,5 @@
+//26/4/2024 Riscrivo il ListenerHandler
+
 package it.polimi.demo.listener;
 
 import it.polimi.demo.model.GameModel;
@@ -13,13 +15,13 @@ import java.util.*;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 /**
- * The ListenersHandler class is responsible for managing a list of GameListener objects.
+ * The ListenersHandler class is responsible for managing a set of GameListener objects.
  * It provides methods to add and remove listeners, as well as various notify methods to
  * inform listeners of specific events.
  * Each notify method creates a new GameModelImmutable object from the provided GameModel
  * and passes it to the corresponding method of each listener.
  * If a RemoteException is thrown during a notify method call, the offending listener is
- * removed from the list.
+ * removed from the set.
  * All methods are synchronized to prevent concurrent modification issues.
  */
 public class ListenersHandler {
@@ -108,18 +110,17 @@ public class ListenersHandler {
      * the nickname is already in use
      * @param p is the player that wanted to join the game
      */
+
     public synchronized void notify_JoinUnableNicknameAlreadyIn(Player p) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.joinUnableNicknameAlreadyIn(p);
+                listener.joinUnableNicknameAlreadyIn(p);
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_JoinUnableNicknameAlreadyIn, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_JoinUnableNicknameAlreadyIn");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
     /**
@@ -127,233 +128,250 @@ public class ListenersHandler {
      * @param model is the GameModel to pass as a new GameModelImmutable
      * @param nick is the nickname of the player that is ready to start the game
      */
+
     public synchronized void notify_PlayerIsReadyToStart(GameModel model, String nick) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.playerIsReadyToStart(new GameModelImmutable(model), nick);
+                listener.playerIsReadyToStart(new GameModelImmutable(model), nick);
+                return false; // Keep the listener
             } catch (IOException e) {
-                printAsync("During notification of notify_PlayerIsReadyToStart, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_PlayerIsReadyToStart");
+                return true; // Remove the listener
             }
-        }
+        });
     }
+
+
 
     /**
      * The notify_GameStarted method notifies that the game has started
      * @param model is the GameModel to pass as a new GameModelImmutable
      */
+
     public synchronized void notify_GameStarted(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.gameStarted(new GameModelImmutable(model));
+                listener.gameStarted(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_GameStarted, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_GameStarted");
+                return true; // Remove the listener
             }
-        }
+        });
     }
+
+
 
     /**
      * The notify_GameEnded method notifies that the game has ended
      * @param model is the GameModel to pass as a new GameModelImmutable
      */
+
     public synchronized void notify_GameEnded(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.gameEnded(new GameModelImmutable(model));
+                listener.gameEnded(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_GameEnded, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_GameEnded");
+                return true; // Remove the listener
             }
-        }
+        });
     }
+
+
 
     /**
      * Notifies all listeners about the extraction of common objective cards.
      * @param model Current game state.
      */
     public synchronized void notify_commonObjectiveCardExtracted(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.commonObjectiveCardsExtracted(new GameModelImmutable(model));
+                listener.commonObjectiveCardsExtracted(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_commonObjectiveCardExtracted, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_commonObjectiveCardExtracted");
+                return true; // Remove the listener
             }
-        }
+        });
     }
+
+
 
     /**
      * Notifies all listeners about the extraction of common resource cards from the deck.
      * @param model Current game state.
      */
     public synchronized void notify_resourceCardExtractedFromDeck(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.resourceCardExtractedFromDeck(new GameModelImmutable(model));
+                listener.resourceCardExtractedFromDeck(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_resourceCardExtractedFromDeck, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_resourceCardExtractedFromDeck");
+                return true; // Remove the listener
             }
-        }
+        });
     }
+
+
 
     /**
      * Notifies all listeners about the extraction of common resource cards from table.
      * @param model Current game state.
      */
+
     public synchronized void notify_resourceCardExtractedFromTable(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.resourceCardExtractedFromTable(new GameModelImmutable(model));
+                listener.resourceCardExtractedFromTable(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_resourceCardExtractedFromTable, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_resourceCardExtractedFromTable");
+                return true; // Remove the listener
             }
-        }
+        });
     }
+
+
 
     /**
      * Notifies all listeners about the extraction of common gold cards from the deck.
      * @param model Current game state.
      */
     public synchronized void notify_goldCardExtractedFromDeck(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.goldCardExtractedFromDeck(new GameModelImmutable(model));
+                listener.goldCardExtractedFromDeck(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_goldCardExtractedFromDeck, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_goldCardExtractedFromDeck");
+                return true; // Remove the listener
             }
-        }
+        });
     }
+
+
 
     /**
      * Notifies all listeners about the extraction of common gold cards from table.
      * @param model Current game state.
      */
+
     public synchronized void notify_goldCardExtractedFromTable(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.goldCardExtractedFromTable(new GameModelImmutable(model));
+                listener.goldCardExtractedFromTable(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_goldCardExtractedFromTable, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_goldCardExtractedFromTable");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
+    /**
+     * Notifies all listeners about the extraction of objective cards from empty deck.
+     * @param model Current game state.
+     */
 
     public synchronized void notify_objectiveCardExtractedFromEmptyDeck(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.objectiveCardExtractedFromEmptyDeck(new GameModelImmutable(model));
+                listener.objectiveCardExtractedFromEmptyDeck(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_objectiveCardExtractedFromEmptyDeck, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_objectiveCardExtractedFromEmptyDeck");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
 
+    /**
+     * Notifies all listeners about the extraction of common resource cards from empty deck.
+     * @param model Current game state.
+     */
 
     public synchronized void notify_resourceCardExtractedFromEmptyDeck(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.resourceCardExtractedFromEmptyDeck(new GameModelImmutable(model));
+                listener.resourceCardExtractedFromEmptyDeck(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_resourceCardExtractedFromEmptyDeck, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_resourceCardExtractedFromEmptyDeck");
+                return true; // Remove the listener
             }
-        }
+        });
     }
+
+    /**
+     * Notifies all listeners about the extraction of common resource cards from empty table.
+     * @param model Current game state.
+     */
 
     public synchronized void notify_resourceCardExtractedFromEmptyTable(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.resourceCardExtractedFromEmptyTable(new GameModelImmutable(model));
+                listener.resourceCardExtractedFromEmptyTable(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_resourceCardExtractedFromEmptyTable, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_resourceCardExtractedFromEmptyTable");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
+    /**
+     * Notifies all listeners about the extraction of common gold cards from empty deck.
+     * @param model Current game state.
+     */
 
     public synchronized void notify_goldCardExtractedFromEmptyDeck(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.goldCardExtractedFromEmptyDeck(new GameModelImmutable(model));
+                listener.goldCardExtractedFromEmptyDeck(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_goldCardExtractedFromEmptyDeck, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_goldCardExtractedFromEmptyDeck");
+                return true; // Remove the listener
             }
-        }
+        });
     }
+
+    /**
+     * Notifies all listeners about the extraction of common gold cards from empty table.
+     * @param model Current game state.
+     */
 
     public synchronized void notify_goldCardExtractedFromEmptyTable(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.goldCardExtractedFromEmptyTable(new GameModelImmutable(model));
+                listener.goldCardExtractedFromEmptyTable(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_goldCardExtractedFromEmptyTable, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_goldCardExtractedFromEmptyTable");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
+    /**
+     * Notifies all listeners about the placement of a card on PersonalBoard.
+     * @param model Current game state.
+     */
 
     public synchronized void notify_cardPlacedOnPersonalBoard(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.cardPlacedOnPersonalBoard(new GameModelImmutable(model));
+                listener.cardPlacedOnPersonalBoard(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_cardPlacedOnPersonalBoard, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_cardPlacedOnPersonalBoard");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
     /**
@@ -361,142 +379,146 @@ public class ListenersHandler {
      * @param gameModel is the GameModel to pass as a new GameModelImmutable
      * @param msg is the message that has been sent
      */
+
     public synchronized void notify_SentMessage(GameModel gameModel, Message msg) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.sentMessage(new GameModelImmutable(gameModel), msg);
+                listener.sentMessage(new GameModelImmutable(gameModel), msg);
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_SentMessage, a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_SentMessage");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
+
     /**
-     * The notify_nextTurn method notifies that the next turn has started <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable}
+     * This method notifies that the next turn has started
+     * @param model is the current game state
      */
+
     public synchronized void notify_nextTurn(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.nextTurn(new GameModelImmutable(model));
+                listener.nextTurn(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_nextTurn, a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_nextTurn");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
+
     /**
-     * The notify_lastCircle method notifies that the last circle has started <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable}
+     * This method notifies that the last turn has started
+     * @param model is the current game state
      */
-    public void notify_LastRound(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+
+    public synchronized void notify_LastRound(GameModel model) {
+        listeners.removeIf(listener -> {
             try {
-                l.lastRound(new GameModelImmutable(model));
+                listener.lastRound(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_LastCircle, a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_LastRound");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
-    public void notify_SecondLastRound(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+    /**
+     * This method notifies that the second last turn has started
+     * @param model is the current game state
+     */
+    public synchronized void notify_SecondLastRound(GameModel model) {
+        listeners.removeIf(listener -> {
             try {
-                l.secondLastRound(new GameModelImmutable(model));
+                listener.secondLastRound(new GameModelImmutable(model));
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_SecondLastCircle, a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_SecondLastRound");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
 
     /**
-     * The notify_playerDisconnected method notifies that a player has disconnected <br>
-     * @param gamemodel is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable} <br>
+     * This method notifies that a player has disconnected
+     * @param model is the current game state
      * @param nick is the nickname of the player that has disconnected
      */
-    public synchronized void notify_playerDisconnected(GameModel gamemodel, String nick) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+    public synchronized void notify_playerDisconnected(GameModel model, String nick) {
+        listeners.removeIf(listener -> {
             try {
-                l.playerDisconnected(new GameModelImmutable(gamemodel), nick);
+                listener.playerDisconnected(new GameModelImmutable(model), nick);
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_playerDisconnected, a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_playerDisconnected");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
+
     /**
-     * The notify_playerLeft method notifies that a player has left the game <br>
-     * @param gameModel is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable} <br>
+     * This method notifies that a player has left the game
+     * @param model is the current game state
      * @param nick is the nickname of the player that has left the game
      */
-    public void notify_playerLeft(GameModel gameModel, String nick) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+    public synchronized void notify_playerLeft(GameModel model, String nick) {
+        listeners.removeIf(listener -> {
             try {
-                l.playerLeft(new GameModelImmutable(gameModel), nick);
+                listener.playerLeft(new GameModelImmutable(model), nick);
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_playerLeft, a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_playerLeft");
+                return true; // Remove the listener
             }
-        }
+        });
     }
 
+
     /**
-     * The notify_onlyOnePlayerConnected method notifies that only one player is connected
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable
+     * This method notifies that only one player is connected
+     * @param model is the current game state
      * @param secondsToWaitUntilGameEnded is the number of seconds to wait until the game ends
      */
     public synchronized void notify_onlyOnePlayerConnected(GameModel model, int secondsToWaitUntilGameEnded) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
+        listeners.removeIf(listener -> {
             try {
-                l.onlyOnePlayerConnected(new GameModelImmutable(model), secondsToWaitUntilGameEnded);
+                listener.onlyOnePlayerConnected(new GameModelImmutable(model), secondsToWaitUntilGameEnded);
+                return false; // Keep the listener
             } catch (RemoteException e) {
-                printAsync("During notification of notify_onlyOnePlayerConnected, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
+                printAsync("ListenerHandler: Disconnection detected during notify_onlyOnePlayerConnected");
+                return true; // Remove the listener
             }
-        }
+        });
     }
-
-
-    public synchronized void notify_playerHasMovedOnCommonBoard(GameModel model, int secondsToWaitUntillGameEnded) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
-            try {
-                l.playerHasMovedOnCommonBoard(new GameModelImmutable(model));
-            } catch (RemoteException e) {
-                printAsync("During notification of notify_playerHasMovedOnCommonBoard, " +
-                        "a disconnection has been detected before heartbeat");
-                i.remove();
-            }
-        }
-    }
-
 
 
     /**
-     * The removeListener method removes a listener from the list of listeners <br>
-     * @param lis is the listener to remove
+     * This method notifies that a player has moved on CommonBoard
+     * @param model is the current game state
+     * @param secondsToWaitUntilGameEnded is the number of seconds to wait until the game ends
+     */
+    public synchronized void notify_playerHasMovedOnCommonBoard(GameModel model, int secondsToWaitUntilGameEnded) {
+        listeners.removeIf(listener -> {
+            try {
+                listener.playerHasMovedOnCommonBoard(new GameModelImmutable(model));
+                return false; // Keep the listener
+            } catch (RemoteException e) {
+                printAsync("ListenerHandler: Disconnection detected during notify_playerHasMovedOnCommonBoard");
+                return true; // Remove the listener
+            }
+        });
+    }
+
+    /**
+     * This method removes a listener from the set of listeners
+     * @param lis is the listener to remove;
      */
     public synchronized void removeListener(GameListener lis) {
         listeners.remove(lis);
