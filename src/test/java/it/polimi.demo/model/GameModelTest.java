@@ -2,6 +2,8 @@ package it.polimi.demo.model;
 
 import it.polimi.demo.model.DefaultValues;
 import it.polimi.demo.model.GameModel;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import javafx.animation.Animation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,6 +24,10 @@ import it.polimi.demo.model.Player;
 import it.polimi.demo.model.ConcreteDeck;
 import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.interfaces.PlayerIC;
+
+import java.io.IOException;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -325,14 +331,66 @@ public class GameModelTest {
 
         assertEquals(8, gameModel.getCommonBoard().getObjectiveConcreteDeck().size());
 
-        assertEquals(6, gameModel.getCommonBoard().getStarterConcreteDeck().size()); //PROBLEM
-        //per come abbiamo fatto lo starter deck è giusto che sia 9 (mazzo ha 12 carte FRONT + BACK) ma è sbagliato:
+        assertEquals(6, gameModel.getCommonBoard().getStarterConcreteDeck().size());
 
         assertEquals(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().getFirst().getStarterCardToChose()[1].getId());
         assertEquals(gameModel.getAllPlayers().get(1).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(1).getStarterCardToChose()[1].getId());
         assertEquals(gameModel.getAllPlayers().get(2).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(2).getStarterCardToChose()[1].getId());
 
     }
+
+    //place resource card
+    //place gold card
+    //draw card
+    //calculate final score
+    //declare winner
+
+
+    //--------------------------managing status --------------------------------------
+
+    @Test
+    public void testSetStatus(){
+        Player player1 = new Player("Player 1");
+        Player player2 = new Player("Player 2");
+        Player player3 = new Player("Player 3");
+        gameModel.addPlayer(player1);
+        gameModel.addPlayer(player2);
+        gameModel.addPlayer(player3);
+        player1.setAsConnected();
+        gameModel.setPlayerAsConnected(player1);
+        player2.setAsConnected();
+        gameModel.setPlayerAsConnected(player2);
+        player3.setAsConnected();
+        gameModel.setPlayerAsConnected(player3);
+
+        gameModel.setStatus(GameStatus.RUNNING);
+        GameStatus expectedStatus = GameStatus.RUNNING;
+        assertEquals(expectedStatus ,gameModel.getStatus());
+
+    }
+
+
+
+
+
+    //----------------------------listeners--------------------------------------------
+    @Test
+    public void testAddListener() {
+        Remote remoteListener = null;
+        gameModel.addListener((GameListener) remoteListener);
+        assertTrue(gameModel.getListenersHandler().contains((GameListener) remoteListener));
+        assertEquals(1,gameModel.getListenersHandler().size());
+        gameModel.removeListener((GameListener) remoteListener);
+        assertEquals(0,gameModel.getListenersHandler().size());
+    }
+
+
+
+
+
+
+
+
 
 
 

@@ -104,7 +104,7 @@ public class GameModel {
      */
     public void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        listener_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
+        listener_handler.notify_PlayerReadyForStarting(this, p.getNickname());
     }
 
     /**
@@ -159,12 +159,12 @@ public class GameModel {
     public void addPlayer(Player p) {
 
         if (aux_order_players.contains(p)) {
-            listener_handler.notify_JoinUnableNicknameAlreadyIn(p);
+            listener_handler.notify_failedJoinInvalidNickname(p);
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() > num_required_players_to_start ||
                 aux_order_players.size() > DefaultValues.MaxNumOfPlayer) {
-            listener_handler.notify_JoinUnableGameFull(p, this);
+            listener_handler.notify_failedJoinFullGame(p, this);
             throw new MaxPlayersLimitException();
         }
         else {
@@ -285,7 +285,7 @@ public class GameModel {
     public void setPlayerAsConnected(Player p) {
         if (aux_order_players.contains(p) && p.getIsConnected()) {
             players_connected.offer(p);
-            listener_handler.notify_playerJoined(this);
+            listener_handler.notify_playerParticipating(this);
         }
         else {
             throw new IllegalArgumentException("Player not in the game!");
@@ -474,8 +474,6 @@ public class GameModel {
                 Card goldCard = common_board.getGoldConcreteDeck().pop();
                 player.addToHand(goldCard);
             }
-
-
             // Deal 2 secret objective cards
             ObjectiveCard objectiveCard1 = null;
             ObjectiveCard objectiveCard2 = null;
