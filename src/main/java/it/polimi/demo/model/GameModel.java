@@ -102,7 +102,7 @@ public class GameModel {
      */
     public void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        listener_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
+        listener_handler.notify_PlayerReadyForStarting(this, p.getNickname());
     }
 
     /**
@@ -157,12 +157,12 @@ public class GameModel {
     public void addPlayer(Player p) {
 
         if (aux_order_players.contains(p)) {
-            listener_handler.notify_JoinUnableNicknameAlreadyIn(p);
+            listener_handler.notify_failedJoinInvalidNickname(p);
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() > num_required_players_to_start ||
                 aux_order_players.size() > DefaultValues.MaxNumOfPlayer) {
-            listener_handler.notify_JoinUnableGameFull(p, this);
+            listener_handler.notify_failedJoinFullGame(p, this);
             throw new MaxPlayersLimitException();
         }
         else {
@@ -283,7 +283,7 @@ public class GameModel {
     public void setPlayerAsConnected(Player p) {
         if (aux_order_players.contains(p) && p.getIsConnected()) {
             players_connected.offer(p);
-            listener_handler.notify_playerJoined(this);
+            listener_handler.notify_playerParticipating(this);
         }
         else {
             throw new IllegalArgumentException("Player not in the game!");
@@ -306,7 +306,6 @@ public class GameModel {
 
         p.setAsConnected();
         connectPlayerInOrder(p);
-
         listener_handler.notify_playerReconnected(this, p.getNickname());
     }
 
@@ -456,8 +455,8 @@ public class GameModel {
             if (!common_board.getStarterConcreteDeck().isEmpty()) {
                 starterCard2 = (StarterCard) common_board.getStarterConcreteDeck().pop();
             }
-            player.setStarterCardToChose(starterCard1, starterCard2);
 
+            player.setStarterCardToChose(starterCard1, starterCard2);
 
             // Deal 2 resource cards
             for (int i = 0; i < 2; i++) {
@@ -472,20 +471,23 @@ public class GameModel {
                 Card goldCard = common_board.getGoldConcreteDeck().pop();
                 player.addToHand(goldCard);
             }
-
-
             // Deal 2 secret objective cards
             ObjectiveCard objectiveCard1 = null;
             ObjectiveCard objectiveCard2 = null;
 
-                if (!common_board.getObjectiveConcreteDeck().isEmpty()) {
-                    objectiveCard1  = (ObjectiveCard) common_board.getObjectiveConcreteDeck().pop();
-                }
+            if (!common_board.getObjectiveConcreteDeck().isEmpty()) {
+                objectiveCard1  = (ObjectiveCard) common_board.getObjectiveConcreteDeck().pop();
+            }
+            else
+                listener_handler.notify_objectiveCardExtractedFromEmptyDeck(this);
 
-                if (!common_board.getObjectiveConcreteDeck().isEmpty()) {
-                    objectiveCard2 = (ObjectiveCard) common_board.getObjectiveConcreteDeck().pop();
-                }
+            if (!common_board.getObjectiveConcreteDeck().isEmpty()) {
+                objectiveCard2 = (ObjectiveCard) common_board.getObjectiveConcreteDeck().pop();
+            }
+            else
+                listener_handler.notify_objectiveCardExtractedFromEmptyDeck(this);
 
+            listener_handler.notify_commonObjectiveCardExtracted(this);
             player.setSecretObjectives(objectiveCard1, objectiveCard2);
 
         }
@@ -509,6 +511,7 @@ public class GameModel {
                 ResourceCard already_placed_card = personal_board.board[x][y].getCornerFromCell().reference_card;
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+                listener_handler.notify_cardPlacedOnPersonalBoard(this);
             }
         }
     }
@@ -531,6 +534,7 @@ public class GameModel {
                 ResourceCard already_placed_card = personal_board.board[x][y].getCornerFromCell().reference_card;
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+                listener_handler.notify_cardPlacedOnPersonalBoard(this);
             }
         }
     }
@@ -554,17 +558,29 @@ public class GameModel {
 
         switch (index) {
             case 1:
-                p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0)); // Draw from Resource Deck
+                // Draw from Resource Deck
+                p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0));
+                listener_handler.notify_resourceCardExtractedFromDeck(this);
             case 2:
-                p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0)); // Draw first Resource Card from table
+                // Draw first Resource Card from table
+                p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0));
+                listener_handler.notify_resourceCardExtractedFromTable(this);
             case 3:
-                p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0)); // Draw second Resource Card from table
+                // Draw second Resource Card from table
+                p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0));
+                listener_handler.notify_resourceCardExtractedFromTable(this);
             case 4:
-                p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1)); // Draw from Gold Deck
+                // Draw from Gold Deck
+                p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1));
+                listener_handler.notify_goldCardExtractedFromDeck(this);
             case 5:
-                p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1)); // Draw first Gold Card from table
+                // Draw first Gold Card from table
+                p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1));
+                listener_handler.notify_goldCardExtractedFromTable(this);
             case 6:
-                p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1)); // Draw second Gold Card from table
+                // Draw second Gold Card from table
+                p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
+                listener_handler.notify_goldCardExtractedFromTable(this);
         }
     }
 
