@@ -1,14 +1,15 @@
 package it.polimi.demo.view;
 
-import java.util.ArrayList;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+
 import java.util.List;
 
 public abstract class UI implements Runnable{
     //protected final List<StartUIListener> lst = new ArrayList<>();
 
-    public abstract void update(GameView gameView);
+    public abstract void update(GameModelImmutable gameView);
 
-    public abstract void gameEnded(GameView gameView);
+    public abstract void gameEnded(GameModelImmutable gameView);
 
     public abstract void showGamesList(List<GameDetails> o);
 

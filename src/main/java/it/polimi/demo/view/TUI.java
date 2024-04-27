@@ -1,6 +1,5 @@
 package it.polimi.demo.view;
 
-import it.polimi.demo.controller.GameController;
 import it.polimi.demo.model.DefaultValues;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
@@ -8,10 +7,9 @@ import it.polimi.demo.model.board.CommonBoardNode;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.enumerations.Orientation;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -42,10 +40,6 @@ public class TUI extends UI {
      */
     private List<String> playersNameList;
 
-    @Override
-    public void run() {
-
-    }
 
     /**
      * Enumeration representing the state of the game from the perspective of the player
@@ -70,7 +64,7 @@ public class TUI extends UI {
      * The latest GameView received from the server.
      * Contains data about every aspect of the current Game (board state, player state...).
      */
-    private GameView lastGameView;
+    private GameModelImmutable game_view;
 
     private char selected_where_to_place_letter;
 
@@ -115,13 +109,21 @@ public class TUI extends UI {
     }
 
 
+    //TODO: to implement
     @Override
-    public void update(GameView gameView) {
+    public void run() {
 
     }
 
+    //TODO: to implement
     @Override
-    public void gameEnded(GameView gameView) {
+    public void update(GameModelImmutable gameView) {
+
+    }
+
+    //TODO: to implement
+    @Override
+    public void gameEnded(GameModelImmutable gameView) {
 
     }
 
