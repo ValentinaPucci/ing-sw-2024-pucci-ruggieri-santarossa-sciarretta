@@ -3,6 +3,7 @@ package it.polimi.demo.networking.Applications;
 import it.polimi.demo.model.DefaultValues;
 import it.polimi.demo.networking.rmi.RmiServer;
 
+import java.rmi.RemoteException;
 import java.util.Scanner;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
@@ -11,7 +12,7 @@ public class AppServer {
     /**
      * Main entry point for the RMI client application.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RemoteException {
         Scanner scanner = new Scanner(System.in);
         String ip = askForRemoteIp(scanner);
 
@@ -21,7 +22,7 @@ public class AppServer {
             DefaultValues.Server_ip = ip;
             System.setProperty("java.rmi.server.hostname", ip);
         }
-        RmiServer.bind();
+        RmiServer.startServer();
     }
 
 

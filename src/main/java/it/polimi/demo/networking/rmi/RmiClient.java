@@ -1,14 +1,12 @@
 package it.polimi.demo.networking.rmi;
 
+import it.polimi.demo.controller.GameController;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.DefaultValues;
+import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.ConnectionType;
-import it.polimi.demo.view.UIType;
-import javafx.application.Application;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -18,31 +16,22 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Scanner;
 
 
-import static it.polimi.demo.networking.ConnectionType.RMI;
-import static it.polimi.demo.networking.PrintAsync.printAsync;
-import static it.polimi.demo.view.UIType.GUI;
+import static it.polimi.demo.networking.PrintAsync.*;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * RMI client to communicate with the remote server using RMI.
  * Implements the MainControllerInterface to receive messages from the server.
  */
-public class RmiClient extends UnicastRemoteObject implements VirtualClient, Serializable {
 
-    private static ConnectionType connectionType;
-    private static UIType uiType;
-    private static String ip;
-    private static int port;
+public class RmiClient extends UnicastRemoteObject implements VirtualClient, Serializable {
 
     /**
      * The remote object returned by the registry that represents the main controller
      */
-    private static MainControllerInterface requests;
+    private static MainControllerInterface client_requests;
     /**
      * The remote object returned by the RMI server that represents the connected game
      */
@@ -50,52 +39,87 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     /**
      * The remote object on which the server will invoke remote methods
      */
-    private static GameListener modelInvokedEvents;
+    private static GameListener events_from_model;
     /**
      * The nickname associated to the client (!=null only when connected in a game)
      */
-    private static String nickname = "Paul";
-
+    private String nickname;
+    /**
+     * The remote object on which the server will invoke remote methods
+     */
+    //private final GameListenersHandlerClient gameListenersHandler;
     /**
      * Registry of the RMI
      */
     private Registry registry;
 
-    protected RmiClient() throws RemoteException {
+
+    /**
+     * Create, start and connect a RMI Client to the server
+     */
+    public RmiClient() throws RemoteException {
+        super();
+        //gameListenersHandler = new GameListenersHandlerClient(flow);
+        connectToRMIServer();
+
+        //rmiHeartbeat = new HeartbeatSender(flow,this);
+        //rmiHeartbeat.start();
     }
 
-    public static int getPort() {
-        return port;
+    public void connectToRMIServer() {
+        int attempt = 0;
+
+        while (attempt < DefaultValues.max_num_connection_attempts) {
+            try {
+                // Get the registry for the RMI server
+                Registry registry = LocateRegistry.getRegistry(DefaultValues.Server_ip, DefaultValues.Default_port_RMI);
+
+                // Look up the MainControllerInterface from the registry
+                MainControllerInterface controllerInterface = (MainControllerInterface) registry.lookup(DefaultValues.RMI_ServerName);
+
+                // Export the GameListener object
+                //events_from_model = (GameListener) UnicastRemoteObject.exportObject(gameListenersHandler, 0);
+
+                // Print a success message
+                printAsync("Connected to RMI server.");
+
+                // Exit the loop as connection succeeded
+                break;
+            } catch (RemoteException | NotBoundException e) {
+                // Print error message for the first attempt only
+                if (attempt == 0) {
+                    printAsync("[ERROR] Unable to connect to RMI server:");
+                    e.printStackTrace();
+                }
+
+                // Print reconnection attempt message
+                printAsyncNoLine("[Attempt #" + (attempt + 1) + "] Waiting to reconnect to RMI server...");
+
+                // Wait for a certain duration before attempting reconnection
+                waitForReconnection();
+
+                // Increment the attempt counter
+                attempt++;
+            }
+        }
+
+        // If all attempts failed, exit the program
+        if (attempt == DefaultValues.max_num_connection_attempts) {
+            printAsyncNoLine("Max connection attempts reached. Exiting...");
+            System.exit(-1);
+        }
     }
 
-    public static void setPort(int port) {
-        RmiClient.port = port;
+    private void waitForReconnection() {
+        try {
+            // Wait for a certain duration before attempting reconnection
+            Thread.sleep(DefaultValues.secondsToWaitReconnection * 1000);
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
-    public static String getIp() {
-        return ip;
-    }
-
-    public static void setIp(String ip) {
-        RmiClient.ip = ip;
-    }
-
-    public static UIType getUiType() {
-        return uiType;
-    }
-
-    public static void setUiType(UIType uiType) {
-        RmiClient.uiType = uiType;
-    }
-
-    public static ConnectionType getConnectionType() {
-        return connectionType;
-    }
-
-    public static void setConnectionType(ConnectionType connectionType) {
-        RmiClient.connectionType = connectionType;
-    }
-
+    //--------------------METODI CHE CREANO LA PARTITA / LA SESSIONE E QUINDI IL RELATIVO  GAME CONTROLLER-------------------------------------------------
 
     /**
      * Requests the creation of a game on the server.
@@ -108,7 +132,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     @Override
     public void createGame(String nick, int num_players) throws RemoteException, NotBoundException {
         connectToRegistry();
-        gameController = requests.createGame(modelInvokedEvents, nick, num_players);
+        gameController = client_requests.createGame(events_from_model, nick, num_players);
         nickname = nick;
     }
 
@@ -122,7 +146,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     @Override
     public void joinFirstAvailable(String nick) throws RemoteException, NotBoundException {
         connectToRegistry();
-        gameController = requests.joinFirstAvailableGame(modelInvokedEvents, nick);
+        gameController = client_requests.joinFirstAvailableGame(events_from_model, nick);
         nickname = nick;
     }
 
@@ -137,7 +161,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     @Override
     public void joinGame(String nick, int idGame) throws RemoteException, NotBoundException {
         connectToRegistry();
-        gameController = requests.joinGame(modelInvokedEvents, nick, idGame);
+        gameController = client_requests.joinGame(events_from_model, nick, idGame);
         nickname = nick;
     }
 
@@ -152,7 +176,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     @Override
     public void reconnect(String nick, int idGame) throws RemoteException, NotBoundException {
         connectToRegistry();
-        gameController = requests.reconnect(modelInvokedEvents, nick, idGame);
+        gameController = client_requests.reconnect(events_from_model, nick, idGame);
         nickname = nick;
     }
 
@@ -167,7 +191,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     @Override
     public void leave(String nick, int idGame) throws IOException, NotBoundException {
         connectToRegistry();
-        requests.leaveGame(modelInvokedEvents, nick, idGame);
+        client_requests.leaveGame(events_from_model, nick, idGame);
         gameController = null;
         nickname = null;
     }
@@ -180,9 +204,10 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
      */
     private void connectToRegistry() throws RemoteException, NotBoundException {
         registry = LocateRegistry.getRegistry(DefaultValues.Server_ip, DefaultValues.Default_port_RMI);
-        requests = (MainControllerInterface) registry.lookup(DefaultValues.RMI_ServerName);
+        client_requests = (MainControllerInterface) registry.lookup(DefaultValues.RMI_ServerName);
     }
 
+    //METODI CHE UTILIZZANO IL GAME CONTROLLER CREATO CON I METODI PRECEENTI
 
     /**
      * Send a message to the server
@@ -228,17 +253,14 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     }
 
     /**
-     * Send a heartbeat to the server
+     * Send a PING to the server
      *
      * @throws RemoteException
      */
     @Override
     public void addPing() throws RemoteException {
         if (gameController != null) {
-            gameController.addPing(nickname, modelInvokedEvents);
+            gameController.addPing(nickname, events_from_model);
         }
     }
-
-
-
 }

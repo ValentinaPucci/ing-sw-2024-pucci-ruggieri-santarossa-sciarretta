@@ -31,4 +31,5 @@ public class DefaultValues {
     public final static int col_chat = 96;
 
     public final static int max_messagesShown = 5;
+    public static int max_num_connection_attempts = 5;
 }

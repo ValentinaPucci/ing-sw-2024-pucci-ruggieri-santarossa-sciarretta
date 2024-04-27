@@ -30,10 +30,8 @@ public class GameModel {
     // the second one is used as a queue and let us know which player
     // is connected (and actively playing).
     private LinkedList<Player> players_connected;
-
     private ListenersHandler listener_handler;
     private CommonBoard common_board;
-
     private Integer gameId;
     private Integer num_required_players_to_start;
     private GameStatus status;
@@ -384,7 +382,6 @@ public class GameModel {
     public void setStatus(GameStatus status) throws NotReadyToRunException {
         // Check if the game status can be set to "RUNNING"
         boolean canSetRunning =
-                status.equals(GameStatus.RUNNING) &&
                 (aux_order_players.size() >= DefaultValues.MinNumOfPlayer) &&
                 !players_connected.isEmpty();
 

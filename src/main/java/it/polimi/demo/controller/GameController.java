@@ -44,6 +44,40 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         listeners_to_heartbeats = new HashMap<>();
         new Thread(this).start();
     }
+    //------------------------------------gameFlow-----------------------------------------------
+    public void gameFlow() throws RemoteException, GameEndedException {
+        switch(model.getStatus()){
+            case WAIT:
+                //TODO: aspettare tutti i giocatori previsti per la partita
+                if(model.getNumPlayersToPlay() == getNumConnectedPlayers())
+                    model.setStatus(GameStatus.FIRST_ROUND);
+            case FIRST_ROUND:
+                //TODO giocare il primo turno posizionando le carte starter
+                if(model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
+                    model.setStatus(GameStatus.RUNNING);
+            case RUNNING:
+                //TODO giocare
+                if(model.getPlayersConnected().getFirst().getCurrentPoints() >= 20) {
+                    model.nextTurn();
+                    model.setStatus(GameStatus.SECOND_LAST_ROUND);
+                }
+            case SECOND_LAST_ROUND:
+                //TODO giocare normale
+                if(model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname())) {
+                    model.nextTurn();
+                    model.setStatus(GameStatus.LAST_ROUND);
+                }
+            case LAST_ROUND:
+                //TODO giocare senza pescare
+                if(model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
+                    model.setStatus(GameStatus.ENDED);
+            case ENDED:
+                //TODO giocare senza pescare
+                model.calculateFinalScores();
+        }
+
+    }
+
 
     //------------------------------------connection/reconnection management-----------------------------------------------
     // Threads management ---------------------------------------
@@ -121,7 +155,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         // Now check
         if (getNumConnectedPlayers() == 0) {
             stopTimer();
-            MainController.getInstance().deleteGame(getGameId());
+            MainController.getControllerInstance().deleteGame(getGameId());
         }
     } catch (RemoteException | GameEndedException e) {
         throw new RuntimeException(e);
@@ -213,7 +247,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
                     if (model.getPlayersConnected().isEmpty()) {
                         // No players online, I delete the games
-                        MainController.getInstance().deleteGame(model.getGameId());
+                        MainController.getControllerInstance().deleteGame(model.getGameId());
                     } else if (model.getPlayersConnected().size() == 1) {
                         printAsync("\tNo player reconnected on time, just one person is playing, set game to ended!");
                         model.setStatus(GameStatus.ENDED);
@@ -414,11 +448,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
     //------------------------------------ logic management -----------------------------------------------
 
-    /**
-     * Return the secret Goal Card associated with the player in index @param indexPlayer
-     *
-     * @return CardGoal associated to the player
-     */
+
     public List<ObjectiveCard> getCommonObjectives() {
         return model.getCommonBoard().getCommonObjectives();
     }
@@ -543,6 +573,10 @@ public class GameController implements GameControllerInterface, Runnable, Serial
     @Override
     public int getGameId() {
         return model.getGameId();
+    }
+
+    public void performTurn(String nickname){
+
     }
 
 //---------------------------------listeners management---------------------------------------

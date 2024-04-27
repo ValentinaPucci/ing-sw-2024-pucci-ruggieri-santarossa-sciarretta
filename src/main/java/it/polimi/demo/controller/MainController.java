@@ -49,7 +49,7 @@ public class MainController implements MainControllerInterface {
      *
      * @return the only one instance of the MainController class
      */
-    public synchronized static MainController getInstance() {
+    public synchronized static MainController getControllerInstance() {
         if (instance == null) {
             instance = new MainController();
         }

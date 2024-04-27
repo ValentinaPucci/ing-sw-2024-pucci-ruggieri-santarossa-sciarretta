@@ -2,23 +2,29 @@ package it.polimi.demo.networking.Applications;
 
 import it.polimi.demo.model.DefaultValues;
 import it.polimi.demo.networking.ConnectionType;
-import it.polimi.demo.networking.rmi.RmiClient;
-import it.polimi.demo.networking.rmi.RmiServer;
+import it.polimi.demo.view.GUI;
+import it.polimi.demo.view.TUI;
+import it.polimi.demo.view.TUIUtils;
 import it.polimi.demo.view.UIType;
+import org.fusesource.jansi.Ansi;
+import org.fusesource.jansi.AnsiConsole;
 
+import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
 import static it.polimi.demo.networking.ConnectionType.RMI;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class AppClient {
     private static ConnectionType connectionType;
     private static UIType uiType;
     private static String ip;
     private static int port;
-    public static void main(String[] args) {
+    private static String nickname;
+    public static void main(String[] args) throws RemoteException {
         Scanner scanner = new Scanner(System.in);
 
         //set connectionType
@@ -34,28 +40,55 @@ public class AppClient {
             case GUI:
                 //Application.launch(GUIApplication.class, connectionType.toString());
                 printAsync("GUI + " + connectionType + " CHOSEN");
+                GUI GUI = new GUI();
                 break;
             case TUI:
                 printAsync("TUI + " + connectionType + " CHOSEN");
-                //new GameFlow(connectionType);
+                TUI Tui = new TUI();
+                startTUI(Tui);
                 break;
         }
+    }
 
-//        try {
-//            switch (uiType) {
-//                case GUI:
-//                    //Application.launch(GUIApplication.class, connectionType.toString());
-//                    printAsync("GUI + " + connectionType + "CHOSEN");
-//                    break;
-//                case TUI:
-//                    printAsync("TUI + " + connectionType + "CHOSEN");
-//                    //new GameFlow(connectionType);
-//                    break;
-//            }
-//        } catch (RemoteException | NotBoundException e) {
-//            System.err.println("Cannot connect to server. Exiting...");
-//            System.exit(1);
-//        }
+
+    public static void startTUI(TUI Tui){
+        AnsiConsole.systemInstall();
+        askNickname();
+        System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+
+        //notifyListeners(lst, StartUIListener::refreshStartUI);
+
+        showMenu();
+        Scanner s = new Scanner(System.in);
+        int choice = TUIUtils.nextInt(s);
+        switch (choice) {
+            case 1 -> Tui.createGame();
+            case 2 -> Tui.joinGame();
+            default -> {
+                System.out.println("Invalid choice.");
+                //notifyListeners(lst, StartUIListener::exit);
+            }
+        }
+    }
+
+        /**
+         * Asks the user to insert his username.
+         */
+    private static void askNickname() {
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.print(ansi().bold().fg(Ansi.Color.GREEN).a("Insert your username: ").reset());
+        nickname = scanner.next();
+    }
+
+    /**
+     * Shows the start menu and asks the user to select an option.
+     * If the user selects an invalid option, the menu is shown again.
+     */
+    private static void showMenu(){
+        System.out.println("Select an option:");
+        System.out.println(" 1. Create a new game");
+        System.out.println(" 2. Join an existing game");
     }
 
 
@@ -72,7 +105,7 @@ public class AppClient {
     private static void askDetails(Scanner in) {
         System.out.print("Enter server IP (blank for localhost): ");
         if (connectionType == RMI)
-            RmiClient.setIp(getInputWithMessage(in, "Invalid IP address. Please retry: "));
+            ip = (getInputWithMessage(in, "Invalid IP address. Please retry: "));
         if (ip.isBlank()) {
             ip = "localhost";
         }
