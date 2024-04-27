@@ -238,4 +238,7 @@ public interface GameListener extends Remote {
      */
     void secondLastRound(GameModelImmutable game_model) throws RemoteException;
 
+
+    //TODO: to be implemented
+    void gameIdNotExists(int gameId);
 }

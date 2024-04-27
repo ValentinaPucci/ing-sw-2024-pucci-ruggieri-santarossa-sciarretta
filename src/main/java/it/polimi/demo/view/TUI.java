@@ -74,8 +74,6 @@ public class TUI extends UI {
 
     private char selected_where_to_place_letter;
 
-
-
     //UI IMPLEMENTS RUNNABLE
 
     /**
@@ -84,11 +82,11 @@ public class TUI extends UI {
     public void createGame() {
         Scanner s = new Scanner(System.in);
         do {
-            System.out.print("How many players? (" + DefaultValues.MinNumOfPlayer + " to " + DefaultValues.MaxNumOfPlayer + ") ");
+            System.out.println(ansi().bold().fg(Ansi.Color.GREEN).a("How many players? (" + DefaultValues.MinNumOfPlayer + " to " + DefaultValues.MaxNumOfPlayer + ") ").reset());
             numOfPlayers = TUIUtils.nextInt(s);
             if (numOfPlayers < DefaultValues.MinNumOfPlayer || numOfPlayers > DefaultValues.MaxNumOfPlayer)
-                System.out.println("Number of players should be between " + DefaultValues.MinNumOfPlayer
-                        + " and " + DefaultValues.MaxNumOfPlayer + ".");
+                System.out.println(ansi().bold().fg(Ansi.Color.RED).a("Number of players should be between " + DefaultValues.MinNumOfPlayer
+                        + " and " + DefaultValues.MaxNumOfPlayer + ".").reset());
         } while (numOfPlayers < DefaultValues.MinNumOfPlayer || numOfPlayers > DefaultValues.MaxNumOfPlayer);
 
         //notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, this.nickname));

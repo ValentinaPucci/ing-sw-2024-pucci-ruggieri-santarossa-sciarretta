@@ -180,11 +180,7 @@ public class MainController implements MainControllerInterface {
                     }
                 })
                 .orElseGet(() -> {
-                    try {
-                        listener.gameIdNotExists(gameId);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
+                    listener.gameIdNotExists(gameId);
                     return null;
                 });
 
@@ -227,11 +223,7 @@ public class MainController implements MainControllerInterface {
                             }
                         }))
                 .orElseGet(() -> {
-                    try {
-                        listener.gameIdNotExists(gameId);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
+                    listener.gameIdNotExists(gameId);
                     return null;
                 });
 
