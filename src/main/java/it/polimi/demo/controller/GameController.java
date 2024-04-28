@@ -406,6 +406,8 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         return model.arePlayersReadyToStartAndEnough();
     }
 
+    // ***************************************** IMPORTANT *****************************************
+
     /**
      * Start the game if it's ready
      *
@@ -416,10 +418,13 @@ public class GameController implements GameControllerInterface, Runnable, Serial
             throw new IllegalStateException("The game is not ready to start");
         }
         else {
+            extractFirstPlayerToPlay();
             model.initializeGame();
             model.setStatus(GameStatus.RUNNING);
         }
     }
+
+    //***********************************************************************************************
 
     /**
      * Check if it's your turn
@@ -548,6 +553,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         if (!(1 <= index && index <= 6))
             throw new IllegalArgumentException("invalid index");
         model.drawCard(getPlayerEntity(player_nickname), index);
+        this.myTurnIsFinished();
     }
 
     /**

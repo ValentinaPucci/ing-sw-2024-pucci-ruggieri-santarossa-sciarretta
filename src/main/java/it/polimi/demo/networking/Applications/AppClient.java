@@ -19,12 +19,15 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class AppClient {
+
     private static ConnectionType connectionType;
     private static UIType uiType;
     private static String ip;
     private static int port;
     private static String nickname;
+
     public static void main(String[] args) throws RemoteException {
+
         Scanner scanner = new Scanner(System.in);
 
         //set connectionType
@@ -50,8 +53,12 @@ public class AppClient {
         }
     }
 
+    /**
+     * Starts the TUI.
+     * @param Tui the TUI to start
+     */
+    public static void startTUI(TUI Tui) {
 
-    public static void startTUI(TUI Tui){
         AnsiConsole.systemInstall();
         askNickname();
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
@@ -61,6 +68,7 @@ public class AppClient {
         showMenu();
         Scanner s = new Scanner(System.in);
         int choice = TUIUtils.nextInt(s);
+
         switch (choice) {
             case 1 -> Tui.createGame();
             case 2 -> Tui.joinGame();
@@ -71,12 +79,11 @@ public class AppClient {
         }
     }
 
-        /**
-         * Asks the user to insert his username.
-         */
+    /**
+     * Asks the user to insert his username.
+     */
     private static void askNickname() {
         Scanner scanner = new Scanner(System.in);
-
         System.out.print(ansi().bold().fg(Ansi.Color.GREEN).a("Insert your username: ").reset());
         nickname = scanner.next();
     }
@@ -90,7 +97,6 @@ public class AppClient {
         System.out.println(" 1. Create a new game");
         System.out.println(" 2. Join an existing game");
     }
-
 
     private static void askConnectionType(Scanner in) {
         printAsync("Select connection type:");
@@ -179,7 +185,5 @@ public class AppClient {
         }
         return true;
     }
-
-
 
 }

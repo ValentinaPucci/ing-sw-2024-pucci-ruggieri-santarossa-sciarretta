@@ -9,10 +9,12 @@ import java.util.Scanner;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 public class AppServer {
+
     /**
      * Main entry point for the RMI client application.
      */
     public static void main(String[] args) throws RemoteException {
+
         Scanner scanner = new Scanner(System.in);
         String ip = askForRemoteIp(scanner);
 
@@ -24,7 +26,6 @@ public class AppServer {
         }
         RmiServer.startServer();
     }
-
 
     /**
      * Prompts the user to enter the remote IP address.
@@ -41,6 +42,13 @@ public class AppServer {
         return input;
     }
 
+    /**
+     * Checks if the given input is a valid IP address.
+     *
+     * @param input The input to check
+     * @return True if the input is a valid IP address, false otherwise
+     *
+     */
     private static boolean isValidIP(String input) {
         String[] parts = input.split("\\.");
         if (parts.length != 4) {

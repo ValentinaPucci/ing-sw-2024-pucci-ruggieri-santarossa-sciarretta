@@ -238,4 +238,10 @@ public interface GameListener extends Remote {
      */
     void secondLastRound(GameModelImmutable game_model) throws RemoteException;
 
+    /**
+     * This method is used to notify that the game id selected does not exist
+     * @param gameId is the game id
+     * @throws RemoteException if the reference inaccessible
+     */
+    void gameIdNotExists(int gameId) throws RemoteException;
 }

@@ -8,6 +8,7 @@ import it.polimi.demo.model.board.CommonBoardNode;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.enumerations.Orientation;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -24,6 +25,7 @@ public class TUI extends UI {
      * The username inserted by the user.
      */
     private String nickname;
+
     /**
      * The number of players inserted by the user when creating a new game.
      */
@@ -70,11 +72,9 @@ public class TUI extends UI {
      * The latest GameView received from the server.
      * Contains data about every aspect of the current Game (board state, player state...).
      */
-    private GameView lastGameView;
+    private GameModelImmutable last_model;
 
     private char selected_where_to_place_letter;
-
-
 
     //UI IMPLEMENTS RUNNABLE
 
@@ -92,6 +92,7 @@ public class TUI extends UI {
         } while (numOfPlayers < DefaultValues.MinNumOfPlayer || numOfPlayers > DefaultValues.MaxNumOfPlayer);
 
         //notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, this.nickname));
+
         waitingForPlayers = true;
     }
 
@@ -118,12 +119,12 @@ public class TUI extends UI {
 
 
     @Override
-    public void update(GameView gameView) {
+    public void update(GameModelImmutable model) {
 
     }
 
     @Override
-    public void gameEnded(GameView gameView) {
+    public void gameEnded(GameModelImmutable model) {
 
     }
 

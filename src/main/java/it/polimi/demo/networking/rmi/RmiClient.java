@@ -17,15 +17,15 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-
 import static it.polimi.demo.networking.PrintAsync.*;
 import static org.fusesource.jansi.Ansi.ansi;
+
+// Todo: re-implement some code (originality)
 
 /**
  * RMI client to communicate with the remote server using RMI.
  * Implements the MainControllerInterface to receive messages from the server.
  */
-
 public class RmiClient extends UnicastRemoteObject implements VirtualClient, Serializable {
 
     /**
@@ -53,9 +53,8 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
      */
     private Registry registry;
 
-
     /**
-     * Create, start and connect a RMI Client to the server
+     * Create, start and connect an RMI Client to the server
      */
     public RmiClient() throws RemoteException {
         super();
@@ -66,6 +65,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
         //rmiHeartbeat.start();
     }
 
+    /**
+     * Connects to the RMI server.
+     */
     public void connectToRMIServer() {
         int attempt = 0;
 
@@ -110,6 +112,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
         }
     }
 
+    /**
+     * Waits for a certain duration before attempting reconnection.
+     */
     private void waitForReconnection() {
         try {
             // Wait for a certain duration before attempting reconnection
@@ -119,7 +124,9 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
         }
     }
 
-    //--------------------METODI CHE CREANO LA PARTITA / LA SESSIONE E QUINDI IL RELATIVO  GAME CONTROLLER-------------------------------------------------
+    //--------------------Overrides of VirtualClient interface-------------------------------------------------
+
+    // subsection: MainControllerInterface
 
     /**
      * Requests the creation of a game on the server.
@@ -207,13 +214,13 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
         client_requests = (MainControllerInterface) registry.lookup(DefaultValues.RMI_ServerName);
     }
 
-    //METODI CHE UTILIZZANO IL GAME CONTROLLER CREATO CON I METODI PRECEENTI
+    // subsection: GameControllerInterface
 
     /**
      * Send a message to the server
      *
      * @param msg message to send
-     * @throws RemoteException
+     * @throws RemoteException if the connection fails
      */
     @Override
     public void sendMessage(Message msg) throws RemoteException {
@@ -223,7 +230,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     /**
      * Notify the server that a client is ready to start
      *
-     * @throws RemoteException
+     * @throws RemoteException if the connection fails
      */
     @Override
     public void setAsReady() throws RemoteException {
@@ -232,21 +239,54 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
         }
     }
 
+    /**
+     * Check if this is my turn
+     * @return true if it's my turn, false else
+     * @throws RemoteException if the connection fails
+     */
     @Override
     public boolean isMyTurn() throws RemoteException {
         return gameController.isMyTurn(nickname);
     }
 
+    /**
+     * Draw a card from the deck/table
+     * @param player_nickname The nickname of the player who wants to draw a card
+     *
+     * @param index The index indicating which card to draw:
+     *                    1: Resource Deck
+     *                    2: First Resource Card on the table
+     *                    3: Second Resource Card on the table
+     *                    4: Gold Deck
+     *                    5: First Gold Card on the table
+     *                    6: Second Gold Card on the table
+     *
+     * @throws IOException if the connection fails
+     */
     @Override
     public void drawCard(String player_nickname, int index) throws IOException {
         gameController.drawCard(player_nickname, index);
     }
 
+    /**
+     * Place a resource card on the personal board of the player
+     * @param card_chosen the card to place
+     * @param x the x coordinate on the personal board
+     * @param y the y coordinate on the personal board
+     * @throws IOException if the connection fails
+     */
     @Override
     public void placeCard(ResourceCard card_chosen, int x, int y) throws IOException{
         gameController.placeCard(card_chosen, gameController.getPlayerEntity(nickname), x, y);
     }
 
+    /**
+     * Place a gold card on the personal board of the player
+     * @param card_chosen the card to place
+     * @param x the x coordinate on the personal board
+     * @param y the y coordinate on the personal board
+     * @throws IOException if the connection fails
+     */
     @Override
     public void placeCard(GoldCard card_chosen, int x, int y) throws IOException{
         gameController.placeCard(card_chosen, gameController.getPlayerEntity(nickname), x, y);
@@ -255,7 +295,7 @@ public class RmiClient extends UnicastRemoteObject implements VirtualClient, Ser
     /**
      * Send a PING to the server
      *
-     * @throws RemoteException
+     * @throws RemoteException if the connection fails
      */
     @Override
     public void addPing() throws RemoteException {

@@ -13,22 +13,28 @@ import it.polimi.demo.model.DefaultValues;
 import static org.fusesource.jansi.Ansi.ansi;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
-
 /**
  * RMI server implementation that provides remote access to clients.
  * Implements the VirtualServer interface to handle client connections and message transmission.
+ *
+ * Remark: This class couples with the MainControllerInterface.
  */
 public class RmiServer extends UnicastRemoteObject implements MainControllerInterface {
+
     private final MainControllerInterface mainController;
     private static RmiServer serverInstance = null;
     private static Registry registryInstance = null;
-
 
     public RmiServer() throws RemoteException {
         super(0);
         mainController = MainController.getControllerInstance();
     }
 
+    /**
+     * Returns the server instance.
+     * @return the server instance
+     * @throws RemoteException if there is an RMI-related exception
+     */
     public synchronized static RmiServer getServerInstance() throws RemoteException {
         if (serverInstance == null) {
             serverInstance = new RmiServer();
@@ -36,6 +42,11 @@ public class RmiServer extends UnicastRemoteObject implements MainControllerInte
         return serverInstance;
     }
 
+    /**
+     * Returns the registry instance.
+     * @return the registry instance
+     * @throws RemoteException if there is an RMI-related exception
+     */
     public synchronized static Registry getRegistryInstance() throws RemoteException {
         if (registryInstance == null) {
             registryInstance = LocateRegistry.createRegistry(DefaultValues.Default_port_RMI);
@@ -43,8 +54,11 @@ public class RmiServer extends UnicastRemoteObject implements MainControllerInte
         return registryInstance;
     }
 
-
-    //VERRÀ CHIAMATO DAL MAIN SERVER (APP SERVER)
+    /**
+     * This method is called by the main server (app server) to start the RMI server.
+     * @return the RMI server instance
+     * @throws RemoteException if there is an RMI-related exception
+     */
     public static RmiServer startServer() throws RemoteException {
         try {
             serverInstance = new RmiServer();

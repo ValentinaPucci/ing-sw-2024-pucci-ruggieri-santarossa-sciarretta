@@ -372,7 +372,6 @@ public class ListenersHandler {
      * @param gameModel current game state
      * @param msg is the message that has been sent
      */
-
     public synchronized void notify_SentMessage(GameModel gameModel, Message msg) {
         listeners.removeIf(listener -> {
             try {

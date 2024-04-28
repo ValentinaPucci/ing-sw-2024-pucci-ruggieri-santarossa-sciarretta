@@ -1,15 +1,18 @@
 package it.polimi.demo.view;
 
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+
 import java.util.List;
 
 public class GUI extends UI {
+
     @Override
-    public void update(GameView gameView) {
+    public void update(GameModelImmutable model) {
 
     }
 
     @Override
-    public void gameEnded(GameView gameView) {
+    public void gameEnded(GameModelImmutable model) {
 
     }
 
