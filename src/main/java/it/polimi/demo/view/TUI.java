@@ -1,6 +1,5 @@
 package it.polimi.demo.view;
 
-import it.polimi.demo.controller.GameController;
 import it.polimi.demo.model.DefaultValues;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
@@ -10,9 +9,7 @@ import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import org.fusesource.jansi.Ansi;
-import org.fusesource.jansi.AnsiConsole;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -25,7 +22,6 @@ public class TUI extends UI {
      * The username inserted by the user.
      */
     private String nickname;
-
     /**
      * The number of players inserted by the user when creating a new game.
      */
@@ -44,10 +40,6 @@ public class TUI extends UI {
      */
     private List<String> playersNameList;
 
-    @Override
-    public void run() {
-
-    }
 
     /**
      * Enumeration representing the state of the game from the perspective of the player
@@ -72,7 +64,7 @@ public class TUI extends UI {
      * The latest GameView received from the server.
      * Contains data about every aspect of the current Game (board state, player state...).
      */
-    private GameModelImmutable last_model;
+    private GameModelImmutable game_view;
 
     private char selected_where_to_place_letter;
 
@@ -84,15 +76,14 @@ public class TUI extends UI {
     public void createGame() {
         Scanner s = new Scanner(System.in);
         do {
-            System.out.print("How many players? (" + DefaultValues.MinNumOfPlayer + " to " + DefaultValues.MaxNumOfPlayer + ") ");
+            System.out.println(ansi().bold().fg(Ansi.Color.GREEN).a("How many players? (" + DefaultValues.MinNumOfPlayer + " to " + DefaultValues.MaxNumOfPlayer + ") ").reset());
             numOfPlayers = TUIUtils.nextInt(s);
             if (numOfPlayers < DefaultValues.MinNumOfPlayer || numOfPlayers > DefaultValues.MaxNumOfPlayer)
-                System.out.println("Number of players should be between " + DefaultValues.MinNumOfPlayer
-                        + " and " + DefaultValues.MaxNumOfPlayer + ".");
+                System.out.println(ansi().bold().fg(Ansi.Color.RED).a("Number of players should be between " + DefaultValues.MinNumOfPlayer
+                        + " and " + DefaultValues.MaxNumOfPlayer + ".").reset());
         } while (numOfPlayers < DefaultValues.MinNumOfPlayer || numOfPlayers > DefaultValues.MaxNumOfPlayer);
 
         //notifyListeners(lst, startUIListener -> startUIListener.createGame(numberOfPlayers, this.nickname));
-
         waitingForPlayers = true;
     }
 
@@ -118,13 +109,21 @@ public class TUI extends UI {
     }
 
 
+    //TODO: to implement
     @Override
-    public void update(GameModelImmutable model) {
+    public void run() {
 
     }
 
+    //TODO: to implement
     @Override
-    public void gameEnded(GameModelImmutable model) {
+    public void update(GameModelImmutable gameView) {
+
+    }
+
+    //TODO: to implement
+    @Override
+    public void gameEnded(GameModelImmutable gameView) {
 
     }
 

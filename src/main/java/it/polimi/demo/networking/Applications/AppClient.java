@@ -37,13 +37,13 @@ public class AppClient {
         //seu UIType
         askUIType(scanner);
 
-        printAsync("Connecting to " + ip + ":" + port + " using " + connectionType + "...");
+        System.out.println(ansi().bold().fg(Ansi.Color.BLUE).a("Connecting to " + ip + ":" + port + " using " + connectionType + "...").reset());
 
         switch (uiType) {
             case GUI:
                 //Application.launch(GUIApplication.class, connectionType.toString());
                 printAsync("GUI + " + connectionType + " CHOSEN");
-                GUI GUI = new GUI();
+                GUI Gui = new GUI();
                 break;
             case TUI:
                 printAsync("TUI + " + connectionType + " CHOSEN");
@@ -93,13 +93,13 @@ public class AppClient {
      * If the user selects an invalid option, the menu is shown again.
      */
     private static void showMenu(){
-        System.out.println("Select an option:");
-        System.out.println(" 1. Create a new game");
-        System.out.println(" 2. Join an existing game");
+        System.out.println(ansi().bold().fg(Ansi.Color.GREEN).a("Select an option:").reset());
+        System.out.println(ansi().bold().fg(Ansi.Color.GREEN).a(" 1. Create a new game").reset());
+        System.out.println(ansi().bold().fg(Ansi.Color.GREEN).a(" 2. Join an existing game").reset());
     }
 
     private static void askConnectionType(Scanner in) {
-        printAsync("Select connection type:");
+        System.out.println(ansi().bold().fg(Ansi.Color.GREEN).a("Select connection type:").reset());
         for (ConnectionType value : ConnectionType.values()) {
             printAsync((value.ordinal() + 1) + ". " + value);
         }
@@ -109,14 +109,14 @@ public class AppClient {
     }
 
     private static void askDetails(Scanner in) {
-        System.out.print("Enter server IP (blank for localhost): ");
+        System.out.println(ansi().bold().fg(Ansi.Color.GREEN).a("Enter server IP (blank for localhost): ").reset());
         if (connectionType == RMI)
             ip = (getInputWithMessage(in, "Invalid IP address. Please retry: "));
         if (ip.isBlank()) {
             ip = "localhost";
         }
 
-        System.out.print("Enter server port (blank for default): ");
+        System.out.println(ansi().bold().fg(Ansi.Color.GREEN).a("Enter server port (blank for localhost): ").reset());
         String portString = in.nextLine();
         if (portString.isBlank()) {
             if (connectionType == RMI)
@@ -130,7 +130,7 @@ public class AppClient {
 
 
     private static void askUIType(Scanner in) {
-        printAsync("Select UI type:");
+        System.out.println(ansi().bold().fg(Ansi.Color.GREEN).a("Select UI type: ").reset());
         for (UIType value : UIType.values()) {
             printAsync((value.ordinal() + 1) + ". " + value);
         }
@@ -148,10 +148,10 @@ public class AppClient {
             try {
                 selection = Integer.parseInt(input);
                 if (selection < 1 || selection > 2) {
-                    printAsync(errorMessage);
+                    System.out.println(ansi().bold().fg(Ansi.Color.RED).a(errorMessage).reset());
                 }
             } catch (NumberFormatException e) {
-                printAsync("Invalid input");
+                System.out.println(ansi().bold().fg(Ansi.Color.RED).a("Invalid input").reset());
             }
         } while (selection < 1 || selection > 2);
         return selection;
@@ -162,7 +162,7 @@ public class AppClient {
         do {
             input = scanner.nextLine();
             if (!input.isEmpty() && !isValidIPAddress(input)) {
-                printAsync(message);
+                System.out.println(ansi().bold().fg(Ansi.Color.RED).a(message).reset());
             }
         } while (!input.isEmpty() && !isValidIPAddress(input));
         return input;

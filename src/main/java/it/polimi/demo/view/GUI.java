@@ -5,14 +5,13 @@ import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import java.util.List;
 
 public class GUI extends UI {
-
     @Override
-    public void update(GameModelImmutable model) {
+    public void update(GameModelImmutable gameView) {
 
     }
 
     @Override
-    public void gameEnded(GameModelImmutable model) {
+    public void gameEnded(GameModelImmutable gameView) {
 
     }
 

@@ -36,7 +36,7 @@ public class AppServer {
     private static String askForRemoteIp(Scanner scanner) {
         String input;
         do {
-            printAsync("Insert remote IP (leave empty for localhost)");
+            printAsync("Insert remote IP (leave empty for localhost): ");
             input = scanner.nextLine();
         } while (!input.isEmpty() && !isValidIP(input));
         return input;
