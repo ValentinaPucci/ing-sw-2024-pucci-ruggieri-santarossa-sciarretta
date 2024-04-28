@@ -1,5 +1,6 @@
 package it.polimi.demo.controller;
 
+import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
@@ -8,7 +9,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.*;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.networking.rmi.GameControllerInterface;
+import it.polimi.demo.networking.ControllerInterfaces.GameControllerInterface;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -406,6 +407,8 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         return model.arePlayersReadyToStartAndEnough();
     }
 
+    // ***************************************** IMPORTANT *****************************************
+
     /**
      * Start the game if it's ready
      *
@@ -416,10 +419,13 @@ public class GameController implements GameControllerInterface, Runnable, Serial
             throw new IllegalStateException("The game is not ready to start");
         }
         else {
+            extractFirstPlayerToPlay();
             model.initializeGame();
             model.setStatus(GameStatus.RUNNING);
         }
     }
+
+    //***********************************************************************************************
 
     /**
      * Check if it's your turn
@@ -548,6 +554,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         if (!(1 <= index && index <= 6))
             throw new IllegalArgumentException("invalid index");
         model.drawCard(getPlayerEntity(player_nickname), index);
+        this.myTurnIsFinished();
     }
 
     /**

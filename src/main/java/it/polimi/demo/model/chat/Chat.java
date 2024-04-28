@@ -1,11 +1,10 @@
 package it.polimi.demo.model.chat;
 
-import it.polimi.demo.model.DefaultValues;
+import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.interfaces.ChatIC;
 //import it.polimi.demo.model.interfaces.ChatIC;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

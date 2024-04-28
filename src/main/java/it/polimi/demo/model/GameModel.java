@@ -1,5 +1,6 @@
 package it.polimi.demo.model;
 
+import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.listener.ListenersHandler;
 import it.polimi.demo.model.board.CommonBoard;
@@ -14,8 +15,6 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.model.Player;
-import it.polimi.demo.model.interfaces.PlayerIC;
 
 import java.util.*;
 
