@@ -1,6 +1,6 @@
 package it.polimi.demo.view;
 
-import it.polimi.demo.model.DefaultValues;
+import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.CommonBoardNode;

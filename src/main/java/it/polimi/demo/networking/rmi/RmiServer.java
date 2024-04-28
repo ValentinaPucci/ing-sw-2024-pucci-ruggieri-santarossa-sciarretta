@@ -8,7 +8,9 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 
-import it.polimi.demo.model.DefaultValues;
+import it.polimi.demo.DefaultValues;
+import it.polimi.demo.networking.ControllerInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.ControllerInterfaces.MainControllerInterface;
 
 import static org.fusesource.jansi.Ansi.ansi;
 import static it.polimi.demo.networking.PrintAsync.printAsync;

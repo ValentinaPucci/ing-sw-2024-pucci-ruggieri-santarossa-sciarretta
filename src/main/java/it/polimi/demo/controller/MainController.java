@@ -1,14 +1,14 @@
 package it.polimi.demo.controller;
 
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.DefaultValues;
+import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.MaxPlayersLimitException;
 import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.networking.rmi.GameControllerInterface;
-import it.polimi.demo.networking.rmi.MainControllerInterface;
+import it.polimi.demo.networking.ControllerInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.ControllerInterfaces.MainControllerInterface;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -180,7 +180,11 @@ public class MainController implements MainControllerInterface {
                     }
                 })
                 .orElseGet(() -> {
-                    listener.gameIdNotExists(gameId);
+                    try {
+                        listener.gameIdNotExists(gameId);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
                     return null;
                 });
 
@@ -223,7 +227,11 @@ public class MainController implements MainControllerInterface {
                             }
                         }))
                 .orElseGet(() -> {
-                    listener.gameIdNotExists(gameId);
+                    try {
+                        listener.gameIdNotExists(gameId);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
                     return null;
                 });
 

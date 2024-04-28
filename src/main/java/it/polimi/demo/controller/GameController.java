@@ -1,5 +1,6 @@
 package it.polimi.demo.controller;
 
+import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
@@ -8,7 +9,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.*;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.networking.rmi.GameControllerInterface;
+import it.polimi.demo.networking.ControllerInterfaces.GameControllerInterface;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;

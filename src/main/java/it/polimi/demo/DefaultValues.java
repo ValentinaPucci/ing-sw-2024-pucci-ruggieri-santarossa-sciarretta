@@ -1,4 +1,4 @@
-package it.polimi.demo.model;
+package it.polimi.demo;
 
 /**
  * This class contains the default values for the game
@@ -19,7 +19,7 @@ public class DefaultValues {
     public final static int num_points_for_second_last_round = 20;
 
     public final static int timeoutConnection_millis = 3000;
-    public final static int secondToWaitToSend_heartbeat =500;
+    public final static int secondToWaitToSend_heartbeat = 500;
     public final static String RMI_ServerName = "CodexNaturalis";
 
     public static final int defaultRMIRegistryPort = java.rmi.registry.Registry.REGISTRY_PORT;

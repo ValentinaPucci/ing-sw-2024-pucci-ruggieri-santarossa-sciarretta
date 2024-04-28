@@ -1,15 +1,13 @@
-package it.polimi.demo.networking.rmi;
+package it.polimi.demo.networking;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-import it.polimi.demo.model.Player;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.exceptions.*;
 
 /**
  * IT IS THE STUB  --> COMMON CLIENT ACTIONS

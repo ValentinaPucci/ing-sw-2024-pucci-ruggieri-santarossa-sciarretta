@@ -1,37 +1,15 @@
 package it.polimi.demo.model;
 
-import it.polimi.demo.model.DefaultValues;
-import it.polimi.demo.model.GameModel;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
-import javafx.animation.Animation;
+import it.polimi.demo.DefaultValues;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.listener.ListenersHandler;
-import it.polimi.demo.model.board.CommonBoard;
-import it.polimi.demo.model.board.PersonalBoard;
-import it.polimi.demo.model.cards.Card;
-import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
-import it.polimi.demo.model.cards.gameCards.ResourceCard;
-import it.polimi.demo.model.cards.gameCards.StarterCard;
-import it.polimi.demo.model.chat.Chat;
-import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.model.Player;
-import it.polimi.demo.model.ConcreteDeck;
-import it.polimi.demo.model.GameModel;
-import it.polimi.demo.model.interfaces.PlayerIC;
 
-import java.io.IOException;
 import java.rmi.Remote;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Stack;
 
 import static org.junit.jupiter.api.Assertions.*;
 

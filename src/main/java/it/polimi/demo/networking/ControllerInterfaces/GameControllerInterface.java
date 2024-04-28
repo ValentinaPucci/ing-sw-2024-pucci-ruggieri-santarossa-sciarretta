@@ -1,4 +1,4 @@
-package it.polimi.demo.networking.rmi;
+package it.polimi.demo.networking.ControllerInterfaces;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.Player;
@@ -57,13 +57,19 @@ public interface GameControllerInterface extends Remote {
      */
     boolean isMyTurn(String nick) throws RemoteException;
 
-
     /**
      * Gets the player entity
      * @param nickname
      * @return
      */
     Player getPlayerEntity(String nickname);
+
+    /**
+     * This method returns the id of the game
+     * @return the id of the game
+     * @throws RemoteException if the connection fails
+     */
+    int getGameId() throws RemoteException;
 
     /**
      * Set the @param p player ready to start
@@ -111,12 +117,6 @@ public interface GameControllerInterface extends Remote {
      * @throws RemoteException if the connection fails
      */
     void sendMessage(Message mess) throws RemoteException;
-
-    /**
-     * This method return the id of the game
-     * @return the id of the game
-     */
-    int getGameId();
 
     /**
      * This method return the number of the online players
