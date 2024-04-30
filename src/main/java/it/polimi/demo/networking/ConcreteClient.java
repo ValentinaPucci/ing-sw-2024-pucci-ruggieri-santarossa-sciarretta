@@ -2,9 +2,11 @@ package it.polimi.demo.networking;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.Player;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.networking.ControllerInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.ControllerInterfaces.MainControllerInterface;
 import it.polimi.demo.view.TUI;
@@ -19,19 +21,17 @@ import java.util.concurrent.TimeUnit;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
-public class ConcreteClient implements VirtualClient, Runnable {
+public class ConcreteClient implements VirtualClient, GameListener, Runnable {
 
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private static MainControllerInterface client_requests;
     private GameControllerInterface gameController;
-    private static GameListener events_from_model;
     private static UI ui;
     private String nickname;
     // todo: heartbeats handling!!!!
     private boolean heartbeat_received = false;
 
     public ConcreteClient(UIType uiType) {
-        //this.server = server;
 
         switch (uiType){
             case TUI -> {
@@ -44,6 +44,7 @@ public class ConcreteClient implements VirtualClient, Runnable {
             }
             default -> throw new RuntimeException("UI type not supported");
         }
+
 
         //initialize();
     }
@@ -102,7 +103,7 @@ public class ConcreteClient implements VirtualClient, Runnable {
      */
     @Override
     public void createGame(String nick, int num_players) throws RemoteException {
-        gameController = client_requests.createGame(events_from_model, nick, num_players);
+        gameController = client_requests.createGame(this, nick, num_players);
         nickname = nick;
     }
 
@@ -114,7 +115,7 @@ public class ConcreteClient implements VirtualClient, Runnable {
      */
     @Override
     public void joinFirstAvailable(String nick) throws RemoteException {
-        gameController = client_requests.joinFirstAvailableGame(events_from_model, nick);
+        gameController = client_requests.joinFirstAvailableGame(this, nick);
         nickname = nick;
     }
 
@@ -127,7 +128,7 @@ public class ConcreteClient implements VirtualClient, Runnable {
      */
     @Override
     public void joinGame(String nick, int idGame) throws RemoteException {
-        gameController = client_requests.joinGame(events_from_model, nick, idGame);
+        gameController = client_requests.joinGame(this, nick, idGame);
         nickname = nick;
     }
 
@@ -140,7 +141,7 @@ public class ConcreteClient implements VirtualClient, Runnable {
      */
     @Override
     public void reconnect(String nick, int idGame) throws RemoteException {
-        gameController = client_requests.reconnect(events_from_model, nick, idGame);
+        gameController = client_requests.reconnect(this, nick, idGame);
         nickname = nick;
     }
 
@@ -153,7 +154,7 @@ public class ConcreteClient implements VirtualClient, Runnable {
      */
     @Override
     public void leave(String nick, int idGame) throws IOException {
-        client_requests.leaveGame(events_from_model, nick, idGame);
+        client_requests.leaveGame(this, nick, idGame);
         gameController = null;
         nickname = null;
     }
@@ -244,7 +245,154 @@ public class ConcreteClient implements VirtualClient, Runnable {
     @Override
     public void addPing() throws RemoteException {
         if (gameController != null) {
-            gameController.addPing(nickname, events_from_model);
+            gameController.addPing(nickname, this);
         }
+    }
+
+    // **************** I do not know why I did this, but maybe it will work ****************
+
+    @Override
+    public void newPlayerHasJoined(GameModelImmutable gameModel) throws RemoteException {
+        
+    }
+
+    @Override
+    public void playerAbandoningGame(GameModelImmutable game_model, String nickname) throws RemoteException {
+
+    }
+
+    @Override
+    public void failedJoinFullGame(Player player, GameModelImmutable game_model) throws RemoteException {
+
+    }
+
+    @Override
+    public void playerReconnected(GameModelImmutable game_model, String nickname_reconnected) throws RemoteException {
+
+    }
+
+    @Override
+    public void failedJoinInvalidNickname(Player player_trying_to_join) throws RemoteException {
+
+    }
+
+    @Override
+    public void invalidGameId(int game_id) throws RemoteException {
+
+    }
+
+    @Override
+    public void genericErrorWhenEnteringGame(String why) throws RemoteException {
+
+    }
+
+    @Override
+    public void playerReadyForStarting(GameModelImmutable game_model, String nickname) throws IOException {
+
+    }
+
+    @Override
+    public void commonObjectiveCardsExtracted(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void resourceCardExtractedFromDeck(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void resourceCardExtractedFromTable(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void goldCardExtractedFromDeck(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void goldCardExtractedFromTable(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void objectiveCardExtractedFromEmptyDeck(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void resourceCardExtractedFromEmptyDeck(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void resourceCardExtractedFromEmptyTable(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void goldCardExtractedFromEmptyDeck(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void goldCardExtractedFromEmptyTable(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void cardPlacedOnPersonalBoard(GameModelImmutable gameModel) throws RemoteException {
+
+    }
+
+    @Override
+    public void gameStarted(GameModelImmutable game_model) throws RemoteException {
+
+    }
+
+    @Override
+    public void gameEnded(GameModelImmutable game_model) throws RemoteException {
+
+    }
+
+    @Override
+    public void sentMessage(GameModelImmutable game_model, Message msg) throws RemoteException {
+
+    }
+
+    @Override
+    public void playerDisconnected(GameModelImmutable gameModel, String nickname) throws RemoteException {
+
+    }
+
+    @Override
+    public void nextTurn(GameModelImmutable game_model) throws RemoteException {
+
+    }
+
+    @Override
+    public void playerHasMovedOnCommonBoard(GameModelImmutable game_model) throws RemoteException {
+
+    }
+
+    @Override
+    public void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
+
+    }
+
+    @Override
+    public void lastRound(GameModelImmutable game_model) throws RemoteException {
+
+    }
+
+    @Override
+    public void secondLastRound(GameModelImmutable game_model) throws RemoteException {
+
+    }
+
+    @Override
+    public void gameIdNotExists(int gameId) throws RemoteException {
+
     }
 }

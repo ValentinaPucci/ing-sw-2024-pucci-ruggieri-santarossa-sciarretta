@@ -3,6 +3,7 @@ package it.polimi.demo.networking.rmi;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.networking.ControllerInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.ConcreteClient;
+import it.polimi.demo.networking.GenericServer;
 import it.polimi.demo.view.TUI;
 import it.polimi.demo.view.TUIUtils;
 import it.polimi.demo.view.UIType;
@@ -38,7 +39,7 @@ public class RmiClient extends ConcreteClient implements Serializable {
         super(uiType);
         connectToRMIServer();
         // todo: heartbeats initializer
-        // todo: take care of connectToRegistry() when calling startRMI() in AppClient!
+        // done: take care of connectToRegistry() when calling startRMI() in AppClient!
     }
 
     /**

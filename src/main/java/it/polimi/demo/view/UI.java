@@ -1,11 +1,12 @@
 package it.polimi.demo.view;
 
+import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.listener.ListenersHandler;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
-
 import java.util.List;
 
+// todo: re-implement code (originality)
 public abstract class UI implements Runnable {
-    //protected final List<StartUIListener> lst = new ArrayList<>();
 
     public abstract void update(GameModelImmutable gameView);
 
@@ -18,16 +19,5 @@ public abstract class UI implements Runnable {
     public abstract void showPlayersList(List<String> o);
 
     public abstract void close();
-
-//    public synchronized void addListener(StartUIListener o){
-//        if(!lst.contains(o)){
-//            lst.add(o);
-//        }
-//    }
-
-//    public synchronized void removeListener(StartUIListener o){
-//        lst.remove(o);
-//    }
-
 
 }
