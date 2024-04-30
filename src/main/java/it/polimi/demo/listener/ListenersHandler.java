@@ -50,13 +50,13 @@ public class ListenersHandler {
      * This method informs the listeners that a player has joined the game
      * @param model the GameModel representing the current game state.
      */
-    public synchronized void notify_playerParticipating(GameModel model) {
+    public synchronized void notify_newPlayerHasJoined(GameModel model) {
         listeners.removeIf(listener -> {
             try {
-                listener.playerParticipating(new GameModelImmutable(model));
+                listener.newPlayerHasJoined(new GameModelImmutable(model));
                 return false;
             } catch (RemoteException e) {
-                printAsync("ListenerHandler: Disconnection detected during notify_playerParticipating");
+                printAsync("ListenerHandler: Disconnection detected during notify_newPlayerHasJoined");
                 return true;
             }
         });

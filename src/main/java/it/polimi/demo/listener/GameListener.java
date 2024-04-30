@@ -15,7 +15,7 @@ public interface GameListener extends Remote {
      * @param gameModel is the game model interface
      * @throws RemoteException if the reference is inaccessible
      */
-    void playerParticipating(GameModelImmutable gameModel) throws RemoteException;
+    void newPlayerHasJoined(GameModelImmutable gameModel) throws RemoteException;
 
     /**
      * This method is employed to inform the client that a player has exited the game
