@@ -1,9 +1,12 @@
 package it.polimi.demo.networking.ControllerInterfaces;
 
+import it.polimi.demo.controller.GameController;
 import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.view.GameDetails;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  * IT IS THE SKELETON --> VIRTUAL VIEW
@@ -60,4 +63,6 @@ public interface MainControllerInterface extends Remote {
      */
     GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException;
 
+
+    List<GameDetails> getGamesDetails();
 }

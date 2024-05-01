@@ -3,15 +3,16 @@ package it.polimi.demo.controller;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.enumerations.GameStatus;
-import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.MaxPlayersLimitException;
 import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.networking.ControllerInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.ControllerInterfaces.MainControllerInterface;
+import it.polimi.demo.view.GameDetails;
 
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static it.polimi.demo.networking.PrintAsync.*;
 
@@ -56,6 +57,11 @@ public class MainController implements MainControllerInterface {
         return instance;
     }
 
+    public Map<Integer, GameController> getGames() {
+        return games;
+    }
+
+
     /**
      * Every player can create a game. By doing so, he/her joins the game as the first player
      *
@@ -86,7 +92,7 @@ public class MainController implements MainControllerInterface {
         printRunningGames();
 
         try {
-            game.addPlayer(player);
+            game.addPlayer(player.getNickname());
         } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
             listener.genericErrorWhenEnteringGame(e.getMessage());
         }
@@ -121,7 +127,7 @@ public class MainController implements MainControllerInterface {
                 GameController game = firstAvailableGame.get();
                 try {
                     game.addListener(listener, player);
-                    game.addPlayer(player);
+                    game.addPlayer(player.getNickname());
 
                     printAsync("Player \"" + nickname + "\" joined Game " + game.getGameId());
                     printRunningGames();
@@ -166,7 +172,7 @@ public class MainController implements MainControllerInterface {
                 .map(g -> {
                     try {
                         g.addListener(listener, player);
-                        g.addPlayer(player);
+                        g.addPlayer(player.getNickname());
                         printAsync("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
                         printRunningGames();
                         return g;
@@ -213,7 +219,7 @@ public class MainController implements MainControllerInterface {
                         .map(player -> {
                             try {
                                 game.addListener(listener, player);
-                                game.reconnectPlayer(player);
+                                game.reconnectPlayer(player.getNickname());
                                 return game;
                             } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
                                 try {
@@ -222,8 +228,6 @@ public class MainController implements MainControllerInterface {
                                     throw new RuntimeException(ex);
                                 }
                                 return null;
-                            } catch (GameEndedException | RemoteException e) {
-                                throw new RuntimeException(e);
                             }
                         }))
                 .orElseGet(() -> {
@@ -269,6 +273,8 @@ public class MainController implements MainControllerInterface {
                 .orElse(null);
     }
 
+
+
     /**
      * Removes the game with the specified ID from the MainController's games.
      *
@@ -293,5 +299,18 @@ public class MainController implements MainControllerInterface {
         printAsyncNoLine("\t\tgames: ");
         games.values().forEach(game -> printAsync(game.getGameId() + " "));
         printAsync("");
+    }
+
+
+    @Override
+    public List<GameDetails> getGamesDetails() {
+        return games.values().stream()
+                .map(gameController -> new GameDetails(
+                        gameController.getModel().getGameId(),
+                        gameController.getModel().getPlayersDetails(),
+                        gameController.getModel().getNumPlayersToPlay(),
+                        gameController.getModel().isStarted(),
+                        gameController.getModel().isFull()))
+                .collect(Collectors.toList());
     }
 }

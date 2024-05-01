@@ -222,7 +222,15 @@ public class Player implements PlayerIC {
         return personal_board.getPoints();
     }
 
+    @Override
+    public ResourceCard getLastChosenCard() {
+        return chosen_card;
+    }
 
-
+    @Override
+    public boolean isLast() {
+        //TODO: IMPLEMENT!
+        return false;
+    }
 }
 

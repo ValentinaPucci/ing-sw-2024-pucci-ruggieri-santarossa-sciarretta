@@ -526,4 +526,6 @@ public class ListenersHandler {
     }
 
 
+    public void notify_playerParticipating(GameModel gameModel) {
+    }
 }

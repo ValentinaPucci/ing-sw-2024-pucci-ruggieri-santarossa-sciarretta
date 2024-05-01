@@ -20,16 +20,31 @@ public class DefaultValues {
 
     public final static int timeoutConnection_millis = 3000;
     public final static int secondToWaitToSend_heartbeat = 500;
-    public final static String RMI_ServerName = "CodexNaturalis";
-
+    public final static String defaultRMIName = "CodexNaturalis";
+    public static final int defaultSocketPort = 12345;
     public static final int defaultRMIRegistryPort = java.rmi.registry.Registry.REGISTRY_PORT;
     public final static int Default_port_RMI = 4321;
     public final static int Default_port_SOCKET = 4320;
-    public static String Server_ip = "127.0.0.1";
+    public final static String Server_ip = "127.0.0.1";
     public final static String Remote_ip = "127.0.0.1";
     public final static int row_chat = 16;
     public final static int col_chat = 96;
 
     public final static int max_messagesShown = 5;
     public static int max_num_connection_attempts = 5;
+
+    /**
+     * Timeout (in milliseconds) used in the ping-pong mechanism.
+     */
+    public static final long pingpongTimeout = 1000;
+    /**
+     * Timeout (in milliseconds) used by the client to determine if the connection to the server is lost.
+     * This value should be greater than the ping-pong timeout.
+     */
+    public static final long connectionLostTimeout = pingpongTimeout * 3;
+
+    /**
+     * Time (in milliseconds) after which the only player left in the game wins.
+     */
+    public static final long walkoverTimeout = 600 * 1000;
 }

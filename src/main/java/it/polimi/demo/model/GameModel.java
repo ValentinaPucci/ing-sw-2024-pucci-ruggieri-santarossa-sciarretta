@@ -15,9 +15,13 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.*;
+import it.polimi.demo.model.interfaces.PlayerIC;
+import it.polimi.demo.view.PlayerDetails;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
+import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 //TODO: Check how first_finished_player is set.
 
@@ -29,15 +33,19 @@ public class GameModel {
     // the second one is used as a queue and let us know which player
     // is connected (and actively playing).
     private LinkedList<Player> players_connected;
+    private Player initial_player;
     private ListenersHandler listener_handler;
     private CommonBoard common_board;
-    private Integer gameId;
-    private Integer num_required_players_to_start;
+    private int gameId;
+    private int num_required_players_to_start;
     private GameStatus status;
     private Chat chat;
     private Player first_finishing_player = null;
     private List<Player> winners;
     private Map<Player, Integer> leaderboard;
+    private int current_player_index;
+    private boolean is_paused;
+    private String errorMessage;
 
     public GameModel() {
         aux_order_players = new ArrayList<>();
@@ -53,6 +61,23 @@ public class GameModel {
         winners = new ArrayList<>();
         leaderboard = new HashMap<>();
     }
+
+    public GameModel(int gameID, int numberOfPlayers, Player player) {
+        aux_order_players = new ArrayList<>();
+        players_connected = new LinkedList<>();
+        listener_handler = new ListenersHandler();
+        common_board = new CommonBoard();
+        num_required_players_to_start = numberOfPlayers;
+        initial_player = player;
+        gameId = gameID;
+        num_required_players_to_start = -1; // invalid value on purpose
+        status = GameStatus.WAIT;
+        chat = new Chat();
+        winners = new ArrayList<>();
+        leaderboard = new HashMap<>();
+    }
+
+
 
     //------------------------------------methods for players-----------------------
 
@@ -91,6 +116,12 @@ public class GameModel {
     public List<Player> getAllPlayers() {
         return aux_order_players;
     }
+    public List<String> getAllNicknames() {
+        return aux_order_players.stream()
+                .map(Player::getNickname)
+                .collect(Collectors.toList());
+
+    }
 
     public LinkedList<Player> getPlayersConnected() {
         return players_connected;
@@ -124,6 +155,10 @@ public class GameModel {
                 .orElse(null);
     }
 
+    public List<Player> getAux_order_players(){
+        return aux_order_players;
+    }
+
     /**
      * Retrieves the index of the first player who finished the game.
      *
@@ -151,20 +186,23 @@ public class GameModel {
      * Adds a new player to the game. Recall that if a player was previously playing,
      * then we are able to retrieve him/her from the auxiliary ordered list.
      * Thus, this method is meant as an adder of new players, not as an adder of disconnected players
-     * @param p player to add
      */
-    public void addPlayer(Player p) {
+    public void addPlayer(String nickname) {
 
-        if (aux_order_players.contains(p)) {
-            listener_handler.notify_failedJoinInvalidNickname(p);
+        List<String> nicknames = this.getAllNicknames();
+
+        if (nicknames.contains(nickname)) {
+            int i = nicknames.indexOf(nickname);
+            listener_handler.notify_failedJoinInvalidNickname(aux_order_players.get(i));
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() > num_required_players_to_start ||
                 aux_order_players.size() > DefaultValues.MaxNumOfPlayer) {
-            listener_handler.notify_failedJoinFullGame(p, this);
+            //listener_handler.notify_failedJoinFullGame(p, this);
             throw new MaxPlayersLimitException();
         }
         else {
+            Player p = new Player(nickname);
             aux_order_players.add(p);
         }
     }
@@ -721,5 +759,84 @@ public class GameModel {
         return this.common_board.getStarterConcreteDeck();
     }
 
+
+    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+        if(currentPlayerIndex < 0 || currentPlayerIndex >= this.getNumPlayersToPlay())
+            throw new IllegalArgumentException("Illegal player index");
+
+        this.current_player_index = currentPlayerIndex;
+    }
+
+
+    //TODO: implement for the GameView
+    public int getCurrentPlayerIndex() {
+        return current_player_index;
+    }
+
+    public int getFinalPlayerIndex() {
+        return aux_order_players.indexOf(first_finishing_player);
+    }
+
+    public PlayerIC getCurrentPlayer() {
+        return aux_order_players.get(current_player_index);
+    }
+
+    public PlayerIC getFirstPlayer() {
+        return initial_player;
+    }
+
+    public boolean isEnded() {
+        return false;
+    }
+
+    public boolean isPaused() {
+        return is_paused;
+    }
+
+    public void setPaused(boolean paused) {
+        is_paused = paused;
+    }
+
+    public List<PlayerDetails> getPlayersDetails(){
+        return this.getAux_order_players()
+                .stream()
+                .map(p -> {
+                    boolean isLast = false;
+                    if (getFinalPlayerIndex() != -1) {
+                        isLast = Objects.equals(p, aux_order_players.get((getFinalPlayerIndex() - 1) >= 0 ? (getFinalPlayerIndex() - 1) : (getNumPlayersToPlay() - 1)));
+                    }
+
+                    return new PlayerDetails(
+                            p.getNickname(),
+                            p.getScoreBoardPosition(),
+                            p.getLastChosenCard(),
+                            p.getIsConnected(),
+                            p.isLast()
+                    );
+                })
+                .toList();
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+
+    //TODO: create for GameDetails in MainController
+
+    public boolean isStarted() {
+        return false;
+    }
+
+    public boolean isFull() {
+        return false;
+    }
+
+    //TODO: in GameController
+    public void setErrorMessage(String error) {
+    }
+
+    public void setAsPaused() {
+    }
 }
 

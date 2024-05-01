@@ -1,11 +1,13 @@
 package it.polimi.demo.networking.ControllerInterfaces;
 
+import it.polimi.demo.controller.GameController;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.view.GameDetails;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -132,4 +134,8 @@ public interface GameControllerInterface extends Remote {
      * @throws RemoteException if the connection fails
      */
     void leave(GameListener lis, String nick) throws RemoteException;
+
+    void startIfFull();
+
+    void setError(String s);
 }

@@ -244,4 +244,19 @@ public interface GameListener extends Remote {
      * @throws RemoteException if the reference inaccessible
      */
     void gameIdNotExists(int gameId) throws RemoteException;
+
+
+    void newGame() throws RemoteException;
+
+    void updatedGame() throws RemoteException;
+
+    void removedGame() throws RemoteException;
+
+    void playerJoinedGame() throws RemoteException;
+
+    void gameIsFull() throws RemoteException;
+
+    void modelChanged() throws RemoteException;
+
+    void gameEnded();
 }

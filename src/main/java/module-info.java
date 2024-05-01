@@ -6,6 +6,7 @@ module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
     requires com.fasterxml.jackson.databind;
     requires java.rmi;
     requires org.fusesource.jansi;
+    requires java.logging;
 
     opens it.polimi.demo.model to javafx.fxml;
     exports it.polimi.demo.model;
@@ -15,4 +16,6 @@ module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
     exports it.polimi.demo.networking.ControllerInterfaces to java.rmi;
     exports it.polimi.demo;
     opens it.polimi.demo to javafx.fxml;
+    exports it.polimi.demo.listener to java.rmi;
+    exports it.polimi.demo.networking.Applications;
 }
