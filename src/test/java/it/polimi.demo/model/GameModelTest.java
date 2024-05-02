@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.*;
+import it.polimi.demo.model.Player;
 
 import java.rmi.Remote;
 import java.util.NoSuchElementException;
@@ -66,12 +67,10 @@ public class GameModelTest {
     @Test
     public void testGetPlayerEntity() {
         assertNull(gameModel.getPlayerEntity("Player1"));
-        Player player1 = new Player("Player1");
-        Player player2 = new Player("Player2");
-        gameModel.addPlayer(player1);
-        gameModel.addPlayer(player2);
-        assertEquals(player1, gameModel.getPlayerEntity("Player1"));
-        assertEquals(player2, gameModel.getPlayerEntity("Player2"));
+        gameModel.addPlayer("Player1");
+        gameModel.addPlayer("Player2");
+        assertEquals(gameModel.getAllPlayers().getFirst(), gameModel.getPlayerEntity("Player1"));
+        assertEquals(gameModel.getAllPlayers().get(1), gameModel.getPlayerEntity("Player2"));
         assertNull(gameModel.getPlayerEntity("UnknownPlayer"));
     }
 
@@ -101,6 +100,9 @@ public class GameModelTest {
         gameModel.addPlayer(player4);*/
         addPlayersToGameModel(3);
         assertEquals(3, gameModel.getAllPlayers().size());
+        System.out.println(gameModel.getAllPlayers().getFirst().getNickname());
+        System.out.println(gameModel.getAllPlayers().get(1).getNickname());
+        System.out.println(gameModel.getAllPlayers().get(2).getNickname());
 
         //Attempt to add more players than the maximum limit
         //assertThrows(MaxPlayersLimitException.class, () -> gameModel.addPlayer(new Player("player5")));
@@ -120,153 +122,148 @@ public class GameModelTest {
     // Utility method to add a specific number of players to the game model
     private void addPlayersToGameModel(int numPlayers) {
         for (int i = 0; i < numPlayers; i++) {
-            gameModel.addPlayer(new Player("Player" + i));
+            gameModel.addPlayer("Player" + i);
         }
     }
     @Test
     public void testSetPlayerAsConnected() {
-        Player player1 = new Player("Player1");
 
         assertFalse(gameModel.areConnectedPlayersEnough());
-        gameModel.addPlayer(player1);
-
-        Player player2 = new Player("Player2");
-        gameModel.addPlayer(player2);
+        gameModel.addPlayer("Player1");
+        gameModel.addPlayer("Player2");
         assertEquals(2, gameModel.getAllPlayers().size());
 
-        assertThrows(IllegalArgumentException.class, () -> gameModel.setPlayerAsConnected(player1));
-        assertThrows(IllegalArgumentException.class, () -> gameModel.setPlayerAsConnected(player2));
+        assertThrows(IllegalArgumentException.class, () -> gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst()));
+        assertThrows(IllegalArgumentException.class, () -> gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1)));
 
-        player1.setAsConnected();
-        gameModel.setPlayerAsConnected(player1);
+        gameModel.getAllPlayers().getFirst().setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst());
+        System.out.println(gameModel.getAllPlayers().getFirst().getIsConnected());
 
         assertEquals(1, gameModel.getPlayersConnected().size());
         assertNotEquals(2, gameModel.getPlayersConnected().size());
 
         assertTrue(gameModel.isTheCurrentPlayerConnected());
         assertFalse(gameModel.areConnectedPlayersEnough());
-        player2.setAsConnected();
-        gameModel.setPlayerAsConnected(player2);
+        gameModel.getAllPlayers().get(1).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
         assertTrue(gameModel.areConnectedPlayersEnough());
     }
 
     @Test
     public void testSetPlayerAsDisconnected() {
 
-        Player player1 = new Player("Player 1");
-        Player player2 = new Player("Player 2");
-
         // add and connect a player to the game
-        gameModel.addPlayer(player1);
-        player1.setAsConnected();
-        gameModel.setPlayerAsConnected(player1);
+        gameModel.addPlayer("Player1");
+        System.out.println(gameModel.getAllPlayers().size());
+        gameModel.getAllPlayers().getFirst().setAsConnected();
+        System.out.println((gameModel.getAllPlayers().getFirst().getIsConnected()));
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst());
 
         // Verify that the player1 is connected
-        assertTrue(player1.getIsConnected());
+        assertTrue(gameModel.getAllPlayers().getFirst().getIsConnected());
         // Disconnect player1
-        gameModel.setPlayerAsDisconnected(player1);
+        gameModel.setPlayerAsDisconnected(gameModel.getAllPlayers().getFirst());
         //Verify that the player1 is disconnect and not ready to start
-        assertFalse(player1.getIsConnected());
-        assertFalse(player1.getReadyToStart());
+        assertFalse(gameModel.getAllPlayers().getFirst().getIsConnected());
+        assertFalse(gameModel.getAllPlayers().getFirst().getReadyToStart());
         //Verify that the player1 is not in players_connected list
 
-        assertFalse(gameModel.getPlayersConnected().contains(player1));
+        assertFalse(gameModel.getPlayersConnected().contains(gameModel.getAllPlayers().getFirst()));
 
         // Verifica che il metodo notify_playerDisconnected sia stato chiamato con i parametri corretti
         //verify(listener_handler).notify_playerDisconnected(gameModel, player1.getNickname());
 
         // Add and connect player2
-        gameModel.addPlayer(player2);
-        player2.setAsConnected();
-        gameModel.setPlayerAsConnected(player2);
+        gameModel.addPlayer("Player2");
+        gameModel.getAllPlayers().get(1).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
 
 
         // Disconnect player2
-        gameModel.setPlayerAsDisconnected(player2);
-        assertFalse(player2.getIsConnected());
+        gameModel.setPlayerAsDisconnected(gameModel.getAllPlayers().get(1));
+        assertFalse(gameModel.getAllPlayers().get(1).getIsConnected());
 
         // Verifica che il metodo notify_onlyOnePlayerConnected sia stato chiamato
-        //verify(listener_handler).notify_onlyOnePlayerConnected(gameModel, DefaultValues.secondsToWaitReconnection);
+        //verify(listener_handler).notify_onlyOnePlayerConnected(gameModel, DefaultValues.secondsToWaitReconnection); */
     }
 
     @Test
     public void testReconnectPlayer() {
-        Player player1 = new Player("Player1");
-        gameModel.addPlayer(player1);
-        player1.setAsConnected();
-        gameModel.setPlayerAsConnected(player1);
+        gameModel.addPlayer("Player1");
+        gameModel.getBeginnerPlayer().setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getBeginnerPlayer());
 
         // Verify that a player can't reconnect if he is already connected
-        assertThrows(PlayerAlreadyConnectedException.class, () -> gameModel.reconnectPlayer(player1));
+        assertThrows(PlayerAlreadyConnectedException.class, () -> gameModel.reconnectPlayer(gameModel.getBeginnerPlayer()));
 
         // Disconnect player1
-        gameModel.setPlayerAsDisconnected(player1);
+        gameModel.setPlayerAsDisconnected(gameModel.getBeginnerPlayer());
 
         // Verify that the player can reconnect after being disconnected
-        assertDoesNotThrow(() -> gameModel.reconnectPlayer(player1));
-        assertTrue(player1.getIsConnected());
-        // Verifica che il metodo notify_playerReconnected sia stato chiamato con i parametri corretti
-        //verify(listener_handler).notify_playerReconnected(gameModel, player1.getNickname());
+        assertDoesNotThrow(() -> gameModel.reconnectPlayer(gameModel.getBeginnerPlayer()));
+        assertTrue(gameModel.getBeginnerPlayer().getIsConnected());
+
     }
 
     @Test
     public void testConnectPlayerInOrder() {
-        Player player1 = new Player("Player1");
-        Player player2 = new Player("Player2");
-        Player player3 = new Player("Player3");
+        //Player player1 = new Player("Player1");
+        //Player player2 = new Player("Player2");
+        //Player player3 = new Player("Player3");
         Player player4 = new Player("Player4");
 
 
-        gameModel.addPlayer(player1);
-        gameModel.addPlayer(player2);
-        gameModel.addPlayer(player3);
+        gameModel.addPlayer("Player1");
+        gameModel.addPlayer("Player2");
+        gameModel.addPlayer("Player3");
 
-        player1.setAsConnected();
-        gameModel.setPlayerAsConnected(player1);
-        player2.setAsConnected();
-        gameModel.setPlayerAsConnected(player2);
-        player3.setAsConnected();
-        gameModel.setPlayerAsConnected(player3);
+        gameModel.getAllPlayers().getFirst().setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst());
+        gameModel.getAllPlayers().get(1).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
+        gameModel.getAllPlayers().get(2).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(2));
 
-        assertEquals(player2, gameModel.getPlayersConnected().get(1));
-        assertEquals(player3, gameModel.getPlayersConnected().get(2));
-        assertEquals(player1, gameModel.getPlayersConnected().getFirst());
+        assertEquals(gameModel.getAllPlayers().get(1), gameModel.getPlayersConnected().get(1));
+        assertEquals(gameModel.getAllPlayers().get(2), gameModel.getPlayersConnected().get(2));
+        assertEquals(gameModel.getAllPlayers().get(0), gameModel.getPlayersConnected().getFirst());
 
-        assertTrue(player2.getIsConnected());
-        assertTrue(gameModel.getPlayersConnected().contains(player2));
+        assertTrue(gameModel.getAllPlayers().get(1).getIsConnected());
+        assertTrue(gameModel.getPlayersConnected().contains(gameModel.getAllPlayers().get(1)));
 
         //disconnect a player in the middle of players_connected
-        gameModel.setPlayerAsDisconnected(player2);
-        assertFalse(gameModel.getPlayersConnected().contains(player2));
+        gameModel.setPlayerAsDisconnected(gameModel.getAllPlayers().get(1));
+        assertFalse(gameModel.getPlayersConnected().contains(gameModel.getAllPlayers().get(1)));
 
 
         assertThrows(IllegalArgumentException.class, () -> gameModel.connectPlayerInOrder(player4));
-        assertEquals(0, gameModel.getAllPlayers().indexOf(player2) - 1);
-        assertEquals(0, gameModel.getAllPlayers().indexOf(player1));
+        assertEquals(0, gameModel.getAllPlayers().indexOf(gameModel.getAllPlayers().get(1)) - 1);
+        assertEquals(0, gameModel.getAllPlayers().indexOf(gameModel.getAllPlayers().get(0)));
 
-        assertEquals(player3, gameModel.getPlayersConnected().get(1));
-        assertEquals(player1, gameModel.getPlayersConnected().getFirst());
-        gameModel.connectPlayerInOrder(player2);
+        assertEquals(gameModel.getAllPlayers().get(2), gameModel.getPlayersConnected().get(1));
+        assertEquals(gameModel.getAllPlayers().get(0), gameModel.getPlayersConnected().getFirst());
+        gameModel.connectPlayerInOrder(gameModel.getAllPlayers().get(1));
 
 
         // Verify that players were added correctly to players_connected list
-        assertTrue(gameModel.getPlayersConnected().contains(player1));
-        assertTrue(gameModel.getPlayersConnected().contains(player2));
-        assertTrue(gameModel.getPlayersConnected().contains(player3));
+        assertTrue(gameModel.getPlayersConnected().contains(gameModel.getAllPlayers().get(0)));
+        assertTrue(gameModel.getPlayersConnected().contains(gameModel.getAllPlayers().get(1)));
+        assertTrue(gameModel.getPlayersConnected().contains(gameModel.getAllPlayers().get(2)));
 
         // Verify that the players were added in correct order
-        assertEquals(player2, gameModel.getPlayersConnected().get(1));
-        assertEquals(player1, gameModel.getPlayersConnected().get(0));
-        assertEquals(player3, gameModel.getPlayersConnected().get(2));
+        assertEquals(gameModel.getAllPlayers().get(1), gameModel.getPlayersConnected().get(1));
+        assertEquals(gameModel.getAllPlayers().get(0), gameModel.getPlayersConnected().get(0));
+        assertEquals(gameModel.getAllPlayers().get(2), gameModel.getPlayersConnected().get(2));
 
         //disconnect the firstPlayer
-        gameModel.setPlayerAsDisconnected(player1);
-        assertFalse(gameModel.getPlayersConnected().contains(player1));
-        gameModel.connectPlayerInOrder(player1);
+        gameModel.setPlayerAsDisconnected(gameModel.getAllPlayers().get(0));
+        assertFalse(gameModel.getPlayersConnected().contains(gameModel.getAllPlayers().get(0)));
+        gameModel.connectPlayerInOrder(gameModel.getAllPlayers().get(0));
 
-        assertEquals(player2, gameModel.getPlayersConnected().get(0));
-        assertEquals(player3, gameModel.getPlayersConnected().get(1));
-        assertEquals(player1, gameModel.getPlayersConnected().get(2));
+        assertEquals(gameModel.getAllPlayers().get(1), gameModel.getPlayersConnected().get(0));
+        assertEquals(gameModel.getAllPlayers().get(2), gameModel.getPlayersConnected().get(1));
+        assertEquals(gameModel.getAllPlayers().get(0), gameModel.getPlayersConnected().get(2));
     }
 
     //------------------------game logic management------------------------
@@ -328,18 +325,16 @@ public class GameModelTest {
 
     @Test
     public void testSetStatus(){
-        Player player1 = new Player("Player 1");
-        Player player2 = new Player("Player 2");
-        Player player3 = new Player("Player 3");
-        gameModel.addPlayer(player1);
-        gameModel.addPlayer(player2);
-        gameModel.addPlayer(player3);
-        player1.setAsConnected();
-        gameModel.setPlayerAsConnected(player1);
-        player2.setAsConnected();
-        gameModel.setPlayerAsConnected(player2);
-        player3.setAsConnected();
-        gameModel.setPlayerAsConnected(player3);
+
+        gameModel.addPlayer("Player1");
+        gameModel.addPlayer("Player2");
+        gameModel.addPlayer("Player3");
+        gameModel.getAllPlayers().getFirst().setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst());
+        gameModel.getAllPlayers().get(1).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
+        gameModel.getAllPlayers().get(2).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(2));
 
         gameModel.setStatus(GameStatus.RUNNING);
         GameStatus expectedStatus = GameStatus.RUNNING;
