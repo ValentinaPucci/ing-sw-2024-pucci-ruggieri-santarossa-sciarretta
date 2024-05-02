@@ -81,6 +81,11 @@ public class Corner {
         this.item = Optional.ofNullable(item);
     }
 
+    public void setEmpty(){
+        this.resource = Optional.empty();
+        this.item = Optional.empty();
+    }
+
 //    public void setBoard_coordinate(Coordinate coord) {
 //        this.board_coordinate.setXY(coord);
 //    }
