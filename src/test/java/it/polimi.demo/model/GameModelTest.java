@@ -366,11 +366,6 @@ public class GameModelTest {
         assertNotNull(gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell());
 */
 
-        //gameModel.placeCard(gameModel.getAllPlayers().getFirst().getHand().getFirst(), gameModel.getAllPlayers().getFirst(), 500, 500); //non funzia!!!
-        //it.polimi.demo.model.board.Cell.getCornerFromCell().item" is null --> in generalUpdateRoutine se devi piazzare sopra una starter questa non ha gli item quindi si blocca!!
-
-
-
 
 
     }
