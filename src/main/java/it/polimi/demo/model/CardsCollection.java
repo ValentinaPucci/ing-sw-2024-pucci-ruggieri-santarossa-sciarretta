@@ -73,12 +73,16 @@ public  class CardsCollection {
                 } else {
                     //TODO: Check with new database.
                     if (!NE_corner_content.equals("Empty")) {
-                        if(NE_corner_content.equals("Mushroom")||NE_corner_content.equals("Leaf")||
-                                NE_corner_content.equals("Butterfly")||NE_corner_content.equals("Wolf")){
+                        if (NE_corner_content.equals("Mushroom") || NE_corner_content.equals("Leaf") ||
+                                NE_corner_content.equals("Butterfly") || NE_corner_content.equals("Wolf")) {
                             actual_corners[0][1].setCornerResource(Resource.valueOf(NE_corner_content.toUpperCase()));
-                        }else{
-                            actual_corners[0][1].setCornerItem(Item.valueOf(NE_corner_content.toUpperCase()));}
+                        } else {
+                            actual_corners[0][1].setCornerItem(Item.valueOf(NE_corner_content.toUpperCase()));
+                        }
+                    }else{
+                        actual_corners[0][1].setEmpty();
                     }
+
                 }
                 // SE Corner.
                 String SE_corner_content = cardNode.path("SE").asText();
@@ -92,8 +96,11 @@ public  class CardsCollection {
                             actual_corners[1][0].setCornerResource(Resource.valueOf(SE_corner_content.toUpperCase()));
                          }else{
                             actual_corners[1][0].setCornerItem(Item.valueOf(SE_corner_content.toUpperCase()));}
-                         }
+                    }else{
+                        actual_corners[1][0].setEmpty();
                     }
+                }
+
                 // NO corner.
                 String NO_corner_content = cardNode.path("NW").asText();
                 //System.out.println(NO_corner_content);
@@ -105,7 +112,11 @@ public  class CardsCollection {
                                 NO_corner_content.equals("Butterfly")||NO_corner_content.equals("Wolf")){
                             actual_corners[0][0].setCornerResource(Resource.valueOf(NO_corner_content.toUpperCase()));
                         }else{
-                            actual_corners[0][0].setCornerItem(Item.valueOf(NO_corner_content.toUpperCase()));}}
+                            actual_corners[0][0].setCornerItem(Item.valueOf(NO_corner_content.toUpperCase()));
+                        }
+                    }else{
+                        actual_corners[0][0].setEmpty();
+                    }
                 }
                 // SO corner.
                 String SO_corner_content = cardNode.path("SW").asText();
@@ -118,7 +129,10 @@ public  class CardsCollection {
                                 SO_corner_content.equals("Butterfly")||SO_corner_content.equals("Wolf")){
                             actual_corners[1][1].setCornerResource(Resource.valueOf(SO_corner_content.toUpperCase()));
                         }else{
-                            actual_corners[1][1].setCornerItem(Item.valueOf(SO_corner_content.toUpperCase()));}
+                            actual_corners[1][1].setCornerItem(Item.valueOf(SO_corner_content.toUpperCase()));
+                        }
+                    }else{
+                        actual_corners[1][1].setEmpty();
                     }
                 }
 
@@ -363,5 +377,7 @@ public  class CardsCollection {
 
     }
 
-
+    public List<Card> getCards() {
+        return cards;
     }
+}
