@@ -15,7 +15,7 @@ public interface GameListener extends Remote {
      * @param gameModel is the game model interface
      * @throws RemoteException if the reference is inaccessible
      */
-    void playerParticipating(GameModelImmutable gameModel) throws RemoteException;
+    void newPlayerHasJoined(GameModelImmutable gameModel) throws RemoteException;
 
     /**
      * This method is employed to inform the client that a player has exited the game
@@ -238,7 +238,25 @@ public interface GameListener extends Remote {
      */
     void secondLastRound(GameModelImmutable game_model) throws RemoteException;
 
+    /**
+     * This method is used to notify that the game id selected does not exist
+     * @param gameId is the game id
+     * @throws RemoteException if the reference inaccessible
+     */
+    void gameIdNotExists(int gameId) throws RemoteException;
 
-    //TODO: to be implemented
-    void gameIdNotExists(int gameId);
+
+    void newGame() throws RemoteException;
+
+    void updatedGame() throws RemoteException;
+
+    void removedGame() throws RemoteException;
+
+    void playerJoinedGame() throws RemoteException;
+
+    void gameIsFull() throws RemoteException;
+
+    void modelChanged() throws RemoteException;
+
+    void gameEnded();
 }

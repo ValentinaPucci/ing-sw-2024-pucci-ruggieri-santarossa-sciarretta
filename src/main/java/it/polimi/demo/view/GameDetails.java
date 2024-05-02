@@ -10,7 +10,6 @@ import java.util.List;
 public record GameDetails(int gameID,
                               List<PlayerDetails> playersInfo,
                               int numberOfPlayers,
-                              int numberOfCommonGoalCards,
                               boolean isFull,
                               boolean isStarted) implements Serializable {
     @Serial

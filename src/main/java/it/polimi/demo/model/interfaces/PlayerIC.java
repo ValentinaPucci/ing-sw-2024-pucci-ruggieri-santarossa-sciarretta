@@ -105,4 +105,8 @@ public interface PlayerIC {
      * @return true if the object p is equals to the player
      */
     boolean equals(Object p);
+
+    ResourceCard getLastChosenCard();
+
+    boolean isLast();
 }

@@ -1,61 +1,111 @@
 package it.polimi.demo.networking.Applications;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import it.polimi.demo.DefaultValues;
+import it.polimi.demo.networking.Server;
+import it.polimi.demo.networking.ServerImpl;
 
-import it.polimi.demo.model.DefaultValues;
-import it.polimi.demo.networking.rmi.RmiServer;
-
+import java.io.IOException;
 import java.rmi.RemoteException;
-import java.util.Scanner;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
+import java.rmi.server.UnicastRemoteObject;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
+public class AppServer extends UnicastRemoteObject implements AppServerInterface{
+    private static final Logger logger = Logger.getLogger(AppServer.class.getName());
 
-public class AppServer {
-    /**
-     * Main entry point for the RMI client application.
-     */
-    public static void main(String[] args) throws RemoteException {
-        Scanner scanner = new Scanner(System.in);
-        String ip = askForRemoteIp(scanner);
-
-        if (ip.isEmpty()) {
-            System.setProperty("java.rmi.server.hostname", DefaultValues.Remote_ip);
-        } else {
-            DefaultValues.Server_ip = ip;
-            System.setProperty("java.rmi.server.hostname", ip);
-        }
-        RmiServer.startServer();
-    }
-
+    private static int socketPort = DefaultValues.defaultSocketPort;
+    private static String serverIP = null;
+    private static AppServer instance;
+    private final ExecutorService executorService = Executors.newCachedThreadPool(); //x socket
+    protected AppServer() throws RemoteException {}
 
     /**
-     * Prompts the user to enter the remote IP address.
-     *
-     * @param scanner The scanner object for user input
-     * @return The entered remote IP address
+     * AppServerImpl singleton instance getter.
+     * @return the AppServerImpl instance
      */
-    private static String askForRemoteIp(Scanner scanner) {
-        String input;
-        do {
-            printAsync("Insert remote IP (leave empty for localhost): ");
-            input = scanner.nextLine();
-        } while (!input.isEmpty() && !isValidIP(input));
-        return input;
+    public static AppServer getInstance() throws RemoteException {
+        if (instance == null) {
+            instance = new AppServer();
+        }
+
+        return instance;
     }
 
-    private static boolean isValidIP(String input) {
-        String[] parts = input.split("\\.");
-        if (parts.length != 4) {
-            return false;
-        }
-        for (String part : parts) {
+    /**
+     * Starts the server application.
+     * @param args [server ip] [socket port]
+     */
+    public static void main(String[] args) {
+        logger.info("Starting server...");
+        System.out.println("Starting server...");
+        serverIP = DefaultValues.Server_ip;
+
+        Thread rmiThread = new Thread(() -> {
             try {
-                int value = Integer.parseInt(part);
-                if (value < 0 || value > 255) {
-                    return false;
-                }
-            } catch (NumberFormatException e) {
-                return false;
+                startRMI();
+            } catch (RemoteException e) {
+                logger.log(Level.SEVERE, "No connection protocol available. Exiting...", e);
+                System.err.println("Cannot start RMI protocol.");
+                e.printStackTrace();
             }
+        });
+        rmiThread.start();
+
+//        Thread socketThread = new Thread(() -> {
+//            try {
+//                startSocket();
+//            } catch (RemoteException e) {
+//                System.err.println("Cannot start socket protocol.");
+//                e.printStackTrace();
+//            }
+//        });
+//        socketThread.start();
+
+        try {
+            rmiThread.join();
+            //socketThread.join();
+        } catch (InterruptedException e) {
+            System.err.println("No connection protocol available. Exiting...");
         }
-        return true;
+    }
+
+    /**
+     * This method is used to start the RMI server.
+     */
+    private static void startRMI() throws RemoteException {
+        logger.info("RMI > Starting RMI server...");
+        System.out.println("RMI > Starting RMI server...");
+
+        if(serverIP != null){
+            System.out.println("RMI > Binding RMI server to IP " + serverIP + "...");
+            System.setProperty("java.rmi.server.hostname", serverIP);
+        }
+
+        AppServer server = getInstance();
+
+        Registry registry;
+        try {
+            System.out.println("RMI > Creating a new RMI registry on port " + DefaultValues.defaultRMIRegistryPort + "...");
+
+            registry = LocateRegistry.createRegistry(DefaultValues.defaultRMIRegistryPort);
+        } catch (RemoteException e) {
+            logger.log(Level.SEVERE, "RMI > Cannot create RMI registry.", e);
+            logger.info("RMI > Trying to get already existing RMI registry...");
+            System.err.println("RMI > Cannot create RMI registry.");
+            System.out.println("RMI > Trying to get already existing RMI registry...");
+            registry = LocateRegistry.getRegistry();
+        }
+
+        registry.rebind(DefaultValues.defaultRMIName, server);
+    }
+
+
+    @Override
+    public Server connect() throws RemoteException {
+        logger.info("Creating server connection...");
+        return new ServerImpl();
     }
 }
