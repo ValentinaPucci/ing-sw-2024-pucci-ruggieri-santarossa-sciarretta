@@ -313,8 +313,69 @@ public class GameModelTest {
         assertEquals(gameModel.getAllPlayers().get(2).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(2).getStarterCardToChose()[1].getId());
 
     }
+    @Test
+    public void testPlaceResourceCard(){
+        //initialize game
+        addPlayersToGameModel(3);
+        gameModel.getCommonBoard().setPlayerCount(gameModel.getAllPlayers().size());
+        gameModel.getCommonBoard().initializeBoard();
+        gameModel.dealCards();
+        //set the starter card for each player
+        gameModel.getAllPlayers().getFirst().setStarterCard(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[0]);
+        gameModel.getAllPlayers().get(1).setStarterCard(gameModel.getAllPlayers().get(1).getStarterCardToChose()[0]);
+        gameModel.getAllPlayers().get(2).setStarterCard(gameModel.getAllPlayers().get(2).getStarterCardToChose()[0]);
 
-    //place resource card
+        //System.out.println(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[0]);
+        //System.out.println(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[1]);
+
+        //set the objective card for each player
+        gameModel.getAllPlayers().getFirst().setChosenObjectiveCard(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards()[0]);
+        gameModel.getAllPlayers().get(1).setChosenObjectiveCard(gameModel.getAllPlayers().get(1).getSecretObjectiveCards()[0]);
+        gameModel.getAllPlayers().get(2).setChosenObjectiveCard(gameModel.getAllPlayers().get(2).getSecretObjectiveCards()[0]);
+
+        for (Player player : gameModel.getAllPlayers()) {
+            //player.playStarterCard();
+            //player.getPersonalBoard().bruteForcePlaceCardSE(gameModel.getAllPlayers().getFirst().getHand().getFirst(), 500,500);
+            //System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().;
+        }
+
+        gameModel.getAllPlayers().getFirst().getPersonalBoard().bruteForcePlaceCardSE(gameModel.getAllPlayers().getFirst().getHand().getFirst(), 500,500);
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(0));
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1));
+
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtNW()); //butterfly
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtNE()); //leaf
+        //System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtSW()); //problem
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtSE().item); //problem
+
+
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(0).getCornerAtNE().is_visible);
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(0).getCornerAtNE().resource); //null (not present)
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtNW()); //Butterfly
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSW().resource); //null (present)
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSW().item); //null (present)
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSW().is_visible);
+
+        //gameModel.placeCard(gameModel.getAllPlayers().getFirst().getHand().get(1), gameModel.getAllPlayers().getFirst(), 501, 501);
+        /*
+        System.out.println(gameModel.getAllPlayers().getFirst().getStarterCard());
+        System.out.println(gameModel.getAllPlayers().getFirst().getStarterCard().getCornerAtNW().getIsVisible()); //true
+        System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getLevel());//1
+        System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell().getIsVisible()); //true
+        System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell().getBoard_coordinate().getX());
+        assertNotNull(gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell());
+*/
+
+        //gameModel.placeCard(gameModel.getAllPlayers().getFirst().getHand().getFirst(), gameModel.getAllPlayers().getFirst(), 500, 500); //non funzia!!!
+        //it.polimi.demo.model.board.Cell.getCornerFromCell().item" is null --> in generalUpdateRoutine se devi piazzare sopra una starter questa non ha gli item quindi si blocca!!
+
+
+
+
+
+    }
+
+
     //place gold card
     //draw card
     //calculate final score
