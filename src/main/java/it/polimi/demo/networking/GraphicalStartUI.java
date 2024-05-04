@@ -1,7 +1,7 @@
 package it.polimi.demo.networking;
 
 import it.polimi.demo.view.GameDetails;
-import it.polimi.demo.view.StartUI;
+import it.polimi.demo.view.UI.StartUI;
 
 import java.util.List;
 

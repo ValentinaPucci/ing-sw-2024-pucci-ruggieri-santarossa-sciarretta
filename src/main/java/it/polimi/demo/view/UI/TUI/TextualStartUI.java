@@ -1,6 +1,9 @@
-package it.polimi.demo.view;
+package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.view.GameDetails;
+import it.polimi.demo.view.PlayerDetails;
+import it.polimi.demo.view.UI.StartUI;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 
@@ -19,8 +22,7 @@ public class TextualStartUI extends StartUI {
     /**
      * The number of players inserted by the user when creating a new game.
      */
-    private int numberOfPlayers;
-
+    private int num_players;
     /**
      * The game ID inserted by the user when joining an existing game.
      */
@@ -36,15 +38,13 @@ public class TextualStartUI extends StartUI {
 
     @Override
     public void run() {
+        
         AnsiConsole.systemInstall();
-
         askUsername();
-
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
-
         notifyListeners(lst, UIListener::refreshStartUI);
-
         Scanner s = new Scanner(System.in);
+        
         int choice = TextualUtils.nextInt(s);
         switch (choice) {
             case 1 -> createGame();
@@ -84,13 +84,14 @@ public class TextualStartUI extends StartUI {
         do {
             System.out.print("How many players? (" + DefaultValues.MinNumOfPlayer + " to " + DefaultValues.MaxNumOfPlayer
                     + ") ");
-            numberOfPlayers = TextualUtils.nextInt(s);
-            if (numberOfPlayers < DefaultValues.MinNumOfPlayer || numberOfPlayers > DefaultValues.MaxNumOfPlayer)
+            num_players = TextualUtils.nextInt(s);
+            if (num_players < DefaultValues.MinNumOfPlayer || num_players > DefaultValues.MaxNumOfPlayer)
                 System.out.println("Number of players should be between " + DefaultValues.MinNumOfPlayer
                         + " and " + DefaultValues.MaxNumOfPlayer + ".");
-        } while (numberOfPlayers < DefaultValues.MinNumOfPlayer || numberOfPlayers > DefaultValues.MaxNumOfPlayer);
+        } while (num_players < DefaultValues.MinNumOfPlayer || num_players > DefaultValues.MaxNumOfPlayer);
 
-        notifyListeners(lst, startUIListener -> startUIListener.createGame(this.username, numberOfPlayers));
+        // Here we create the game using observer design pattern
+        notifyListeners(lst, startUIListener -> startUIListener.createGame(this.username, num_players));
         waitingForPlayers = true;
     }
 
@@ -116,7 +117,6 @@ public class TextualStartUI extends StartUI {
 
     /**
      * Shows the list of games on the server only if the user has inserted a username.
-     *
      * @param o array of strings representing the list of games on the server
      */
     @Override
@@ -129,7 +129,6 @@ public class TextualStartUI extends StartUI {
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("ID:\tPlayers:").reset());
                 for (GameDetails gameDetails : o) {
                     StringBuilder string = new StringBuilder();
-
                     string.append(" ").append(gameDetails.gameID()).append("\t");
                     for (PlayerDetails playerInfo : gameDetails.playersInfo()) {
                         if (playerInfo.isConnected())
@@ -160,7 +159,6 @@ public class TextualStartUI extends StartUI {
     @Override
     public void showError(String err) {
         System.out.println(ansi().bold().fg(Ansi.Color.RED).a(err).reset());
-
         notifyListeners(lst, UIListener::exit);
     }
 
@@ -173,7 +171,6 @@ public class TextualStartUI extends StartUI {
     public void showPlayersList(List<String> o) {
         if (this.playersNameList == null) {
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
-
             if (gameID == -1) {
                 System.out.println(ansi().fg(Ansi.Color.GREEN).a("Game created successfully.").reset());
             } else {
@@ -186,7 +183,6 @@ public class TextualStartUI extends StartUI {
         } else {
             o.stream().filter(s -> !this.playersNameList.contains(s)).forEach(x -> System.out.println(" " + x));
         }
-
         this.playersNameList = o;
     }
 

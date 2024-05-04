@@ -1,11 +1,14 @@
 package it.polimi.demo.networking;
 
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
+import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
 import it.polimi.demo.controller.GameController;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
 import it.polimi.demo.listener.GameListener;
@@ -31,10 +34,16 @@ public class ServerImpl implements Server, GameListener {
      */
     private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
+    /**
+     * game_controller is created and put inside main_controller.
+     * We could also avoid to having it as an attribute, but it is
+     * far more convenient to have it here.
+     */
     protected GameModel model;
     protected MainController main_controller;
     protected GameController game_controller;
 
+    // Here we exploit the interface
     protected Client client;
     /**
      * Index of the player served by this ServerImpl.
@@ -53,55 +62,59 @@ public class ServerImpl implements Server, GameListener {
     @Override
     public void register(Client client) throws RemoteException {
         this.client = client;
-        //TODO: guardare bene: ----> controller.getGames().addListener(this);
+        // it is not necessary to add listener here, we do it in
+        // either createGame() or joinGame() methods
         System.out.println("A client is registering to the server...");
-
         executor.submit(this.pingpongThread);
     }
 
     /**
      * This method is called when a player wants to join a game.
-     * It will also handle the case where a player is reconnecting to a game in which he was already playing.
+     * It will also handle the case where a player is reconnecting
+     * to a game in which he was already playing.
      *
      * @see Server#addPlayerToGame(int, String)
      */
     @Override
-    public void addPlayerToGame(int gameID, String nickname) throws RemoteException, GameNotStartedException, InvalidChoiceException {
+    public void addPlayerToGame(int gameID, String nickname)
+            throws RemoteException, GameNotStartedException, InvalidChoiceException {
+
         System.out.println("A client is joining game " + gameID + " with username " + nickname + "...");
+        main_controller.joinGame(this, nickname, gameID).startIfFull();
 
-        this.game_controller = main_controller.getGames().get(gameID);
-        this.model = main_controller.getGames().get(gameID).getModel();
-        Player p = new Player(nickname);
-        if(this.model == null){
-            throw new InvalidChoiceException("Game not found.");
-        }
-
-        if(model.getPlayersConnected().contains(nickname)){
-            //TODO: guardare bene: ----> GameList.getInstance().removeListener(this);
-
-            this.client.gameHasStarted();
-
-            this.playerIndex = this.game_controller.reconnectPlayer(nickname);
-
-            // Force the update of the client
-            this.client.modelChanged(new GameView(this.model, this.playerIndex));
-            this.model.addListener(this);
-        } else {
-            this.model.addListener(this);
-
-            try {
-                this.game_controller.addPlayer(nickname);
-            } catch (GameNotStartedException e) {
-                this.model.removeListener(this);
-                this.model = null;
-                this.game_controller = null;
-                throw e;
-            }
-
-            this.playerJoinedGame();
-
-            this.game_controller.startIfFull();
-        }
+//        game_controller = main_controller.getGames().get(gameID);
+//        model = main_controller.getGames().get(gameID).getModel();
+//        if (model.getAllPlayers().contains(nickname)) {
+//            // todo: guardare bene: ----> GameList.getInstance().removeListener(this);
+//            // we do not remove listener when the connection falls!!
+//            // main_controller.getGames().get(gameID).addListener(this, p);
+//            client.gameHasStarted();
+//            try {
+//                // we take care of the listeners directly inside the model!
+//                game_controller.getModel().reconnectPlayer(p);
+//            } catch (GameEndedException e) {
+//                throw new RuntimeException(e);
+//            }
+//
+//            // Force the update of the client
+//            playerIndex = model.getAllPlayers().indexOf(nickname);
+//            client.modelChanged(new GameView(model, playerIndex));
+//            // We don't remove the listener when the connection falls!!
+//            // this.model.addListener(this);
+//        } else {
+//            // Yes, this is ok!
+//            model.addListener(this);
+//            try {
+//                game_controller.addPlayer(nickname);
+//            } catch (GameNotStartedException e) {
+//                model.removeListener(this);
+//                model = null;
+//                game_controller = null;
+//                throw e;
+//            }
+//            playerJoinedGame();
+//            game_controller.startIfFull();
+//        }
     }
 
     /**
@@ -111,25 +124,21 @@ public class ServerImpl implements Server, GameListener {
      */
     @Override
     public void create(String nickname, int numberOfPlayers) throws RemoteException, GameNotStartedException {
+
+        // We get the main controller instance before doing any other action
+        main_controller = MainController.getControllerInstance();
+
         int gameID = main_controller.getGames().keySet().stream()
                 .max(Comparator.naturalOrder())
                 .orElse(0) + 1;
 
         System.out.println("A client is creating game " + gameID + " with username " + nickname + "...");
 
-        this.model = new GameModel(gameID, numberOfPlayers, new Player(nickname));
-
+        main_controller.createGame(this, nickname, numberOfPlayers, gameID);
         // The player that creates the game is the first player to join it
-        this.playerIndex = 0;
-
-        this.game_controller = new GameController(this.model);
-
-        main_controller.getGames().put(gameID, game_controller);
-
-        this.model.addListener(this);
-
+        playerIndex = 0;
         // Triggers the update of the player list on the client
-        this.playerJoinedGame();
+        playerJoinedGame();
     }
 
     /**
@@ -140,7 +149,6 @@ public class ServerImpl implements Server, GameListener {
     public void getGamesList() throws RemoteException {
         this.client.updateGamesList(main_controller.getGamesDetails());
     }
-
 
     @Override
     public void newGame() throws RemoteException {
@@ -205,17 +213,6 @@ public class ServerImpl implements Server, GameListener {
         try {
             this.client.gameEnded(gameView);
         } catch (RemoteException ignored) {}
-    }
-
-
-    @Override
-    public void performTurn(int column) throws RemoteException {
-        if(this.playerIndex != this.model.getCurrentPlayerIndex()){
-            this.game_controller.setError("Player " + this.model.getAux_order_players().get(this.playerIndex).getNickname() + " tried to perform a turn while it was not his turn.");
-            return;
-        }
-
-        this.game_controller.performTurn(column);
     }
 
     @Override

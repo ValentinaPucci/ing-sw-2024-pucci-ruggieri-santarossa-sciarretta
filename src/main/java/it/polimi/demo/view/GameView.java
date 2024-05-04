@@ -29,7 +29,7 @@ public class GameView implements Serializable {
     /**
      * The index of the current player who's playing.
      */
-    private final int currentPlayerIndex;
+    //private final int currentPlayerIndex;
     /**
      * The index of the player who filled the bookshelf first.
      */
@@ -37,7 +37,7 @@ public class GameView implements Serializable {
     /**
      * The current player's username.
      */
-    private final String currentPlayerNickname;
+    //private final String currentPlayerNickname;
     /**
      * The username of the player who played first.
      */
@@ -68,9 +68,9 @@ public class GameView implements Serializable {
 
         this.common_board = game.getCommonBoard();
         this.personal_objective_card = game.getAllPlayers().get(this.myIndex).getChosenObjectiveCard();
-        this.currentPlayerIndex = game.getCurrentPlayerIndex();
+        //this.currentPlayerIndex = game.getCurrentPlayerIndex();
         this.finalPlayerIndex = game.getFinalPlayerIndex();
-        this.currentPlayerNickname= game.getCurrentPlayer().getNickname();
+        //this.currentPlayerNickname= game.getCurrentPlayer().getNickname();
         this.firstPlayerNickname = game.getFirstPlayer().getNickname();
 
         this.gameEnded = game.isEnded();

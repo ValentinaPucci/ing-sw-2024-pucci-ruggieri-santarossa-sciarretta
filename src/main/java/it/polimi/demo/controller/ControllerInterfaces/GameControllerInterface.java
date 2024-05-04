@@ -1,4 +1,4 @@
-package it.polimi.demo.networking.ControllerInterfaces;
+package it.polimi.demo.controller.ControllerInterfaces;
 
 import it.polimi.demo.controller.GameController;
 import it.polimi.demo.listener.GameListener;

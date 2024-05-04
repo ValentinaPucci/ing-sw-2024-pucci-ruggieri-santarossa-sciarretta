@@ -33,6 +33,7 @@ public class GameModel {
     // the second one is used as a queue and let us know which player
     // is connected (and actively playing).
     private LinkedList<Player> players_connected;
+
     private Player initial_player;
     private ListenersHandler listener_handler;
     private CommonBoard common_board;
@@ -43,7 +44,7 @@ public class GameModel {
     private Player first_finishing_player = null;
     private List<Player> winners;
     private Map<Player, Integer> leaderboard;
-    private int current_player_index;
+    //private int current_player_index;
     private boolean is_paused;
     private String errorMessage;
 
@@ -155,7 +156,7 @@ public class GameModel {
                 .orElse(null);
     }
 
-    public List<Player> getAux_order_players(){
+    public List<Player> getAux_order_players() {
         return aux_order_players;
     }
 
@@ -760,26 +761,26 @@ public class GameModel {
     }
 
 
-    public void setCurrentPlayerIndex(int currentPlayerIndex) {
-        if(currentPlayerIndex < 0 || currentPlayerIndex >= this.getNumPlayersToPlay())
-            throw new IllegalArgumentException("Illegal player index");
+//    public void setCurrentPlayerIndex(int currentPlayerIndex) {
+//        if(currentPlayerIndex < 0 || currentPlayerIndex >= this.getNumPlayersToPlay())
+//            throw new IllegalArgumentException("Illegal player index");
+//
+//        this.current_player_index = currentPlayerIndex;
+//    }
 
-        this.current_player_index = currentPlayerIndex;
-    }
 
-
-    //TODO: implement for the GameView
-    public int getCurrentPlayerIndex() {
-        return current_player_index;
-    }
+//    //TODO: implement for the GameView
+//    public int getCurrentPlayerIndex() {
+//        return current_player_index;
+//    }
 
     public int getFinalPlayerIndex() {
         return aux_order_players.indexOf(first_finishing_player);
     }
 
-    public PlayerIC getCurrentPlayer() {
-        return aux_order_players.get(current_player_index);
-    }
+//    public PlayerIC getCurrentPlayer() {
+//        return aux_order_players.get(current_player_index);
+//    }
 
     public PlayerIC getFirstPlayer() {
         return initial_player;

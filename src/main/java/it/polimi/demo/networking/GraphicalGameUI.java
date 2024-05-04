@@ -1,6 +1,6 @@
 package it.polimi.demo.networking;
 
-import it.polimi.demo.view.GameUI;
+import it.polimi.demo.view.UI.GameUI;
 import it.polimi.demo.view.GameView;
 
 public class GraphicalGameUI extends GameUI {

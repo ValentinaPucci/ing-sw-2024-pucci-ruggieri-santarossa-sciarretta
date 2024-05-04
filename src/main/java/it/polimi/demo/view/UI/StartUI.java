@@ -1,11 +1,13 @@
-package it.polimi.demo.view;
+package it.polimi.demo.view.UI;
 
 import it.polimi.demo.listener.UIListener;
+import it.polimi.demo.view.GameDetails;
 
 import java.util.ArrayList;
 import java.util.List;
 
 abstract public class StartUI implements Runnable {
+
     protected final List<UIListener> lst = new ArrayList<>();
 
     public abstract void showGamesList(List<GameDetails> o);

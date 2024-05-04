@@ -245,6 +245,7 @@ public interface GameListener extends Remote {
      */
     void gameIdNotExists(int gameId) throws RemoteException;
 
+    // todo: check if these method are needed
 
     void newGame() throws RemoteException;
 

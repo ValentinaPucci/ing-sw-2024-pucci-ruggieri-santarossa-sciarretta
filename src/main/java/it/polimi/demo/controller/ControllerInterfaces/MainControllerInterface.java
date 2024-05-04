@@ -1,6 +1,5 @@
-package it.polimi.demo.networking.ControllerInterfaces;
+package it.polimi.demo.controller.ControllerInterfaces;
 
-import it.polimi.demo.controller.GameController;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.view.GameDetails;
 
@@ -21,7 +20,7 @@ public interface MainControllerInterface extends Remote {
      * @return the GameControllerInterface of the game {@link GameControllerInterface}
      * @throws RemoteException if the connection fails
      */
-    GameControllerInterface createGame(GameListener lis, String nick, int num_players) throws RemoteException;
+    GameControllerInterface createGame(GameListener lis, String nick, int num_players, int gameID) throws RemoteException;
 
     /**
      * This method joins the first available game

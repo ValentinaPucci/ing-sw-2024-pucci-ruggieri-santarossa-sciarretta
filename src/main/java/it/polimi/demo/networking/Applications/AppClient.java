@@ -3,8 +3,8 @@ import java.util.logging.Logger;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.networking.ClientImpl;
 import it.polimi.demo.networking.ConnectionType;
-import it.polimi.demo.view.TextualUtils;
-import it.polimi.demo.view.UIType;
+import it.polimi.demo.view.UI.TUI.TextualUtils;
+import it.polimi.demo.view.UI.UIType;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -13,6 +13,7 @@ import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class AppClient {
+
     private static final Logger logger = Logger.getLogger(AppServer.class.getName());
     private static UIType uiType;
     private static ConnectionType connectionType;
@@ -86,7 +87,6 @@ public class AppClient {
         try {
             Registry registry = LocateRegistry.getRegistry(ip, port);
             AppServerInterface appServer = (AppServerInterface) registry.lookup(DefaultValues.defaultRMIName);
-
             ClientImpl client = new ClientImpl(appServer.connect(), uiType);
             client.run();
         } catch (RemoteException e) {
@@ -95,8 +95,6 @@ public class AppClient {
             throw new NotBoundException();
         }
     }
-
-
 
     public static String getIP(){
         return ip;

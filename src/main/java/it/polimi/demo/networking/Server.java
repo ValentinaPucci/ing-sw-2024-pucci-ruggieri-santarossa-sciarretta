@@ -8,8 +8,7 @@ import java.rmi.RemoteException;
 
 /**
  * This interface represents all the methods that can be called by the client on the server.
- *
- * @see ServerImpl
+ * Namely, client ----> server through Server interface!
  */
 public interface Server extends Remote {
     /**
@@ -39,12 +38,6 @@ public interface Server extends Remote {
      * The client will be notified of the list of games using the VirtualClient method.
      */
     void getGamesList() throws RemoteException;
-
-    /**
-     * This method is called by the client to perform a turn.
-     * @param column the column where to put the tiles
-     */
-    void performTurn(int column) throws RemoteException;
 
     /**
      * This method is called by the client to respond to a ping sent by the server.

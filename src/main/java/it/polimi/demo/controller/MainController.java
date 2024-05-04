@@ -3,11 +3,12 @@ package it.polimi.demo.controller;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.MaxPlayersLimitException;
 import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.networking.ControllerInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.ControllerInterfaces.MainControllerInterface;
+import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
+import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
 import it.polimi.demo.view.GameDetails;
 
 import java.rmi.RemoteException;
@@ -71,11 +72,10 @@ public class MainController implements MainControllerInterface {
      * @throws RemoteException if the connection fails
      */
     @Override
-    public GameControllerInterface createGame(GameListener listener, String nickname, int num_of_players)
+    public GameControllerInterface createGame(GameListener listener, String nickname, int num_of_players, int id)
             throws RemoteException {
         Player player = new Player(nickname);
-        GameController game = new GameController();
-        int id = game.getGameId();
+        GameController game = new GameController(id, num_of_players, new Player(nickname));
 
         synchronized (games) {
             // By adding this check, we avoid the possibility of having two games with the same ID.
@@ -219,7 +219,7 @@ public class MainController implements MainControllerInterface {
                         .map(player -> {
                             try {
                                 game.addListener(listener, player);
-                                game.reconnectPlayer(player.getNickname());
+                                game.getModel().reconnectPlayer(player);
                                 return game;
                             } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
                                 try {
@@ -228,6 +228,8 @@ public class MainController implements MainControllerInterface {
                                     throw new RuntimeException(ex);
                                 }
                                 return null;
+                            } catch (GameEndedException e) {
+                                throw new RuntimeException(e);
                             }
                         }))
                 .orElseGet(() -> {
@@ -313,4 +315,5 @@ public class MainController implements MainControllerInterface {
                         gameController.getModel().isFull()))
                 .collect(Collectors.toList());
     }
+
 }
