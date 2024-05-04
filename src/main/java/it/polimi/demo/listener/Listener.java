@@ -28,13 +28,14 @@ public interface Listener {
      */
     static <L extends Listener> void notifyListeners(List<L> listeners, ConsumerWithRemoteException<L> lambda){
         List<L> tmp = new ArrayList<>(listeners);
-
         tmp.forEach(listener -> {
             try {
                 lambda.accept(listener);
             } catch (RemoteException e) {
                 listeners.remove(listener);
-                System.err.println("Removing listener " + listener + " because of a RemoteException. Probably the client has disconnected.");
+                System.err.println("Removing listener " +
+                        listener +
+                        " because of a RemoteException. Probably the client has disconnected.");
             }
         });
     }

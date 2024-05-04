@@ -44,4 +44,9 @@ We would like to implement this advanced functionality on our program. Namely, w
 - Ricontrollare GameController e MainController --> VALE
 - Inizio del gioco e creazione sessione --> VALE
 - GameView di Tarantino et al + GameFlow --> RIK E LOLLO
+
+# Some notes on the network (4 May 2024)
+- Server implementation directly act on the main controller right? Well, where is that main_controller reference initialized? We take care of it by getting the controller instance in the create method of class ServerImpl
+- As a convention, a listener is added to the model whenever a player create a new game. 
+- We need to rethink interface: Client is an interface which is used by the ServerImpl class. It is an interface in the sense that from an exterior point of view (i.e. from the server), we only see Client (the interface), not its implementation. That is fine! Remark: viceversa still holds, i.e. from the client point of view, we only see the Server interface, not its implementation.
 - 

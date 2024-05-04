@@ -9,8 +9,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.*;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.networking.ControllerInterfaces.GameControllerInterface;
-import it.polimi.demo.view.GameDetails;
+import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -49,6 +48,12 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
     public GameController(GameModel game_model) {
         model = game_model;
+        listeners_to_heartbeats = new HashMap<>();
+        new Thread(this).start();
+    }
+
+    public GameController(int gameID, int numberOfPlayers, Player player) {
+        model = new GameModel(gameID, numberOfPlayers, player);
         listeners_to_heartbeats = new HashMap<>();
         new Thread(this).start();
     }
@@ -285,35 +290,39 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         //else It means that a player reconnected but the timer was not started (ex 3 players and 1 disconnects)
     }
 
-    /**
-     * Reconnect the player with the nickname @param to the game
-     *
-     * @throws PlayerAlreadyConnectedException if a player tries to rejoin the same game
-     * @throws MaxPlayersLimitException    if there are already 4 players in game
-     * @throws GameEndedException       the game is ended
-     */
-    public int reconnectPlayer(String username){
-        int playerIndex = this.model.getAux_order_players().indexOf(username);
-        this.model.setPlayerAsConnected(model.getAux_order_players().get(playerIndex));
-
-        if(!this.model.getAux_order_players().get(this.model.getCurrentPlayerIndex()).getIsConnected()){
-            this.nextPlayer();
-        }
-
-        return playerIndex;
-    }
-
-    public void nextPlayer(){
-        if(this.model.getPlayersConnected().size() > 1){
-            int i = (this.model.getCurrentPlayerIndex() + 1) % this.model.getNumPlayersToPlay();
-            while(!this.model.getAux_order_players().get(i).getIsConnected()){
-                i = (i + 1) % this.model.getNumPlayersToPlay();
-            }
-            this.model.setCurrentPlayerIndex(i);
-        } else {
-            this.model.setAsPaused();
-        }
-    }
+//    /**
+//     * Reconnect the player with the nickname @param to the game
+//     *
+//     * @throws PlayerAlreadyConnectedException if a player tries to rejoin the same game
+//     * @throws MaxPlayersLimitException    if there are already 4 players in game
+//     * @param username the nickname of the player
+//     * @return the index of the player in the list of players
+//     */
+//    public int reconnectPlayer(String username) {
+//
+//        int playerIndex = this.model.getAux_order_players().indexOf(username);
+//        this.model.setPlayerAsConnected(model.getAux_order_players().get(playerIndex));
+//
+//        if (!this.model
+//                .getAux_order_players()
+//                .get(this.model.getCurrentPlayerIndex())
+//                .getIsConnected()) {
+//            this.nextPlayer();
+//        }
+//        return playerIndex;
+//    }
+//
+//    public void nextPlayer() {
+//        if(this.model.getPlayersConnected().size() > 1) {
+//            int i = (this.model.getCurrentPlayerIndex() + 1) % this.model.getNumPlayersToPlay();
+//            while(!this.model.getAux_order_players().get(i).getIsConnected()){
+//                i = (i + 1) % this.model.getNumPlayersToPlay();
+//            }
+//            this.model.setCurrentPlayerIndex(i);
+//        } else {
+//            this.model.setAsPaused();
+//        }
+//    }
 
     /**
      * It removes a player by nickname @param nick from the game including the associated listeners
@@ -330,7 +339,7 @@ public class GameController implements GameControllerInterface, Runnable, Serial
 
     @Override
     public void startIfFull() {
-        if(this.getConnectedPlayers().size() == getNumPlayersToPlay()){
+        if (isTheGameReadyToStart()) {
             this.startGame();
         }
     }
@@ -610,9 +619,6 @@ public class GameController implements GameControllerInterface, Runnable, Serial
         return model.getGameId();
     }
 
-    public void performTurn(int column){
-
-    }
 
 //---------------------------------listeners management---------------------------------------
 

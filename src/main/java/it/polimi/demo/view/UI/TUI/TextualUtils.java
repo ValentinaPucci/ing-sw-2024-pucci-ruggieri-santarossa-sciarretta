@@ -1,4 +1,4 @@
-package it.polimi.demo.view;
+package it.polimi.demo.view.UI.TUI;
 
 import java.io.IOException;
 import java.util.InputMismatchException;

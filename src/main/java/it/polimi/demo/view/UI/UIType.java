@@ -1,4 +1,4 @@
-package it.polimi.demo.view;
+package it.polimi.demo.view.UI;
 
 public enum UIType {
     GUI,

@@ -13,13 +13,14 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class AppServer extends UnicastRemoteObject implements AppServerInterface{
-    private static final Logger logger = Logger.getLogger(AppServer.class.getName());
+public class AppServer extends UnicastRemoteObject implements AppServerInterface {
 
-    private static int socketPort = DefaultValues.defaultSocketPort;
+    private static final Logger logger = Logger.getLogger(AppServer.class.getName());
+    private static final int socketPort = DefaultValues.defaultSocketPort;
     private static String serverIP = null;
     private static AppServer instance;
-    private final ExecutorService executorService = Executors.newCachedThreadPool(); //x socket
+    private final ExecutorService executorService = Executors.newCachedThreadPool(); // x socket
+
     protected AppServer() throws RemoteException {}
 
     /**
@@ -30,7 +31,6 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
         if (instance == null) {
             instance = new AppServer();
         }
-
         return instance;
     }
 
@@ -54,6 +54,7 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
         });
         rmiThread.start();
 
+        // todo: start socket
 //        Thread socketThread = new Thread(() -> {
 //            try {
 //                startSocket();
@@ -76,20 +77,19 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
      * This method is used to start the RMI server.
      */
     private static void startRMI() throws RemoteException {
+
         logger.info("RMI > Starting RMI server...");
         System.out.println("RMI > Starting RMI server...");
 
-        if(serverIP != null){
+        if (serverIP != null) {
             System.out.println("RMI > Binding RMI server to IP " + serverIP + "...");
             System.setProperty("java.rmi.server.hostname", serverIP);
         }
 
-        AppServer server = getInstance();
-
         Registry registry;
+
         try {
             System.out.println("RMI > Creating a new RMI registry on port " + DefaultValues.defaultRMIRegistryPort + "...");
-
             registry = LocateRegistry.createRegistry(DefaultValues.defaultRMIRegistryPort);
         } catch (RemoteException e) {
             logger.log(Level.SEVERE, "RMI > Cannot create RMI registry.", e);
@@ -99,6 +99,10 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
             registry = LocateRegistry.getRegistry();
         }
 
+        // Here we take advantage of singleton design pattern;
+        // AppServer is a local variable to this method, it is fundamental
+        // for the binding to the RMI registry.
+        AppServer server = getInstance();
         registry.rebind(DefaultValues.defaultRMIName, server);
     }
 

@@ -1,6 +1,7 @@
-package it.polimi.demo.view;
+package it.polimi.demo.view.UI;
 
 import it.polimi.demo.listener.UIListener;
+import it.polimi.demo.view.GameView;
 
 import java.util.ArrayList;
 import java.util.List;
