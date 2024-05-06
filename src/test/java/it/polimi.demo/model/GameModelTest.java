@@ -1,6 +1,8 @@
 package it.polimi.demo.model;
 
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -312,6 +314,54 @@ public class GameModelTest {
         assertEquals(gameModel.getAllPlayers().get(1).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(1).getStarterCardToChose()[1].getId());
         assertEquals(gameModel.getAllPlayers().get(2).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(2).getStarterCardToChose()[1].getId());
 
+        GoldCard gold = gameModel.getCommonBoard().getGoldConcreteDeck().popGoldCard();
+        System.out.println(gold.getId());
+        System.out.println(gold.getButterflyRequired());
+        System.out.println(gold.getLeafRequired());
+        System.out.println(gold.getMushroomRequired());
+        System.out.println(gold.getWolfRequired());
+        System.out.println(gold.getPoints());
+        System.out.println(gold.getCornerAtNE());
+        System.out.println(gold.getCornerAtNW());
+        System.out.println(gold.getCornerAtSW());
+        System.out.println(gold.getCornerAtSE());
+
+        GoldCard gold1 = gameModel.getCommonBoard().getGoldConcreteDeck().popGoldCard();
+        System.out.println(gold1.getId());
+        System.out.println(gold1.getButterflyRequired());
+        System.out.println(gold1.getLeafRequired());
+        System.out.println(gold1.getMushroomRequired());
+        System.out.println(gold1.getWolfRequired());
+        System.out.println(gold1.getPoints());
+        System.out.println(gold1.getCornerAtNE());
+        System.out.println(gold1.getCornerAtNW());
+        System.out.println(gold1.getCornerAtSW());
+        System.out.println(gold1.getCornerAtSE());
+
+
+        ResourceCard res = gameModel.getCommonBoard().getResourceConcreteDeck().popResourceCard();
+        System.out.println(res.getId());
+        System.out.println(res.getPoints());
+        System.out.println(res.getCornerAtSW());
+        System.out.println(res.getCornerAtNE());
+        System.out.println(res.getCornerAtSE());
+        System.out.println(res.getCornerAtNW());
+
+        ResourceCard res1 = gameModel.getCommonBoard().getResourceConcreteDeck().popResourceCard();
+        System.out.println(res1.getId());
+        System.out.println(res1.getPoints());
+        System.out.println(res1.getCornerAtSW().resource);
+        System.out.println(res1.getCornerAtNE());
+        System.out.println(res1.getCornerAtSE());
+        System.out.println(res1.getCornerAtNW());
+
+
+
+
+
+
+
+
     }
     @Test
     public void testPlaceResourceCard(){
@@ -341,9 +391,11 @@ public class GameModelTest {
 
         gameModel.getAllPlayers().getFirst().getPersonalBoard().bruteForcePlaceCardSE(gameModel.getAllPlayers().getFirst().getHand().getFirst(), 500,500);
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(0));
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(0).points);
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1));
 
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtNW()); //butterfly
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtNW().item);//Optional.empty
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtNE()); //leaf
         //System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtSW()); //problem
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtSE().item); //problem
@@ -352,11 +404,34 @@ public class GameModelTest {
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(0).getCornerAtNE().is_visible);
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(0).getCornerAtNE().resource); //null (not present)
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtNW()); //Butterfly
-        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSW().resource); //null (present)
-        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSW().item); //null (present)
-        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSW().is_visible);
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSW().resource); //Optional.empty
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSW().item); //Optional.empty
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSW().is_visible);//true
 
-        //gameModel.placeCard(gameModel.getAllPlayers().getFirst().getHand().get(1), gameModel.getAllPlayers().getFirst(), 501, 501);
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSE().resource); //Optional.empty
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSE().item); //Optional.empty
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand().getFirst().getCornerAtSE().is_visible);//true
+
+
+        gameModel.placeCard(gameModel.getAllPlayers().getFirst().getHand().get(1), gameModel.getAllPlayers().getFirst(), 501, 501);
+
+        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2));
+        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).getCornerAtSE());
+        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).getCornerAtSW());
+        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).getCornerAtNE());
+        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).getCornerAtNW().item);
+        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).getPoints());
+        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).type);
+
+        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2));
+        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).getCornerAtSE());
+        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).getCornerAtSW());
+        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).getCornerAtNE().is_visible);
+        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).getCornerAtNW().item);
+        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).points);
+        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).type);
+        //System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).mushroom_required);
+
         /*
         System.out.println(gameModel.getAllPlayers().getFirst().getStarterCard());
         System.out.println(gameModel.getAllPlayers().getFirst().getStarterCard().getCornerAtNW().getIsVisible()); //true
