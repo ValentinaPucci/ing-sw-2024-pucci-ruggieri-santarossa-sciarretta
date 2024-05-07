@@ -6,6 +6,7 @@ import it.polimi.demo.networking.ClientImpl;
 import it.polimi.demo.networking.ConnectionType;
 import it.polimi.demo.view.UI.TUI.TextualUtils;
 import it.polimi.demo.view.UI.UIType;
+import it.polimi.demo.networking.Socket.ServerProxy;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -40,7 +41,7 @@ public class AppClient {
         try {
             switch (connectionType) {
                 case RMI -> startRMI();
-                //case SOCKET -> startSocket();
+                case SOCKET -> startSocket();
             }
         } catch (RemoteException e) {
             System.err.println("Cannot connect to server due to a remote exception. Exiting...");
@@ -102,4 +103,28 @@ public class AppClient {
     public static ConnectionType getConnectionType(){
         return connectionType;
     }
+
+    // Starts the socket client:
+
+    private  static void startSocket() throws RemoteException {
+        ServerProxy serverProxy = new ServerProxy(ip, port);
+        ClientImpl client = new ClientImpl(serverProxy, uiType);
+        new Thread(() -> {
+            while(true) {
+                try {
+                    serverProxy.ReceiveFromClient(client);
+                } catch (RemoteException e) {
+                    System.err.println("Cannot receive from server. Stopping...");
+                    try {
+                        serverProxy.close();
+                    } catch (RemoteException ex) {
+                        System.err.println("Cannot close connection with server. Halting...");
+                    }
+                    System.exit(1);
+                }
+            }
+        }).start();
+        client.run();
+    }
+
 }
