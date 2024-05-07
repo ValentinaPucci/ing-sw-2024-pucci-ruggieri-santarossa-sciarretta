@@ -155,7 +155,7 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
             throw new RemoteException("SOCKET > Cannot start socket server", e);
         }
     }
-    // TODO: A noi non serve? Metto solo per toglere errore...
+    // TODO: A noi non serve? metto per togliere errrore..
     @Override
     public Server connect() throws RemoteException {
         return null;
