@@ -81,6 +81,10 @@ public class Corner {
         this.item = Optional.ofNullable(item);
     }
 
+    public void setCornerItemEmpty(){this.item = Optional.empty();}
+
+    public void setCornerResourceEmpty(){this.resource = Optional.empty();}
+
     public void setEmpty(){
         this.resource = Optional.empty();
         this.item = Optional.empty();

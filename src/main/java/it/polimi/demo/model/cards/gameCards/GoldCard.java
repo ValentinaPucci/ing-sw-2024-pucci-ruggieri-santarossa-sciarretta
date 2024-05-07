@@ -22,7 +22,17 @@ public class GoldCard extends ResourceCard {
      * @param orientation
      */
     public GoldCard(int id, Orientation orientation, Color color) {
+
         super(id, orientation, color);
+        this.isCornerCoverageRequired = false;
+        this.isPotionRequired = false;
+        this.isFeatherRequired = false;
+        this.isParchmentRequired = false;
+        this.leaf_required = 0;
+        this.butterfly_required = 0;
+        this.wolf_required = 0;
+        this.mushroom_required = 0;
+
     }
 
     public GoldCard(int id, Orientation orientation, Color color, int points, Corner[][] actual_corners) {
