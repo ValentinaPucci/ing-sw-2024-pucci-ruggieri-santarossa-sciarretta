@@ -71,15 +71,15 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
         });
         rmiThread.start();
 
-//        Thread socketThread = new Thread(() -> {
-//            try {
-//                startSocket();
-//            } catch (RemoteException e) {
-//                System.err.println("Cannot start socket protocol.");
-//                e.printStackTrace();
-//            }
-//        });
-//        socketThread.start();
+        Thread socketThread = new Thread(() -> {
+            try {
+                startSocket();
+            } catch (RemoteException e) {
+                System.err.println("Cannot start socket protocol.");
+                e.printStackTrace();
+            }
+        });
+        socketThread.start();
 
         try {
             rmiThread.join();
@@ -135,6 +135,7 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
                         ClientProxy client_proxy = new ClientProxy(socket);
                         Server server = new ServerImpl();
                         server.register(client_proxy);
+                        // Check:
                         while (true) {
                             client_proxy.receiveFromServer(server);
                         }

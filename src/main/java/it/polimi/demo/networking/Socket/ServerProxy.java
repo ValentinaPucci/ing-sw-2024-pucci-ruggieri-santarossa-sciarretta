@@ -27,7 +27,7 @@ import java.util.List;
  * Actually, to communicate with the clientProxy of the sever.
 
  */
-public class ServerProxy   implements Server {
+public class ServerProxy  implements Server {
     private final String ip;
     private final int port;
     private ObjectInputStream in_deserialized;
@@ -35,11 +35,11 @@ public class ServerProxy   implements Server {
     private Socket socket;
 
     public enum Methods {
-        register,
-        addPlayerToGame,
-        create,
-        getGamesList,
-        pong
+        REGISTER,
+        ADD_PLAYER_TO_GAME,
+        CREATE,
+        GET_GAMES_LIST,
+        PONG
     }
     /**
      * Constructor of the class
@@ -51,8 +51,6 @@ public class ServerProxy   implements Server {
         this.ip = ip;
         this.port = port;
     }
-
-
     /**
      * Register a client to the server.
      * @param client the client to register
@@ -68,6 +66,7 @@ public class ServerProxy   implements Server {
                 throw new RemoteException("Cannot create OUTPUT stream", e);
             }
             try{
+
                 this.in_deserialized = new ObjectInputStream(socket.getInputStream());
             } catch (IOException e) {
                 throw new RemoteException("Cannot create INPUT stream", e);
@@ -87,14 +86,13 @@ public class ServerProxy   implements Server {
                 socket.close();
             } catch (IOException e) {
                 throw new RemoteException("Cannot close connection", e);
-
             }
         }
         @Override
         public void addPlayerToGame ( int gameID, String username) throws RemoteException {
             try {
                 out_serialized.reset();
-                out_serialized.writeObject("addPlayerToGame");
+                out_serialized.writeObject(Methods.ADD_PLAYER_TO_GAME);
                 out_serialized.writeObject(gameID);
                 out_serialized.writeObject(username);
                 out_serialized.flush();
@@ -107,7 +105,7 @@ public class ServerProxy   implements Server {
         public void create (String username,int numberOfPlayers) throws RemoteException {
             try {
                 out_serialized.reset();
-                out_serialized.writeObject("create");
+                out_serialized.writeObject(Methods.CREATE);
                 out_serialized.writeObject(username);
                 out_serialized.writeObject(numberOfPlayers);
                 out_serialized.flush();
@@ -120,7 +118,7 @@ public class ServerProxy   implements Server {
         public void getGamesList () throws RemoteException {
             try {
                 out_serialized.reset();
-                out_serialized.writeObject("getGamesList");
+                out_serialized.writeObject(Methods.GET_GAMES_LIST);
                 out_serialized.flush();
             } catch (IOException e) {
                 throw new RemoteException("Cannot get games list", e);
@@ -131,7 +129,7 @@ public class ServerProxy   implements Server {
         public void pong () throws RemoteException {
             try {
                 out_serialized.reset();
-                out_serialized.writeObject("pong");
+                out_serialized.writeObject(Methods.PONG);
                 out_serialized.flush();
             } catch (IOException e) {
                 throw new RemoteException("Cannot pong", e);
@@ -140,31 +138,30 @@ public class ServerProxy   implements Server {
 
         // receive messgaes from the server: use not a case based.
         // Something like this:
-
+//
         public void ReceiveFromClient(Client client) throws RemoteException {
             try {
                 ClientProxy.Methods client_methods = (ClientProxy.Methods) in_deserialized.readObject();
-
                 switch (client_methods) {
-                    case updateGamesList:
+                    case UPDATE_GAMES_LIST:
                         client.updateGamesList((List<GameDetails>) in_deserialized.readObject());
                         break;
-                    case showError:
+                    case SHOW_ERROR:
                         client.showError((String) in_deserialized.readObject());
                         break;
-                    case updatePlayersList:
+                    case UPDATE_PLAYERS_LIST:
                         client.updatePlayersList((List<String>) in_deserialized.readObject());
                         break;
-                    case gameHasStarted:
+                    case GAME_HAS_STARTED:
                         client.gameHasStarted();
                         break;
-                    case modelChanged:
+                    case MODEL_CHANGED:
                         client.modelChanged((GameView) in_deserialized.readObject());
                         break;
-                    case gameEnded:
+                    case GAME_ENDED:
                         client.gameEnded((GameView) in_deserialized.readObject());
                         break;
-                    case ping:
+                    case PING:
                         client.ping();
                         break;
                 }
@@ -176,4 +173,5 @@ public class ServerProxy   implements Server {
                 throw new RemoteException("Connection error", e);
             }
         }
+
     }
