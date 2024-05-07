@@ -37,13 +37,13 @@ public class ClientProxy implements Client {
      * This enum is used to define the methods that can be called on the client.
      */
     public enum Methods{
-        updateGamesList,
-        showError,
-        updatePlayersList,
-        gameHasStarted,
-        modelChanged,
-        gameEnded,
-        ping
+        UPDATE_GAMES_LIST,
+        SHOW_ERROR,
+        UPDATE_PLAYERS_LIST,
+        GAME_HAS_STARTED,
+        MODEL_CHANGED,
+        GAME_ENDED,
+        PING
     }
 
     /**
@@ -68,7 +68,7 @@ public class ClientProxy implements Client {
     public void updateGamesList(List<GameDetails> o) throws RemoteException{
         try {
             out_serialized.reset();
-            out_serialized.writeObject("updateGamesList");
+            out_serialized.writeObject(Methods.UPDATE_GAMES_LIST);
             out_serialized.writeObject(o);
             out_serialized.flush();
             // Just because it is not a void method
@@ -81,7 +81,7 @@ public class ClientProxy implements Client {
     public void  showError(String err) throws RemoteException{
         try {
             out_serialized.reset();
-            out_serialized.writeObject("showError");
+            out_serialized.writeObject(Methods.SHOW_ERROR);
             out_serialized.writeObject(err);
             out_serialized.flush();
             // Just because it is not a void method
@@ -94,10 +94,9 @@ public class ClientProxy implements Client {
     public void updatePlayersList(List<String> o) throws RemoteException{
         try {
             out_serialized.reset();
-            out_serialized.writeObject("updatePlayersList");
+            out_serialized.writeObject(Methods.UPDATE_PLAYERS_LIST); // Corrected enum value
             out_serialized.writeObject(o);
             out_serialized.flush();
-            // Just because it is not a void method
         } catch (IOException e) {
             throw new RemoteException("error, cannot serialize the object", e);
         }
@@ -107,7 +106,7 @@ public class ClientProxy implements Client {
     public void gameHasStarted() throws RemoteException{
         try {
             out_serialized.reset();
-            out_serialized.writeObject("gameHasStarted");
+            out_serialized.writeObject(Methods.GAME_HAS_STARTED);
             out_serialized.flush();
             // Just because it is not a void method
         } catch (IOException e) {
@@ -119,7 +118,7 @@ public class ClientProxy implements Client {
     public void modelChanged(GameView gameView) throws RemoteException{
         try {
             out_serialized.reset();
-            out_serialized.writeObject("modelChanged");
+            out_serialized.writeObject(Methods.MODEL_CHANGED);
             out_serialized.writeObject(gameView);
             out_serialized.flush();
             // Just because it is not a void method
@@ -132,7 +131,7 @@ public class ClientProxy implements Client {
     public void gameEnded(GameView gameView) throws RemoteException{
         try {
             out_serialized.reset();
-            out_serialized.writeObject("gameEnded");
+            out_serialized.writeObject(Methods.GAME_ENDED);
             out_serialized.writeObject(gameView);
             out_serialized.flush();
             // Just because it is not a void method
@@ -145,7 +144,7 @@ public class ClientProxy implements Client {
     public void ping() throws RemoteException {
         try {
             out_serialized.reset();
-            out_serialized.writeObject("ping");
+            out_serialized.writeObject(Methods.PING);
             out_serialized.flush();
         } catch (IOException e) {
             throw new RemoteException("error, cannot serialize the object", e);
@@ -157,10 +156,10 @@ public class ClientProxy implements Client {
         try{
             ServerProxy.Methods server_methods = (ServerProxy.Methods) in_deserialized.readObject();
             switch(server_methods){
-                case register:
+                case REGISTER:
                     server.register((Client) in_deserialized.readObject());
                     break;
-                case addPlayerToGame:
+                case ADD_PLAYER_TO_GAME:
                     try {
                         server.addPlayerToGame((int) in_deserialized.readObject(), (String) in_deserialized.readObject());
                     } catch (it.polimi.demo.model.exceptions.InvalidChoiceException e) {
@@ -168,20 +167,19 @@ public class ClientProxy implements Client {
                         System.err.println("Invalid choice: " + e.getMessage());
                     }
                     break;
-                case create:
+                case CREATE:
                     server.create((String) in_deserialized.readObject(), (int) in_deserialized.readObject());
                     break;
-                case getGamesList:
+                case GET_GAMES_LIST:
                     server.getGamesList();
                     break;
-                case pong:
+                case PONG:
                     server.pong();
                     break;
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RemoteException("error, cannot deserialize the object or cannot connect", e);
         }
-
     }
 
 }
