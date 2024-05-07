@@ -21,7 +21,6 @@ import it.polimi.demo.view.PlayerDetails;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 //TODO: Check how first_finished_player is set.
 

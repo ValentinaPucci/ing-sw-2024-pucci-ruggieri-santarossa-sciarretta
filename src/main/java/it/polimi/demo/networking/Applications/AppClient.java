@@ -1,4 +1,5 @@
 package it.polimi.demo.networking.Applications;
+import java.rmi.AccessException;
 import java.util.logging.Logger;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.networking.ClientImpl;
@@ -65,7 +66,7 @@ public class AppClient {
         System.out.print("Enter server IP (blank for localhost): ");
         ip = in.nextLine();
         if (ip.isBlank()){
-            ip = DefaultValues.Server_ip;
+            ip = "localhost";
         }
 
         System.out.print("Enter server port (blank for default): ");
@@ -84,16 +85,10 @@ public class AppClient {
      * Starts an RMI client.
      */
     private static void startRMI() throws RemoteException, NotBoundException {
-        try {
             Registry registry = LocateRegistry.getRegistry(ip, port);
             AppServerInterface appServer = (AppServerInterface) registry.lookup(DefaultValues.defaultRMIName);
             ClientImpl client = new ClientImpl(appServer.connect(), uiType);
             client.run();
-        } catch (RemoteException e) {
-            throw new RemoteException("Cannot connect to server due to a remote exception!!", e);
-        } catch (NotBoundException e) {
-            throw new NotBoundException();
-        }
     }
 
     public static String getIP(){

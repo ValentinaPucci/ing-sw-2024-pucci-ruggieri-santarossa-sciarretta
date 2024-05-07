@@ -1,7 +1,5 @@
 package it.polimi.demo.listener;
 
-import it.polimi.demo.listener.Listener;
-
 import java.rmi.RemoteException;
 
 public interface UIListener extends Listener {

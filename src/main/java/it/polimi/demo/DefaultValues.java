@@ -36,7 +36,7 @@ public class DefaultValues {
     /**
      * Timeout (in milliseconds) used in the ping-pong mechanism.
      */
-    public static final long pingpongTimeout = 1000;
+    public static final long pingpongTimeout = 3000;
     /**
      * Timeout (in milliseconds) used by the client to determine if the connection to the server is lost.
      * This value should be greater than the ping-pong timeout.
