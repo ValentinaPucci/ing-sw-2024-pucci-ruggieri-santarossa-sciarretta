@@ -19,5 +19,4 @@ module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
     opens it.polimi.demo to javafx.fxml;
     exports it.polimi.demo.listener to java.rmi;
     exports it.polimi.demo.networking.Applications;
-    // exports it.polimi.demo.listener.aux to java.rmi;
 }

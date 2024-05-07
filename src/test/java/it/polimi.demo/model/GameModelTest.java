@@ -473,31 +473,4 @@ public class GameModelTest {
 
     }
 
-
-
-
-
-    //----------------------------listeners--------------------------------------------
-    @Test
-    public void testAddListener() {
-        Remote remoteListener = null;
-        gameModel.addListener((GameListener) remoteListener);
-        assertTrue(gameModel.getListenersHandler().contains((GameListener) remoteListener));
-        assertEquals(1,gameModel.getListenersHandler().size());
-        gameModel.removeListener((GameListener) remoteListener);
-        assertEquals(0,gameModel.getListenersHandler().size());
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

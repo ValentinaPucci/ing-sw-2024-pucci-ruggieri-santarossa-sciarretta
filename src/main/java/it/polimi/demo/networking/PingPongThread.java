@@ -58,7 +58,7 @@ public class PingPongThread extends Thread {
     }
 
     //TODO: IMPLEMENT
-    private void handlePlayerDisconnection(){
+    private void handlePlayerDisconnection() {
         // Checks if the client is already in a game
     }
 

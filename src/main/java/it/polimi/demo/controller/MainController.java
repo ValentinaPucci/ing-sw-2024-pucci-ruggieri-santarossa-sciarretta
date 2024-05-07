@@ -15,6 +15,7 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.networking.PrintAsync.*;
 
 /**
@@ -86,17 +87,11 @@ public class MainController implements MainControllerInterface {
             games.get(id).setNumPlayersToPlay(num_of_players);
         }
 
-        game.addListener(listener, player);
+        notifyListeners(game.getModel().getListeners(), GameListener::newGame);
 
         printAsync("\t>Player:\"" + nickname + "\"" + " created game " + id);
         printRunningGames();
-
-        try {
-            game.addPlayer(player.getNickname());
-        } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-            listener.genericErrorWhenEnteringGame(e.getMessage());
-        }
-
+        game.addPlayer(player.getNickname());
         return game;
     }
 
@@ -126,7 +121,7 @@ public class MainController implements MainControllerInterface {
             if (firstAvailableGame.isPresent()) {
                 GameController game = firstAvailableGame.get();
                 try {
-                    game.addListener(listener, player);
+                    //game.addListener(listener, player);
                     game.addPlayer(player.getNickname());
 
                     printAsync("Player \"" + nickname + "\" joined Game " + game.getGameId());
@@ -134,11 +129,8 @@ public class MainController implements MainControllerInterface {
 
                     return game;
                 } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-                    game.removeListener(listener, player);
-                    listener.genericErrorWhenEnteringGame("Failed to join the game: " + e.getMessage());
+                    //game.removeListener(listener, player);
                 }
-            } else {
-                listener.genericErrorWhenEnteringGame("No available games to join.");
             }
         }
 
@@ -171,28 +163,16 @@ public class MainController implements MainControllerInterface {
                         g.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname)))
                 .map(g -> {
                     try {
-                        g.addListener(listener, player);
                         g.addPlayer(player.getNickname());
+                        notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::playerJoinedGame);
                         printAsync("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
                         printRunningGames();
                         return g;
                     } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-                        try {
-                            listener.genericErrorWhenEnteringGame(e.getMessage());
-                        } catch (RemoteException ex) {
-                            throw new RuntimeException(ex);
-                        }
                         return null;
                     }
                 })
-                .orElseGet(() -> {
-                    try {
-                        listener.gameIdNotExists(gameId);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+                .orElseGet(() -> null);
 
     }
 
@@ -218,28 +198,16 @@ public class MainController implements MainControllerInterface {
                         .findFirst()
                         .map(player -> {
                             try {
-                                game.addListener(listener, player);
+                                //game.addListener(listener, player);
                                 game.getModel().reconnectPlayer(player);
                                 return game;
                             } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-                                try {
-                                    listener.genericErrorWhenEnteringGame(e.getMessage());
-                                } catch (RemoteException ex) {
-                                    throw new RuntimeException(ex);
-                                }
                                 return null;
                             } catch (GameEndedException e) {
                                 throw new RuntimeException(e);
                             }
                         }))
-                .orElseGet(() -> {
-                    try {
-                        listener.gameIdNotExists(gameId);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+                .orElseGet(() -> null);
 
     }
 
@@ -289,6 +257,7 @@ public class MainController implements MainControllerInterface {
                 .findFirst()
                 .ifPresent(game -> {
                     games.remove(gameId);
+                    notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::removedGame);
                     printAsync("\t>Game " + gameId + " removed from games");
                     printRunningGames();
                 });
