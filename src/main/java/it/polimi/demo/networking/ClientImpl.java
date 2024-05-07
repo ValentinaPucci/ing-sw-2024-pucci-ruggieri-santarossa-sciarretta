@@ -43,8 +43,9 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public ClientImpl(Server server, UIType uiType) throws RemoteException {
 
         this.server = server;
+        initialize();
 
-        switch (uiType){
+        switch (uiType) {
             case TUI -> {
                 this.startUI = new TextualStartUI();
                 this.gameUI = new TextualGameUI();
@@ -55,7 +56,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
             }
             default -> throw new RuntimeException("UI type not supported");
         }
-        initialize();
     }
 
     /**
@@ -180,7 +180,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void ping() throws RemoteException {
         pingReceived = true;
-
         this.server.pong();
     }
 }

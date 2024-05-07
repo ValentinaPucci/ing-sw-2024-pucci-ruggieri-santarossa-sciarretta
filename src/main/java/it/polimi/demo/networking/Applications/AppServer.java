@@ -3,6 +3,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.networking.Server;
+import it.polimi.demo.networking.ServerExecutor;
 import it.polimi.demo.networking.ServerImpl;
 
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
      * @param args [server ip] [socket port]
      */
     public static void main(String[] args) {
+
         logger.info("Starting server...");
         System.out.println("Starting server...");
         serverIP = DefaultValues.Server_ip;
@@ -106,10 +108,9 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
         registry.rebind(DefaultValues.defaultRMIName, server);
     }
 
-
     @Override
     public Server connect() throws RemoteException {
         logger.info("Creating server connection...");
-        return new ServerImpl();
+        return new ServerExecutor(new ServerImpl());
     }
 }
