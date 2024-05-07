@@ -78,44 +78,10 @@ public class ServerImpl implements Server, GameListener {
      */
     @Override
     public void addPlayerToGame(int gameID, String nickname)
-            throws RemoteException, GameNotStartedException, InvalidChoiceException {
+            throws RemoteException, GameNotStartedException {
 
         System.out.println("A client is joining game " + gameID + " with username " + nickname + "...");
         main_controller.joinGame(this, nickname, gameID).startIfFull();
-
-//        game_controller = main_controller.getGames().get(gameID);
-//        model = main_controller.getGames().get(gameID).getModel();
-//        if (model.getAllPlayers().contains(nickname)) {
-//            // todo: guardare bene: ----> GameList.getInstance().removeListener(this);
-//            // we do not remove listener when the connection falls!!
-//            // main_controller.getGames().get(gameID).addListener(this, p);
-//            client.gameHasStarted();
-//            try {
-//                // we take care of the listeners directly inside the model!
-//                game_controller.getModel().reconnectPlayer(p);
-//            } catch (GameEndedException e) {
-//                throw new RuntimeException(e);
-//            }
-//
-//            // Force the update of the client
-//            playerIndex = model.getAllPlayers().indexOf(nickname);
-//            client.modelChanged(new GameView(model, playerIndex));
-//            // We don't remove the listener when the connection falls!!
-//            // this.model.addListener(this);
-//        } else {
-//            // Yes, this is ok!
-//            model.addListener(this);
-//            try {
-//                game_controller.addPlayer(nickname);
-//            } catch (GameNotStartedException e) {
-//                model.removeListener(this);
-//                model = null;
-//                game_controller = null;
-//                throw e;
-//            }
-//            playerJoinedGame();
-//            game_controller.startIfFull();
-//        }
     }
 
     /**
@@ -166,7 +132,7 @@ public class ServerImpl implements Server, GameListener {
         this.client.updateGamesList(main_controller.getGamesDetails());
 
         if(this.model != null && main_controller.getGames().get(this.model.getGameId()) == null){
-            this.model.removeListener(this);
+            //this.model.removeListener(this);
             this.model = null;
 
             this.client.showError("The game you were waiting for has been removed.");
@@ -209,7 +175,7 @@ public class ServerImpl implements Server, GameListener {
         GameView gameView = new GameView(this.model, this.playerIndex);
 
         main_controller.getGames().remove(model.getGameId());
-        this.model.removeListener(this);
+        //this.model.removeListener(this);
         this.model = null;
         try {
             this.client.gameEnded(gameView);
@@ -219,151 +185,5 @@ public class ServerImpl implements Server, GameListener {
     @Override
     public void pong() throws RemoteException {
         pingpongThread.pongReceived();
-    }
-
-
-    @Override
-    public void newPlayerHasJoined(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void playerAbandoningGame(GameModelImmutable game_model, String nickname) throws RemoteException {
-
-    }
-
-    @Override
-    public void failedJoinFullGame(Player player, GameModelImmutable game_model) throws RemoteException {
-
-    }
-
-    @Override
-    public void playerReconnected(GameModelImmutable game_model, String nickname_reconnected) throws RemoteException {
-
-    }
-
-    @Override
-    public void failedJoinInvalidNickname(Player player_trying_to_join) throws RemoteException {
-
-    }
-
-    @Override
-    public void invalidGameId(int game_id) throws RemoteException {
-
-    }
-
-    @Override
-    public void genericErrorWhenEnteringGame(String why) throws RemoteException {
-
-    }
-
-    @Override
-    public void playerReadyForStarting(GameModelImmutable game_model, String nickname) throws IOException {
-
-    }
-
-    @Override
-    public void commonObjectiveCardsExtracted(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void resourceCardExtractedFromDeck(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void resourceCardExtractedFromTable(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void goldCardExtractedFromDeck(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void goldCardExtractedFromTable(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void objectiveCardExtractedFromEmptyDeck(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void resourceCardExtractedFromEmptyDeck(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void resourceCardExtractedFromEmptyTable(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void goldCardExtractedFromEmptyDeck(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void goldCardExtractedFromEmptyTable(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void cardPlacedOnPersonalBoard(GameModelImmutable gameModel) throws RemoteException {
-
-    }
-
-    @Override
-    public void gameStarted(GameModelImmutable game_model) throws RemoteException {
-
-    }
-
-    @Override
-    public void gameEnded(GameModelImmutable game_model) throws RemoteException {
-
-    }
-
-    @Override
-    public void sentMessage(GameModelImmutable game_model, Message msg) throws RemoteException {
-
-    }
-
-    @Override
-    public void playerDisconnected(GameModelImmutable gameModel, String nickname) throws RemoteException {
-
-    }
-
-    @Override
-    public void nextTurn(GameModelImmutable game_model) throws RemoteException {
-
-    }
-
-    @Override
-    public void playerHasMovedOnCommonBoard(GameModelImmutable game_model) throws RemoteException {
-
-    }
-
-    @Override
-    public void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
-
-    }
-
-    @Override
-    public void lastRound(GameModelImmutable game_model) throws RemoteException {
-
-    }
-
-    @Override
-    public void secondLastRound(GameModelImmutable game_model) throws RemoteException {
-
-    }
-
-    @Override
-    public void gameIdNotExists(int gameId) throws RemoteException {
-
     }
 }

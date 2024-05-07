@@ -44,7 +44,7 @@ public class TextualStartUI extends StartUI {
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
         notifyListeners(lst, UIListener::refreshStartUI);
         Scanner s = new Scanner(System.in);
-        
+        showMenu();
         int choice = TextualUtils.nextInt(s);
         switch (choice) {
             case 1 -> createGame();
@@ -61,7 +61,6 @@ public class TextualStartUI extends StartUI {
      */
     private void askUsername() {
         Scanner s = new Scanner(System.in);
-
         System.out.print(ansi().bold().fg(Ansi.Color.GREEN).a("Insert your username: ").reset());
         this.username = s.next();
     }

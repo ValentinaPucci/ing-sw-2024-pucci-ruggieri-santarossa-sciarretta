@@ -96,29 +96,21 @@ public interface GameControllerInterface extends Remote {
      */
     void startGame() throws IllegalStateException;
 
-    /**
-     * This method is used by the server to add a ping every x second in order to check for disconnections.
-     * @param nickname
-     * @param me
-     * @throws RemoteException
-     */
 
-    void addPing(String nickname, GameListener me) throws RemoteException;
+//    /**
+//     * This method disconnect a player and remove him from the GameListener list{@link GameListener}
+//     * @param p the player to disconnect
+//     * @param listOfClient the GameListener of the player {@link GameListener}
+//     * @throws RemoteException if the connection fails
+//     */
+//    void disconnectPlayer( Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
 
-    /**
-     * This method disconnect a player and remove him from the GameListener list{@link GameListener}
-     * @param p the player to disconnect
-     * @param listOfClient the GameListener of the player {@link GameListener}
-     * @throws RemoteException if the connection fails
-     */
-    void disconnectPlayer( Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
-
-    /**
-     * Add a message to the chat list
-     * @param mess the message to send {@link Message}
-     * @throws RemoteException if the connection fails
-     */
-    void sendMessage(Message mess) throws RemoteException;
+//    /**
+//     * Add a message to the chat list
+//     * @param mess the message to send {@link Message}
+//     * @throws RemoteException if the connection fails
+//     */
+//    void sendMessage(Message mess) throws RemoteException;
 
     /**
      * This method return the number of the online players
