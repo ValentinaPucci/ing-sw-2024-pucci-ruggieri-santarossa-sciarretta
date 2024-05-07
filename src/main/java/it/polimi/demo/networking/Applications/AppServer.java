@@ -71,15 +71,15 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
         });
         rmiThread.start();
 
-        Thread socketThread = new Thread(() -> {
-            try {
-                startSocket();
-            } catch (RemoteException e) {
-                System.err.println("Cannot start socket protocol.");
-                e.printStackTrace();
-            }
-        });
-        socketThread.start();
+//        Thread socketThread = new Thread(() -> {
+//            try {
+//                startSocket();
+//            } catch (RemoteException e) {
+//                System.err.println("Cannot start socket protocol.");
+//                e.printStackTrace();
+//            }
+//        });
+//        socketThread.start();
 
         try {
             rmiThread.join();
@@ -121,6 +121,7 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
         AppServer server = getInstance();
         registry.rebind(DefaultValues.defaultRMIName, server);
     }
+
     private static void startSocket() throws RemoteException {
         System.out.println("SOCKET > Starting socket server on port " + socketPort + "...");
 
@@ -155,10 +156,10 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
             throw new RemoteException("SOCKET > Cannot start socket server", e);
         }
     }
-    // TODO: A noi non serve? metto per togliere errrore..
+
     @Override
     public Server connect() throws RemoteException {
-        return null;
+        return new ServerExecutor(new ServerImpl());
     }
 
 }
