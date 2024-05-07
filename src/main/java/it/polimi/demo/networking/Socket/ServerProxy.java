@@ -11,8 +11,6 @@ import it.polimi.demo.networking.Client;
 import it.polimi.demo.networking.Socket.ClientProxy;
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.GameView;
-import
-
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

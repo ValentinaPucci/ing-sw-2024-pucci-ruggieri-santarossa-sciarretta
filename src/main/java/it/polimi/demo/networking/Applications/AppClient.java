@@ -112,11 +112,11 @@ public class AppClient {
         new Thread(() -> {
             while(true) {
                 try {
-                    ServerProxy.ReceiveFromClient(client);
+                    serverProxy.ReceiveFromClient(client);
                 } catch (RemoteException e) {
                     System.err.println("Cannot receive from server. Stopping...");
                     try {
-                        ServerProxy.close();
+                        serverProxy.close();
                     } catch (RemoteException ex) {
                         System.err.println("Cannot close connection with server. Halting...");
                     }
