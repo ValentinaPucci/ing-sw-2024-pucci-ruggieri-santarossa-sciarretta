@@ -4,6 +4,7 @@ import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.UIListener;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
+import it.polimi.demo.networking.Socket.ServerProxy;
 import it.polimi.demo.view.*;
 import it.polimi.demo.view.UI.GUI.GraphicalGameUI;
 import it.polimi.demo.view.UI.GUI.GraphicalStartUI;
@@ -141,7 +142,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void exit() {
-        //closeConnection(); --> x socket
+        closeConnection();
         System.exit(0);
     }
 
@@ -180,6 +181,15 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         gameUI.gameEnded(gameView);
     }
 
+    private void closeConnection() {
+        if(this.server instanceof ServerProxy) {
+            try {
+                ((ServerProxy) this.server).close();
+            } catch (RemoteException e) {
+                throw new RuntimeException("Error while closing connection.", e);
+            }
+        }
+    }
     @Override
     public void ping() throws RemoteException {
         pingReceived = true;
