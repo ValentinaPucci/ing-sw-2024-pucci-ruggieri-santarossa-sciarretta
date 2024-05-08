@@ -81,8 +81,7 @@ public class TextualStartUI extends StartUI {
     private void createGame() {
         Scanner s = new Scanner(System.in);
         do {
-            System.out.print("How many players? (" + DefaultValues.MinNumOfPlayer + " to " + DefaultValues.MaxNumOfPlayer
-                    + ") ");
+            System.out.print("How many players? (" + DefaultValues.MinNumOfPlayer + " to " + DefaultValues.MaxNumOfPlayer + ") ");
             num_players = TextualUtils.nextInt(s);
             if (num_players < DefaultValues.MinNumOfPlayer || num_players > DefaultValues.MaxNumOfPlayer)
                 System.out.println("Number of players should be between " + DefaultValues.MinNumOfPlayer
@@ -101,6 +100,7 @@ public class TextualStartUI extends StartUI {
         Scanner s = new Scanner(System.in);
         do {
             System.out.print("Which game do you want to join? ");
+            showGamesList();
             gameID = TextualUtils.nextInt(s);
             if (gameID <= 0)
                 System.out.println("GameID is a positive number!");

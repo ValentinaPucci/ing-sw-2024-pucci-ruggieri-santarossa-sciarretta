@@ -5,6 +5,8 @@ import it.polimi.demo.listener.UIListener;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
 import it.polimi.demo.view.*;
+import it.polimi.demo.view.UI.GUI.GraphicalGameUI;
+import it.polimi.demo.view.UI.GUI.GraphicalStartUI;
 import it.polimi.demo.view.UI.TUI.TextualGameUI;
 import it.polimi.demo.view.UI.TUI.TextualStartUI;
 import it.polimi.demo.view.UI.GameUI;

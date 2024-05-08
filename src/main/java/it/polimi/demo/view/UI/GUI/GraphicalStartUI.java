@@ -1,4 +1,4 @@
-package it.polimi.demo.networking;
+package it.polimi.demo.view.UI.GUI;
 
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.UI.StartUI;

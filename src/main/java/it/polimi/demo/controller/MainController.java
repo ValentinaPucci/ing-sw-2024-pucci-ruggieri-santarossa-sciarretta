@@ -90,8 +90,10 @@ public class MainController implements MainControllerInterface {
         notifyListeners(game.getModel().getListeners(), GameListener::newGame);
 
         printAsync("\t>Player:\"" + nickname + "\"" + " created game " + id);
+        printAsync("RUNNING GAMES: ");
         printRunningGames();
         game.addPlayer(player.getNickname());
+
         return game;
     }
 
