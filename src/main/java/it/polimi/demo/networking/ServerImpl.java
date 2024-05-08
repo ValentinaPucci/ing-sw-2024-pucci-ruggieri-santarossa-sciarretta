@@ -7,22 +7,22 @@ import it.polimi.demo.controller.GameController;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
-import it.polimi.demo.model.exceptions.InvalidChoiceException;
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.GameView;
+import it.polimi.demo.view.PlayerDetails;
+import org.fusesource.jansi.Ansi;
 
-import java.io.IOException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Comparator;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 public class ServerImpl implements Server, GameListener {
     /**
@@ -42,7 +42,7 @@ public class ServerImpl implements Server, GameListener {
      */
     protected GameModel model;
     protected MainController main_controller;
-    protected GameController game_controller;
+    protected GameControllerInterface game_controller;
 
     // Here we exploit the interface
     protected Client client;
@@ -74,14 +74,13 @@ public class ServerImpl implements Server, GameListener {
      * It will also handle the case where a player is reconnecting
      * to a game in which he was already playing.
      *
-     * @see Server#addPlayerToGame(int, String)
      */
     @Override
     public void addPlayerToGame(int gameID, String nickname)
             throws RemoteException, GameNotStartedException {
 
         System.out.println("A client is joining game " + gameID + " with username " + nickname + "...");
-        main_controller.joinGame(this, nickname, gameID).startIfFull();
+        MainController.getControllerInstance().joinGame(this, nickname, gameID).startIfFull();
     }
 
     /**
@@ -99,9 +98,12 @@ public class ServerImpl implements Server, GameListener {
                 .max(Comparator.naturalOrder())
                 .orElse(0) + 1;
 
-        System.out.println("A client is creating game " + gameID + " with username " + nickname + "...");
+        System.out.println("A client with username " + nickname + " is creating game " + gameID + "...");
 
-        main_controller.createGame(this, nickname, numberOfPlayers, gameID);
+        this.model = new GameModel(gameID, numberOfPlayers, new Player(nickname));
+
+        game_controller = main_controller.createGame(this, nickname, numberOfPlayers, gameID);
+
         // The player that creates the game is the first player to join it
         playerIndex = 0;
         // Triggers the update of the player list on the client
@@ -114,24 +116,41 @@ public class ServerImpl implements Server, GameListener {
      */
     @Override
     public void getGamesList() throws RemoteException {
-        this.client.updateGamesList(main_controller.getGamesDetails());
+
+        main_controller = MainController.getControllerInstance();
+
+        if (main_controller != null) {
+            List<GameDetails> gamesDetails = main_controller.getGamesDetails();
+            if (gamesDetails != null && this.client != null) {
+                this.client.updateGamesList(gamesDetails);
+            } else {
+                if (gamesDetails == null) {
+                    System.err.println("Games details returned by main controller is null.");
+                }
+                if (this.client == null) {
+                    System.err.println("Client is null.");
+                }
+            }
+        } else {
+            System.err.println("Main controller is null.");
+        }
     }
 
     @Override
     public void newGame() throws RemoteException {
-        this.client.updateGamesList(main_controller.getGamesDetails());
+        this.client.updateGamesList(MainController.getControllerInstance().getGamesDetails());
     }
 
     @Override
     public void updatedGame() throws RemoteException {
-        this.client.updateGamesList(main_controller.getGamesDetails());
+        this.client.updateGamesList(MainController.getControllerInstance().getGamesDetails());
     }
 
     @Override
     public void removedGame() throws RemoteException {
-        this.client.updateGamesList(main_controller.getGamesDetails());
+        this.client.updateGamesList(MainController.getControllerInstance().getGamesDetails());
 
-        if(this.model != null && main_controller.getGames().get(this.model.getGameId()) == null){
+        if(this.model != null && MainController.getControllerInstance().getGames().get(this.model.getGameId()) == null){
             //this.model.removeListener(this);
             this.model = null;
 
@@ -140,8 +159,28 @@ public class ServerImpl implements Server, GameListener {
     }
 
     @Override
-    public void playerJoinedGame() throws RemoteException {
-        this.client.updatePlayersList(this.model.getAllNicknames());
+    public void playerJoinedGame() {
+        try {
+            if (this.client == null) {
+                System.err.println("Client is null. Cannot update players list.");
+                return;
+            }
+
+            if (this.model == null) {
+                System.err.println("Model is null. Cannot retrieve nicknames.");
+                return;
+            }
+
+            List<String> allNicknames = this.model.getAllNicknames();
+            if (allNicknames == null) {
+                System.err.println("Nicknames list is null. Cannot update players list.");
+                return;
+            }
+
+            this.client.updatePlayersList(allNicknames);
+        } catch (RemoteException e) {
+            System.err.println("Error while updating players list: " + e.getMessage());
+        }
     }
 
 
@@ -174,7 +213,7 @@ public class ServerImpl implements Server, GameListener {
     public void gameEnded() {
         GameView gameView = new GameView(this.model, this.playerIndex);
 
-        main_controller.getGames().remove(model.getGameId());
+        MainController.getControllerInstance().getGames().remove(model.getGameId());
         //this.model.removeListener(this);
         this.model = null;
         try {

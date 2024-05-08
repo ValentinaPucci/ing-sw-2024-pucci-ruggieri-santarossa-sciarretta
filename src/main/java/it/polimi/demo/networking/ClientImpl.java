@@ -13,6 +13,7 @@ import it.polimi.demo.view.UI.TUI.TextualStartUI;
 import it.polimi.demo.view.UI.GameUI;
 import it.polimi.demo.view.UI.StartUI;
 import it.polimi.demo.view.UI.UIType;
+import org.fusesource.jansi.Ansi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -109,12 +110,29 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
      */
     @Override
     public void createGame( String nickname, int numberOfPlayers) {
+        if (server == null) {
+            System.err.println("Server is null. Cannot create game.");
+            return;
+        }
+
+        if (nickname == null || nickname.isEmpty()) {
+            System.err.println("Nickname cannot be null or empty.");
+            return;
+        }
+
+        if (numberOfPlayers <= 0) {
+            System.err.println("Number of players must be greater than zero.");
+            return;
+        }
+
         try {
-            this.server.create(nickname, numberOfPlayers);
+            server.create(nickname, numberOfPlayers);
         } catch (GameNotStartedException e) {
             try {
-                this.showError(e.getMessage());
-            } catch (RemoteException ignored) {}
+                showError(e.getMessage());
+            } catch (RemoteException ignored) {
+                System.err.println("Error while showing error message.");
+            }
         } catch (RemoteException e) {
             System.err.println("Network error while creating game.");
         }
@@ -158,6 +176,10 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void updatePlayersList(List<String> o) throws RemoteException {
+        if (o == null) {
+            System.err.println("List of players is null. Cannot update players list.");
+            return;
+        }
         startUI.showPlayersList(o);
     }
 

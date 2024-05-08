@@ -2,11 +2,14 @@ package it.polimi.demo.networking;
 
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
+import org.fusesource.jansi.Ansi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * This class wraps the server methods in order to execute them in a separate thread.

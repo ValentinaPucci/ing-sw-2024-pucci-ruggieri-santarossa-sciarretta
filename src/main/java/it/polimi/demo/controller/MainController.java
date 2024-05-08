@@ -10,6 +10,7 @@ import it.polimi.demo.model.Player;
 import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
 import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
 import it.polimi.demo.view.GameDetails;
+import org.fusesource.jansi.Ansi;
 
 import java.rmi.RemoteException;
 import java.util.*;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.networking.PrintAsync.*;
+import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * MainController Class
@@ -75,6 +77,7 @@ public class MainController implements MainControllerInterface {
     @Override
     public GameControllerInterface createGame(GameListener listener, String nickname, int num_of_players, int id)
             throws RemoteException {
+
         Player player = new Player(nickname);
         GameController game = new GameController(id, num_of_players, new Player(nickname));
 
@@ -89,7 +92,7 @@ public class MainController implements MainControllerInterface {
 
         notifyListeners(game.getModel().getListeners(), GameListener::newGame);
 
-        printAsync("\t>Player:\"" + nickname + "\"" + " created game " + id);
+        printAsync("\t>Player:\" " + nickname + " \"" + " created game " + id);
         printAsync("RUNNING GAMES: ");
         printRunningGames();
         game.addPlayer(player.getNickname());
@@ -277,6 +280,7 @@ public class MainController implements MainControllerInterface {
 
     @Override
     public List<GameDetails> getGamesDetails() {
+        System.out.println(ansi().fg(Ansi.Color.BLUE).a("CHECKKKKKKKK3").reset());
         return games.values().stream()
                 .map(gameController -> new GameDetails(
                         gameController.getModel().getGameId(),

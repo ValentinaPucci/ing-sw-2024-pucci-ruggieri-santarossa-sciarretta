@@ -42,9 +42,12 @@ public class TextualStartUI extends StartUI {
         AnsiConsole.systemInstall();
         askUsername();
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+
+        //shows games list on the server
         notifyListeners(lst, UIListener::refreshStartUI);
+
         Scanner s = new Scanner(System.in);
-        showMenu();
+
         int choice = TextualUtils.nextInt(s);
         switch (choice) {
             case 1 -> createGame();
@@ -100,7 +103,6 @@ public class TextualStartUI extends StartUI {
         Scanner s = new Scanner(System.in);
         do {
             System.out.print("Which game do you want to join? ");
-            showGamesList();
             gameID = TextualUtils.nextInt(s);
             if (gameID <= 0)
                 System.out.println("GameID is a positive number!");
@@ -122,7 +124,6 @@ public class TextualStartUI extends StartUI {
     public void showGamesList(List<GameDetails> o) {
         if (this.username != null && !waitingForPlayers) {
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
-
             if (!o.isEmpty()) {
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("List of games on the server:").reset());
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("ID:\tPlayers:").reset());
@@ -168,6 +169,10 @@ public class TextualStartUI extends StartUI {
      */
     @Override
     public void showPlayersList(List<String> o) {
+        if (o == null) {
+            System.err.println("List of players is null. Cannot update players list.");
+            return;
+        }
         if (this.playersNameList == null) {
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
             if (gameID == -1) {
