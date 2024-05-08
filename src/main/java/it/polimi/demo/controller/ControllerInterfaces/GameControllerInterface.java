@@ -84,6 +84,11 @@ public interface GameControllerInterface extends Remote {
     void setPlayerAsReadyToStart(String nickname) throws RemoteException;
 
     /**
+     * Set the player as connected
+     * @param p the player to set as connected
+     */
+    void setPlayerAsConnected(Player p) throws RemoteException;
+    /**
      * Check if the game is ready to start
      * @return true if the game is ready to start, false else
      */
