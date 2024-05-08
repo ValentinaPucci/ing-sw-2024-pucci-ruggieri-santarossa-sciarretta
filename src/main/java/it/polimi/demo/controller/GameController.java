@@ -53,30 +53,30 @@ public class GameController implements GameControllerInterface, Serializable {
 
     //------------------------------------gameFlow-----------------------------------------------
     public void gameFlow() throws RemoteException, GameEndedException {
-        switch(model.getStatus()){
+        switch (model.getStatus()) {
             case WAIT:
                 //TODO: aspettare tutti i giocatori previsti per la partita
-                if(model.getNumPlayersToPlay() == getNumConnectedPlayers())
+                if (model.getNumPlayersToPlay() == getNumConnectedPlayers())
                     model.setStatus(GameStatus.FIRST_ROUND);
             case FIRST_ROUND:
                 //TODO giocare il primo turno posizionando le carte starter
-                if(model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
+                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
                     model.setStatus(GameStatus.RUNNING);
             case RUNNING:
                 //TODO giocare
-                if(model.getPlayersConnected().getFirst().getCurrentPoints() >= 20) {
+                if (model.getPlayersConnected().getFirst().getCurrentPoints() >= 20) {
                     model.nextTurn();
                     model.setStatus(GameStatus.SECOND_LAST_ROUND);
                 }
             case SECOND_LAST_ROUND:
                 //TODO giocare normale
-                if(model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname())) {
+                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname())) {
                     model.nextTurn();
                     model.setStatus(GameStatus.LAST_ROUND);
                 }
             case LAST_ROUND:
                 //TODO giocare senza pescare
-                if(model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
+                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
                     model.setStatus(GameStatus.ENDED);
             case ENDED:
                 //TODO giocare senza pescare
@@ -329,6 +329,7 @@ public class GameController implements GameControllerInterface, Serializable {
     @Override
     public void startIfFull() {
         if (isTheGameReadyToStart()) {
+            System.out.println("Game " + this.model.getGameId() + " is full and ready to start");
             this.startGame();
         }
     }
@@ -412,6 +413,11 @@ public class GameController implements GameControllerInterface, Serializable {
     @Override
     public synchronized void setPlayerAsReadyToStart(String nickname) {
         model.setPlayerAsReadyToStart(getPlayerEntity(nickname));
+    }
+
+    @Override
+    public synchronized void setPlayerAsConnected(Player p) {
+        model.setPlayerAsConnected(p);
     }
 
     /**

@@ -56,3 +56,7 @@ We would like to implement this advanced functionality on our program. Namely, w
 - Someone has to take care of GameModelImmutable class. It is useful to have all the object we want to represent in the view ready to use. 
 - Implement performTurn in controller, called by ServerImpl (Server interface) called by ClientImpl (It contains both placeCard and drawCard methods).
 - See execute() method in the run of TextualGameUI (called whenever MyState == MY_TURN).
+
+# ToDo (8 may 2024)
+- setAsConnected vs setAsReadyToStart... what is the difference?
+- Manage the GameStatus! Implement GameFlow method correctly in the controller.
