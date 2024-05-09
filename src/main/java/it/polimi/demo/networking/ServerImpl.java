@@ -100,9 +100,10 @@ public class ServerImpl implements Server, GameListener {
 
         System.out.println("A client with username " + nickname + " is creating game " + gameID + "...");
 
-        this.model = new GameModel(gameID, numberOfPlayers, new Player(nickname));
+        //this.model = new GameModel(gameID, numberOfPlayers, new Player(nickname));
 
         game_controller = main_controller.createGame(this, nickname, numberOfPlayers, gameID);
+        model = game_controller.getModel();
 
         // The player that creates the game is the first player to join it
         playerIndex = 0;

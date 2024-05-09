@@ -115,6 +115,12 @@ public class GameModel {
         return aux_order_players;
     }
     public List<String> getAllNicknames() {
+            System.out.println("aux_order_players: ");
+            for(Player p2 : aux_order_players){
+                System.out.println(p2.getNickname() + "\n");
+            }
+
+
         return aux_order_players.stream()
                 .map(Player::getNickname)
                 .collect(Collectors.toList());
@@ -199,6 +205,12 @@ public class GameModel {
             Player p = new Player(nickname);
             aux_order_players.add(p);
             notifyListeners(listeners, GameListener::playerJoinedGame);
+
+//            System.out.println("aux_order_players: ");
+//            for(Player p2 : aux_order_players){
+//                System.out.println(p2.getNickname() + "\n");
+//            }
+
         }
     }
 

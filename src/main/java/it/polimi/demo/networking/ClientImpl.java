@@ -180,6 +180,10 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
             System.err.println("List of players is null. Cannot update players list.");
             return;
         }
+        if (o.isEmpty()) {
+            System.err.println("List of players is empty. Cannot update players list.");
+            return;
+        }
         startUI.showPlayersList(o);
     }
 
