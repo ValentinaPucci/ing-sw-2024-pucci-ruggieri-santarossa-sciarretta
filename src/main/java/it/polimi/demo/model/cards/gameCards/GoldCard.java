@@ -57,7 +57,8 @@ public class GoldCard extends ResourceCard {
                             boolean isCornerCoverageRequired,
                             boolean isPotionRequired,
                             boolean isFeatherRequired,
-                            boolean isParchmentRequired) {
+                            boolean isParchmentRequired
+                            ) {
         this.mushroom_required = mushroom_required;
         this.leaf_required = leaf_required;
         this.butterfly_required = butterfly_required;
@@ -66,6 +67,7 @@ public class GoldCard extends ResourceCard {
         this.isPotionRequired = isPotionRequired;
         this.isFeatherRequired = isFeatherRequired;
         this.isParchmentRequired = isParchmentRequired;
+
     }
 
     public boolean getIsCornerCoverageRequired() {

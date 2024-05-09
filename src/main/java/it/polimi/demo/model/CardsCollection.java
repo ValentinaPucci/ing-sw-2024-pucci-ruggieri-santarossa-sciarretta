@@ -174,7 +174,7 @@ public  class CardsCollection {
                    boolean isParchmentRequired = cardNode.path("isParchmentRequired").asBoolean();
                    boolean isCornerCoverageRequired = cardNode.path("isCornerCoverageRequired").asBoolean();
 
-                    GoldCard gold_card = new GoldCard(id, orientation, color);
+                    GoldCard gold_card = new GoldCard(id, orientation, color,score, actual_corners);
                     gold_card.type = "Gold";
                     gold_card.setGoldCard(MushroomRequired, LeafRequired, ButterflyRequired, WolfRequired,
                             isPotionRequired, isFeatherRequired, isParchmentRequired, isCornerCoverageRequired);

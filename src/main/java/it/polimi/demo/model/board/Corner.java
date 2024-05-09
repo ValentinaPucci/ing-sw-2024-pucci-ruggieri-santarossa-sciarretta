@@ -134,4 +134,7 @@ public class Corner {
                 '}';
     }
 
+    public BoardCellCoordinate getBoard_coordinate() {
+        return board_coordinate;
+    }
 }
