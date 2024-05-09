@@ -105,7 +105,6 @@ public class MainController implements MainControllerInterface {
         return game;
     }
 
-
     /**
      * Allows a player to join the first available game.
      * If there are no available games (i.e., all games are either full or not in the waiting state),

@@ -114,12 +114,11 @@ public class GameModel {
     public List<Player> getAllPlayers() {
         return aux_order_players;
     }
-    public List<String> getAllNicknames() {
-            //System.out.println("aux_order_players: ");
-            for(Player p2 : aux_order_players){
-                System.out.println(p2.getNickname() + "\n");
-            }
 
+    public List<String> getAllNicknames() {
+        for(Player p2 : aux_order_players){
+            System.out.println(p2.getNickname() + "\n");
+        }
 
         return aux_order_players.stream()
                 .map(Player::getNickname)
@@ -143,7 +142,6 @@ public class GameModel {
     public boolean arePlayersReadyToStartAndEnough() {
         List<Player> p = aux_order_players.stream().filter(Player::getReadyToStart).toList();
         // If every player is ready, the game starts
-        System.out.println(p.containsAll(aux_order_players) && p.size() == num_required_players_to_start);
         return p.containsAll(aux_order_players) && p.size() == num_required_players_to_start;
     }
 
@@ -287,7 +285,7 @@ public class GameModel {
     public void setPlayerAsConnected(Player p) {
         // cancellato
         System.out.println("entra");
-        if (aux_order_players.contains(p)) {
+        if (aux_order_players.contains(p) && !players_connected.contains(p)) {
             // Here we bypass the question 'are you ready to start?'
             p.setAsReadyToStart();
             players_connected.offer(p);

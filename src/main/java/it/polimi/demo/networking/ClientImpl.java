@@ -192,7 +192,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public void gameHasStarted() throws RemoteException {
         System.out.println("Closing StartUI...");
         startUI.close();
-
         System.out.println("Starting GameUI...");
         new Thread(gameUI).start();
         gameUI.addListener(this);
