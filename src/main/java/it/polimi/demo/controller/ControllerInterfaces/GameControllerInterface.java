@@ -2,6 +2,7 @@ package it.polimi.demo.controller.ControllerInterfaces;
 
 import it.polimi.demo.controller.GameController;
 import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
@@ -15,6 +16,8 @@ import java.rmi.RemoteException;
 /**
  * This interface contains all the action a player can do in a single game */
 public interface GameControllerInterface extends Remote {
+
+    GameModel getModel();
 
     /**
      * This method place a RESOURCECARD in the commonboard.

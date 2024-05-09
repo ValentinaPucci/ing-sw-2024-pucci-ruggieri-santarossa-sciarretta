@@ -118,7 +118,6 @@ public class GameModel {
         return aux_order_players.stream()
                 .map(Player::getNickname)
                 .collect(Collectors.toList());
-
     }
 
     public LinkedList<Player> getPlayersConnected() {

@@ -109,7 +109,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
      * @param numberOfPlayers number of players in the game
      */
     @Override
-    public void createGame( String nickname, int numberOfPlayers) {
+    public void createGame(String nickname, int numberOfPlayers) {
         if (server == null) {
             System.err.println("Server is null. Cannot create game.");
             return;

@@ -173,6 +173,10 @@ public class TextualStartUI extends StartUI {
             System.err.println("List of players is null. Cannot update players list.");
             return;
         }
+        if (o.isEmpty()) {
+            System.err.println("List of players is Empty. Cannot update players list.");
+            return;
+        }
         if (this.playersNameList == null) {
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
             if (gameID == -1) {
