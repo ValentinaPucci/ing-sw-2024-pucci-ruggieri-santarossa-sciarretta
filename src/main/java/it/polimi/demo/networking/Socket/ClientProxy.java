@@ -168,6 +168,7 @@ public class ClientProxy implements Client {
                     }
                     break;
                 case CREATE:
+                    //System.out.println(" " + (String) in_deserialized.readObject() + " " + (int) in_deserialized.readObject());
                     server.create((String) in_deserialized.readObject(), (int) in_deserialized.readObject());
                     break;
                 case GET_GAMES_LIST:
