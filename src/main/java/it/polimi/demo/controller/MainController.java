@@ -92,13 +92,13 @@ public class MainController implements MainControllerInterface {
         }
 
         notifyListeners(game.getModel().getListeners(), GameListener::newGame);
-
         printAsync("\t>Player:\" " + nickname + " \"" + " created game " + id);
         printAsync("RUNNING GAMES: ");
         printRunningGames();
 
         // Here we add the player to the 'statical' list of players
         game.addPlayer(player.getNickname());
+        System.out.println("Player added to the game: " + player.getNickname() + " " + game.getPlayers().size() + " " + game.getNumPlayersToPlay());
         // Here we add the player to the 'dynamic' list of players connected (the queue!)
         game.setPlayerAsConnected(player);
 

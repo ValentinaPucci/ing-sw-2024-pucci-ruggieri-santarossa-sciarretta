@@ -115,7 +115,7 @@ public class GameModel {
         return aux_order_players;
     }
     public List<String> getAllNicknames() {
-            System.out.println("aux_order_players: ");
+            //System.out.println("aux_order_players: ");
             for(Player p2 : aux_order_players){
                 System.out.println(p2.getNickname() + "\n");
             }
@@ -285,7 +285,9 @@ public class GameModel {
      * @param p player to set as connected.
      */
     public void setPlayerAsConnected(Player p) {
-        if (aux_order_players.contains(p) && p.getIsConnected()) {
+        // cancellato
+        System.out.println("entra");
+        if (aux_order_players.contains(p)) {
             // Here we bypass the question 'are you ready to start?'
             p.setAsReadyToStart();
             players_connected.offer(p);
