@@ -76,33 +76,21 @@ public interface GameControllerInterface extends Remote {
      */
     int getGameId() throws RemoteException;
 
-    /**
-     * Set the @param p player ready to start
-     * When all the players are ready to start, the game starts (game status changes to running)
-     *
-     * @param nickname the nickname of the player
-     * @return true if the player is ready to start
-     * @throws RemoteException if the connection fails
-     */
-    void setPlayerAsReadyToStart(String nickname) throws RemoteException;
+
+    void setPlayerAsReadyToStart(String nickname);
 
     /**
      * Set the player as connected
      * @param p the player to set as connected
      */
     void setPlayerAsConnected(Player p) throws RemoteException;
-    /**
-     * Check if the game is ready to start
-     * @return true if the game is ready to start, false else
-     */
-    boolean isTheGameReadyToStart() throws RemoteException;
 
     /**
      * This method starts the game
      * @throws IllegalStateException if the game is not ready to start
      * @throws RemoteException if the connection fails
      */
-    void startGame() throws IllegalStateException;
+    void startGame();
 
 
 //    /**

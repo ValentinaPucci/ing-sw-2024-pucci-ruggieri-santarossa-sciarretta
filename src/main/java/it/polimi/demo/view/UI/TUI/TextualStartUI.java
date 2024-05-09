@@ -113,6 +113,7 @@ public class TextualStartUI extends StartUI {
         } catch (IllegalArgumentException | IllegalStateException e) {
             showError(e.getMessage());
         }
+        // todo: in qualche modo bisogna capire se il gioco è pieno o meno!
         waitingForPlayers = true;
     }
 

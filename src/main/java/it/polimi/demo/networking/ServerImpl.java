@@ -22,6 +22,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class ServerImpl implements Server, GameListener {
@@ -81,6 +82,9 @@ public class ServerImpl implements Server, GameListener {
 
         System.out.println("A client is joining game " + gameID + " with username " + nickname + "...");
         MainController.getControllerInstance().joinGame(this, nickname, gameID).startIfFull();
+        game_controller = MainController.getControllerInstance().getGames().get(gameID);
+        model = game_controller.getModel();
+        playerJoinedGame();
     }
 
     /**
@@ -108,6 +112,7 @@ public class ServerImpl implements Server, GameListener {
         // The player that creates the game is the first player to join it
         playerIndex = 0;
         // Triggers the update of the player list on the client
+        printAsync("now we launch playerJoinedGame()...");
         playerJoinedGame();
     }
 
@@ -173,12 +178,14 @@ public class ServerImpl implements Server, GameListener {
             }
 
             List<String> allNicknames = this.model.getAllNicknames();
+
             if (allNicknames == null) {
                 System.err.println("Nicknames list is null. Cannot update players list.");
                 return;
             }
 
             this.client.updatePlayersList(allNicknames);
+
         } catch (RemoteException e) {
             System.err.println("Error while updating players list: " + e.getMessage());
         }
@@ -220,6 +227,11 @@ public class ServerImpl implements Server, GameListener {
         try {
             this.client.gameEnded(gameView);
         } catch (RemoteException ignored) {}
+    }
+
+    @Override
+    public void gameStarted() throws RemoteException {
+        this.client.gameHasStarted();
     }
 
     @Override

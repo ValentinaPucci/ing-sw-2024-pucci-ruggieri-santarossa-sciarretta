@@ -5,7 +5,6 @@ import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
-import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.*;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
@@ -328,10 +327,13 @@ public class GameController implements GameControllerInterface, Serializable {
 
     @Override
     public void startIfFull() {
-        if (isTheGameReadyToStart()) {
+        if (model.getAllPlayers().size() == model.getNumPlayersToPlay()) {
             System.out.println("Game " + this.model.getGameId() + " is full and ready to start");
+            notifyListeners(model.getListeners(), GameListener::gameStarted);
             this.startGame();
         }
+        else
+            printAsync("Game " + this.model.getGameId() + " is waiting for other players to join");
     }
 
     @Override
@@ -429,15 +431,6 @@ public class GameController implements GameControllerInterface, Serializable {
         return model.getPlayerEntity(nickname);
     }
 
-    /**
-     * Check if the game is ready to start
-     * @return true if the game is ready to start, false else
-     */
-    @Override
-    public boolean isTheGameReadyToStart() {
-        return model.arePlayersReadyToStartAndEnough();
-    }
-
     // ***************************************** IMPORTANT *****************************************
 
     /**
@@ -445,16 +438,11 @@ public class GameController implements GameControllerInterface, Serializable {
      *
      */
     @Override
-    public void startGame() throws IllegalStateException {
-        if (!isTheGameReadyToStart()) {
-            throw new IllegalStateException("The game is not ready to start");
-        }
-        else {
-            System.out.println("Game " + this.model.getGameId() + " is starting...");
-            extractFirstPlayerToPlay();
-            model.initializeGame();
-            model.setStatus(GameStatus.RUNNING);
-        }
+    public void startGame() {
+        System.out.println("Game " + this.model.getGameId() + " is starting...");
+        extractFirstPlayerToPlay();
+        model.initializeGame();
+        model.setStatus(GameStatus.RUNNING);
     }
 
     //***********************************************************************************************
@@ -497,7 +485,7 @@ public class GameController implements GameControllerInterface, Serializable {
     private void extractFirstPlayerToPlay() {
 
         Player first_player = getPlayers().get(random.nextInt(getPlayers().size()));
-
+        // printAsync("First player to play: " + first_player.getNickname());
         model.getAllPlayers().remove(first_player);
         model.getAllPlayers().addFirst(first_player);
 
