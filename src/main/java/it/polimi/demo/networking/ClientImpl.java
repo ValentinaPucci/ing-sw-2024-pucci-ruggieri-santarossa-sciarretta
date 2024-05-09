@@ -126,6 +126,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         }
 
         try {
+            // Here we create the game
             server.create(nickname, numberOfPlayers);
         } catch (GameNotStartedException e) {
             try {
