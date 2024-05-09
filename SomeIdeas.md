@@ -49,4 +49,14 @@ We would like to implement this advanced functionality on our program. Namely, w
 - Server implementation directly act on the main controller right? Well, where is that main_controller reference initialized? We take care of it by getting the controller instance in the create method of class ServerImpl
 - As a convention, a listener is added to the model whenever a player create a new game. 
 - We need to rethink interface: Client is an interface which is used by the ServerImpl class. It is an interface in the sense that from an exterior point of view (i.e. from the server), we only see Client (the interface), not its implementation. That is fine! Remark: viceversa still holds, i.e. from the client point of view, we only see the Server interface, not its implementation.
-- 
+
+# ToDo (7 may 2024)
+- Implement the reconnection feature including new listeners paradigm
+- Create a method 'connectPlayer' in model and controller (to be called by the server, induced by the client)
+- Someone has to take care of GameModelImmutable class. It is useful to have all the object we want to represent in the view ready to use. 
+- Implement performTurn in controller, called by ServerImpl (Server interface) called by ClientImpl (It contains both placeCard and drawCard methods).
+- See execute() method in the run of TextualGameUI (called whenever MyState == MY_TURN).
+
+# ToDo (8 may 2024)
+- setAsConnected vs setAsReadyToStart... what is the difference?
+- Manage the GameStatus! Implement GameFlow method correctly in the controller.

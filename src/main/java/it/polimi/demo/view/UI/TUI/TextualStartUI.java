@@ -42,9 +42,12 @@ public class TextualStartUI extends StartUI {
         AnsiConsole.systemInstall();
         askUsername();
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+
+        //shows games list on the server
         notifyListeners(lst, UIListener::refreshStartUI);
+
         Scanner s = new Scanner(System.in);
-        
+
         int choice = TextualUtils.nextInt(s);
         switch (choice) {
             case 1 -> createGame();
@@ -61,7 +64,6 @@ public class TextualStartUI extends StartUI {
      */
     private void askUsername() {
         Scanner s = new Scanner(System.in);
-
         System.out.print(ansi().bold().fg(Ansi.Color.GREEN).a("Insert your username: ").reset());
         this.username = s.next();
     }
@@ -82,8 +84,7 @@ public class TextualStartUI extends StartUI {
     private void createGame() {
         Scanner s = new Scanner(System.in);
         do {
-            System.out.print("How many players? (" + DefaultValues.MinNumOfPlayer + " to " + DefaultValues.MaxNumOfPlayer
-                    + ") ");
+            System.out.print("How many players? (" + DefaultValues.MinNumOfPlayer + " to " + DefaultValues.MaxNumOfPlayer + ") ");
             num_players = TextualUtils.nextInt(s);
             if (num_players < DefaultValues.MinNumOfPlayer || num_players > DefaultValues.MaxNumOfPlayer)
                 System.out.println("Number of players should be between " + DefaultValues.MinNumOfPlayer
@@ -123,7 +124,6 @@ public class TextualStartUI extends StartUI {
     public void showGamesList(List<GameDetails> o) {
         if (this.username != null && !waitingForPlayers) {
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
-
             if (!o.isEmpty()) {
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("List of games on the server:").reset());
                 System.out.println(ansi().fg(Ansi.Color.BLUE).a("ID:\tPlayers:").reset());
@@ -169,6 +169,14 @@ public class TextualStartUI extends StartUI {
      */
     @Override
     public void showPlayersList(List<String> o) {
+        if (o == null) {
+            System.err.println("List of players is null. Cannot update players list.");
+            return;
+        }
+        if (o.isEmpty()) {
+            System.err.println("List of players is Empty. Cannot update players list.");
+            return;
+        }
         if (this.playersNameList == null) {
             System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
             if (gameID == -1) {

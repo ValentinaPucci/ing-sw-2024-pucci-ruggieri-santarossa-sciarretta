@@ -1,10 +1,12 @@
 package it.polimi.demo.networking.Applications;
+import java.rmi.AccessException;
 import java.util.logging.Logger;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.networking.ClientImpl;
 import it.polimi.demo.networking.ConnectionType;
 import it.polimi.demo.view.UI.TUI.TextualUtils;
 import it.polimi.demo.view.UI.UIType;
+import it.polimi.demo.networking.Socket.ServerProxy;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -39,7 +41,7 @@ public class AppClient {
         try {
             switch (connectionType) {
                 case RMI -> startRMI();
-                //case SOCKET -> startSocket();
+                case SOCKET -> startSocket();
             }
         } catch (RemoteException e) {
             System.err.println("Cannot connect to server due to a remote exception. Exiting...");
@@ -65,7 +67,7 @@ public class AppClient {
         System.out.print("Enter server IP (blank for localhost): ");
         ip = in.nextLine();
         if (ip.isBlank()){
-            ip = DefaultValues.Server_ip;
+            ip = "localhost";
         }
 
         System.out.print("Enter server port (blank for default): ");
@@ -84,16 +86,10 @@ public class AppClient {
      * Starts an RMI client.
      */
     private static void startRMI() throws RemoteException, NotBoundException {
-        try {
             Registry registry = LocateRegistry.getRegistry(ip, port);
             AppServerInterface appServer = (AppServerInterface) registry.lookup(DefaultValues.defaultRMIName);
             ClientImpl client = new ClientImpl(appServer.connect(), uiType);
             client.run();
-        } catch (RemoteException e) {
-            throw new RemoteException("Cannot connect to server due to a remote exception!!", e);
-        } catch (NotBoundException e) {
-            throw new NotBoundException();
-        }
     }
 
     public static String getIP(){
@@ -107,4 +103,28 @@ public class AppClient {
     public static ConnectionType getConnectionType(){
         return connectionType;
     }
+
+    // Starts the socket client:
+
+    private  static void startSocket() throws RemoteException {
+        ServerProxy serverProxy = new ServerProxy(ip, port);
+        ClientImpl client = new ClientImpl(serverProxy, uiType);
+        new Thread(() -> {
+            while(true) {
+                try {
+                    serverProxy.ReceiveFromClient(client);
+                } catch (RemoteException e) {
+                    System.err.println("Cannot receive from server. Stopping...");
+                    try {
+                        serverProxy.close();
+                    } catch (RemoteException ex) {
+                        System.err.println("Cannot close connection with server. Halting...");
+                    }
+                    System.exit(1);
+                }
+            }
+        }).start();
+        client.run();
+    }
+
 }

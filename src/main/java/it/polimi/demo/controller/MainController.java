@@ -10,12 +10,16 @@ import it.polimi.demo.model.Player;
 import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
 import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
 import it.polimi.demo.view.GameDetails;
+import org.fusesource.jansi.Ansi;
 
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.networking.PrintAsync.*;
+import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * MainController Class
@@ -74,6 +78,7 @@ public class MainController implements MainControllerInterface {
     @Override
     public GameControllerInterface createGame(GameListener listener, String nickname, int num_of_players, int id)
             throws RemoteException {
+
         Player player = new Player(nickname);
         GameController game = new GameController(id, num_of_players, new Player(nickname));
 
@@ -86,16 +91,16 @@ public class MainController implements MainControllerInterface {
             games.get(id).setNumPlayersToPlay(num_of_players);
         }
 
-        game.addListener(listener, player);
-
-        printAsync("\t>Player:\"" + nickname + "\"" + " created game " + id);
+        notifyListeners(game.getModel().getListeners(), GameListener::newGame);
+        printAsync("\t>Player:\" " + nickname + " \"" + " created game " + id);
+        printAsync("RUNNING GAMES: ");
         printRunningGames();
 
-        try {
-            game.addPlayer(player.getNickname());
-        } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-            listener.genericErrorWhenEnteringGame(e.getMessage());
-        }
+        // Here we add the player to the 'statical' list of players
+        game.addPlayer(player.getNickname());
+        System.out.println("Player added to the game: " + player.getNickname() + " " + game.getPlayers().size() + " " + game.getNumPlayersToPlay());
+        // Here we add the player to the 'dynamic' list of players connected (the queue!)
+        game.setPlayerAsConnected(player);
 
         return game;
     }
@@ -126,7 +131,7 @@ public class MainController implements MainControllerInterface {
             if (firstAvailableGame.isPresent()) {
                 GameController game = firstAvailableGame.get();
                 try {
-                    game.addListener(listener, player);
+                    //game.addListener(listener, player);
                     game.addPlayer(player.getNickname());
 
                     printAsync("Player \"" + nickname + "\" joined Game " + game.getGameId());
@@ -134,11 +139,8 @@ public class MainController implements MainControllerInterface {
 
                     return game;
                 } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-                    game.removeListener(listener, player);
-                    listener.genericErrorWhenEnteringGame("Failed to join the game: " + e.getMessage());
+                    //game.removeListener(listener, player);
                 }
-            } else {
-                listener.genericErrorWhenEnteringGame("No available games to join.");
             }
         }
 
@@ -162,8 +164,10 @@ public class MainController implements MainControllerInterface {
         Player player = new Player(nickname);
         GameController game = games.get(gameId);
 
+        // todo: check if this code makes sense! In fact, it is 99% incorrect
         return Optional.ofNullable(game)
                 .filter(g -> g.getStatus() == GameStatus.WAIT ||
+                        g.getStatus() == GameStatus.FIRST_ROUND ||
                         g.getStatus() == GameStatus.RUNNING ||
                         g.getStatus() == GameStatus.SECOND_LAST_ROUND ||
                         g.getStatus() == GameStatus.LAST_ROUND)
@@ -171,30 +175,53 @@ public class MainController implements MainControllerInterface {
                         g.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname)))
                 .map(g -> {
                     try {
-                        g.addListener(listener, player);
+                        // Here we add the player to the 'statical' list of players
                         g.addPlayer(player.getNickname());
+                        // Here we add the player to the 'dynamic' list of players connected (the queue!)
+                        game.setPlayerAsConnected(player);
+                        notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::playerJoinedGame);
                         printAsync("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
                         printRunningGames();
                         return g;
                     } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-                        try {
-                            listener.genericErrorWhenEnteringGame(e.getMessage());
-                        } catch (RemoteException ex) {
-                            throw new RuntimeException(ex);
-                        }
                         return null;
                     }
                 })
-                .orElseGet(() -> {
-                    try {
-                        listener.gameIdNotExists(gameId);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+                .orElse(null);
 
     }
+
+//    public synchronized GameControllerInterface joinGame(GameListener listener, String nickname, int gameId)
+//            throws RemoteException {
+//
+//        Player player = new Player(nickname);
+//        GameController game = games.get(gameId);
+//
+//        // todo: check if this code makes sense! In fact, it is 99% incorrect
+//        if (game != null &&
+//                (game.getStatus() == GameStatus.WAIT ||
+//                        game.getStatus() == GameStatus.FIRST_ROUND ||
+//                        game.getStatus() == GameStatus.RUNNING ||
+//                        game.getStatus() == GameStatus.SECOND_LAST_ROUND ||
+//                        game.getStatus() == GameStatus.LAST_ROUND) &&
+//                game.getNumPlayers() < DefaultValues.MaxNumOfPlayer &&
+//                game.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname))) {
+//
+//            try {
+//                // Here we add the player to the 'statical' list of players
+//                game.addPlayer(player.getNickname());
+//                // Here we add the player to the 'dynamic' list of players connected (the queue!)
+//                game.setPlayerAsConnected(player);
+//                notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::playerJoinedGame);
+//                printAsync("\t>Game " + game.getGameId() + " player:\"" + nickname + "\" entered player");
+//                printRunningGames();
+//            } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
+//                // Handle exceptions if needed
+//            }
+//        }
+//        return null;
+//    }
+
 
     /**
      * Reconnects a player to a game specified by its ID.
@@ -218,28 +245,16 @@ public class MainController implements MainControllerInterface {
                         .findFirst()
                         .map(player -> {
                             try {
-                                game.addListener(listener, player);
+                                //game.addListener(listener, player);
                                 game.getModel().reconnectPlayer(player);
                                 return game;
                             } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-                                try {
-                                    listener.genericErrorWhenEnteringGame(e.getMessage());
-                                } catch (RemoteException ex) {
-                                    throw new RuntimeException(ex);
-                                }
                                 return null;
                             } catch (GameEndedException e) {
                                 throw new RuntimeException(e);
                             }
                         }))
-                .orElseGet(() -> {
-                    try {
-                        listener.gameIdNotExists(gameId);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                    return null;
-                });
+                .orElseGet(() -> null);
 
     }
 
@@ -289,6 +304,7 @@ public class MainController implements MainControllerInterface {
                 .findFirst()
                 .ifPresent(game -> {
                     games.remove(gameId);
+                    notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::removedGame);
                     printAsync("\t>Game " + gameId + " removed from games");
                     printRunningGames();
                 });
@@ -306,6 +322,7 @@ public class MainController implements MainControllerInterface {
 
     @Override
     public List<GameDetails> getGamesDetails() {
+        System.out.println(ansi().fg(Ansi.Color.BLUE).a("CHECKKKKKKKK3").reset());
         return games.values().stream()
                 .map(gameController -> new GameDetails(
                         gameController.getModel().getGameId(),

@@ -2,7 +2,6 @@ package it.polimi.demo.model;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.listener.ListenersHandler;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.Card;
@@ -34,8 +33,8 @@ public class GameModel {
     // is connected (and actively playing).
     private LinkedList<Player> players_connected;
 
+    private final List<GameListener> listeners = new ArrayList<>();
     private Player initial_player;
-    private ListenersHandler listener_handler;
     private CommonBoard common_board;
     private int gameId;
     private int num_required_players_to_start;
@@ -51,7 +50,6 @@ public class GameModel {
     public GameModel() {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
-        listener_handler = new ListenersHandler();
         common_board = new CommonBoard();
 
         Random random = new Random();
@@ -66,7 +64,6 @@ public class GameModel {
     public GameModel(int gameID, int numberOfPlayers, Player player) {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
-        listener_handler = new ListenersHandler();
         common_board = new CommonBoard();
         num_required_players_to_start = numberOfPlayers;
         initial_player = player;
@@ -118,10 +115,15 @@ public class GameModel {
         return aux_order_players;
     }
     public List<String> getAllNicknames() {
+            //System.out.println("aux_order_players: ");
+            for(Player p2 : aux_order_players){
+                System.out.println(p2.getNickname() + "\n");
+            }
+
+
         return aux_order_players.stream()
                 .map(Player::getNickname)
                 .collect(Collectors.toList());
-
     }
 
     public LinkedList<Player> getPlayersConnected() {
@@ -133,7 +135,6 @@ public class GameModel {
      */
     public void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        listener_handler.notify_PlayerReadyForStarting(this, p.getNickname());
     }
 
     /**
@@ -142,6 +143,7 @@ public class GameModel {
     public boolean arePlayersReadyToStartAndEnough() {
         List<Player> p = aux_order_players.stream().filter(Player::getReadyToStart).toList();
         // If every player is ready, the game starts
+        System.out.println(p.containsAll(aux_order_players) && p.size() == num_required_players_to_start);
         return p.containsAll(aux_order_players) && p.size() == num_required_players_to_start;
     }
 
@@ -186,25 +188,31 @@ public class GameModel {
     /**
      * Adds a new player to the game. Recall that if a player was previously playing,
      * then we are able to retrieve him/her from the auxiliary ordered list.
-     * Thus, this method is meant as an adder of new players, not as an adder of disconnected players
+     * Thus, this method is meant as an adder of new players, not as an adder of disconnected players.
+     * Statical add.
      */
     public void addPlayer(String nickname) {
 
         List<String> nicknames = this.getAllNicknames();
 
         if (nicknames.contains(nickname)) {
-            int i = nicknames.indexOf(nickname);
-            listener_handler.notify_failedJoinInvalidNickname(aux_order_players.get(i));
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() > num_required_players_to_start ||
                 aux_order_players.size() > DefaultValues.MaxNumOfPlayer) {
-            //listener_handler.notify_failedJoinFullGame(p, this);
+            notifyListeners(listeners, GameListener::gameIsFull);
             throw new MaxPlayersLimitException();
         }
         else {
             Player p = new Player(nickname);
             aux_order_players.add(p);
+            notifyListeners(listeners, GameListener::playerJoinedGame);
+
+//            System.out.println("aux_order_players: ");
+//            for(Player p2 : aux_order_players){
+//                System.out.println(p2.getNickname() + "\n");
+//            }
+
         }
     }
 
@@ -227,38 +235,6 @@ public class GameModel {
         }
     }
 
-    //-------------------------listeners---------------------------------------------
-
-    /**
-     * Retrieves the ListenersHandler object associated with the game.
-     *
-     * @return The ListenersHandler object used for managing game event listeners.
-     */
-    public ListenersHandler getListenersHandler() {
-        return this.listener_handler;
-    }
-
-    /**
-     * @param lis adds the listener to the list
-     */
-    public void addListener(GameListener lis) {
-        listener_handler.addListener(lis);
-    }
-
-    /**
-     * @param lis removes listener from list
-     */
-    public void removeListener(GameListener lis) {
-        listener_handler.removeListener(lis);
-    }
-
-    /**
-     * @return the list of listeners
-     */
-    public Set<GameListener> getListeners() {
-        return listener_handler.getListeners();
-    }
-
     //-------------------------chat and messages---------------------------------------------
 
     /**
@@ -270,24 +246,22 @@ public class GameModel {
         return this.chat;
     }
 
-     /**
-     * Sends a message to the game's chat.
-     * If the sender of the message is not a player in the game, an exception is thrown.
-     *
-     * @param m The message to be sent.
-     * @throws ActionPerformedByAPlayerNotPlayingException If the sender of the message is not a player in the game.
-     */
-    public void sendMessage(Message m) throws ActionPerformedByAPlayerNotPlayingException {
-        if (players_connected.contains(m.getSender())) {
-            // Add the message to the chat
-            chat.addMsg(m);
-            // Notify listeners about the sent message
-            listener_handler.notify_SentMessage(this, chat.getLastMessage());
-        } else {
-            // Throw an exception if the sender is not a player in the game
-            throw new ActionPerformedByAPlayerNotPlayingException();
-        }
-    }
+//     /**
+//     * Sends a message to the game's chat.
+//     * If the sender of the message is not a player in the game, an exception is thrown.
+//     *
+//     * @param m The message to be sent.
+//     * @throws ActionPerformedByAPlayerNotPlayingException If the sender of the message is not a player in the game.
+//     */
+//    public void sendMessage(Message m) throws ActionPerformedByAPlayerNotPlayingException {
+//        if (players_connected.contains(m.getSender())) {
+//            // Add the message to the chat
+//            chat.addMsg(m);
+//        } else {
+//            // Throw an exception if the sender is not a player in the game
+//            throw new ActionPerformedByAPlayerNotPlayingException();
+//        }
+//    }
 
     //-------------------------connection/disconnection management---------------------------------------------
 
@@ -301,27 +275,22 @@ public class GameModel {
             p.setAsNotConnected();
             p.setAsNotReadyToStart();
             players_connected.remove(p);
-            listener_handler.notify_playerDisconnected(this, p.getNickname());
-        }
-
-        if ((this.status.equals(GameStatus.RUNNING) ||
-                this.status.equals(GameStatus.SECOND_LAST_ROUND) ||
-                this.status.equals(GameStatus.LAST_ROUND))
-                && aux_order_players.size() == 1) {
-            listener_handler.notify_onlyOnePlayerConnected(this, DefaultValues.secondsToWaitReconnection);
         }
     }
 
     /**
      * It requires player.isConnected() == true.
      * Add the player, that is connected, to the players_connected list, notify that the player is connected.
-     * If the player is already connected, it throws exception.
-     * @param p player to set as connected
+     * If the player is already connected, it throws exception. Dynamical add (connection).
+     * @param p player to set as connected.
      */
     public void setPlayerAsConnected(Player p) {
-        if (aux_order_players.contains(p) && p.getIsConnected()) {
+        // cancellato
+        System.out.println("entra");
+        if (aux_order_players.contains(p)) {
+            // Here we bypass the question 'are you ready to start?'
+            p.setAsReadyToStart();
             players_connected.offer(p);
-            listener_handler.notify_playerParticipating(this);
         }
         else {
             throw new IllegalArgumentException("Player not in the game!");
@@ -341,17 +310,15 @@ public class GameModel {
             printAsync("ERROR: Trying to reconnect a player not offline!");
             throw new PlayerAlreadyConnectedException();
         }
-
         p.setAsConnected();
         connectPlayerInOrder(p);
-        listener_handler.notify_playerReconnected(this, p.getNickname());
     }
 
     /**
-     * It connects a player in the right place (by order), that had already joined the game, but was disconnected,
-     * so that the game will continue with the correct order of the game (aux_order_players).
+     * It connects a player in the right place (by order), that had already joined the game,
+     * but was disconnected, so that the game will continue with the correct order of the game (aux_order_players).
      * (It also cares about the limit case of the first element).
-     * @param p
+     * @param p player to connect
      */
     public void connectPlayerInOrder(Player p) {
         // index of previous player in aux_order_players
@@ -426,18 +393,17 @@ public class GameModel {
         if (canSetRunning) {
             this.status = status;
             switch (status) {
-                case RUNNING:
-                    listener_handler.notify_GameStarted(this);
-                    listener_handler.notify_nextTurn(this);
-                    break;
-                case SECOND_LAST_ROUND:
-                    listener_handler.notify_SecondLastRound(this);
-                    break;
-                case LAST_ROUND:
-                    listener_handler.notify_LastRound(this);
-                    break;
+//                case RUNNING:
+//                    listener_handler.notify_GameStarted(this);
+//                    break;
+//                case SECOND_LAST_ROUND:
+//                    listener_handler.notify_SecondLastRound(this);
+//                    break;
+//                case LAST_ROUND:
+//                    listener_handler.notify_LastRound(this);
+//                    break;
                 case ENDED:
-                    listener_handler.notify_GameEnded(this);
+                    notifyListeners(listeners, GameListener::gameEnded);
                     break;
                 default:
                     break;
@@ -516,16 +482,11 @@ public class GameModel {
             if (!common_board.getObjectiveConcreteDeck().isEmpty()) {
                 objectiveCard1  = (ObjectiveCard) common_board.getObjectiveConcreteDeck().pop();
             }
-            else
-                listener_handler.notify_objectiveCardExtractedFromEmptyDeck(this);
 
             if (!common_board.getObjectiveConcreteDeck().isEmpty()) {
                 objectiveCard2 = (ObjectiveCard) common_board.getObjectiveConcreteDeck().pop();
             }
-            else
-                listener_handler.notify_objectiveCardExtractedFromEmptyDeck(this);
 
-            listener_handler.notify_commonObjectiveCardExtracted(this);
             player.setSecretObjectives(objectiveCard1, objectiveCard2);
 
         }
@@ -549,7 +510,6 @@ public class GameModel {
                 ResourceCard already_placed_card = personal_board.board[x][y].getCornerFromCell().reference_card;
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
-                listener_handler.notify_cardPlacedOnPersonalBoard(this);
             }
         }
     }
@@ -572,7 +532,6 @@ public class GameModel {
                 ResourceCard already_placed_card = personal_board.board[x][y].getCornerFromCell().reference_card;
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
-                listener_handler.notify_cardPlacedOnPersonalBoard(this);
             }
         }
     }
@@ -598,27 +557,21 @@ public class GameModel {
             case 1:
                 // Draw from Resource Deck
                 p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0));
-                listener_handler.notify_resourceCardExtractedFromDeck(this);
             case 2:
                 // Draw first Resource Card from table
                 p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0));
-                listener_handler.notify_resourceCardExtractedFromTable(this);
             case 3:
                 // Draw second Resource Card from table
                 p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0));
-                listener_handler.notify_resourceCardExtractedFromTable(this);
             case 4:
                 // Draw from Gold Deck
                 p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1));
-                listener_handler.notify_goldCardExtractedFromDeck(this);
             case 5:
                 // Draw first Gold Card from table
                 p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1));
-                listener_handler.notify_goldCardExtractedFromTable(this);
             case 6:
                 // Draw second Gold Card from table
                 p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
-                listener_handler.notify_goldCardExtractedFromTable(this);
         }
     }
 
@@ -710,9 +663,6 @@ public class GameModel {
 
         Player q = players_connected.poll();
         players_connected.offer(q);
-
-        // Notify listeners about the next turn
-        listener_handler.notify_nextTurn(this);
     }
 
     /**
@@ -835,9 +785,26 @@ public class GameModel {
 
     //TODO: in GameController
     public void setErrorMessage(String error) {
+
     }
 
     public void setAsPaused() {
+    }
+
+    // **************************** Listeners ********************************
+
+    public void addListener(GameListener listener) {
+        if (!listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+
+    public void removeListener(GameListener listener) {
+        listeners.remove(listener);
+    }
+
+    public List<GameListener> getListeners() {
+        return listeners;
     }
 }
 

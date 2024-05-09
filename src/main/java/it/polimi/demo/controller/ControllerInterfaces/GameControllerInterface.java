@@ -2,6 +2,7 @@ package it.polimi.demo.controller.ControllerInterfaces;
 
 import it.polimi.demo.controller.GameController;
 import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
@@ -15,6 +16,8 @@ import java.rmi.RemoteException;
 /**
  * This interface contains all the action a player can do in a single game */
 public interface GameControllerInterface extends Remote {
+
+    GameModel getModel();
 
     /**
      * This method place a RESOURCECARD in the commonboard.
@@ -84,6 +87,11 @@ public interface GameControllerInterface extends Remote {
     void setPlayerAsReadyToStart(String nickname) throws RemoteException;
 
     /**
+     * Set the player as connected
+     * @param p the player to set as connected
+     */
+    void setPlayerAsConnected(Player p) throws RemoteException;
+    /**
      * Check if the game is ready to start
      * @return true if the game is ready to start, false else
      */
@@ -96,29 +104,21 @@ public interface GameControllerInterface extends Remote {
      */
     void startGame() throws IllegalStateException;
 
-    /**
-     * This method is used by the server to add a ping every x second in order to check for disconnections.
-     * @param nickname
-     * @param me
-     * @throws RemoteException
-     */
 
-    void addPing(String nickname, GameListener me) throws RemoteException;
+//    /**
+//     * This method disconnect a player and remove him from the GameListener list{@link GameListener}
+//     * @param p the player to disconnect
+//     * @param listOfClient the GameListener of the player {@link GameListener}
+//     * @throws RemoteException if the connection fails
+//     */
+//    void disconnectPlayer( Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
 
-    /**
-     * This method disconnect a player and remove him from the GameListener list{@link GameListener}
-     * @param p the player to disconnect
-     * @param listOfClient the GameListener of the player {@link GameListener}
-     * @throws RemoteException if the connection fails
-     */
-    void disconnectPlayer( Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
-
-    /**
-     * Add a message to the chat list
-     * @param mess the message to send {@link Message}
-     * @throws RemoteException if the connection fails
-     */
-    void sendMessage(Message mess) throws RemoteException;
+//    /**
+//     * Add a message to the chat list
+//     * @param mess the message to send {@link Message}
+//     * @throws RemoteException if the connection fails
+//     */
+//    void sendMessage(Message mess) throws RemoteException;
 
     /**
      * This method return the number of the online players
