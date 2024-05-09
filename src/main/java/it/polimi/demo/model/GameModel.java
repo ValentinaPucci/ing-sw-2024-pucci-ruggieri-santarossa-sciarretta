@@ -143,6 +143,7 @@ public class GameModel {
     public boolean arePlayersReadyToStartAndEnough() {
         List<Player> p = aux_order_players.stream().filter(Player::getReadyToStart).toList();
         // If every player is ready, the game starts
+        System.out.println(p.containsAll(aux_order_players) && p.size() == num_required_players_to_start);
         return p.containsAll(aux_order_players) && p.size() == num_required_players_to_start;
     }
 
@@ -187,7 +188,8 @@ public class GameModel {
     /**
      * Adds a new player to the game. Recall that if a player was previously playing,
      * then we are able to retrieve him/her from the auxiliary ordered list.
-     * Thus, this method is meant as an adder of new players, not as an adder of disconnected players
+     * Thus, this method is meant as an adder of new players, not as an adder of disconnected players.
+     * Statical add.
      */
     public void addPlayer(String nickname) {
 
@@ -279,11 +281,13 @@ public class GameModel {
     /**
      * It requires player.isConnected() == true.
      * Add the player, that is connected, to the players_connected list, notify that the player is connected.
-     * If the player is already connected, it throws exception.
-     * @param p player to set as connected
+     * If the player is already connected, it throws exception. Dynamical add (connection).
+     * @param p player to set as connected.
      */
     public void setPlayerAsConnected(Player p) {
         if (aux_order_players.contains(p) && p.getIsConnected()) {
+            // Here we bypass the question 'are you ready to start?'
+            p.setAsReadyToStart();
             players_connected.offer(p);
         }
         else {
@@ -312,7 +316,7 @@ public class GameModel {
      * It connects a player in the right place (by order), that had already joined the game,
      * but was disconnected, so that the game will continue with the correct order of the game (aux_order_players).
      * (It also cares about the limit case of the first element).
-     * @param p
+     * @param p player to connect
      */
     public void connectPlayerInOrder(Player p) {
         // index of previous player in aux_order_players

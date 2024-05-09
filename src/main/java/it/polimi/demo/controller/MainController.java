@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.networking.PrintAsync.*;
+import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
@@ -95,7 +96,11 @@ public class MainController implements MainControllerInterface {
         printAsync("\t>Player:\" " + nickname + " \"" + " created game " + id);
         printAsync("RUNNING GAMES: ");
         printRunningGames();
+
+        // Here we add the player to the 'statical' list of players
         game.addPlayer(player.getNickname());
+        // Here we add the player to the 'dynamic' list of players connected (the queue!)
+        game.setPlayerAsConnected(player);
 
         return game;
     }
@@ -159,8 +164,10 @@ public class MainController implements MainControllerInterface {
         Player player = new Player(nickname);
         GameController game = games.get(gameId);
 
+        // todo: check if this code makes sense! In fact, it is 99% incorrect
         return Optional.ofNullable(game)
                 .filter(g -> g.getStatus() == GameStatus.WAIT ||
+                        g.getStatus() == GameStatus.FIRST_ROUND ||
                         g.getStatus() == GameStatus.RUNNING ||
                         g.getStatus() == GameStatus.SECOND_LAST_ROUND ||
                         g.getStatus() == GameStatus.LAST_ROUND)
@@ -168,7 +175,10 @@ public class MainController implements MainControllerInterface {
                         g.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname)))
                 .map(g -> {
                     try {
+                        // Here we add the player to the 'statical' list of players
                         g.addPlayer(player.getNickname());
+                        // Here we add the player to the 'dynamic' list of players connected (the queue!)
+                        game.setPlayerAsConnected(player);
                         notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::playerJoinedGame);
                         printAsync("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
                         printRunningGames();
@@ -177,9 +187,41 @@ public class MainController implements MainControllerInterface {
                         return null;
                     }
                 })
-                .orElseGet(() -> null);
+                .orElse(null);
 
     }
+
+//    public synchronized GameControllerInterface joinGame(GameListener listener, String nickname, int gameId)
+//            throws RemoteException {
+//
+//        Player player = new Player(nickname);
+//        GameController game = games.get(gameId);
+//
+//        // todo: check if this code makes sense! In fact, it is 99% incorrect
+//        if (game != null &&
+//                (game.getStatus() == GameStatus.WAIT ||
+//                        game.getStatus() == GameStatus.FIRST_ROUND ||
+//                        game.getStatus() == GameStatus.RUNNING ||
+//                        game.getStatus() == GameStatus.SECOND_LAST_ROUND ||
+//                        game.getStatus() == GameStatus.LAST_ROUND) &&
+//                game.getNumPlayers() < DefaultValues.MaxNumOfPlayer &&
+//                game.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname))) {
+//
+//            try {
+//                // Here we add the player to the 'statical' list of players
+//                game.addPlayer(player.getNickname());
+//                // Here we add the player to the 'dynamic' list of players connected (the queue!)
+//                game.setPlayerAsConnected(player);
+//                notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::playerJoinedGame);
+//                printAsync("\t>Game " + game.getGameId() + " player:\"" + nickname + "\" entered player");
+//                printRunningGames();
+//            } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
+//                // Handle exceptions if needed
+//            }
+//        }
+//        return null;
+//    }
+
 
     /**
      * Reconnects a player to a game specified by its ID.
