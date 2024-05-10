@@ -93,7 +93,6 @@ public class MainController implements MainControllerInterface {
 
         notifyListeners(game.getModel().getListeners(), GameListener::newGame);
         printAsync("\t>Player:\" " + nickname + " \"" + " created game " + id);
-        printAsync("RUNNING GAMES: ");
         printRunningGames();
 
         // Here we add the player to the 'statical' list of players
@@ -313,15 +312,17 @@ public class MainController implements MainControllerInterface {
      * Prints the IDs of all games currently running.
      */
     private void printRunningGames() {
-        printAsyncNoLine("\t\tgames: ");
-        games.values().forEach(game -> printAsync(game.getGameId() + " "));
+        printAsync("RUNNING GAMES: ");
+        if(games.isEmpty()){
+            printAsync("No running games available");
+        }
+        games.values().forEach(game -> printAsync( "GAME #" + game.getGameId() + " "));
         printAsync("");
     }
 
 
     @Override
     public List<GameDetails> getGamesDetails() {
-        System.out.println(ansi().fg(Ansi.Color.BLUE).a("CHECKKKKKKKK3").reset());
         return games.values().stream()
                 .map(gameController -> new GameDetails(
                         gameController.getModel().getGameId(),

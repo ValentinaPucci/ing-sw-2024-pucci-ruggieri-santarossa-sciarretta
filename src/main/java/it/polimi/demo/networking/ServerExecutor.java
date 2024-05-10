@@ -9,6 +9,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**

@@ -81,10 +81,15 @@ public class ServerImpl implements Server, GameListener {
             throws RemoteException, GameNotStartedException {
 
         System.out.println("A client is joining game " + gameID + " with username " + nickname + "...");
-        MainController.getControllerInstance().joinGame(this, nickname, gameID).startIfFull();
+        MainController.getControllerInstance().joinGame(this, nickname, gameID);
         game_controller = MainController.getControllerInstance().getGames().get(gameID);
         model = game_controller.getModel();
-        playerJoinedGame();
+
+        this.model.addListener(this);
+
+        this.playerJoinedGame();
+
+        this.game_controller.startIfFull();
     }
 
     /**
@@ -109,10 +114,11 @@ public class ServerImpl implements Server, GameListener {
         game_controller = main_controller.createGame(this, nickname, numberOfPlayers, gameID);
         model = game_controller.getModel();
 
+        this.model.addListener(this);
+
         // The player that creates the game is the first player to join it
         playerIndex = 0;
-        // Triggers the update of the player list on the client
-        printAsync("now we launch playerJoinedGame()...");
+
         playerJoinedGame();
     }
 
@@ -157,7 +163,7 @@ public class ServerImpl implements Server, GameListener {
         this.client.updateGamesList(MainController.getControllerInstance().getGamesDetails());
 
         if(this.model != null && MainController.getControllerInstance().getGames().get(this.model.getGameId()) == null){
-            //this.model.removeListener(this);
+            this.model.removeListener(this);
             this.model = null;
 
             this.client.showError("The game you were waiting for has been removed.");
@@ -216,13 +222,12 @@ public class ServerImpl implements Server, GameListener {
         }
     }
 
-
     @Override
     public void gameEnded() {
         GameView gameView = new GameView(this.model, this.playerIndex);
 
         MainController.getControllerInstance().getGames().remove(model.getGameId());
-        //this.model.removeListener(this);
+        this.model.removeListener(this);
         this.model = null;
         try {
             this.client.gameEnded(gameView);

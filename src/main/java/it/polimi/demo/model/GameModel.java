@@ -116,10 +116,9 @@ public class GameModel {
     }
 
     public List<String> getAllNicknames() {
-        for(Player p2 : aux_order_players){
-            System.out.println(p2.getNickname() + "\n");
-        }
-
+//        for(Player p2 : aux_order_players){
+//            System.out.println(p2.getNickname() + "\n");
+//        }
         return aux_order_players.stream()
                 .map(Player::getNickname)
                 .collect(Collectors.toList());
@@ -284,7 +283,6 @@ public class GameModel {
      */
     public void setPlayerAsConnected(Player p) {
         // cancellato
-        System.out.println("entra");
         if (aux_order_players.contains(p) && !players_connected.contains(p)) {
             // Here we bypass the question 'are you ready to start?'
             p.setAsReadyToStart();

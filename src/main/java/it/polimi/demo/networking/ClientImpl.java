@@ -147,7 +147,12 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void joinGame(int gameID, String username) {
         try {
-            this.server.addPlayerToGame(gameID, username);
+            if (this.server != null) { // Check if server object is not null
+                this.server.addPlayerToGame(gameID, username);
+            } else {
+                // Handle the case where server object is null
+                System.err.println("Server object is null. Cannot join game.");
+            }
         } catch (GameNotStartedException e) {
             try {
                 this.showError(e.getMessage());
@@ -158,6 +163,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public void exit() {
@@ -192,6 +198,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public void gameHasStarted() throws RemoteException {
         System.out.println("Closing StartUI...");
         startUI.close();
+
         System.out.println("Starting GameUI...");
         new Thread(gameUI).start();
         gameUI.addListener(this);
