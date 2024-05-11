@@ -2,25 +2,20 @@ package it.polimi.demo.networking;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
-import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
-import it.polimi.demo.controller.GameController;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.GameModel;
-import it.polimi.demo.model.Player;
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.GameView;
-import it.polimi.demo.view.PlayerDetails;
-import org.fusesource.jansi.Ansi;
 
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -238,6 +233,45 @@ public class ServerImpl implements Server, GameListener {
     public void gameStarted() throws RemoteException {
         this.client.gameHasStarted();
     }
+
+//    @Override
+//    public void performTurn() {
+//        if(this.playerIndex != this.model.getCurrentPlayerIndex()) {
+//            this.game_controller.setError("Player " + this.model.getAux_order_players().get(playerIndex).getNickname() + " tried to perform a turn while it was not his turn.");
+//        }
+//        this.game_controller.performTurn();
+//    }
+
+    @Override
+    public GameStatus getGameStatus() {
+        return this.model.getStatus();
+    }
+
+    @Override
+    public void placeStarterCard() {
+        this.game_controller.placeStarterCard();
+    }
+
+    @Override
+    public void drawCard(int x) {
+
+    }
+
+    @Override
+    public void placeCard(ResourceCard chosenCard, int x, int y) {
+        this.game_controller.placeCard(chosenCard, x, y);
+    }
+
+    @Override
+    public void calculateFinalScores() {
+
+    }
+
+    @Override
+    public List<ResourceCard> getPlayerHand() {
+        return model.getAllPlayers().get(this.model.getCurrentPlayerIndex()).getHand();
+    }
+
 
     @Override
     public void pong() throws RemoteException {

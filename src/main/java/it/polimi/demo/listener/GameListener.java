@@ -1,5 +1,7 @@
 package it.polimi.demo.listener;
 
+import it.polimi.demo.model.enumerations.GameStatus;
+
 import java.rmi.RemoteException;
 
 /**
@@ -40,4 +42,6 @@ public interface GameListener extends Listener {
     void removedGame() throws RemoteException;
 
     void updatedGame() throws RemoteException;
+
+    GameStatus getGameStatus();
 }

@@ -50,43 +50,13 @@ public class GameController implements GameControllerInterface, Serializable {
         return model;
     }
 
-    //------------------------------------gameFlow-----------------------------------------------
-    public void gameFlow() throws RemoteException, GameEndedException {
-        switch (model.getStatus()) {
-            case WAIT:
-                //TODO: aspettare tutti i giocatori previsti per la partita
-                if (model.getNumPlayersToPlay() == getNumConnectedPlayers())
-                    model.setStatus(GameStatus.FIRST_ROUND);
-            case FIRST_ROUND:
-                //TODO giocare il primo turno posizionando le carte starter
-                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
-                    model.setStatus(GameStatus.RUNNING);
-            case RUNNING:
-                //TODO giocare
-                if (model.getPlayersConnected().getFirst().getCurrentPoints() >= 20) {
-                    model.nextTurn();
-                    model.setStatus(GameStatus.SECOND_LAST_ROUND);
-                }
-            case SECOND_LAST_ROUND:
-                //TODO giocare normale
-                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname())) {
-                    model.nextTurn();
-                    model.setStatus(GameStatus.LAST_ROUND);
-                }
-            case LAST_ROUND:
-                //TODO giocare senza pescare
-                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
-                    model.setStatus(GameStatus.ENDED);
-            case ENDED:
-                //TODO giocare senza pescare
-                model.calculateFinalScores();
-        }
+    @Override
+    public void placeCard(ResourceCard chosenCard, int x, int y) {
 
     }
 
 
     //------------------------------------connection/reconnection management-----------------------------------------------
-    // Threads management ---------------------------------------
     /**
      * This method is called when the thread is started.
      */
@@ -341,6 +311,57 @@ public class GameController implements GameControllerInterface, Serializable {
         this.model.setErrorMessage(error);
     }
 
+//    @Override
+//    public void performTurn() {
+//        switch (model.getStatus()) {
+//            case WAIT:
+//                //TODO: aspettare tutti i giocatori previsti per la partita
+//                try {
+//                    if (model.getNumPlayersToPlay() == getNumConnectedPlayers())
+//                        model.setStatus(GameStatus.FIRST_ROUND);
+//                } catch (RemoteException e) {
+//                    throw new RuntimeException(e);
+//                }
+//
+//            case FIRST_ROUND:
+//                //TODO giocare il primo turno posizionando le carte starter
+//                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
+//                    model.setStatus(GameStatus.RUNNING);
+//
+//            case RUNNING:
+//                //TODO giocare
+//                if (model.getPlayersConnected().getFirst().getCurrentPoints() >= 20) {
+//                    try {
+//                        model.nextTurn();
+//                    } catch (GameEndedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                    model.setStatus(GameStatus.SECOND_LAST_ROUND);
+//                }
+//
+//            case SECOND_LAST_ROUND:
+//                //TODO giocare normale
+//                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname())) {
+//                    try {
+//                        model.nextTurn();
+//                    } catch (GameEndedException e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                    model.setStatus(GameStatus.LAST_ROUND);
+//                }
+//
+//            case LAST_ROUND:
+//                //TODO giocare senza pescare
+//                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
+//                    model.setStatus(GameStatus.ENDED);
+//
+//            case ENDED:
+//                model.calculateFinalScores();
+//        }
+//
+//
+//    }
+
 
     //------------------------------------ management of players -----------------------------------------------
     /**
@@ -445,6 +466,22 @@ public class GameController implements GameControllerInterface, Serializable {
         model.setStatus(GameStatus.RUNNING);
     }
 
+
+    /**
+     * Return the status of the model
+     *
+     * @return status
+     */
+    public GameStatus getGameStatus() {
+        return model.getStatus();
+    }
+
+    @Override
+    public void placeStarterCard() {
+
+    }
+
+
     //***********************************************************************************************
 
     /**
@@ -493,14 +530,6 @@ public class GameController implements GameControllerInterface, Serializable {
         model.getPlayersConnected().addFirst(first_player);
     }
 
-    /**
-     * Return the status of the model
-     *
-     * @return status
-     */
-    public GameStatus getStatus() {
-        return model.getStatus();
-    }
 
     // Section: Overrides
 

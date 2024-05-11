@@ -1,10 +1,14 @@
 package it.polimi.demo.networking;
 
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This interface represents all the methods that can be called by the client on the server.
@@ -43,4 +47,18 @@ public interface Server extends Remote {
      * This method is called by the client to respond to a ping sent by the server.
      */
     void pong() throws RemoteException;
+
+//    void performTurn();
+
+    GameStatus getGameStatus();
+
+    void placeStarterCard();
+
+    void drawCard(int x);
+
+    void placeCard(ResourceCard chosenCard, int x, int y);
+
+    void calculateFinalScores();
+
+    List<ResourceCard> getPlayerHand();
 }

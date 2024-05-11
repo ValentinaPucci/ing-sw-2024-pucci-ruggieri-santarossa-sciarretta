@@ -3,6 +3,7 @@ package it.polimi.demo.networking.Socket;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.networking.ClientImpl;
 import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
 import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
@@ -136,7 +137,37 @@ public class ServerProxy  implements Server {
             }
         }
 
-        // receive messgaes from the server: use not a case based.
+    @Override
+    public GameStatus getGameStatus() {
+        return null;
+    }
+
+    @Override
+    public void placeStarterCard() {
+
+    }
+
+    @Override
+    public void drawCard(int x) {
+
+    }
+
+    @Override
+    public void placeCard(ResourceCard chosenCard, int x, int y) {
+
+    }
+
+    @Override
+    public void calculateFinalScores() {
+
+    }
+
+    @Override
+    public List<ResourceCard> getPlayerHand() {
+        return null;
+    }
+
+    // receive messgaes from the server: use not a case based.
         // Something like this:
 //
         public void ReceiveFromClient(Client client) throws RemoteException {

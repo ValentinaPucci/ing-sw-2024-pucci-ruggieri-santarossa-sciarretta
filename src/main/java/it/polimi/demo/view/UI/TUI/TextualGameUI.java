@@ -1,6 +1,7 @@
 package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.view.UI.GameUI;
 import it.polimi.demo.view.GameView;
 import org.fusesource.jansi.Ansi;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import static it.polimi.demo.listener.Listener.notifyListeners;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class TextualGameUI extends GameUI {
@@ -63,41 +65,28 @@ public class TextualGameUI extends GameUI {
      * This method performs the player's turn. It asks the user to select the tiles to place and the column to place them in.
      */
     private void performTurn() throws InterruptedException {
-        Scanner input = new Scanner(System.in);
-
-        //bisogna valutare lo stato del gioco
-
-        // stato del gioco inziale: FIRST_ROUND
-        // --> placeStarterCard()
-        // --> drawCard()
-
-        // stato del gioco: RUNNING && SECOND_LAST ROUND
-        //--> chosenCard = chooseCardFromHand()
-        // --> placeCard(chosenCard)
-        // --> drawCard()
-
-        // stato del gioco LAST ROUND
-        //--> chosenCard = chooseCardFromHand()
-        // --> placeCard(chosenCard)
-
-        //stato del gioco ENDED
-        //--> calculate final scores
+            if (getState() == State.MY_TURN)
+                notifyListeners(lst, x -> x.performTurn());
+            setState(State.NOT_MY_TURN);
     }
 
 
-    public ResourceCard chooseCardFromHand(){
+
+    public Orientation chooseCardOrientation(){
         Scanner s = new Scanner(System.in);
         int choice = -1;
 
-        while (choice < 1 || choice >3){
-            System.out.print("Select a card from your hand: ");
+        while (choice < 1 || choice > 2){
+            System.out.print("Choose the card orientation you want to use: \n 1: FRONT \n 2:BACK");
             choice = TextualUtils.nextInt(s);
             if(choice < 1 || choice >3){
-                System.out.print("Invalid input. Type 1, 2 or 3.");
+                System.out.print("Invalid input. Type 1 or 2.");
             }
         }
-        //return player_hand(choice)
-        return null;
+        if (choice == 1)
+            return Orientation.FRONT;
+        else
+            return Orientation.BACK;
     }
 
     public void placeCard(ResourceCard chosenCard){
