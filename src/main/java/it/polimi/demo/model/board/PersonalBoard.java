@@ -1146,4 +1146,7 @@ public class PersonalBoard {
             addFixedResource(card_to_play.color);
     }
 
+    public Cell[][] getBoard() {
+        return board;
+    }
 }

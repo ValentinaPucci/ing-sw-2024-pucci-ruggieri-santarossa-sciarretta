@@ -19,6 +19,9 @@ public class ConcreteDeckTest {
     @Test
     public void testPop() {
         ResourceCard card = new ResourceCard(13, Orientation.FRONT, Color.RED ); // Add necessary parameters if needed
+        System.out.println(card.getCornerAtNE().resource);
+        System.out.println(card.getCornerAtNE().item);
+
         concreteDeck.push(card);
         Card poppedCard = concreteDeck.pop();
         assertEquals(card, poppedCard);

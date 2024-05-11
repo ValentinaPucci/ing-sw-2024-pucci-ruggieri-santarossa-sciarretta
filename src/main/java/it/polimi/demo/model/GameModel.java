@@ -532,21 +532,27 @@ public class GameModel {
             case 1:
                 // Draw from Resource Deck
                 p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0));
+                break;
             case 2:
                 // Draw first Resource Card from table
                 p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0));
+                break;
             case 3:
                 // Draw second Resource Card from table
                 p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0));
+                break;
             case 4:
                 // Draw from Gold Deck
                 p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1));
+                break;
             case 5:
                 // Draw first Gold Card from table
                 p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1));
+                break;
             case 6:
                 // Draw second Gold Card from table
                 p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
+                break;
         }
     }
 
