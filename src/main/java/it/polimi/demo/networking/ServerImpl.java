@@ -95,7 +95,6 @@ public class ServerImpl implements Server, GameListener {
         playerIndex = 0;
         playerJoinedGame();
         client.showStatus(model.getStatus());
-
         // Here, we do not need to call game_controller.gameFlow() because the WAIT status is already set
         // by the constructor of the GameModel class.
     }
@@ -190,26 +189,20 @@ public class ServerImpl implements Server, GameListener {
                 System.err.println("Client is null. Cannot update players list.");
                 return;
             }
-
             if (this.model == null) {
                 System.err.println("Model is null. Cannot retrieve nicknames.");
                 return;
             }
-
             List<String> allNicknames = this.model.getAllNicknames();
-
             if (allNicknames == null) {
                 System.err.println("Nicknames list is null. Cannot update players list.");
                 return;
             }
-
             this.client.updatePlayersList(allNicknames);
-
         } catch (RemoteException e) {
             System.err.println("Error while updating players list: " + e.getMessage());
         }
     }
-
 
     @Override
     public void modelChanged() throws RemoteException {

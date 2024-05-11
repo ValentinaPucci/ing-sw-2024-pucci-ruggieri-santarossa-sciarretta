@@ -40,6 +40,8 @@ public interface Server extends Remote {
      */
     void getGamesList() throws RemoteException;
 
+
+
     /**
      * This method is called by the client to respond to a ping sent by the server.
      */
