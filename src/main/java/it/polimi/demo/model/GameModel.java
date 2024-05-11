@@ -38,6 +38,7 @@ public class GameModel {
     private CommonBoard common_board;
     private int gameId;
     private int num_required_players_to_start;
+    private int current_player_index;
     private GameStatus status;
     private Chat chat;
     private Player first_finishing_player = null;
@@ -226,6 +227,10 @@ public class GameModel {
                 this.setStatus(GameStatus.ENDED);
             }
         }
+    }
+
+    public int getCurrentPlayerIndex() {
+        return getAllPlayers().indexOf(players_connected.getFirst());
     }
 
     //-------------------------chat and messages---------------------------------------------
@@ -783,6 +788,10 @@ public class GameModel {
 
     public List<GameListener> getListeners() {
         return listeners;
+    }
+
+    public PlayerIC getPlayer(int playerIndex) {
+        return aux_order_players.get(playerIndex);
     }
 }
 

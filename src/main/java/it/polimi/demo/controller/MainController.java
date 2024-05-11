@@ -10,14 +10,12 @@ import it.polimi.demo.model.Player;
 import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
 import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
 import it.polimi.demo.view.GameDetails;
-import org.fusesource.jansi.Ansi;
 
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.demo.listener.Listener.notifyListeners;
-import static it.polimi.demo.networking.PrintAsync.*;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -123,7 +121,7 @@ public class MainController implements MainControllerInterface {
 
         synchronized (games) {
             Optional<GameController> firstAvailableGame = games.values().stream()
-                    .filter(game -> game.getStatus() == GameStatus.WAIT && game.getNumPlayers() < DefaultValues.MaxNumOfPlayer)
+                    .filter(game -> game.getGameStatus() == GameStatus.WAIT && game.getNumPlayers() < DefaultValues.MaxNumOfPlayer)
                     .findFirst();
 
             if (firstAvailableGame.isPresent()) {
@@ -163,11 +161,11 @@ public class MainController implements MainControllerInterface {
         GameController game = games.get(gameId);
 
         return Optional.ofNullable(game)
-                .filter(g -> g.getStatus() == GameStatus.WAIT ||
-                        g.getStatus() == GameStatus.FIRST_ROUND ||
-                        g.getStatus() == GameStatus.RUNNING ||
-                        g.getStatus() == GameStatus.SECOND_LAST_ROUND ||
-                        g.getStatus() == GameStatus.LAST_ROUND)
+                .filter(g -> g.getGameStatus() == GameStatus.WAIT ||
+                        g.getGameStatus() == GameStatus.FIRST_ROUND ||
+                        g.getGameStatus() == GameStatus.RUNNING ||
+                        g.getGameStatus() == GameStatus.SECOND_LAST_ROUND ||
+                        g.getGameStatus() == GameStatus.LAST_ROUND)
                 .filter(g -> g.getNumPlayers() < DefaultValues.MaxNumOfPlayer &&
                         g.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname)))
                 .map(g -> {
