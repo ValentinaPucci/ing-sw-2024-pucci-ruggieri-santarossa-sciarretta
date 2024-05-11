@@ -315,7 +315,6 @@ public class GameController implements GameControllerInterface, Serializable {
 //    public void performTurn() {
 //        switch (model.getStatus()) {
 //            case WAIT:
-//                //TODO: aspettare tutti i giocatori previsti per la partita
 //                try {
 //                    if (model.getNumPlayersToPlay() == getNumConnectedPlayers())
 //                        model.setStatus(GameStatus.FIRST_ROUND);
@@ -324,12 +323,10 @@ public class GameController implements GameControllerInterface, Serializable {
 //                }
 //
 //            case FIRST_ROUND:
-//                //TODO giocare il primo turno posizionando le carte starter
 //                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
 //                    model.setStatus(GameStatus.RUNNING);
 //
 //            case RUNNING:
-//                //TODO giocare
 //                if (model.getPlayersConnected().getFirst().getCurrentPoints() >= 20) {
 //                    try {
 //                        model.nextTurn();
@@ -340,7 +337,6 @@ public class GameController implements GameControllerInterface, Serializable {
 //                }
 //
 //            case SECOND_LAST_ROUND:
-//                //TODO giocare normale
 //                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname())) {
 //                    try {
 //                        model.nextTurn();
@@ -351,7 +347,6 @@ public class GameController implements GameControllerInterface, Serializable {
 //                }
 //
 //            case LAST_ROUND:
-//                //TODO giocare senza pescare
 //                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
 //                    model.setStatus(GameStatus.ENDED);
 //
