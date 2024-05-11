@@ -1,6 +1,7 @@
 package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.PlayerDetails;
 import it.polimi.demo.view.UI.StartUI;
@@ -96,10 +97,7 @@ public class TextualStartUI extends StartUI {
         waitingForPlayers = true;
     }
 
-    /**
-     * Asks the user to insert the ID of the game to join, then sends a JOIN event.
-     */
-    private void joinGame() {
+    public void askID() {
         Scanner s = new Scanner(System.in);
         do {
             System.out.print("Which game do you want to join? ");
@@ -107,13 +105,19 @@ public class TextualStartUI extends StartUI {
             if (gameID <= 0)
                 System.out.println("GameID is a positive number!");
         } while (gameID <= 0);
+    }
 
+    /**
+     * Asks the user to insert the ID of the game to join, then sends a JOIN event.
+     */
+    @Override
+    public void joinGame() {
+        askID();
         try {
             notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
         } catch (IllegalArgumentException | IllegalStateException e) {
             showError(e.getMessage());
         }
-        // todo: in qualche modo bisogna capire se il gioco è pieno o meno!
         waitingForPlayers = true;
     }
 
@@ -161,6 +165,12 @@ public class TextualStartUI extends StartUI {
     public void showError(String err) {
         System.out.println(ansi().bold().fg(Ansi.Color.RED).a(err).reset());
         notifyListeners(lst, UIListener::exit);
+    }
+
+    @Override
+    public void showStatus(GameStatus status) {
+        System.out.println(Ansi.ansi().fgGreen()
+                .a("The current game status is: ").bold().a(status).reset());
     }
 
     /**

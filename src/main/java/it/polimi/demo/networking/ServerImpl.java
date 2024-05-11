@@ -7,6 +7,8 @@ import it.polimi.demo.controller.GameController;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.view.GameDetails;
@@ -56,6 +58,8 @@ public class ServerImpl implements Server, GameListener {
      */
     private final PingPongThread pingpongThread = new PingPongThread(this);
 
+    // ******************************************** Server methods ********************************************
+
     /**
      * This method saves the instance of the client that is registering to the server and starts the ping-pong thread.
      * It also adds this ServerImpl to the GameListListener list, so the client will be notified when the list of games changes.
@@ -64,32 +68,8 @@ public class ServerImpl implements Server, GameListener {
     @Override
     public void register(Client client) throws RemoteException {
         this.client = client;
-        // it is not necessary to add listener here, we do it in
-        // either createGame() or joinGame() methods
         System.out.println("A client is registering to the server...");
         executor.submit(this.pingpongThread);
-    }
-
-    /**
-     * This method is called when a player wants to join a game.
-     * It will also handle the case where a player is reconnecting
-     * to a game in which he was already playing.
-     *
-     */
-    @Override
-    public void addPlayerToGame(int gameID, String nickname)
-            throws RemoteException, GameNotStartedException {
-
-        System.out.println("A client is joining game " + gameID + " with username " + nickname + "...");
-        MainController.getControllerInstance().joinGame(this, nickname, gameID);
-        game_controller = MainController.getControllerInstance().getGames().get(gameID);
-        model = game_controller.getModel();
-
-        this.model.addListener(this);
-
-        this.playerJoinedGame();
-
-        this.game_controller.startIfFull();
     }
 
     /**
@@ -108,18 +88,44 @@ public class ServerImpl implements Server, GameListener {
                 .orElse(0) + 1;
 
         System.out.println("A client with username " + nickname + " is creating game " + gameID + "...");
-
-        //this.model = new GameModel(gameID, numberOfPlayers, new Player(nickname));
-
         game_controller = main_controller.createGame(this, nickname, numberOfPlayers, gameID);
         model = game_controller.getModel();
+        model.addListener(this);
 
-        this.model.addListener(this);
-
-        // The player that creates the game is the first player to join it
         playerIndex = 0;
-
         playerJoinedGame();
+        client.showStatus(model.getStatus());
+
+        // Here, we do not need to call game_controller.gameFlow() because the WAIT status is already set
+        // by the constructor of the GameModel class.
+    }
+
+    /**
+     * This method is called when a player wants to join a game.
+     * It will also handle the case where a player is reconnecting
+     * to a game in which he was already playing.
+     *
+     */
+    @Override
+    public void addPlayerToGame(int gameID, String nickname)
+            throws RemoteException, GameNotStartedException, GameEndedException {
+
+        game_controller = MainController.getControllerInstance().joinGame(this, nickname, gameID);
+        if (game_controller == null) {
+            client.gameUnavailable();
+        }
+        else {
+            System.out.println("A client is joining game " + gameID + " with username " + nickname + "...");
+            model = game_controller.getModel();
+            model.addListener(this);
+            playerJoinedGame();
+            // WAIT --> READY_TO_START
+            game_controller.gameFlow();
+            // Start the game if it is full
+            game_controller.startIfFull();
+            // READY_TO_START --> FIRST_ROUND
+            game_controller.gameFlow();
+        }
     }
 
     /**
@@ -147,6 +153,13 @@ public class ServerImpl implements Server, GameListener {
             System.err.println("Main controller is null.");
         }
     }
+
+    @Override
+    public void pong() throws RemoteException {
+        pingpongThread.pongReceived();
+    }
+
+    // ******************************************** GameListener methods ********************************************
 
     @Override
     public void newGame() throws RemoteException {
@@ -199,14 +212,6 @@ public class ServerImpl implements Server, GameListener {
 
 
     @Override
-    public void gameIsFull() throws RemoteException {
-        //TODO: gestione listeners ---> GameList.getInstance().removeListener(this);
-
-        this.client.gameHasStarted();
-    }
-
-
-    @Override
     public void modelChanged() throws RemoteException {
         this.client.modelChanged(new GameView(this.model, this.playerIndex));
 
@@ -222,10 +227,25 @@ public class ServerImpl implements Server, GameListener {
         }
     }
 
+    // *************************** Status Listeners ***************************
+
+    /**
+     * This method is invoked by the GameModel class when the model has a significant change,
+     * namely a change in the game status
+     */
+    @Override
+    public void genericGameStatus() {
+        try {
+            this.client.showStatus(model.getStatus());
+        } catch (RemoteException e) {
+            System.err.println("Error while showing status: " + e.getMessage());
+        }
+    }
+
+
     @Override
     public void gameEnded() {
         GameView gameView = new GameView(this.model, this.playerIndex);
-
         MainController.getControllerInstance().getGames().remove(model.getGameId());
         this.model.removeListener(this);
         this.model = null;
@@ -234,13 +254,24 @@ public class ServerImpl implements Server, GameListener {
         } catch (RemoteException ignored) {}
     }
 
+    // ***********************************************************************
+
+    @Override
+    public void gameUnavailable() throws RemoteException {
+        this.client.gameUnavailable();
+    }
+
+    // *** !!
+    /**
+     * This is a special method, not totally related to GameStatus-like methods.
+     * This is because it induces the transition from StartUI to GameUI!
+     * @throws RemoteException if the remote operation fails
+     */
     @Override
     public void gameStarted() throws RemoteException {
         this.client.gameHasStarted();
     }
+    // *** !!
 
-    @Override
-    public void pong() throws RemoteException {
-        pingpongThread.pongReceived();
-    }
+
 }

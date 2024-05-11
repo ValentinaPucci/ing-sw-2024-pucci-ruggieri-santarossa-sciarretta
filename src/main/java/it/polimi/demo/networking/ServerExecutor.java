@@ -1,5 +1,6 @@
 package it.polimi.demo.networking;
 
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
 import org.fusesource.jansi.Ansi;
@@ -50,7 +51,7 @@ public class ServerExecutor extends UnicastRemoteObject implements Server {
                 try {
                     client.showError(e.getMessage());
                 } catch (RemoteException ignored) {}
-            } catch (InvalidChoiceException e) {
+            } catch (InvalidChoiceException | GameEndedException e) {
                 throw new RuntimeException(e);
             }
         });

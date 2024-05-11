@@ -10,14 +10,12 @@ import it.polimi.demo.model.Player;
 import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
 import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
 import it.polimi.demo.view.GameDetails;
-import org.fusesource.jansi.Ansi;
 
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.demo.listener.Listener.notifyListeners;
-import static it.polimi.demo.networking.PrintAsync.*;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -162,7 +160,6 @@ public class MainController implements MainControllerInterface {
         Player player = new Player(nickname);
         GameController game = games.get(gameId);
 
-        // todo: check if this code makes sense! In fact, it is 99% incorrect
         return Optional.ofNullable(game)
                 .filter(g -> g.getStatus() == GameStatus.WAIT ||
                         g.getStatus() == GameStatus.FIRST_ROUND ||

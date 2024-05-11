@@ -47,14 +47,6 @@ public interface GameControllerInterface extends Remote {
     void drawCard(String player_nickname, int index) throws RemoteException;
 
     /**
-     * this method must be called every time a player finishes his/her turn,
-     * i.e. whenever he/she has placed a card on his/her personal board and has also
-     * drawn a new game card from the deck/table
-     * @throws RuntimeException if the connection fails
-     */
-    void myTurnIsFinished() throws RuntimeException;
-
-    /**
      * This method checks if it's the turn of player named 'nick'.
      * @param nick the nickname of the player
      * @return true if it's the turn of the player
@@ -126,4 +118,6 @@ public interface GameControllerInterface extends Remote {
     void startIfFull();
 
     void setError(String s);
+
+    void gameFlow() throws RemoteException, GameEndedException;
 }
