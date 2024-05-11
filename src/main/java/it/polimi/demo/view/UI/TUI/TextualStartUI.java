@@ -200,7 +200,8 @@ public class TextualStartUI extends StartUI {
                 System.out.println(" " + s);
             }
         } else {
-            o.stream().filter(s -> !this.playersNameList.contains(s)).forEach(x -> System.out.println(" " + x));
+            System.out.println(ansi().fg(Ansi.Color.BLUE).a("** Updated ** list of connected players:").reset());
+            o.forEach(x -> System.out.println(" " + x));
         }
         this.playersNameList = o;
     }
