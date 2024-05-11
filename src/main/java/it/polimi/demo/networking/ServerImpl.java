@@ -7,6 +7,7 @@ import it.polimi.demo.controller.GameController;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.listener.GameListener;
@@ -93,7 +94,7 @@ public class ServerImpl implements Server, GameListener {
 
         playerIndex = 0;
         playerJoinedGame();
-        statusActions();
+        client.showStatus(model.getStatus());
 
         // Here, we do not need to call game_controller.gameFlow() because the WAIT status is already set
         // by the constructor of the GameModel class.
@@ -120,14 +121,10 @@ public class ServerImpl implements Server, GameListener {
             playerJoinedGame();
             // WAIT --> READY_TO_START
             game_controller.gameFlow();
-            // display the status
-            statusActions();
             // Start the game if it is full
             game_controller.startIfFull();
             // READY_TO_START --> FIRST_ROUND
             game_controller.gameFlow();
-            // display the status
-            statusActions();
         }
     }
 
@@ -232,37 +229,19 @@ public class ServerImpl implements Server, GameListener {
 
     // *************************** Status Listeners ***************************
 
-    // todo: maybe we will need to add some features to this methods (as done for gameStarted / gameEnded)
-
+    /**
+     * This method is invoked by the GameModel class when the model has a significant change,
+     * namely a change in the game status
+     */
     @Override
-    public void gameIsWaiting() throws RemoteException {
-        this.client.gameIsWaiting();
+    public void genericGameStatus() {
+        try {
+            this.client.showStatus(model.getStatus());
+        } catch (RemoteException e) {
+            System.err.println("Error while showing status: " + e.getMessage());
+        }
     }
 
-    @Override
-    public void gameIsReadyToStart() throws RemoteException {
-        this.client.gameIsReadyToStart();
-    }
-
-    @Override
-    public void gameIsInFirstRound() throws RemoteException {
-        this.client.gameIsInFirstRound();
-    }
-
-    @Override
-    public void gameIsRunning() throws RemoteException {
-        this.client.gameIsRunning();
-    }
-
-    @Override
-    public void gameIsInLastRound() throws RemoteException {
-        this.client.gameIsInLastRound();
-    }
-
-    @Override
-    public void gameIsInSecondLastRound() throws RemoteException {
-        this.client.gameIsInSecondLastRound();
-    }
 
     @Override
     public void gameEnded() {
@@ -294,17 +273,5 @@ public class ServerImpl implements Server, GameListener {
     }
     // *** !!
 
-    // ****************************** auxiliary methods ******************************
 
-    public void statusActions() throws RemoteException {
-        switch (model.getStatus()) {
-            case WAIT -> gameIsWaiting();
-            case READY_TO_START -> gameIsReadyToStart();
-            case FIRST_ROUND -> gameIsInFirstRound();
-            case RUNNING -> gameIsRunning();
-            case LAST_ROUND -> gameIsInLastRound();
-            case SECOND_LAST_ROUND -> gameIsInSecondLastRound();
-            case ENDED -> gameEnded();
-        }
-    }
 }

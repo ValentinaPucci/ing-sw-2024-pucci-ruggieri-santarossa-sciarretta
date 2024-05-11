@@ -1,6 +1,7 @@
 package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.PlayerDetails;
 import it.polimi.demo.view.UI.StartUI;
@@ -164,6 +165,12 @@ public class TextualStartUI extends StartUI {
     public void showError(String err) {
         System.out.println(ansi().bold().fg(Ansi.Color.RED).a(err).reset());
         notifyListeners(lst, UIListener::exit);
+    }
+
+    @Override
+    public void showStatus(GameStatus status) {
+        System.out.println(Ansi.ansi().fgGreen()
+                .a("The current game status is: ").bold().a(status).reset());
     }
 
     /**

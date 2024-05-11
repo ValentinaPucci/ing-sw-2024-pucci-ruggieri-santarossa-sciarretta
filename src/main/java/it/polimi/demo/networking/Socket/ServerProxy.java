@@ -137,35 +137,31 @@ public class ServerProxy  implements Server {
             }
         }
 
-    @Override
-    public GameStatus getGameStatus() {
-        return null;
-    }
 
-    @Override
-    public void placeStarterCard() {
-
-    }
-
-    @Override
-    public void drawCard(int x) {
-
-    }
-
-    @Override
-    public void placeCard(ResourceCard chosenCard, int x, int y) {
-
-    }
-
-    @Override
-    public void calculateFinalScores() {
-
-    }
-
-    @Override
-    public List<ResourceCard> getPlayerHand() {
-        return null;
-    }
+//    @Override
+//    public void placeStarterCard() {
+//
+//    }
+//
+//    @Override
+//    public void drawCard(int x) {
+//
+//    }
+//
+//    @Override
+//    public void placeCard(ResourceCard chosenCard, int x, int y) {
+//
+//    }
+//
+//    @Override
+//    public void calculateFinalScores() {
+//
+//    }
+//
+//    @Override
+//    public List<ResourceCard> getPlayerHand() {
+//        return null;
+//    }
 
     // receive messgaes from the server: use not a case based.
         // Something like this:

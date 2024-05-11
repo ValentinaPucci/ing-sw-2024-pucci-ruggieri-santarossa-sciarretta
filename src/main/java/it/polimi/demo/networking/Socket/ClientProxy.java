@@ -1,6 +1,7 @@
 package it.polimi.demo.networking.Socket;
 
 
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
 import it.polimi.demo.networking.Client;
@@ -104,32 +105,7 @@ public class ClientProxy implements Client {
     // ****************************** Status of the game ******************************
 
     @Override
-    public void gameIsWaiting() throws RemoteException {
-
-    }
-
-    @Override
-    public void gameIsReadyToStart() throws RemoteException {
-
-    }
-
-    @Override
-    public void gameIsInFirstRound() throws RemoteException {
-
-    }
-
-    @Override
-    public void gameIsRunning() throws RemoteException {
-
-    }
-
-    @Override
-    public void gameIsInLastRound() throws RemoteException {
-
-    }
-
-    @Override
-    public void gameIsInSecondLastRound() throws RemoteException {
+    public void showStatus(GameStatus status) throws RemoteException {
 
     }
 

@@ -2,6 +2,7 @@ package it.polimi.demo.networking;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.UIListener;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
@@ -60,7 +61,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
             }
             default -> throw new RuntimeException("UI type not supported");
         }
-
         initialize();
     }
 
@@ -178,6 +178,11 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     @Override
+    public void showStatus(GameStatus status) {
+        startUI.showStatus(status);
+    }
+
+    @Override
     public void showError(String err) throws RemoteException {
         startUI.showError(err);
     }
@@ -195,45 +200,9 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         startUI.showPlayersList(o);
     }
 
-    // ****************************** Status of the game ******************************
-
-    @Override
-    public void gameIsWaiting() throws RemoteException {
-        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is waiting for players to join..." +
-                " other players will be shown below:").reset());
-    }
-
-    @Override
-    public void gameIsReadyToStart() throws RemoteException {
-        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is now full and ready to start.").reset());
-    }
-
-    @Override
-    public void gameIsInFirstRound() throws RemoteException {
-        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is in the first round.").reset());
-    }
-
-    @Override
-    public void gameIsRunning() throws RemoteException {
-        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is running.").reset());
-    }
-
-    @Override
-    public void gameIsInLastRound() throws RemoteException {
-        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is in the last round.").reset());
-    }
-
-    @Override
-    public void gameIsInSecondLastRound() throws RemoteException {
-        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is in the second last round.").reset());
-    }
-
-    // *******************************************************************************
-
     @Override
     public void gameUnavailable() throws RemoteException {
-        printAsync(ansi().fg(Ansi.Color.RED).a("Game is unavailable (possibly full), " +
-                "you cannot enter this game. Please enter another game ID.").reset());
+        System.out.println(ansi().fg(Ansi.Color.RED).a("Game is unavailable (possibly full), you cannot enter this game. Please enter another game ID.").reset());
         startUI.joinGame();
     }
 
@@ -270,5 +239,10 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public void ping() throws RemoteException {
         pingReceived = true;
         this.server.pong();
+    }
+
+    @Override
+    public void performTurn() {
+
     }
 }
