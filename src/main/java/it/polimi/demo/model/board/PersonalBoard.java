@@ -1127,7 +1127,7 @@ public class PersonalBoard {
 
                 if (board[i + k][j + h].is_full) {
                     board[i + k][j + h].getCornerFromCell().resource.ifPresent(res -> this.removeResource(res));
-                    //board[i + k][j + h].getCornerFromCell().item.ifPresent(it -> this.removeItem(it));
+                    board[i + k][j + h].getCornerFromCell().item.ifPresent(it -> this.removeItem(it));
                 }
 
                 // Effective cell-setter

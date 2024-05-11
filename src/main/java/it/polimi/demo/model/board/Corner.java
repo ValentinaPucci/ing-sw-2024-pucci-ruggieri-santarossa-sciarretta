@@ -112,6 +112,9 @@ public class Corner {
         return coordinate;
     }
 
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
+    }
 
     @Override
     public boolean equals(Object obj) {
@@ -136,5 +139,9 @@ public class Corner {
 
     public BoardCellCoordinate getBoard_coordinate() {
         return board_coordinate;
+    }
+
+    public void setReference_card(ResourceCard reference_card) {
+        this.reference_card = reference_card;
     }
 }

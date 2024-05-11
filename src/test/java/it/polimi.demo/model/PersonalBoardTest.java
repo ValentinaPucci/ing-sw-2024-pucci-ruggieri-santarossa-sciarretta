@@ -327,6 +327,8 @@ public class PersonalBoardTest {
             }
         }
 
+        System.out.println(filledCorner1[1][1].resource);
+
         Corner[][] filledCorner2 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
@@ -369,7 +371,11 @@ public class PersonalBoardTest {
 
         personalBoard.bruteForcePlaceCardSE(card1, i, j);
 
+
+
         personalBoard.placeCardAtSE(card1, card2);
+        System.out.println(personalBoard.getNum_mushrooms());
+
         personalBoard.placeCardAtSE(card2, card3);
         personalBoard.placeCardAtSE(card3, card4);
         personalBoard.placeCardAtSW(card4, card5);
