@@ -162,7 +162,6 @@ public class MainController implements MainControllerInterface {
         Player player = new Player(nickname);
         GameController game = games.get(gameId);
 
-        // todo: check if this code makes sense! In fact, it is 99% incorrect
         return Optional.ofNullable(game)
                 .filter(g -> g.getStatus() == GameStatus.WAIT ||
                         g.getStatus() == GameStatus.FIRST_ROUND ||

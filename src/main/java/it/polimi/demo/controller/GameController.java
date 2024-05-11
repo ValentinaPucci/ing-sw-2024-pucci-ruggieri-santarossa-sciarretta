@@ -51,37 +51,42 @@ public class GameController implements GameControllerInterface, Serializable {
     }
 
     //------------------------------------gameFlow-----------------------------------------------
+
+    // todo: reimplement the right conditions to pass from a status to another!
     public void gameFlow() throws RemoteException, GameEndedException {
         switch (model.getStatus()) {
-            case WAIT:
-                //TODO: aspettare tutti i giocatori previsti per la partita
+            case WAIT -> {
                 if (model.getNumPlayersToPlay() == getNumConnectedPlayers())
-                    model.setStatus(GameStatus.FIRST_ROUND);
-            case FIRST_ROUND:
-                //TODO giocare il primo turno posizionando le carte starter
+                    model.setStatus(GameStatus.READY_TO_START);
+            }
+            case READY_TO_START -> {
+                model.setStatus(GameStatus.FIRST_ROUND);
+            }
+            case FIRST_ROUND -> {
                 if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
                     model.setStatus(GameStatus.RUNNING);
-            case RUNNING:
-                //TODO giocare
+            }
+            case RUNNING -> {
                 if (model.getPlayersConnected().getFirst().getCurrentPoints() >= 20) {
                     model.nextTurn();
                     model.setStatus(GameStatus.SECOND_LAST_ROUND);
                 }
-            case SECOND_LAST_ROUND:
-                //TODO giocare normale
+            }
+            case SECOND_LAST_ROUND -> {
                 if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname())) {
                     model.nextTurn();
                     model.setStatus(GameStatus.LAST_ROUND);
                 }
-            case LAST_ROUND:
-                //TODO giocare senza pescare
+            }
+            case LAST_ROUND -> {
                 if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
                     model.setStatus(GameStatus.ENDED);
-            case ENDED:
-                //TODO giocare senza pescare
+            }
+            case ENDED -> {
                 model.calculateFinalScores();
+                model.getWinners();
+            }
         }
-
     }
 
 
@@ -327,20 +332,18 @@ public class GameController implements GameControllerInterface, Serializable {
 
     @Override
     public void startIfFull() {
+
         if (model.getAllPlayers().size() == model.getNumPlayersToPlay()) {
-            System.out.println("Game " + this.model.getGameId() + " is full and ready to start");
+            // System.out.println("Game " + this.model.getGameId() + " is full and ready to start");
             notifyListeners(model.getListeners(), GameListener::gameStarted);
             this.startGame();
         }
-        else
-            printAsync("Game " + this.model.getGameId() + " is waiting for other players to join");
     }
 
     @Override
     public void setError(String error){
         this.model.setErrorMessage(error);
     }
-
 
     //------------------------------------ management of players -----------------------------------------------
     /**
@@ -379,7 +382,7 @@ public class GameController implements GameControllerInterface, Serializable {
     /**
      * Return the entity of the player associated with the nickname @param
      *
-     * @param nick
+     * @param nick the nickname of the player
      * @return the player by nickname @param
      */
     public Player getPlayer(String nick) {
@@ -410,7 +413,6 @@ public class GameController implements GameControllerInterface, Serializable {
      * When all the players are ready to start, the game starts (game status changes to running)
      *
      * @param nickname Player to set has ready
-     * @return true if the game has started, false else
      */
     @Override
     public synchronized void setPlayerAsReadyToStart(String nickname) {
@@ -424,8 +426,8 @@ public class GameController implements GameControllerInterface, Serializable {
 
     /**
      * Gets the player entity
-     * @param nickname
-     * @return
+     * @param nickname the nickname of the player
+     * @return the player entity
      */
     public Player getPlayerEntity(String nickname){
         return model.getPlayerEntity(nickname);
@@ -435,14 +437,12 @@ public class GameController implements GameControllerInterface, Serializable {
 
     /**
      * Start the game if it's ready
-     *
      */
     @Override
     public void startGame() {
         System.out.println("Game " + this.model.getGameId() + " is starting...");
         extractFirstPlayerToPlay();
         model.initializeGame();
-        model.setStatus(GameStatus.RUNNING);
     }
 
     //***********************************************************************************************
@@ -505,7 +505,7 @@ public class GameController implements GameControllerInterface, Serializable {
     // Section: Overrides
 
     /**
-     * Place a card in the commonboard
+     * Place a card in the common board
      *
      * @param card_chosen the card to place
      * @param p           the player that places the card
@@ -565,8 +565,9 @@ public class GameController implements GameControllerInterface, Serializable {
     }
 
     /**
-     * Draw a card from the deck in commonBoard
-     * @param player_nickname
+     * Draw a card from the deck in commonBoard. It also incorporates the logic of the game
+     * with respect to the game flow, since it calls (through myTurnIsFinished) the nextTurn method in GameModel
+     * @param player_nickname the nickname of the player
      * @param index the index of the card to draw
      */
     @Override
@@ -577,16 +578,17 @@ public class GameController implements GameControllerInterface, Serializable {
         this.myTurnIsFinished();
     }
 
+    // aux method for drawCard
     /**
      * this method must be called every time a player finishes his/her turn,
      * i.e. whenever he/she has placed a card on his/her personal board and has also
      * drawn a new game card from the deck/table
      * @throws RuntimeException if the connection fails
      */
-    @Override
     public void myTurnIsFinished() throws RuntimeException {
         try {
             model.nextTurn();
+            // IMPORTANT: notifies the listeners that the model has changed!
             notifyListeners(model.getListeners(), GameListener::modelChanged);
         } catch (GameEndedException e) {
             throw new RuntimeException(e);

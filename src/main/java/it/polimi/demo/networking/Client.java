@@ -30,6 +30,20 @@ public interface Client extends Remote {
      */
     void updatePlayersList(List<String> o) throws RemoteException;
 
+    void gameIsWaiting() throws RemoteException;
+
+    void gameIsReadyToStart() throws RemoteException;
+
+    void gameIsInFirstRound() throws RemoteException;
+
+    void gameIsRunning() throws RemoteException;
+
+    void gameIsInLastRound() throws RemoteException;
+
+    void gameIsInSecondLastRound() throws RemoteException;
+
+    void gameUnavailable() throws RemoteException;
+
     /**
      * This method is called by the server to notify the client that the game it is in has started.
      * It should trigger a UI change.

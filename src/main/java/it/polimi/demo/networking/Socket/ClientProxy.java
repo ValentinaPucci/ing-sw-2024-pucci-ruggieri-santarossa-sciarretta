@@ -1,12 +1,8 @@
 package it.polimi.demo.networking.Socket;
 
 
-import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.cards.gameCards.GoldCard;
-import it.polimi.demo.model.cards.gameCards.ResourceCard;
-import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
-import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
-import it.polimi.demo.networking.Socket.ServerProxy;
+import it.polimi.demo.model.exceptions.GameEndedException;
+import it.polimi.demo.model.exceptions.InvalidChoiceException;
 import it.polimi.demo.networking.Client;
 import it.polimi.demo.networking.Server;
 import it.polimi.demo.view.GameDetails;
@@ -16,9 +12,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;
+
+import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * This class is a proxy, a stub for the server, it is used by the server to communicate with the client and with the
@@ -30,6 +28,7 @@ import java.util.List;
 
  */
 public class ClientProxy implements Client {
+
     private final ObjectOutputStream out_serialized;
     private final ObjectInputStream in_deserialized;
 
@@ -102,6 +101,45 @@ public class ClientProxy implements Client {
         }
     }
 
+    // ****************************** Status of the game ******************************
+
+    @Override
+    public void gameIsWaiting() throws RemoteException {
+
+    }
+
+    @Override
+    public void gameIsReadyToStart() throws RemoteException {
+
+    }
+
+    @Override
+    public void gameIsInFirstRound() throws RemoteException {
+
+    }
+
+    @Override
+    public void gameIsRunning() throws RemoteException {
+
+    }
+
+    @Override
+    public void gameIsInLastRound() throws RemoteException {
+
+    }
+
+    @Override
+    public void gameIsInSecondLastRound() throws RemoteException {
+
+    }
+
+    // *******************************************************************************
+
+    @Override
+    public void gameUnavailable() throws RemoteException {
+
+    }
+
     @Override
     public void gameHasStarted() throws RemoteException{
         try {
@@ -162,7 +200,7 @@ public class ClientProxy implements Client {
                 case ADD_PLAYER_TO_GAME:
                     try {
                         server.addPlayerToGame((int) in_deserialized.readObject(), (String) in_deserialized.readObject());
-                    } catch (it.polimi.demo.model.exceptions.InvalidChoiceException e) {
+                    } catch (InvalidChoiceException | GameEndedException e) {
                         // Exception thrown by the server
                         System.err.println("Invalid choice: " + e.getMessage());
                     }

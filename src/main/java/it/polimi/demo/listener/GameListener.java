@@ -12,6 +12,18 @@ public interface GameListener extends Listener {
      */
     void modelChanged() throws RemoteException;
 
+    void gameIsWaiting() throws RemoteException;
+
+    void gameIsReadyToStart() throws RemoteException;
+
+    void gameIsInFirstRound() throws RemoteException;
+
+    void gameIsRunning() throws RemoteException;
+
+    void gameIsInLastRound() throws RemoteException;
+
+    void gameIsInSecondLastRound() throws RemoteException;
+
     /**
      * This method is invoked by the GameModel class when the game is ended.
      * It should trigger the end of the game for the client.
@@ -23,15 +35,13 @@ public interface GameListener extends Listener {
      */
     void gameStarted() throws RemoteException;
 
+
     /**
      * This method is invoked when a player joins the game.
      */
     void playerJoinedGame() throws RemoteException;
 
-    /**
-     * This method is invoked when the game becomes full.
-     */
-    void gameIsFull() throws RemoteException;
+    void gameUnavailable() throws RemoteException;
 
     // *************************** GameListListener ***************************
 

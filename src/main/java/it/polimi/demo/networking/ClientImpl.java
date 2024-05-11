@@ -2,6 +2,7 @@ package it.polimi.demo.networking;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.UIListener;
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
 import it.polimi.demo.networking.Socket.ServerProxy;
@@ -147,19 +148,19 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void joinGame(int gameID, String username) {
         try {
-            if (this.server != null) { // Check if server object is not null
-                this.server.addPlayerToGame(gameID, username);
+            if (server != null) {
+                server.addPlayerToGame(gameID, username);
             } else {
                 // Handle the case where server object is null
                 System.err.println("Server object is null. Cannot join game.");
             }
         } catch (GameNotStartedException e) {
             try {
-                this.showError(e.getMessage());
+                showError(e.getMessage());
             } catch (RemoteException ignored) {}
         } catch (RemoteException e) {
             System.err.println("Network error while joining game.");
-        } catch (InvalidChoiceException e) {
+        } catch (InvalidChoiceException | GameEndedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -194,6 +195,48 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         startUI.showPlayersList(o);
     }
 
+    // ****************************** Status of the game ******************************
+
+    @Override
+    public void gameIsWaiting() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is waiting for players to join..." +
+                " other players will be shown below:").reset());
+    }
+
+    @Override
+    public void gameIsReadyToStart() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is now full and ready to start.").reset());
+    }
+
+    @Override
+    public void gameIsInFirstRound() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is in the first round.").reset());
+    }
+
+    @Override
+    public void gameIsRunning() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is running.").reset());
+    }
+
+    @Override
+    public void gameIsInLastRound() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is in the last round.").reset());
+    }
+
+    @Override
+    public void gameIsInSecondLastRound() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is in the second last round.").reset());
+    }
+
+    // *******************************************************************************
+
+    @Override
+    public void gameUnavailable() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.RED).a("Game is unavailable (possibly full), " +
+                "you cannot enter this game. Please enter another game ID.").reset());
+        startUI.joinGame();
+    }
+
     @Override
     public void gameHasStarted() throws RemoteException {
         System.out.println("Closing StartUI...");
@@ -215,7 +258,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     private void closeConnection() {
-        if(this.server instanceof ServerProxy) {
+        if (this.server instanceof ServerProxy) {
             try {
                 ((ServerProxy) this.server).close();
             } catch (RemoteException e) {

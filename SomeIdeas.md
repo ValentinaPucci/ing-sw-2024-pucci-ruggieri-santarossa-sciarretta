@@ -60,3 +60,6 @@ We would like to implement this advanced functionality on our program. Namely, w
 # ToDo (8 may 2024)
 - setAsConnected vs setAsReadyToStart... what is the difference?
 - Manage the GameStatus! Implement GameFlow method correctly in the controller.
+
+# ToDo (11 may 2024)
+- check the real condition of gameFlow! For example, the game should enter in running status only when the cards are dealt to the players.

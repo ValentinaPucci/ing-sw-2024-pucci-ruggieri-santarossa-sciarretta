@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 public enum GameStatus {
     WAIT,
+    READY_TO_START,
     FIRST_ROUND,
     RUNNING,
     // Real last_turn, nobody draw a card.
