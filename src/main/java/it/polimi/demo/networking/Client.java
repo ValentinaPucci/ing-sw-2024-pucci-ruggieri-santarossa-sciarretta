@@ -1,5 +1,7 @@
 package it.polimi.demo.networking;
 
+import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.GameView;
 
@@ -18,6 +20,8 @@ public interface Client extends Remote {
      */
     void updateGamesList(List<GameDetails> o) throws RemoteException;
 
+    void showStatus(GameStatus status) throws RemoteException;
+
     /**
      * This method is called by the server when there is an error to show.
      * @param err the error message
@@ -29,6 +33,9 @@ public interface Client extends Remote {
      * @param o the list of players
      */
     void updatePlayersList(List<String> o) throws RemoteException;
+
+
+    void gameUnavailable() throws RemoteException;
 
     /**
      * This method is called by the server to notify the client that the game it is in has started.

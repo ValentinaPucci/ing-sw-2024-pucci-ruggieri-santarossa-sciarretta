@@ -47,14 +47,6 @@ public interface GameControllerInterface extends Remote {
     void drawCard(String player_nickname, int index) throws RemoteException;
 
     /**
-     * this method must be called every time a player finishes his/her turn,
-     * i.e. whenever he/she has placed a card on his/her personal board and has also
-     * drawn a new game card from the deck/table
-     * @throws RuntimeException if the connection fails
-     */
-    void myTurnIsFinished() throws RuntimeException;
-
-    /**
      * This method checks if it's the turn of player named 'nick'.
      * @param nick the nickname of the player
      * @return true if it's the turn of the player
@@ -76,33 +68,21 @@ public interface GameControllerInterface extends Remote {
      */
     int getGameId() throws RemoteException;
 
-    /**
-     * Set the @param p player ready to start
-     * When all the players are ready to start, the game starts (game status changes to running)
-     *
-     * @param nickname the nickname of the player
-     * @return true if the player is ready to start
-     * @throws RemoteException if the connection fails
-     */
-    void setPlayerAsReadyToStart(String nickname) throws RemoteException;
+
+    void setPlayerAsReadyToStart(String nickname);
 
     /**
      * Set the player as connected
      * @param p the player to set as connected
      */
     void setPlayerAsConnected(Player p) throws RemoteException;
-    /**
-     * Check if the game is ready to start
-     * @return true if the game is ready to start, false else
-     */
-    boolean isTheGameReadyToStart() throws RemoteException;
 
     /**
      * This method starts the game
      * @throws IllegalStateException if the game is not ready to start
      * @throws RemoteException if the connection fails
      */
-    void startGame() throws IllegalStateException;
+    void startGame();
 
 
 //    /**
@@ -138,4 +118,6 @@ public interface GameControllerInterface extends Remote {
     void startIfFull();
 
     void setError(String s);
+
+    void gameFlow() throws RemoteException, GameEndedException;
 }

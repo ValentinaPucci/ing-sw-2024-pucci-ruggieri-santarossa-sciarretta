@@ -11,10 +11,11 @@ public interface UIListener extends Listener {
      */
     void createGame(String nickname, int numberOfPlayers)throws RemoteException;
 
+    void performTurn();
     /**
      * This method is invoked when startUI wants to join a game.
      */
-    void joinGame(int gameID, String username);
+    void joinGame(int gameID, String nickname);
 
     void exit();
 }

@@ -2,6 +2,8 @@ package it.polimi.demo.networking;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.UIListener;
+import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
 import it.polimi.demo.networking.Socket.ServerProxy;
@@ -59,7 +61,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
             }
             default -> throw new RuntimeException("UI type not supported");
         }
-
         initialize();
     }
 
@@ -147,17 +148,23 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void joinGame(int gameID, String username) {
         try {
-            this.server.addPlayerToGame(gameID, username);
+            if (server != null) {
+                server.addPlayerToGame(gameID, username);
+            } else {
+                // Handle the case where server object is null
+                System.err.println("Server object is null. Cannot join game.");
+            }
         } catch (GameNotStartedException e) {
             try {
-                this.showError(e.getMessage());
+                showError(e.getMessage());
             } catch (RemoteException ignored) {}
         } catch (RemoteException e) {
             System.err.println("Network error while joining game.");
-        } catch (InvalidChoiceException e) {
+        } catch (InvalidChoiceException | GameEndedException e) {
             throw new RuntimeException(e);
         }
     }
+
 
     @Override
     public void exit() {
@@ -168,6 +175,11 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void updateGamesList(List<GameDetails> o) throws RemoteException {
         startUI.showGamesList(o);
+    }
+
+    @Override
+    public void showStatus(GameStatus status) {
+        startUI.showStatus(status);
     }
 
     @Override
@@ -186,6 +198,12 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
             return;
         }
         startUI.showPlayersList(o);
+    }
+
+    @Override
+    public void gameUnavailable() throws RemoteException {
+        System.out.println(ansi().fg(Ansi.Color.RED).a("Game is unavailable (possibly full), you cannot enter this game. Please enter another game ID.").reset());
+        startUI.joinGame();
     }
 
     @Override
@@ -209,7 +227,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     private void closeConnection() {
-        if(this.server instanceof ServerProxy) {
+        if (this.server instanceof ServerProxy) {
             try {
                 ((ServerProxy) this.server).close();
             } catch (RemoteException e) {
@@ -222,4 +240,14 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         pingReceived = true;
         this.server.pong();
     }
+
+    @Override
+    public void performTurn() {
+//        try {
+//            server.performTurn();
+//        } catch (RemoteException e) {
+//            System.err.println("Network error while performing turn.");
+//        }
+    }
+
 }

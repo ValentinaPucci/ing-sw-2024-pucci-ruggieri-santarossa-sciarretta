@@ -1,6 +1,7 @@
 package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.PlayerDetails;
 import it.polimi.demo.view.UI.StartUI;
@@ -96,10 +97,7 @@ public class TextualStartUI extends StartUI {
         waitingForPlayers = true;
     }
 
-    /**
-     * Asks the user to insert the ID of the game to join, then sends a JOIN event.
-     */
-    private void joinGame() {
+    public void askID() {
         Scanner s = new Scanner(System.in);
         do {
             System.out.print("Which game do you want to join? ");
@@ -107,7 +105,14 @@ public class TextualStartUI extends StartUI {
             if (gameID <= 0)
                 System.out.println("GameID is a positive number!");
         } while (gameID <= 0);
+    }
 
+    /**
+     * Asks the user to insert the ID of the game to join, then sends a JOIN event.
+     */
+    @Override
+    public void joinGame() {
+        askID();
         try {
             notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
         } catch (IllegalArgumentException | IllegalStateException e) {
@@ -162,6 +167,12 @@ public class TextualStartUI extends StartUI {
         notifyListeners(lst, UIListener::exit);
     }
 
+    @Override
+    public void showStatus(GameStatus status) {
+        System.out.println(Ansi.ansi().fgGreen()
+                .a("The current game status is: ").bold().a(status).reset());
+    }
+
     /**
      * Shows the list of connected players.
      *
@@ -189,7 +200,8 @@ public class TextualStartUI extends StartUI {
                 System.out.println(" " + s);
             }
         } else {
-            o.stream().filter(s -> !this.playersNameList.contains(s)).forEach(x -> System.out.println(" " + x));
+            System.out.println(ansi().fg(Ansi.Color.BLUE).a("** Updated ** list of connected players:").reset());
+            o.forEach(x -> System.out.println(" " + x));
         }
         this.playersNameList = o;
     }

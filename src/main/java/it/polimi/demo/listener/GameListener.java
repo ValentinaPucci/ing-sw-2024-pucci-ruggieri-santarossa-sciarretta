@@ -1,5 +1,7 @@
 package it.polimi.demo.listener;
 
+import it.polimi.demo.model.enumerations.GameStatus;
+
 import java.rmi.RemoteException;
 
 /**
@@ -18,15 +20,20 @@ public interface GameListener extends Listener {
      */
     void gameEnded() throws RemoteException;
 
+    void genericGameStatus() throws RemoteException;
+
+    /**
+     * This method is invoked when the game is started.
+     */
+    void gameStarted() throws RemoteException;
+
+
     /**
      * This method is invoked when a player joins the game.
      */
     void playerJoinedGame() throws RemoteException;
 
-    /**
-     * This method is invoked when the game becomes full.
-     */
-    void gameIsFull() throws RemoteException;
+    void gameUnavailable() throws RemoteException;
 
     // *************************** GameListListener ***************************
 
@@ -35,4 +42,6 @@ public interface GameListener extends Listener {
     void removedGame() throws RemoteException;
 
     void updatedGame() throws RemoteException;
+
+    // GameStatus getGameStatus();
 }

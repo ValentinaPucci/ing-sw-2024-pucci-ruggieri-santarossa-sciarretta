@@ -38,6 +38,7 @@ public class GameModel {
     private CommonBoard common_board;
     private int gameId;
     private int num_required_players_to_start;
+    private int current_player_index;
     private GameStatus status;
     private Chat chat;
     private Player first_finishing_player = null;
@@ -68,7 +69,6 @@ public class GameModel {
         num_required_players_to_start = numberOfPlayers;
         initial_player = player;
         gameId = gameID;
-        num_required_players_to_start = -1; // invalid value on purpose
         status = GameStatus.WAIT;
         chat = new Chat();
         winners = new ArrayList<>();
@@ -114,13 +114,11 @@ public class GameModel {
     public List<Player> getAllPlayers() {
         return aux_order_players;
     }
+
     public List<String> getAllNicknames() {
-            //System.out.println("aux_order_players: ");
-            for(Player p2 : aux_order_players){
-                System.out.println(p2.getNickname() + "\n");
-            }
-
-
+//        for(Player p2 : aux_order_players){
+//            System.out.println(p2.getNickname() + "\n");
+//        }
         return aux_order_players.stream()
                 .map(Player::getNickname)
                 .collect(Collectors.toList());
@@ -143,7 +141,6 @@ public class GameModel {
     public boolean arePlayersReadyToStartAndEnough() {
         List<Player> p = aux_order_players.stream().filter(Player::getReadyToStart).toList();
         // If every player is ready, the game starts
-        System.out.println(p.containsAll(aux_order_players) && p.size() == num_required_players_to_start);
         return p.containsAll(aux_order_players) && p.size() == num_required_players_to_start;
     }
 
@@ -193,26 +190,22 @@ public class GameModel {
      */
     public void addPlayer(String nickname) {
 
+//        printAsync("the number of player required to start is: " + num_required_players_to_start +
+//                " and the number of players connected is: " + players_connected.size() +
+//                " and the number of players in the game is: " + aux_order_players.size());
+
         List<String> nicknames = this.getAllNicknames();
 
         if (nicknames.contains(nickname)) {
             throw new PlayerAlreadyConnectedException();
         }
-        else if (aux_order_players.size() > num_required_players_to_start ||
-                aux_order_players.size() > DefaultValues.MaxNumOfPlayer) {
-            notifyListeners(listeners, GameListener::gameIsFull);
+        else if (aux_order_players.size() >= num_required_players_to_start ||
+                aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
             throw new MaxPlayersLimitException();
         }
         else {
             Player p = new Player(nickname);
             aux_order_players.add(p);
-            notifyListeners(listeners, GameListener::playerJoinedGame);
-
-//            System.out.println("aux_order_players: ");
-//            for(Player p2 : aux_order_players){
-//                System.out.println(p2.getNickname() + "\n");
-//            }
-
         }
     }
 
@@ -233,6 +226,10 @@ public class GameModel {
                 this.setStatus(GameStatus.ENDED);
             }
         }
+    }
+
+    public int getCurrentPlayerIndex() {
+        return getAllPlayers().indexOf(players_connected.getFirst());
     }
 
     //-------------------------chat and messages---------------------------------------------
@@ -285,9 +282,7 @@ public class GameModel {
      * @param p player to set as connected.
      */
     public void setPlayerAsConnected(Player p) {
-        // cancellato
-        System.out.println("entra");
-        if (aux_order_players.contains(p)) {
+        if (aux_order_players.contains(p) && !players_connected.contains(p)) {
             // Here we bypass the question 'are you ready to start?'
             p.setAsReadyToStart();
             players_connected.offer(p);
@@ -340,7 +335,6 @@ public class GameModel {
         for (Player s : players_connected) {
             if (s.equals(q))
                 index_to_add = players_connected.indexOf(s) + 1;
-
         }
         if (index_to_add != -1)
             players_connected.add(index_to_add , p);
@@ -383,33 +377,20 @@ public class GameModel {
      * @throws NotReadyToRunException If attempting to set the game status to "RUNNING" but the lobby
      * does not have at least the minimum number of players or the current player index is not set.
      */
-    public void setStatus(GameStatus status) throws NotReadyToRunException {
+    public void setStatus(GameStatus status) {
         // Check if the game status can be set to "RUNNING"
-        boolean canSetRunning =
-                (aux_order_players.size() >= DefaultValues.MinNumOfPlayer) &&
-                !players_connected.isEmpty();
+//        boolean canSetRunning =
+//                (aux_order_players.size() >= DefaultValues.MinNumOfPlayer) &&
+//                !players_connected.isEmpty();
 
         // Set the game status and notify listeners based on the new status
-        if (canSetRunning) {
-            this.status = status;
-            switch (status) {
-//                case RUNNING:
-//                    listener_handler.notify_GameStarted(this);
-//                    break;
-//                case SECOND_LAST_ROUND:
-//                    listener_handler.notify_SecondLastRound(this);
-//                    break;
-//                case LAST_ROUND:
-//                    listener_handler.notify_LastRound(this);
-//                    break;
-                case ENDED:
-                    notifyListeners(listeners, GameListener::gameEnded);
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            throw new NotReadyToRunException();
+        this.status = status;
+
+        switch (status) {
+            case WAIT, FIRST_ROUND, RUNNING, LAST_ROUND, SECOND_LAST_ROUND ->
+                    notifyListeners(listeners, GameListener::genericGameStatus);
+            case READY_TO_START -> notifyListeners(listeners, GameListener::gameStarted);
+            case ENDED -> notifyListeners(listeners, GameListener::gameEnded);
         }
     }
 
@@ -426,9 +407,6 @@ public class GameModel {
     }
 
     /**
-     * Deals cards to each player, including starter cards, resource cards, gold cards and secret objective cards.
-     */
-    /**
      * Deals cards to players from the common board's decks.
      * Each player receives:
      * - 1 starter card from the starter deck
@@ -443,12 +421,10 @@ public class GameModel {
         for (Player player : aux_order_players) {
 
             // Deal 1 starter card
-
-            /*
-            if (!common_board.getStarterConcreteDeck().isEmpty()) {
-                StarterCard starterCard = (StarterCard) common_board.getStarterConcreteDeck().pop();
-                player.setStarterCard(starterCard);
-            }*/
+//            if (!common_board.getStarterConcreteDeck().isEmpty()) {
+//                StarterCard starterCard = (StarterCard) common_board.getStarterConcreteDeck().pop();
+//                player.setStarterCard(starterCard);
+//            }
             StarterCard starterCard1 = null;
             StarterCard starterCard2 = null;
 
@@ -488,7 +464,6 @@ public class GameModel {
             }
 
             player.setSecretObjectives(objectiveCard1, objectiveCard2);
-
         }
     }
 
@@ -582,6 +557,34 @@ public class GameModel {
     }
 
     /**
+     * Proceeds to the next turn of the game.
+     * Throws a GameEndedException if the game has already ended or a GameNotStartedException if the game has not yet started.
+     *
+     * @throws GameEndedException    If the game has already ended.
+     * @throws GameNotStartedException If the game has not yet started.
+     */
+    public void nextTurn() throws GameEndedException, GameNotStartedException {
+
+        if (status.equals(GameStatus.ENDED)) {
+            throw new GameEndedException();
+        }
+        else if (status.equals(GameStatus.WAIT)) {
+            throw new GameNotStartedException();
+        }
+
+//        while (players_connected.size() <= 1) {
+//            // we wait for another player to connect
+//            // TODO:
+//            // IDEA: look for timeout in the requirements of disconnection
+//        }
+
+        // Proceeding to the next turn means changing the current player,
+        // namely the peek of the queue.
+        Player q = players_connected.poll();
+        players_connected.offer(q);
+    }
+
+    /**
      * Calculates the final scores for all players based on their personal boards, chosen objective cards,
      * and common objectives.
      * Updates the final scores for each player and stores them in the {@code final_scores} array.
@@ -600,6 +603,7 @@ public class GameModel {
     /**
      * Calculates the winner(s) of the game based on final scores.
      * Updates the leaderboard and the list of winners accordingly.
+     * It is called by getWinners() method.
      */
     public void declareWinners() {
 
@@ -629,8 +633,9 @@ public class GameModel {
      *
      * @return A list of Player objects representing the winner(s).
      */
-    public List<Player> getWinners(){
-        return this.winners;
+    public List<Player> getWinners() {
+        declareWinners();
+        return winners;
     }
 
 
@@ -641,34 +646,6 @@ public class GameModel {
      */
     public Map<Player, Integer> getLeaderboard() {
         return this.leaderboard;
-    }
-
-    /**
-     * Proceeds to the next turn of the game.
-     * Throws a GameEndedException if the game has already ended or a GameNotStartedException if the game has not yet started.
-     *
-     * @throws GameEndedException    If the game has already ended.
-     * @throws GameNotStartedException If the game has not yet started.
-     */
-    public void nextTurn() throws GameEndedException, GameNotStartedException {
-
-        if (status.equals(GameStatus.ENDED) || first_finishing_player != null) {
-            throw new GameEndedException();
-        } else if (!status.equals(GameStatus.FIRST_ROUND) &&
-                !status.equals(GameStatus.RUNNING) &&
-                !status.equals(GameStatus.SECOND_LAST_ROUND) &&
-                !status.equals(GameStatus.LAST_ROUND)) {
-            throw new GameNotStartedException();
-        }
-
-        while (players_connected.size() <= 1) {
-            // we wait for another player to connect
-            //TODO:
-            // IDEA: look for timeout in the requirements of disconnection
-        }
-
-        Player q = players_connected.poll();
-        players_connected.offer(q);
     }
 
     /**
@@ -754,7 +731,7 @@ public class GameModel {
         is_paused = paused;
     }
 
-    public List<PlayerDetails> getPlayersDetails(){
+    public List<PlayerDetails> getPlayersDetails() {
         return this.getAux_order_players()
                 .stream()
                 .map(p -> {
@@ -811,6 +788,10 @@ public class GameModel {
 
     public List<GameListener> getListeners() {
         return listeners;
+    }
+
+    public PlayerIC getPlayer(int playerIndex) {
+        return aux_order_players.get(playerIndex);
     }
 }
 
