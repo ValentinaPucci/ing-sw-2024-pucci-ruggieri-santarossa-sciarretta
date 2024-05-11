@@ -547,26 +547,6 @@ public class GameModelTest {
         //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
         //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
 
