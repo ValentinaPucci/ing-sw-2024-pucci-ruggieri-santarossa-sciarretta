@@ -390,11 +390,9 @@ public class GameModel {
         this.status = status;
 
         switch (status) {
-            case WAIT -> notifyListeners(listeners, GameListener::gameIsWaiting);
-            case FIRST_ROUND -> notifyListeners(listeners, GameListener::gameIsInFirstRound);
-            case RUNNING -> notifyListeners(listeners, GameListener::gameIsRunning);
-            case LAST_ROUND -> notifyListeners(listeners, GameListener::gameIsInLastRound);
-            case SECOND_LAST_ROUND -> notifyListeners(listeners, GameListener::gameIsInSecondLastRound);
+            case WAIT, FIRST_ROUND, RUNNING, LAST_ROUND, SECOND_LAST_ROUND ->
+                    notifyListeners(listeners, GameListener::genericGameStatus);
+            case READY_TO_START -> notifyListeners(listeners, GameListener::gameStarted);
             case ENDED -> notifyListeners(listeners, GameListener::gameEnded);
         }
     }

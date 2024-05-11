@@ -1,5 +1,6 @@
 package it.polimi.demo.view.UI.GUI;
 
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.UI.StartUI;
 
@@ -13,6 +14,11 @@ public class GraphicalStartUI extends StartUI {
 
     @Override
     public void showError(String err) {
+
+    }
+
+    @Override
+    public void showStatus(GameStatus status) {
 
     }
 

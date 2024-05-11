@@ -58,9 +58,6 @@ public class TextualGameUI extends GameUI {
         }
     }
 
-
-
-
     /**
      * This method performs the player's turn. It asks the user to select the tiles to place and the column to place them in.
      */
@@ -70,8 +67,6 @@ public class TextualGameUI extends GameUI {
             setState(State.NOT_MY_TURN);
     }
 
-
-
     public Orientation chooseCardOrientation(){
         Scanner s = new Scanner(System.in);
         int choice = -1;
@@ -79,7 +74,7 @@ public class TextualGameUI extends GameUI {
         while (choice < 1 || choice > 2){
             System.out.print("Choose the card orientation you want to use: \n 1: FRONT \n 2:BACK");
             choice = TextualUtils.nextInt(s);
-            if(choice < 1 || choice >3){
+            if (choice < 1 || choice > 3){
                 System.out.print("Invalid input. Type 1 or 2.");
             }
         }
