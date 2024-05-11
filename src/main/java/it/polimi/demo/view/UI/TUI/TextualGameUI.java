@@ -1,5 +1,6 @@
 package it.polimi.demo.view.UI.TUI;
 
+import it.polimi.demo.listener.UIListener;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.view.UI.GameUI;
@@ -62,12 +63,13 @@ public class TextualGameUI extends GameUI {
      * This method performs the player's turn. It asks the user to select the tiles to place and the column to place them in.
      */
     private void performTurn() throws InterruptedException {
-            if (getState() == State.MY_TURN)
-                notifyListeners(lst, x -> x.performTurn());
+            if (getState() == State.MY_TURN) {
+                notifyListeners(lst, UIListener::performTurn);
+            }
             setState(State.NOT_MY_TURN);
     }
 
-    public Orientation chooseCardOrientation(){
+    public Orientation chooseCardOrientation() {
         Scanner s = new Scanner(System.in);
         int choice = -1;
 

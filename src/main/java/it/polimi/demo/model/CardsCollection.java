@@ -14,10 +14,7 @@ import it.polimi.demo.model.cards.objectiveCards.DiagonalPatternObjectiveCard;
 import it.polimi.demo.model.cards.objectiveCards.ItemObjectiveCard;
 import it.polimi.demo.model.cards.objectiveCards.LetterPatternObjectiveCard;
 import it.polimi.demo.model.cards.objectiveCards.ResourceObjectiveCard;
-import it.polimi.demo.model.enumerations.Color;
-import it.polimi.demo.model.enumerations.Item;
-import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.enumerations.Resource;
+import it.polimi.demo.model.enumerations.*;
 
 import java.io.File;
 
@@ -68,9 +65,12 @@ public  class CardsCollection {
 
                 String NE_corner_content = cardNode.path("NE").asText();
                 //System.out.println(NE_corner_content);
+
+                actual_corners[0][1].setCoordinate(Coordinate.NE);
                 if (NE_corner_content.equals("NonVisible")) {
                     actual_corners[0][1].is_visible = false;
                     actual_corners[0][1].setEmpty();
+
                 } else {
                     //TODO: Check with new database.
                     if (!NE_corner_content.equals("Empty")) {
@@ -89,6 +89,7 @@ public  class CardsCollection {
                 }
                 // SE Corner.
                 String SE_corner_content = cardNode.path("SE").asText();
+                actual_corners[1][1].setCoordinate(Coordinate.SE);
                 //System.out.println(SE_corner_content);
                 if (SE_corner_content.equals("NonVisible")) {
                     actual_corners[1][1].is_visible = false;
@@ -110,6 +111,7 @@ public  class CardsCollection {
 
                 // NO corner.
                 String NO_corner_content = cardNode.path("NW").asText();
+                actual_corners[0][0].setCoordinate(Coordinate.NW);
                 //System.out.println(NO_corner_content);
                 if (NO_corner_content.equals("NonVisible")) {
                     actual_corners[0][0].is_visible = false;
@@ -130,6 +132,7 @@ public  class CardsCollection {
                 }
                 // SO corner.
                 String SO_corner_content = cardNode.path("SW").asText();
+                actual_corners[1][0].setCoordinate(Coordinate.SW);
                 //System.out.println(SO_corner_content);
                 if (SO_corner_content.equals("NonVisible")) {
                     actual_corners[1][0].is_visible = false;
@@ -152,6 +155,10 @@ public  class CardsCollection {
                 if (cardNode.path("type").asText().equals("Resource") && type.equals("Resource")) {
                     ResourceCard card = new ResourceCard(id, orientation, color, score, actual_corners);
                     card.type = "Resource";
+                    actual_corners[0][0].setReference_card(card);
+                    actual_corners[0][1].setReference_card(card);
+                    actual_corners[1][1].setReference_card(card);
+                    actual_corners[1][0].setReference_card(card);
                     // Qui potresti settare ulteriori proprietà specifiche per ResourceCard
                     this.addCard(card);
                 }
@@ -174,10 +181,16 @@ public  class CardsCollection {
                    boolean isParchmentRequired = cardNode.path("isParchmentRequired").asBoolean();
                    boolean isCornerCoverageRequired = cardNode.path("isCornerCoverageRequired").asBoolean();
 
-                    GoldCard gold_card = new GoldCard(id, orientation, color);
+                    GoldCard gold_card = new GoldCard(id, orientation, color,score, actual_corners);
                     gold_card.type = "Gold";
                     gold_card.setGoldCard(MushroomRequired, LeafRequired, ButterflyRequired, WolfRequired,
                             isPotionRequired, isFeatherRequired, isParchmentRequired, isCornerCoverageRequired);
+                    actual_corners[0][0].setReference_card(gold_card);
+                    actual_corners[0][1].setReference_card(gold_card);
+                    actual_corners[1][1].setReference_card(gold_card);
+                    actual_corners[1][0].setReference_card(gold_card);
+
+
                     this.addCard(gold_card);
                     }
                 }
@@ -301,6 +314,7 @@ public  class CardsCollection {
                     }
                 }
                 // Front of the Starter Card
+                actual_corners_front[0][1].setCoordinate(Coordinate.NE);
                 if (front_NE.equals("NonVisible")) {
                     actual_corners_front[0][1].is_visible = false;
                     actual_corners_front[0][1].setEmpty();
@@ -310,6 +324,7 @@ public  class CardsCollection {
                         actual_corners_front[0][1].setCornerResource(Resource.valueOf(front_NE.toUpperCase()));
                         actual_corners_front[0][1].setCornerItemEmpty();}
                 }
+                actual_corners_front[1][1].setCoordinate(Coordinate.SE);
                 if (front_SE.equals("NonVisible")) {
                     actual_corners_front[1][1].is_visible = false;
                     actual_corners_front[1][1].setEmpty();
@@ -319,6 +334,8 @@ public  class CardsCollection {
                         actual_corners_front[1][1].setCornerItemEmpty();
                     }
                 }
+
+                actual_corners_front[0][0].setCoordinate(Coordinate.NW);
                 if (front_NO.equals("NonVisible")) {
                     actual_corners_front[0][0].is_visible = false;
                     actual_corners_front[0][0].setEmpty();
@@ -328,6 +345,8 @@ public  class CardsCollection {
                     actual_corners_front[0][0].setCornerItemEmpty();
                     }
                 }
+
+                actual_corners_front[1][0].setCoordinate(Coordinate.SW);
                 if (front_SO.equals("NonVisible")) {
                     actual_corners_front[1][0].is_visible = false;
                     actual_corners_front[1][0].setEmpty();
@@ -346,6 +365,8 @@ public  class CardsCollection {
                         actual_corners_back[i][j] = new Corner();
                     }
                 }
+
+                actual_corners_front[0][1].setCoordinate(Coordinate.NE);
                 if (back_NE.equals("NonVisible")) {
                     actual_corners_back[0][1].is_visible = false;
                     actual_corners_back[0][1].setEmpty();
@@ -353,6 +374,8 @@ public  class CardsCollection {
                     actual_corners_back[0][1].setCornerResource(Resource.valueOf(back_NE.toUpperCase()));
                     actual_corners_back[0][1].setCornerItemEmpty();
                 }
+
+                actual_corners_front[1][1].setCoordinate(Coordinate.SE);
                 if (back_SE.equals("NonVisible")) {
                     actual_corners_back[1][1].is_visible = false;
                     actual_corners_back[1][1].setEmpty();
@@ -360,6 +383,8 @@ public  class CardsCollection {
                     actual_corners_back[1][1].setCornerResource(Resource.valueOf(back_SE.toUpperCase()));
                     actual_corners_back[1][1].setCornerItemEmpty();
                 }
+
+                actual_corners_front[0][0].setCoordinate(Coordinate.NW);
                 if (back_NO.equals("NonVisible")) {
                     actual_corners_back[0][0].is_visible = false;
                     actual_corners_back[0][0].setEmpty();
@@ -367,6 +392,8 @@ public  class CardsCollection {
                     actual_corners_back[0][0].setCornerResource(Resource.valueOf(back_NO.toUpperCase()));
                     actual_corners_back[0][0].setCornerItemEmpty();
                 }
+
+                actual_corners_front[1][0].setCoordinate(Coordinate.SW);
                 if (back_SO.equals("NonVisible")) {
                     actual_corners_back[1][0].is_visible = false;
                     actual_corners_back[1][0].setEmpty();

@@ -243,6 +243,11 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void performTurn() {
-
+//        try {
+//            server.performTurn();
+//        } catch (RemoteException e) {
+//            System.err.println("Network error while performing turn.");
+//        }
     }
+
 }

@@ -34,14 +34,6 @@ public class GameController implements GameControllerInterface, Serializable {
      */
     private Thread reconnection_thread;
 
-    public GameController() {
-        model = new GameModel();
-    }
-
-    public GameController(GameModel game_model) {
-        model = game_model;
-    }
-
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new GameModel(gameID, numberOfPlayers, player);
     }
@@ -485,7 +477,6 @@ public class GameController implements GameControllerInterface, Serializable {
     private void extractFirstPlayerToPlay() {
 
         Player first_player = getPlayers().get(random.nextInt(getPlayers().size()));
-        // printAsync("First player to play: " + first_player.getNickname());
         model.getAllPlayers().remove(first_player);
         model.getAllPlayers().addFirst(first_player);
 
@@ -575,7 +566,7 @@ public class GameController implements GameControllerInterface, Serializable {
         if (!(1 <= index && index <= 6))
             throw new IllegalArgumentException("invalid index");
         model.drawCard(getPlayerEntity(player_nickname), index);
-        this.myTurnIsFinished();
+        //this.myTurnIsFinished();
     }
 
     // aux method for drawCard
@@ -594,8 +585,6 @@ public class GameController implements GameControllerInterface, Serializable {
             throw new RuntimeException(e);
         }
     }
-
-    // game ended exception in draw card!!!
 
     /**
      * @return the ID of the game

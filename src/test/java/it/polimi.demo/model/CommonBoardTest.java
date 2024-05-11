@@ -75,6 +75,7 @@ public class CommonBoardTest {
 
         //Verify the pop of Resource and Gold decks
         assertNotNull(commonBoard.drawFromConcreteDeck(0));
+        System.out.println(commonBoard.drawFromConcreteDeck(0));
         assertNotNull(commonBoard.drawFromConcreteDeck(1));
         assertNull(commonBoard.drawFromConcreteDeck(-1));
         assertNull(commonBoard.drawFromConcreteDeck(2));

@@ -73,4 +73,7 @@ public class Cell {
             return false;
     }
 
+    public int getLevel() {
+        return level;
+    }
 }

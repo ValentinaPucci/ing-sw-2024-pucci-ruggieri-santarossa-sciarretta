@@ -206,7 +206,6 @@ public class GameModel {
         else {
             Player p = new Player(nickname);
             aux_order_players.add(p);
-            notifyListeners(listeners, GameListener::playerJoinedGame);
         }
     }
 
@@ -283,7 +282,6 @@ public class GameModel {
      * @param p player to set as connected.
      */
     public void setPlayerAsConnected(Player p) {
-        // cancellato
         if (aux_order_players.contains(p) && !players_connected.contains(p)) {
             // Here we bypass the question 'are you ready to start?'
             p.setAsReadyToStart();
@@ -337,7 +335,6 @@ public class GameModel {
         for (Player s : players_connected) {
             if (s.equals(q))
                 index_to_add = players_connected.indexOf(s) + 1;
-
         }
         if (index_to_add != -1)
             players_connected.add(index_to_add , p);
@@ -535,22 +532,56 @@ public class GameModel {
             case 1:
                 // Draw from Resource Deck
                 p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0));
+                break;
             case 2:
                 // Draw first Resource Card from table
                 p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0));
+                break;
             case 3:
                 // Draw second Resource Card from table
                 p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0));
+                break;
             case 4:
                 // Draw from Gold Deck
                 p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1));
+                break;
             case 5:
                 // Draw first Gold Card from table
                 p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1));
+                break;
             case 6:
                 // Draw second Gold Card from table
                 p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
+                break;
         }
+    }
+
+    /**
+     * Proceeds to the next turn of the game.
+     * Throws a GameEndedException if the game has already ended or a GameNotStartedException if the game has not yet started.
+     *
+     * @throws GameEndedException    If the game has already ended.
+     * @throws GameNotStartedException If the game has not yet started.
+     */
+    public void nextTurn() throws GameEndedException, GameNotStartedException {
+
+        if (status.equals(GameStatus.ENDED)) {
+            throw new GameEndedException();
+        }
+        else if (status.equals(GameStatus.WAIT)) {
+            throw new GameNotStartedException();
+        }
+
+//        while (players_connected.size() <= 1) {
+//            // we wait for another player to connect
+//            // TODO:
+//            // IDEA: look for timeout in the requirements of disconnection
+//        }
+
+        // Proceeding to the next turn means changing the current player,
+        // namely the peek of the queue.
+        Player q = players_connected.poll();
+        players_connected.offer(q);
     }
 
     /**
@@ -615,35 +646,6 @@ public class GameModel {
      */
     public Map<Player, Integer> getLeaderboard() {
         return this.leaderboard;
-    }
-
-    /**
-     * Proceeds to the next turn of the game.
-     * Throws a GameEndedException if the game has already ended or a GameNotStartedException if the game has not yet started.
-     *
-     * @throws GameEndedException    If the game has already ended.
-     * @throws GameNotStartedException If the game has not yet started.
-     */
-    public void nextTurn() throws GameEndedException, GameNotStartedException {
-
-        // todo: integrate READY_TO_START
-        if (status.equals(GameStatus.ENDED) || first_finishing_player != null) {
-            throw new GameEndedException();
-        } else if (!status.equals(GameStatus.FIRST_ROUND) &&
-                !status.equals(GameStatus.RUNNING) &&
-                !status.equals(GameStatus.SECOND_LAST_ROUND) &&
-                !status.equals(GameStatus.LAST_ROUND)) {
-            throw new GameNotStartedException();
-        }
-
-        while (players_connected.size() <= 1) {
-            // we wait for another player to connect
-            //TODO:
-            // IDEA: look for timeout in the requirements of disconnection
-        }
-
-        Player q = players_connected.poll();
-        players_connected.offer(q);
     }
 
     /**
@@ -729,7 +731,7 @@ public class GameModel {
         is_paused = paused;
     }
 
-    public List<PlayerDetails> getPlayersDetails(){
+    public List<PlayerDetails> getPlayersDetails() {
         return this.getAux_order_players()
                 .stream()
                 .map(p -> {
