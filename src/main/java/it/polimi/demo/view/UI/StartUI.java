@@ -30,4 +30,6 @@ abstract public class StartUI implements Runnable {
     public synchronized void removeListener(UIListener o){
         lst.remove(o);
     }
+
+    public abstract void joinGame();
 }

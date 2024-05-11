@@ -30,4 +30,9 @@ public class GraphicalStartUI extends StartUI {
     public void run() {
 
     }
+
+    @Override
+    public void joinGame() {
+
+    }
 }

@@ -6,7 +6,6 @@ import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
-import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.view.GameDetails;
@@ -19,8 +18,6 @@ import java.rmi.RemoteException;
 public interface GameControllerInterface extends Remote {
 
     GameModel getModel();
-
-    void placeCard(ResourceCard chosenCard, int x, int y);
 
     /**
      * This method place a RESOURCECARD in the commonboard.
@@ -48,14 +45,6 @@ public interface GameControllerInterface extends Remote {
      * @param index the index of the card to draw
      */
     void drawCard(String player_nickname, int index) throws RemoteException;
-
-    /**
-     * this method must be called every time a player finishes his/her turn,
-     * i.e. whenever he/she has placed a card on his/her personal board and has also
-     * drawn a new game card from the deck/table
-     * @throws RuntimeException if the connection fails
-     */
-    void myTurnIsFinished() throws RuntimeException;
 
     /**
      * This method checks if it's the turn of player named 'nick'.
@@ -130,10 +119,5 @@ public interface GameControllerInterface extends Remote {
 
     void setError(String s);
 
-    //void performTurn();
-
-    GameStatus getGameStatus();
-
-
-    void placeStarterCard();
+    void gameFlow() throws RemoteException, GameEndedException;
 }

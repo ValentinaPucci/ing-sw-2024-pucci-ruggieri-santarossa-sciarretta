@@ -96,10 +96,7 @@ public class TextualStartUI extends StartUI {
         waitingForPlayers = true;
     }
 
-    /**
-     * Asks the user to insert the ID of the game to join, then sends a JOIN event.
-     */
-    private void joinGame() {
+    public void askID() {
         Scanner s = new Scanner(System.in);
         do {
             System.out.print("Which game do you want to join? ");
@@ -107,13 +104,19 @@ public class TextualStartUI extends StartUI {
             if (gameID <= 0)
                 System.out.println("GameID is a positive number!");
         } while (gameID <= 0);
+    }
 
+    /**
+     * Asks the user to insert the ID of the game to join, then sends a JOIN event.
+     */
+    @Override
+    public void joinGame() {
+        askID();
         try {
             notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
         } catch (IllegalArgumentException | IllegalStateException e) {
             showError(e.getMessage());
         }
-        // todo: in qualche modo bisogna capire se il gioco è pieno o meno!
         waitingForPlayers = true;
     }
 

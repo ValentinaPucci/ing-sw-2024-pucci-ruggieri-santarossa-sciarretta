@@ -2,8 +2,7 @@ package it.polimi.demo.networking;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.UIListener;
-import it.polimi.demo.model.cards.gameCards.ResourceCard;
-import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
 import it.polimi.demo.networking.Socket.ServerProxy;
@@ -14,13 +13,12 @@ import it.polimi.demo.view.UI.TUI.TextualGameUI;
 import it.polimi.demo.view.UI.TUI.TextualStartUI;
 import it.polimi.demo.view.UI.GameUI;
 import it.polimi.demo.view.UI.StartUI;
-import it.polimi.demo.view.UI.TUI.TextualUtils;
 import it.polimi.demo.view.UI.UIType;
+import org.fusesource.jansi.Ansi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -142,74 +140,6 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         }
     }
 
-    @Override
-    public void performTurn() {
-        Scanner s = new Scanner(System.in);
-        GameStatus actual_status = this.server.getGameStatus();
-        int where_to_draw;
-        int x, y;
-        ResourceCard chosen_card;
-        switch (actual_status){
-            case GameStatus.FIRST_ROUND:
-                this.server.placeStarterCard();
-                printAsync("Select where you want to draw your card from: ");
-                where_to_draw = TextualUtils.nextInt(s);
-                this.server.drawCard(where_to_draw);
-
-            case GameStatus.RUNNING:
-                chosen_card = chooseCardFromHand();
-                printAsync("Select where you want to put your selected card: ");
-                x = TextualUtils.nextInt(s);
-                y = TextualUtils.nextInt(s);
-                this.server.placeCard(chosen_card, x, y );
-                printAsync("Select from where you want to draw: ");
-                where_to_draw = TextualUtils.nextInt(s);
-                this.server.drawCard(where_to_draw);
-
-            case GameStatus.SECOND_LAST_ROUND:
-                chosen_card = chooseCardFromHand();
-                printAsync("Select where you want to put your selected card: ");
-                x = TextualUtils.nextInt(s);
-                y = TextualUtils.nextInt(s);
-                this.server.placeCard(chosen_card, x, y);
-                printAsync("Select from where you want to draw: ");
-                where_to_draw = TextualUtils.nextInt(s);
-                this.server.drawCard(where_to_draw);
-
-            case GameStatus.LAST_ROUND:
-                chosen_card = chooseCardFromHand();
-                printAsync("Select where you want to put your selected card: ");
-                x = TextualUtils.nextInt(s);
-                y = TextualUtils.nextInt(s);
-                this.server.placeCard(chosen_card, x, y);
-
-            case GameStatus.ENDED:
-                this.server.calculateFinalScores();
-        }
-    }
-
-    public ResourceCard chooseCardFromHand(){
-        Scanner s = new Scanner(System.in);
-        int choice = -1;
-
-        while (choice < 1 || choice >3){
-            System.out.print("Select a card from your hand: ");
-            choice = TextualUtils.nextInt(s);
-            showPlayerHand(server.getPlayerHand());
-            if(choice < 1 || choice >3){
-                System.out.print("Invalid input. Type 1, 2 or 3.");
-            }
-        }
-        return server.getPlayerHand().get(choice);
-    }
-
-    private void showPlayerHand(List<ResourceCard> playerHand) {
-        System.out.println("Player's Hand:");
-        for (ResourceCard card : playerHand) {
-            System.out.println(card); // Assuming ResourceCard has a meaningful toString() method
-        }
-    }
-
     /**
      * The client delegates the joining of the game to the server.
      * @param gameID the ID of the game to join
@@ -218,19 +148,19 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void joinGame(int gameID, String username) {
         try {
-            if (this.server != null) { // Check if server object is not null
-                this.server.addPlayerToGame(gameID, username);
+            if (server != null) {
+                server.addPlayerToGame(gameID, username);
             } else {
                 // Handle the case where server object is null
                 System.err.println("Server object is null. Cannot join game.");
             }
         } catch (GameNotStartedException e) {
             try {
-                this.showError(e.getMessage());
+                showError(e.getMessage());
             } catch (RemoteException ignored) {}
         } catch (RemoteException e) {
             System.err.println("Network error while joining game.");
-        } catch (InvalidChoiceException e) {
+        } catch (InvalidChoiceException | GameEndedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -265,6 +195,48 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         startUI.showPlayersList(o);
     }
 
+    // ****************************** Status of the game ******************************
+
+    @Override
+    public void gameIsWaiting() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is waiting for players to join..." +
+                " other players will be shown below:").reset());
+    }
+
+    @Override
+    public void gameIsReadyToStart() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is now full and ready to start.").reset());
+    }
+
+    @Override
+    public void gameIsInFirstRound() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is in the first round.").reset());
+    }
+
+    @Override
+    public void gameIsRunning() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is running.").reset());
+    }
+
+    @Override
+    public void gameIsInLastRound() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is in the last round.").reset());
+    }
+
+    @Override
+    public void gameIsInSecondLastRound() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.GREEN).a("Game is in the second last round.").reset());
+    }
+
+    // *******************************************************************************
+
+    @Override
+    public void gameUnavailable() throws RemoteException {
+        printAsync(ansi().fg(Ansi.Color.RED).a("Game is unavailable (possibly full), " +
+                "you cannot enter this game. Please enter another game ID.").reset());
+        startUI.joinGame();
+    }
+
     @Override
     public void gameHasStarted() throws RemoteException {
         System.out.println("Closing StartUI...");
@@ -286,7 +258,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     private void closeConnection() {
-        if(this.server instanceof ServerProxy) {
+        if (this.server instanceof ServerProxy) {
             try {
                 ((ServerProxy) this.server).close();
             } catch (RemoteException e) {

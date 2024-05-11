@@ -69,7 +69,6 @@ public class GameModel {
         num_required_players_to_start = numberOfPlayers;
         initial_player = player;
         gameId = gameID;
-        num_required_players_to_start = -1; // invalid value on purpose
         status = GameStatus.WAIT;
         chat = new Chat();
         winners = new ArrayList<>();
@@ -191,26 +190,23 @@ public class GameModel {
      */
     public void addPlayer(String nickname) {
 
+//        printAsync("the number of player required to start is: " + num_required_players_to_start +
+//                " and the number of players connected is: " + players_connected.size() +
+//                " and the number of players in the game is: " + aux_order_players.size());
+
         List<String> nicknames = this.getAllNicknames();
 
         if (nicknames.contains(nickname)) {
             throw new PlayerAlreadyConnectedException();
         }
-        else if (aux_order_players.size() > num_required_players_to_start ||
-                aux_order_players.size() > DefaultValues.MaxNumOfPlayer) {
-            notifyListeners(listeners, GameListener::gameIsFull);
+        else if (aux_order_players.size() >= num_required_players_to_start ||
+                aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
             throw new MaxPlayersLimitException();
         }
         else {
             Player p = new Player(nickname);
             aux_order_players.add(p);
             notifyListeners(listeners, GameListener::playerJoinedGame);
-
-//            System.out.println("aux_order_players: ");
-//            for(Player p2 : aux_order_players){
-//                System.out.println(p2.getNickname() + "\n");
-//            }
-
         }
     }
 
@@ -384,33 +380,22 @@ public class GameModel {
      * @throws NotReadyToRunException If attempting to set the game status to "RUNNING" but the lobby
      * does not have at least the minimum number of players or the current player index is not set.
      */
-    public void setStatus(GameStatus status) throws NotReadyToRunException {
+    public void setStatus(GameStatus status) {
         // Check if the game status can be set to "RUNNING"
-        boolean canSetRunning =
-                (aux_order_players.size() >= DefaultValues.MinNumOfPlayer) &&
-                !players_connected.isEmpty();
+//        boolean canSetRunning =
+//                (aux_order_players.size() >= DefaultValues.MinNumOfPlayer) &&
+//                !players_connected.isEmpty();
 
         // Set the game status and notify listeners based on the new status
-        if (canSetRunning) {
-            this.status = status;
-            switch (status) {
-//                case RUNNING:
-//                    listener_handler.notify_GameStarted(this);
-//                    break;
-//                case SECOND_LAST_ROUND:
-//                    listener_handler.notify_SecondLastRound(this);
-//                    break;
-//                case LAST_ROUND:
-//                    listener_handler.notify_LastRound(this);
-//                    break;
-                case ENDED:
-                    notifyListeners(listeners, GameListener::gameEnded);
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            throw new NotReadyToRunException();
+        this.status = status;
+
+        switch (status) {
+            case WAIT -> notifyListeners(listeners, GameListener::gameIsWaiting);
+            case FIRST_ROUND -> notifyListeners(listeners, GameListener::gameIsInFirstRound);
+            case RUNNING -> notifyListeners(listeners, GameListener::gameIsRunning);
+            case LAST_ROUND -> notifyListeners(listeners, GameListener::gameIsInLastRound);
+            case SECOND_LAST_ROUND -> notifyListeners(listeners, GameListener::gameIsInSecondLastRound);
+            case ENDED -> notifyListeners(listeners, GameListener::gameEnded);
         }
     }
 
@@ -427,9 +412,6 @@ public class GameModel {
     }
 
     /**
-     * Deals cards to each player, including starter cards, resource cards, gold cards and secret objective cards.
-     */
-    /**
      * Deals cards to players from the common board's decks.
      * Each player receives:
      * - 1 starter card from the starter deck
@@ -444,12 +426,10 @@ public class GameModel {
         for (Player player : aux_order_players) {
 
             // Deal 1 starter card
-
-            /*
-            if (!common_board.getStarterConcreteDeck().isEmpty()) {
-                StarterCard starterCard = (StarterCard) common_board.getStarterConcreteDeck().pop();
-                player.setStarterCard(starterCard);
-            }*/
+//            if (!common_board.getStarterConcreteDeck().isEmpty()) {
+//                StarterCard starterCard = (StarterCard) common_board.getStarterConcreteDeck().pop();
+//                player.setStarterCard(starterCard);
+//            }
             StarterCard starterCard1 = null;
             StarterCard starterCard2 = null;
 
@@ -489,7 +469,6 @@ public class GameModel {
             }
 
             player.setSecretObjectives(objectiveCard1, objectiveCard2);
-
         }
     }
 
@@ -595,6 +574,7 @@ public class GameModel {
     /**
      * Calculates the winner(s) of the game based on final scores.
      * Updates the leaderboard and the list of winners accordingly.
+     * It is called by getWinners() method.
      */
     public void declareWinners() {
 
@@ -624,8 +604,9 @@ public class GameModel {
      *
      * @return A list of Player objects representing the winner(s).
      */
-    public List<Player> getWinners(){
-        return this.winners;
+    public List<Player> getWinners() {
+        declareWinners();
+        return winners;
     }
 
 
@@ -647,6 +628,7 @@ public class GameModel {
      */
     public void nextTurn() throws GameEndedException, GameNotStartedException {
 
+        // todo: integrate READY_TO_START
         if (status.equals(GameStatus.ENDED) || first_finishing_player != null) {
             throw new GameEndedException();
         } else if (!status.equals(GameStatus.FIRST_ROUND) &&
