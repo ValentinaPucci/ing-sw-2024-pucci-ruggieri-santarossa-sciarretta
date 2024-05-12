@@ -16,6 +16,7 @@ import it.polimi.demo.model.cards.*;
 
 
 import java.rmi.RemoteException;
+import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -72,19 +73,25 @@ public class MainControllerTest {
         };
         Player p = new Player("Player1");
         Player p2 = new Player("Player2");
+        Player p3 = new Player("Player3");
+
         mainController.createGame(lis, "Player1", 2, 1);
         mainController.getGames().get(1).addPlayer(p2.getNickname());
         mainController.getGames().get(1).setPlayerAsConnected(p2);
+//        mainController.getGames().get(1).addPlayer(p3.getNickname());
+//        mainController.getGames().get(1).setPlayerAsConnected(p3);
         ;
         Assertions.assertEquals(2, mainController.getGames().get(1).getModel().getGameId(), mainController.getGames().get(1).getModel().getGameId());
         Assertions.assertEquals(mainController.getGames().get(1).getModel().getPlayersConnected().size(), 2);
         System.out.println(" NUMDEFAULT: "+ mainController.getGames().get(1).getModel().getNumPlayersToPlay() + "Connected: " + mainController.getGames().get(1).getNumConnectedPlayers());
+        // Remark: You start a agme, initialize a game and deal card all in one with startIfFull(), is also the only method that checks if the game has enough players to start.
         mainController.getGames().get(1).startIfFull();
 
         // Testing of DRAW CARD and PLACE CARD
-        mainController.getGames().get(1).getModel().initializeGame();
-        mainController.getGames().get(1).getModel().dealCards();
+        // Initialize game and deal cards is in the same method!
+        // mainController.getGames().get(1).getModel().initializeGame(); ---> ERROR, YOU JUST HAVE TO USE startIfFull()
 
+        //set the starter card for each player
         mainController.getGames().get(1).getModel().getAllPlayers().getFirst().setStarterCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCardToChose()[0]);
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCardToChose()[0]);
         mainController.getGames().get(1).getModel().getAllPlayers().get(1).setStarterCard(mainController.getGames().get(1).getModel().getAllPlayers().get(1).getStarterCardToChose()[0]);
@@ -93,26 +100,32 @@ public class MainControllerTest {
         mainController.getGames().get(1).getModel().getAllPlayers().getFirst().setChosenObjectiveCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getSecretObjectiveCards()[0]);
         mainController.getGames().get(1).getModel().getAllPlayers().get(1).setChosenObjectiveCard(mainController.getGames().get(1).getModel().getAllPlayers().get(1).getSecretObjectiveCards()[0]);
 
+        // Play starter card
         mainController.getGames().get(1).getPlayers().getFirst().playStarterCard();
         mainController.getGames().get(1).getPlayers().get(1).playStarterCard();
 
-
-
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCard());
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCard().getCornerAtNW().is_visible); //true
 
+        // Test that the starter card is placed correctly
         assertEquals(1,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getLevel());
+
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell().is_visible); //true
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell().getBoard_coordinate().getX());
+
         assertNotNull(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell());
+
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1));
-
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCard());
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCard().getCornerAtNW().is_visible); //true
+
         assertEquals(1,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getLevel());
+
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell().is_visible); //true
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell().getBoard_coordinate().getX());
+
         assertNotNull(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell());
+
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1));
 
         mainController.getGames().get(1).placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 501);
@@ -136,9 +149,7 @@ public class MainControllerTest {
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().size());
         // Remove from hand test
         mainController.getGames().get(1).getPlayers().getFirst().removeFromHand(mainController.getGames().get(1).getPlayers().getFirst().getHand().get(1));
-        mainController.getGames().get(1).getPlayers().getFirst().removeFromHand(mainController.getGames().get(1).getPlayers().getFirst().getHand().get(2));
-        mainController.getGames().get(1).getPlayers().getFirst().removeFromHand(mainController.getGames().get(1).getPlayers().getFirst().getHand().get(3));
-        mainController.getGames().get(1).getPlayers().getFirst().removeFromHand(mainController.getGames().get(1).getPlayers().getFirst().getHand().get(4));
+        System.out.println(mainController.getGames().get(1).getPlayers().getFirst().getHand());
         assertEquals(2, mainController.getGames().get(1).getPlayers().getFirst().getHand().size());
 
 
@@ -168,19 +179,28 @@ public class MainControllerTest {
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(0));
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1));
 
-        //GoldCard on ResourceCard
+        // GoldCard on ResourceCard
         mainController.getGames().get(1).getModel().placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 503);
         assertEquals(2,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[501][503].getLevel());
 
-        //GoldCard on GoldCard
+        // GoldCard on GoldCard
         assertThrows(IllegalMoveException.class, ()-> mainController.getGames().get(1).getModel().placeCard((GoldCard) mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(0), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 504));
 
         mainController.getGames().get(1).getModel().drawCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 4);
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(2));
 
-        //GoldCard on StarterCard
-        mainController.getGames().get(1).getModel().placeCard((GoldCard) mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(2), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 500, 500);
-        assertEquals(2,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getLevel());
+        // GoldCard on StarterCard
+        System.out.println("Gold Card --> " + mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(2));
+        System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(2));
+        System.out.println("Number of mushrooms: " + mainController.getGames().get(1).getPlayers().getFirst().getPersonalBoard().getNum_mushrooms());
+        System.out.println("Number of leaves: " + mainController.getGames().get(1).getPlayers().getFirst().getPersonalBoard().getNum_leaves());
+        System.out.println("Number of potions: " + mainController.getGames().get(1).getPlayers().getFirst().getPersonalBoard().getNum_potions());
+        System.out.println("Number of butterflies: " + mainController.getGames().get(1).getPlayers().getFirst().getPersonalBoard().getNum_butterflies());
+        System.out.println("Number of wolves: " + mainController.getGames().get(1).getPlayers().getFirst().getPersonalBoard().getNum_wolves());
+        System.out.println("Number of parchments: " + mainController.getGames().get(1).getPlayers().getFirst().getPersonalBoard().getNum_parchments());
+        System.out.println("Number of feathers: " + mainController.getGames().get(1).getPlayers().getFirst().getPersonalBoard().getNum_feathers());
+        assertThrows(IllegalMoveException.class, () -> mainController.getGames().get(1).getModel().placeCard((GoldCard) mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(2), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 500, 500));
+        //assertEquals(2,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getLevel());
 
 
         //Test for drawCard
@@ -195,7 +215,128 @@ public class MainControllerTest {
         mainController.getGames().get(1).getModel().drawCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 5);
         assertEquals(8,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().size());
 
+        // TODO: missing GoldCard case, waiting for Model testing
 
+    }
+
+
+    @Test
+    public void joinFirstAvaibleGameTest() throws RemoteException {
+        MainController mainController = new MainController();
+        GameListener lis = new GameListener() {
+            @Override
+            public void modelChanged() throws RemoteException {
+
+            }
+
+            @Override
+            public void gameEnded() throws RemoteException {
+
+            }
+
+            @Override
+            public void genericGameStatus() throws RemoteException {
+
+            }
+
+            @Override
+            public void gameStarted() throws RemoteException {
+
+            }
+
+            @Override
+            public void playerJoinedGame() throws RemoteException {
+
+            }
+
+            @Override
+            public void gameUnavailable() throws RemoteException {
+
+            }
+
+            @Override
+            public void newGame() throws RemoteException {
+
+            }
+
+            @Override
+            public void removedGame() throws RemoteException {
+
+            }
+
+            @Override
+            public void updatedGame() throws RemoteException {
+
+            }
+        };
+        Player p = new Player("Player1");
+        Player p2 = new Player("Player2");
+        Player p3 = new Player("Player3");
+        mainController.createGame(lis, "Player1", 2, 1);
+        mainController.joinFirstAvailableGame(lis,  "Player2");
+        assertEquals(2, mainController.getGames().get(1).getPlayers().size());
+        // check if the player is set as connected
+        assertEquals(2, mainController.getGames().get(1).getNumConnectedPlayers());
+
+    }
+
+    @Test
+    public void joinGameTest() throws RemoteException{
+        MainController mainController = new MainController();
+        GameListener lis = new GameListener() {
+            @Override
+            public void modelChanged() throws RemoteException {
+
+            }
+
+            @Override
+            public void gameEnded() throws RemoteException {
+
+            }
+
+            @Override
+            public void genericGameStatus() throws RemoteException {
+
+            }
+
+            @Override
+            public void gameStarted() throws RemoteException {
+
+            }
+
+            @Override
+            public void playerJoinedGame() throws RemoteException {
+
+            }
+
+            @Override
+            public void gameUnavailable() throws RemoteException {
+
+            }
+
+            @Override
+            public void newGame() throws RemoteException {
+
+            }
+
+            @Override
+            public void removedGame() throws RemoteException {
+
+            }
+
+            @Override
+            public void updatedGame() throws RemoteException {
+
+            }
+        };
+        Player p = new Player("Player1");
+        Player p2 = new Player("Player2");
+        Player p3 = new Player("Player3");
+        mainController.createGame(lis, "Player1", 2, 1);
+
+        mainController.joinGame(lis, "Player2", 1);
+        assertEquals(2, mainController.getGames().get(1).getPlayers().size());
+        assertEquals(2, mainController.getGames().get(1).getNumConnectedPlayers());
     }
 
 

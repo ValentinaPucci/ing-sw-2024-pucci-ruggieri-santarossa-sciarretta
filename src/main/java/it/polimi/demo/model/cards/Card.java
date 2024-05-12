@@ -14,6 +14,10 @@ public abstract class Card {
     }
 
     public int getId(){return this.id;}
+
+    public String toString(){
+        return "Card: " + this.id + " " + this.orientation;
+    }
 }
 
 
