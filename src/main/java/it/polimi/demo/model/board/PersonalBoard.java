@@ -456,6 +456,12 @@ public class PersonalBoard {
         card.front_resource2.ifPresent(res -> this.addResource(res));
         card.front_resource3.ifPresent(res -> this.addResource(res));
 
+        card.getCornerAtNW().resource.ifPresent(res -> this.addResource(res));
+        card.getCornerAtNE().resource.ifPresent(res -> this.addResource(res));
+        card.getCornerAtSE().resource.ifPresent(res -> this.addResource(res));
+        card.getCornerAtSW().resource.ifPresent(res -> this.addResource(res));
+
+
         for (int k = 0; k < 2; k++) {
             for (int h = 0; h < 2; h++) {
                 this.board[i + k][j + h].setCellAsFull(card.getCornerAt(k, h));
