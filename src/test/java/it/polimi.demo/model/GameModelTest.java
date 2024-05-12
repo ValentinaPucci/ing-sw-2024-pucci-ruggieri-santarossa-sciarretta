@@ -12,6 +12,7 @@ import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.model.Player;
 
 import java.rmi.Remote;
+import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -568,6 +569,27 @@ public class GameModelTest {
         //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_feathers());
         //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
         //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
+        System.out.println("Butterflies first "+gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_butterflies());
+        System.out.println("wolves first "+ gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_wolves());
+        System.out.println("Mushrooms first "+ gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_mushrooms());
+        System.out.println("Leaves first "+gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_leaves());
+        System.out.println("Feathers first "+gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_feathers());
+        System.out.println("Potions first "+gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
+        System.out.println("Parchments first "+gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
+        System.out.println("Secret Objective First: "+Arrays.toString(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards()));
+
+//        assertEquals(2,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_butterflies()); //1
+//        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_wolves());//-1
+//        assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_mushrooms());
+//        assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_leaves());
+//        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_feathers());
+//        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
+//        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
+        gameModel.getAllPlayers().getFirst().getPersonalBoard().printBoardIDs();
+        gameModel.calculateFinalScores();
+        System.out.println("Final score First:"+gameModel.getAllPlayers().getFirst().getFinalScore());
+        System.out.println("Final score 2: "+gameModel.getAllPlayers().get(1).getFinalScore());
+        System.out.println("Final score 3:"+gameModel.getAllPlayers().get(2).getFinalScore());
 
     }
 
