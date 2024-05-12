@@ -184,7 +184,7 @@ public  class CardsCollection {
                     GoldCard gold_card = new GoldCard(id, orientation, color,score, actual_corners);
                     gold_card.type = "Gold";
                     gold_card.setGoldCard(MushroomRequired, LeafRequired, ButterflyRequired, WolfRequired,
-                            isPotionRequired, isFeatherRequired, isParchmentRequired, isCornerCoverageRequired);
+                            isCornerCoverageRequired, isPotionRequired, isFeatherRequired, isParchmentRequired);
                     actual_corners[0][0].setReference_card(gold_card);
                     actual_corners[0][1].setReference_card(gold_card);
                     actual_corners[1][1].setReference_card(gold_card);
