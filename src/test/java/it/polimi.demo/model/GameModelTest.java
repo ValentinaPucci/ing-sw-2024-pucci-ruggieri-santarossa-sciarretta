@@ -284,6 +284,12 @@ public class GameModelTest {
         assertNotNull(gameModel.getCommonBoard().getDecks().get(1));
         assertNotNull(gameModel.getCommonBoard().getDecks().get(2));
 
+        assertNotNull(gameModel.getResourceDeck());
+        assertNotNull(gameModel.getGoldDeck());
+        assertNotNull(gameModel.getObjectiveDeck());
+        assertNotNull(gameModel.getStarterDeck());
+
+
         //assertNotNull(gameModel.getCommonBoard().drawFromConcreteDeck(0));
         assertEquals(14, gameModel.getCommonBoard().getObjectiveConcreteDeck().size());
 
@@ -579,11 +585,38 @@ public class GameModelTest {
         gameModel.drawCard(gameModel.getAllPlayers().getFirst(), 5);
         assertEquals(8,gameModel.getAllPlayers().getFirst().getHand().size());
 
+        //test for nextTurn
+        gameModel.getAllPlayers().getFirst().setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst());
+        gameModel.getAllPlayers().get(1).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
+        gameModel.getAllPlayers().get(2).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(2));
+
+
+        System.out.println(gameModel.getPlayersConnected().getFirst().getNickname());
+        System.out.println(gameModel.getPlayersConnected().get(1).getNickname());
+        System.out.println(gameModel.getPlayersConnected().get(2).getNickname());
+
+        //gameModel.nextTurn();
+
+
+        //Test for declareWinners
+        System.out.println(gameModel.getWinners().getFirst().getNickname());
+
+
+
+
+
     }
 
 
 
-    //calculate final score
+
+
+
+
+
     //declare winner
 
 
