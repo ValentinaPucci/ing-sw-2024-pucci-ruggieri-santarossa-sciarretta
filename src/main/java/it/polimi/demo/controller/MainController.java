@@ -129,6 +129,8 @@ public class MainController implements MainControllerInterface {
                 try {
                     //game.addListener(listener, player);
                     game.addPlayer(player.getNickname());
+                    // When a player joins a game, he/she is set also as connected!!
+                    game.setPlayerAsConnected(player);
 
                     printAsync("Player \"" + nickname + "\" joined Game " + game.getGameId());
                     printRunningGames();

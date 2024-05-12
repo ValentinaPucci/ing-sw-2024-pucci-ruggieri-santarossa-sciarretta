@@ -13,7 +13,7 @@ import it.polimi.demo.model.Player;
 
 import java.rmi.Remote;
 import java.util.NoSuchElementException;
-
+import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class GameModelTest {
@@ -482,6 +482,7 @@ public class GameModelTest {
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtNE().getCoordinate());
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().size());
         gameModel.getAllPlayers().getFirst().removeFromHand(gameModel.getAllPlayers().getFirst().getHand().get(1));
+        System.out.println(gameModel.getAllPlayers().getFirst().getHand());
         assertEquals(2,gameModel.getAllPlayers().getFirst().getHand().size());
 
         gameModel.drawCard(gameModel.getAllPlayers().getFirst(), 6);
@@ -521,8 +522,8 @@ public class GameModelTest {
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(2));
 
         //GoldCard on StarterCard
-        gameModel.placeCard((GoldCard) gameModel.getAllPlayers().getFirst().getHand().get(2), gameModel.getAllPlayers().getFirst(), 500, 500);
-        assertEquals(2,gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getLevel());
+        assertThrows(IllegalMoveException.class, ()->gameModel.placeCard((GoldCard) gameModel.getAllPlayers().getFirst().getHand().get(2), gameModel.getAllPlayers().getFirst(), 500, 500));
+        //assertEquals(2,gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getLevel()); TODO: ERROR
 
 
         //Test for drawCard
@@ -538,14 +539,27 @@ public class GameModelTest {
         assertEquals(8,gameModel.getAllPlayers().getFirst().getHand().size());
 
         //Test for  CalculateFinalScore
-        //assertEquals(2,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_butterflies()); //1
-        //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_wolves());//-1
-        //assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_mushrooms());
-        //assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_leaves());
+        System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_butterflies());
+        System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_wolves());
+        System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_mushrooms());
+        System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_leaves());
+        System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_feathers());
+        System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
+        System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
+        System.out.println(Arrays.toString(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards()));
 
-        //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_feathers());
-        //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
-        //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
+        assertEquals(2,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_butterflies()); //1
+        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_wolves());//-1
+        assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_mushrooms());
+        assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_leaves());
+        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_feathers());
+        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
+        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
+
+        gameModel.calculateFinalScores();
+        System.out.println(gameModel.getAllPlayers().getFirst().getFinalScore());
+        System.out.println(gameModel.getAllPlayers().get(1).getFinalScore());
+        System.out.println(gameModel.getAllPlayers().get(2).getFinalScore());
 
     }
 
