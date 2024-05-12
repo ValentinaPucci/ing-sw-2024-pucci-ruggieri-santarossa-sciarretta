@@ -372,7 +372,7 @@ public class GameModelTest {
 
     }
     @Test
-    public void testPlaceResourceCard(){
+    public void testPlaceResourceCard() throws GameEndedException {
         //initialize game
         addPlayersToGameModel(3);
         gameModel.getCommonBoard().setPlayerCount(gameModel.getAllPlayers().size());
@@ -598,26 +598,31 @@ public class GameModelTest {
         System.out.println(gameModel.getPlayersConnected().get(1).getNickname());
         System.out.println(gameModel.getPlayersConnected().get(2).getNickname());
 
-        //gameModel.nextTurn();
+        System.out.println(gameModel.getStatus());
+
+        gameModel.setStatus(GameStatus.RUNNING);
 
 
+        gameModel.nextTurn();
+        System.out.println(gameModel.getPlayersConnected().getFirst().getNickname());
+        System.out.println(gameModel.getPlayersConnected().get(1).getNickname());
+        System.out.println(gameModel.getPlayersConnected().get(2).getNickname());
+
+        gameModel.setStatus(GameStatus.WAIT);
+        assertThrows(GameNotStartedException.class, ()-> gameModel.nextTurn());
+
+        gameModel.setStatus(GameStatus.ENDED);
+        assertThrows(GameEndedException.class, ()-> gameModel.nextTurn());
+
+
+
+        System.out.println("*********");
         //Test for declareWinners
         System.out.println(gameModel.getWinners().getFirst().getNickname());
-
-
-
-
 
     }
 
 
-
-
-
-
-
-
-    //declare winner
 
 
     //--------------------------managing status --------------------------------------
