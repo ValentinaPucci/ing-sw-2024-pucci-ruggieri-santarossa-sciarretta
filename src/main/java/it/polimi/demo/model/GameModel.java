@@ -623,6 +623,11 @@ public class GameModel {
                 .filter(player -> player.getFinalScore() >= maxScore)
                 .forEach(this.winners::add);
 
+        Set<Player> uniqueWinners = new HashSet<>(winners);
+        winners.clear();
+        winners.addAll(uniqueWinners);
+
+
         for (Player orderedPlayer : ordered_players) {
             leaderboard.put(orderedPlayer, orderedPlayer.getFinalScore());
         }

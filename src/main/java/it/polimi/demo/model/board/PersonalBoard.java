@@ -1155,7 +1155,7 @@ public class PersonalBoard {
     public Cell[][] getBoard() {
         return board;
     }
-
+/*
     public void printBoardIDs() {
         for (int i = 0; i < dim1; i++) {
             for (int j = 0; j < dim2; j++) {
@@ -1166,5 +1166,5 @@ public class PersonalBoard {
                 }
             }
         }
-    }
+    }*/
 }

@@ -12,7 +12,6 @@ import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.model.Player;
 
 import java.rmi.Remote;
-import java.util.Arrays;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -285,6 +284,12 @@ public class GameModelTest {
         assertNotNull(gameModel.getCommonBoard().getDecks().get(1));
         assertNotNull(gameModel.getCommonBoard().getDecks().get(2));
 
+        assertNotNull(gameModel.getResourceDeck());
+        assertNotNull(gameModel.getGoldDeck());
+        assertNotNull(gameModel.getObjectiveDeck());
+        assertNotNull(gameModel.getStarterDeck());
+
+
         //assertNotNull(gameModel.getCommonBoard().drawFromConcreteDeck(0));
         assertEquals(14, gameModel.getCommonBoard().getObjectiveConcreteDeck().size());
 
@@ -367,7 +372,7 @@ public class GameModelTest {
 
     }
     @Test
-    public void testPlaceResourceCard(){
+    public void testPlaceResourceCard() throws GameEndedException {
         //initialize game
         addPlayersToGameModel(3);
         gameModel.getCommonBoard().setPlayerCount(gameModel.getAllPlayers().size());
@@ -385,6 +390,8 @@ public class GameModelTest {
         gameModel.getAllPlayers().getFirst().setChosenObjectiveCard(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards()[0]);
         gameModel.getAllPlayers().get(1).setChosenObjectiveCard(gameModel.getAllPlayers().get(1).getSecretObjectiveCards()[0]);
         gameModel.getAllPlayers().get(2).setChosenObjectiveCard(gameModel.getAllPlayers().get(2).getSecretObjectiveCards()[0]);
+
+        System.out.println(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards()[0]);
 
         for (Player player : gameModel.getAllPlayers()) {
             player.playStarterCard();
@@ -475,6 +482,10 @@ public class GameModelTest {
         assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[501][502].getLevel());
 
         System.out.println(gameModel.getAllPlayers().getFirst().getHand().get(1).getCornerAtNW().resource);
+        assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getPoints());
+
+
+
         //assertEquals(1, gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_butterflies()); //PROBLEM
         //System.out.println(gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell().resource);
 
@@ -503,6 +514,7 @@ public class GameModelTest {
         gameModel.placeCard(gameModel.getAllPlayers().getFirst().getHand().get(0), gameModel.getAllPlayers().getFirst(), 501, 502);
         assertEquals(2,gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[501][502].getLevel());
         assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[502][502].getLevel());
+        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getPoints());
         gameModel.getAllPlayers().getFirst().removeFromHand(gameModel.getAllPlayers().getFirst().getHand().get(0));
         assertEquals(2,gameModel.getAllPlayers().getFirst().getHand().size());
 
@@ -538,12 +550,25 @@ public class GameModelTest {
         gameModel.placeCard((GoldCard) gameModel.getAllPlayers().getFirst().getHand().get(2), gameModel.getAllPlayers().getFirst(), 500, 500);
         //assertThrows(IllegalMoveException.class, ()-> gameModel.placeCard((GoldCard) gameModel.getAllPlayers().getFirst().getHand().get(2), gameModel.getAllPlayers().getFirst(), 500, 500));
         assertEquals(2,gameModel.getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getLevel());
+        System.out.println("*********");
+        //assertEquals(3, gameModel.getAllPlayers().getFirst().getPersonalBoard().getPoints());
+        System.out.println(((GoldCard)gameModel.getAllPlayers().getFirst().getHand().get(2)).getIsPotionRequired());
 
         assertEquals(1, gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_leaves());
         assertEquals(2, gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
         assertEquals(1, gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_wolves());
         assertEquals(2, gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_butterflies());
         assertEquals(0, gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_mushrooms());
+        assertEquals(0, gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
+
+        System.out.println(gameModel.getCommonBoard().getCommonObjectives());
+
+        gameModel.calculateFinalScores();
+        System.out.println(gameModel.getAllPlayers().getFirst().getFinalScore());
+        assertEquals(3,gameModel.getAllPlayers().getFirst().getPersonalBoard().getPoints());
+        assertEquals(0,gameModel.getCommonBoard().getCommonObjectives().getFirst().calculateScore(gameModel.getAllPlayers().getFirst().getPersonalBoard()));
+        assertEquals(2,gameModel.getCommonBoard().getCommonObjectives().get(1).calculateScore(gameModel.getAllPlayers().getFirst().getPersonalBoard()));
+        assertEquals(0,gameModel.getAllPlayers().getFirst().getChosenObjectiveCard().calculateScore(gameModel.getAllPlayers().getFirst().getPersonalBoard()));
 
 
 
@@ -560,43 +585,44 @@ public class GameModelTest {
         gameModel.drawCard(gameModel.getAllPlayers().getFirst(), 5);
         assertEquals(8,gameModel.getAllPlayers().getFirst().getHand().size());
 
-        //Test for  CalculateFinalScore
-        //assertEquals(2,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_butterflies()); //1
-        //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_wolves());//-1
-        //assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_mushrooms());
-        //assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_leaves());
+        //test for nextTurn
+        gameModel.getAllPlayers().getFirst().setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst());
+        gameModel.getAllPlayers().get(1).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
+        gameModel.getAllPlayers().get(2).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(2));
 
-        //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_feathers());
-        //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
-        //assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
-        System.out.println("Butterflies first "+gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_butterflies());
-        System.out.println("wolves first "+ gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_wolves());
-        System.out.println("Mushrooms first "+ gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_mushrooms());
-        System.out.println("Leaves first "+gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_leaves());
-        System.out.println("Feathers first "+gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_feathers());
-        System.out.println("Potions first "+gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
-        System.out.println("Parchments first "+gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
-        System.out.println("Secret Objective First: "+Arrays.toString(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards()));
 
-//        assertEquals(2,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_butterflies()); //1
-//        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_wolves());//-1
-//        assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_mushrooms());
-//        assertEquals(0,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_leaves());
-//        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_feathers());
-//        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_potions());
-//        assertEquals(1,gameModel.getAllPlayers().getFirst().getPersonalBoard().getNum_parchments());
-        gameModel.getAllPlayers().getFirst().getPersonalBoard().printBoardIDs();
-        gameModel.calculateFinalScores();
-        System.out.println("Final score First:"+gameModel.getAllPlayers().getFirst().getFinalScore());
-        System.out.println("Final score 2: "+gameModel.getAllPlayers().get(1).getFinalScore());
-        System.out.println("Final score 3:"+gameModel.getAllPlayers().get(2).getFinalScore());
+        System.out.println(gameModel.getPlayersConnected().getFirst().getNickname());
+        System.out.println(gameModel.getPlayersConnected().get(1).getNickname());
+        System.out.println(gameModel.getPlayersConnected().get(2).getNickname());
+
+        System.out.println(gameModel.getStatus());
+
+        gameModel.setStatus(GameStatus.RUNNING);
+
+
+        gameModel.nextTurn();
+        System.out.println(gameModel.getPlayersConnected().getFirst().getNickname());
+        System.out.println(gameModel.getPlayersConnected().get(1).getNickname());
+        System.out.println(gameModel.getPlayersConnected().get(2).getNickname());
+
+        gameModel.setStatus(GameStatus.WAIT);
+        assertThrows(GameNotStartedException.class, ()-> gameModel.nextTurn());
+
+        gameModel.setStatus(GameStatus.ENDED);
+        assertThrows(GameEndedException.class, ()-> gameModel.nextTurn());
+
+
+
+        System.out.println("*********");
+        //Test for declareWinners
+        System.out.println(gameModel.getWinners().getFirst().getNickname());
 
     }
 
 
-
-    //calculate final score
-    //declare winner
 
 
     //--------------------------managing status --------------------------------------
