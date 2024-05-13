@@ -74,8 +74,8 @@ public class AppClient {
         String portString = in.nextLine();
         if (portString.isBlank()){
             switch (connectionType) {
-                case RMI -> port = DefaultValues.defaultRMIRegistryPort;
-                case SOCKET -> port = DefaultValues.defaultSocketPort;
+                case RMI -> port = DefaultValues.Default_port_RMI;
+                case SOCKET -> port = DefaultValues.Default_port_SOCKET;
             }
         } else {
             port = Integer.parseInt(portString);

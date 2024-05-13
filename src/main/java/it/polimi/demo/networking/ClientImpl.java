@@ -238,7 +238,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
 
     @Override
     public void gameUnavailable() throws RemoteException {
-        System.out.println(ansi().fg(Ansi.Color.RED).a("Game is unavailable (possibly full), you cannot enter this game. Please enter another game ID.").reset());
+        System.out.println(ansi().fg(Ansi.Color.RED).a("Game is unavailable (possibly full), you cannot enter this game. Please enter another game ID or enter 0 to create a new game.").reset());
         startUI.joinGame();
     }
 

@@ -20,7 +20,7 @@ import java.net.Socket;
 public class AppServer extends UnicastRemoteObject implements AppServerInterface {
 
     private static final Logger logger = Logger.getLogger(AppServer.class.getName());
-    private static int socketPort = DefaultValues.defaultSocketPort;
+    private static int socketPort = DefaultValues.Default_port_SOCKET;
     private static String serverIP = null;
     private static AppServer instance;
     private final ExecutorService executorService = Executors.newCachedThreadPool(); // x socket
@@ -54,7 +54,7 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
                 try {
                     socketPort = Integer.parseInt(args[1]);
                 } catch (NumberFormatException e) {
-                    System.err.println("Invalid socket port. Using default port " + DefaultValues.defaultSocketPort + "...");
+                    System.err.println("Invalid socket port. Using default port " + DefaultValues.Default_port_SOCKET + "...");
                 }
             case 1:
                 serverIP = args[0];
@@ -105,8 +105,8 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
         Registry registry;
 
         try {
-            System.out.println("RMI > Creating a new RMI registry on port " + DefaultValues.defaultRMIRegistryPort + "...");
-            registry = LocateRegistry.createRegistry(DefaultValues.defaultRMIRegistryPort);
+            System.out.println("RMI > Creating a new RMI registry on port " + DefaultValues.Default_port_RMI + "...");
+            registry = LocateRegistry.createRegistry(DefaultValues.Default_port_RMI);
         } catch (RemoteException e) {
             logger.log(Level.SEVERE, "RMI > Cannot create RMI registry.", e);
             logger.info("RMI > Trying to get already existing RMI registry...");

@@ -108,9 +108,9 @@ public class TextualStartUI extends StartUI {
         do {
             System.out.print("Which game do you want to join? ");
             gameID = TextualUtils.nextInt(s);
-            if (gameID <= 0)
+            if (gameID < 0)
                 System.out.println("GameID is a positive number!");
-        } while (gameID <= 0);
+        } while (gameID < 0);
     }
 
     /**
@@ -119,10 +119,18 @@ public class TextualStartUI extends StartUI {
     @Override
     public void joinGame() {
         askID();
-        try {
-            notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            showError(e.getMessage());
+        if (gameID == 0){
+            try {
+                createGame();
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                showError(e.getMessage());
+            }
+        }else{
+            try {
+                notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                showError(e.getMessage());
+            }
         }
         waitingForPlayers = true;
     }
