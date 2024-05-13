@@ -8,6 +8,11 @@ import java.util.List;
 
 public class GraphicalStartUI extends StartUI {
     @Override
+    public void placeStarterCard() {
+
+    }
+
+    @Override
     public void showGamesList(List<GameDetails> o) {
 
     }
