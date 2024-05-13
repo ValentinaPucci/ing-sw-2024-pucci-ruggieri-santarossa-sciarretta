@@ -128,7 +128,7 @@ public class MainControllerTest {
 
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1));
 
-        mainController.getGames().get(1).placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 501);
+        mainController.getGames().get(1).placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 501);
         assertEquals(2,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[501][501].getLevel());
         assertEquals(1,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[501][502].getLevel());
 
@@ -158,7 +158,7 @@ public class MainControllerTest {
 
         System.out.println(mainController.getGames().get(1).getPlayers().getFirst().getHand().get(0));
 
-        mainController.getGames().get(1).getModel().placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(0), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 502);
+        mainController.getGames().get(1).getModel().placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 502);
         assertEquals(2,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[501][502].getLevel());
         assertEquals(1,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[502][502].getLevel());
         mainController.getGames().get(1).getModel().getAllPlayers().getFirst().removeFromHand(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(0));
@@ -167,7 +167,7 @@ public class MainControllerTest {
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(0));
 
         //resourceCard on ResourceCard
-        mainController.getGames().get(1).getModel().placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(0), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 502, 501);
+        mainController.getGames().get(1).getModel().placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 502, 501);
         assertEquals(2,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[502][501].getLevel());
 
         mainController.getGames().get(1).getModel().getAllPlayers().getFirst().removeFromHand(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(0));
@@ -180,11 +180,11 @@ public class MainControllerTest {
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1));
 
         // GoldCard on ResourceCard
-        mainController.getGames().get(1).getModel().placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 503);
+        mainController.getGames().get(1).getModel().placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 503);
         assertEquals(2,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[501][503].getLevel());
 
         // GoldCard on GoldCard
-        assertThrows(IllegalMoveException.class, ()-> mainController.getGames().get(1).getModel().placeCard((GoldCard) mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(0), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 504));
+        assertThrows(IllegalMoveException.class, ()-> mainController.getGames().get(1).getModel().placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 504));
 
         mainController.getGames().get(1).getModel().drawCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 4);
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(2));
@@ -199,7 +199,7 @@ public class MainControllerTest {
         System.out.println("Number of wolves: " + mainController.getGames().get(1).getPlayers().getFirst().getPersonalBoard().getNum_wolves());
         System.out.println("Number of parchments: " + mainController.getGames().get(1).getPlayers().getFirst().getPersonalBoard().getNum_parchments());
         System.out.println("Number of feathers: " + mainController.getGames().get(1).getPlayers().getFirst().getPersonalBoard().getNum_feathers());
-        assertThrows(IllegalMoveException.class, () -> mainController.getGames().get(1).getModel().placeCard((GoldCard) mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(2), mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 500, 500));
+        assertThrows(IllegalMoveException.class, () -> mainController.getGames().get(1).getModel().placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 500, 500));
         //assertEquals(2,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getLevel());
 
 

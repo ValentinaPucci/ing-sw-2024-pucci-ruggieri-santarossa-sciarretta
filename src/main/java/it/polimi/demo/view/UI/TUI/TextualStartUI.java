@@ -2,6 +2,7 @@ package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.PlayerDetails;
 import it.polimi.demo.view.UI.StartUI;
@@ -95,6 +96,11 @@ public class TextualStartUI extends StartUI {
         // Here we create the game using observer design pattern
         notifyListeners(lst, startUIListener -> startUIListener.createGame(this.username, num_players));
         waitingForPlayers = true;
+
+        // Here we eventually put the starter cards on the table. This is a procedure which is
+        // necessary to start the game and is separated from the real execution of the game. Moreover,
+        // it can be done without an effective synchronization with the other players.
+
     }
 
     public void askID() {
@@ -119,6 +125,13 @@ public class TextualStartUI extends StartUI {
             showError(e.getMessage());
         }
         waitingForPlayers = true;
+    }
+
+    @Override
+    public void placeStarterCard() {
+        Scanner s = new Scanner(System.in);
+        Orientation orientation = TextualUtils.nextOrientation(s);
+        notifyListeners(lst, UIListener -> UIListener.placeStarterCard(orientation));
     }
 
     /**

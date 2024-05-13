@@ -469,6 +469,17 @@ public class PersonalBoard {
             }
         }
     }
+
+    public void placeStarterCard(StarterCard card) {
+        int i = dim1 / 2;
+        int j = dim2 / 2;
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                this.board[i + k][j + h].setCellAsFull(card.getCornerAt(k, h));
+                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
+            }
+        }
+    }
     
 
     /**
