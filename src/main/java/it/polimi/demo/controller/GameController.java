@@ -523,7 +523,7 @@ public class GameController implements GameControllerInterface, Serializable {
      * @throws RemoteException if there is an  error.
      */
     @Override
-    public void placeCard(Player p, int x, int y, Orientation orientation)
+    public void placeCard( Player p, int x, int y, Orientation orientation)
             throws RemoteException {
 
         if (!getConnectedPlayers().contains(p))
@@ -532,11 +532,12 @@ public class GameController implements GameControllerInterface, Serializable {
             throw new RemoteException("It's not your turn");
 
         try {
-            // Call the placeCard method in GameModel
-            // ************ IMPORTANT ************
-            if (orientation == Orientation.BACK) {
-
+            if (orientation == Orientation.FRONT) {
+                model.placeCard(p.getChosenGameCard(), p, x, y);
+            }else{
+                model.placeCard(p.getChosenGameCard().getBack(), p, x, y);
             }
+
             if (p.getChosenGameCard() instanceof GoldCard) {
                 model.getPlayersConnected().stream()
                     .filter(player -> player.getNickname().equals(p.getNickname()))
