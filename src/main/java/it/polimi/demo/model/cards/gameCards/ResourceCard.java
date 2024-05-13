@@ -107,6 +107,7 @@ public class ResourceCard extends Card implements ResourceCardIC {
         Corner[][] corners_back = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
+                corners_back[i][j] = new Corner(new BoardCellCoordinate(i, j), this);
                 corners_back[i][j].setEmpty();
                 corners_back[i][j].is_visible = true;
             }

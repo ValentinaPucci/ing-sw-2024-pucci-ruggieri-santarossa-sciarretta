@@ -91,10 +91,6 @@ public class MainControllerTest {
         // Remark: You start a agme, initialize a game and deal card all in one with startIfFull(), is also the only method that checks if the game has enough players to start.
         mainController.getGames().get(1).startIfFull();
 
-        // Testing of DRAW CARD and PLACE CARD
-        // Initialize game and deal cards is in the same method!
-        // mainController.getGames().get(1).getModel().initializeGame(); ---> ERROR, YOU JUST HAVE TO USE startIfFull()
-
         //set the starter card for each player
         mainController.getGames().get(1).getModel().getAllPlayers().getFirst().setStarterCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCardToChose()[0]);
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCardToChose()[0]);
@@ -131,12 +127,14 @@ public class MainControllerTest {
         assertNotNull(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[500][500].getCornerFromCell());
 
         System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1));
-        mainController.getGames().get(1).getModel().getAllPlayers().getFirst().setChosenGameCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(2));
-        // Error: illegal Move
-        mainController.getGames().get(1).placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 501, Orientation.FRONT);
-        mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().printBoardIDs();
+        mainController.getGames().get(1).getModel().getAllPlayers().getFirst().setChosenGameCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getHand().get(1));
+        System.out.println(" Chosen Card: " + mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getChosenGameCard());
+        mainController.getGames().get(1).placeCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst(), 501, 501, Orientation.BACK);
 
-        // OLD PLACE CARD, TODO: Change
+
+        // OLD PLACE CARD,
+        // TODO: Change all the methods invocation, NOw you have to call setChosenGameCard before calling placeCard, that now does not
+        //  have a card as parameter. Look at rows 130-132.
 //
 //        assertEquals(2,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[501][501].getLevel());
 //        assertEquals(1,mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getPersonalBoard().getBoard()[501][502].getLevel());
