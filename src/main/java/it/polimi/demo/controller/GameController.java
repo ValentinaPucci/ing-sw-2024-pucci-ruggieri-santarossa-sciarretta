@@ -492,7 +492,7 @@ public class GameController implements GameControllerInterface, Serializable {
     public GameStatus getStatus() {
         return model.getStatus();
     }
-
+    //TODO
     // Section: Overrides
 
     @Override
@@ -523,7 +523,7 @@ public class GameController implements GameControllerInterface, Serializable {
      * @throws RemoteException if there is an  error.
      */
     @Override
-    public void placeCard(Player p, int x, int y, Orientation orientation)
+    public void placeCard( Player p, int x, int y, Orientation orientation)
             throws RemoteException {
 
         if (!getConnectedPlayers().contains(p))
@@ -532,22 +532,21 @@ public class GameController implements GameControllerInterface, Serializable {
             throw new RemoteException("It's not your turn");
 
         try {
-            // Call the placeCard method in GameModel
-            // ************ IMPORTANT ************
-            if (orientation == Orientation.BACK) {
-
-            }
-            if (p.getChosenGameCard() instanceof GoldCard) {
-                model.getPlayersConnected().stream()
-                    .filter(player -> player.getNickname().equals(p.getNickname()))
-                    .findFirst()
-                    .ifPresent(player -> model.placeCard((GoldCard) player.getChosenGameCard(), player, x, y));
-            }
-            else {
-                model.getPlayersConnected().stream()
-                        .filter(player -> player.getNickname().equals(p.getNickname()))
-                        .findFirst()
-                        .ifPresent(player -> model.placeCard(player.getChosenGameCard(), player, x, y));
+            if (orientation == Orientation.FRONT) {
+                System.out.println("FRONT PLACING");
+                if(p.getChosenGameCard() instanceof GoldCard) {
+                    model.placeCard((GoldCard) p.getChosenGameCard(), p, x, y);
+//                    System.out.println("Gold Placing");
+//                    System.out.println("Personal board of: " + p.getNickname());
+                    p.getPersonalBoard().printBoardIDs();
+                }else {
+//                    System.out.println("Resource placing");
+//                    System.out.println("Personal board of: " + p.getNickname());
+                    model.placeCard(p.getChosenGameCard(), p, x, y);
+                }
+            }else{
+                System.out.println("BACK PLACING, doesn't matter the card type");
+                model.placeCard(p.getChosenGameCard().getBack(), p, x, y);
             }
         } catch (IllegalMoveException e) {
             throw new RemoteException("Illegal move");

@@ -1166,12 +1166,16 @@ public class PersonalBoard {
     public Cell[][] getBoard() {
         return board;
     }
-/*
+
     public void printBoardIDs() {
         for (int i = 0; i < dim1; i++) {
             for (int j = 0; j < dim2; j++) {
-                System.out.println("Cell at position (" + i + "," + j + ") has ID: " + board[i][j].getId());
+                if (board[i][j].getCornerFromCell() != null && board[i][j].getCornerFromCell().reference_card != null) {
+                    System.out.println("Cell at position (" + i + "," + j + ") has ID: " + board[i][j].getCornerFromCell().reference_card.getId());
+                } else {
+                    // niente
+                }
             }
         }
-    }*/
+    }
 }

@@ -103,6 +103,20 @@ public class ResourceCard extends Card implements ResourceCardIC {
             return this.getCornerAtSE();
     }
 
+    public ResourceCard getBack() {
+        Corner[][] corners_back = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                corners_back[i][j] = new Corner(new BoardCellCoordinate(i, j), this);
+                corners_back[i][j].setEmpty();
+                corners_back[i][j].is_visible = true;
+            }
+        }
+        // We set orientation as Orientation.BACK in order to identify it easily.
+        return new ResourceCard(super.id, Orientation.BACK, this.color, this.points, corners_back);
+    }
+
+
     @Override
     public Color getColor() {
         return this.color;
