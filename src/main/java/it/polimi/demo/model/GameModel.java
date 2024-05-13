@@ -13,7 +13,9 @@ import it.polimi.demo.model.chat.Chat;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.*;
+import it.polimi.demo.model.interfaces.GameModelInterface;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.PlayerDetails;
 
@@ -24,7 +26,7 @@ import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 //TODO: Check how first_finished_player is set.
 
-public class GameModel {
+public class GameModel implements GameModelInterface {
 
     // the first list let us keep the order of players. It is immutable!!
     // aux_order_player.size() always >= players_connected.size()
@@ -299,7 +301,7 @@ public class GameModel {
      * @throws MaxPlayersLimitException there's already 4 players in game
      * @throws GameEndedException the game has ended
      */
-    public void reconnectPlayer(Player p) throws GameEndedException {
+    public void reconnectPlayer(Player p) {
 
         if (players_connected.contains(p)) {
             printAsync("ERROR: Trying to reconnect a player not offline!");
@@ -348,7 +350,7 @@ public class GameModel {
      *
      * @return gameId
      */
-    public Integer getGameId() {
+    public int getGameId() {
         return this.gameId;
     }
 
@@ -420,18 +422,12 @@ public class GameModel {
         // aux_order_players and players_connected are the same
         for (Player player : aux_order_players) {
 
-            // Deal 1 starter card
-//            if (!common_board.getStarterConcreteDeck().isEmpty()) {
-//                StarterCard starterCard = (StarterCard) common_board.getStarterConcreteDeck().pop();
-//                player.setStarterCard(starterCard);
-//            }
             StarterCard starterCard1 = null;
             StarterCard starterCard2 = null;
 
             if (!common_board.getStarterConcreteDeck().isEmpty()) {
                 starterCard1 = (StarterCard) common_board.getStarterConcreteDeck().pop();
             }
-
             if (!common_board.getStarterConcreteDeck().isEmpty()) {
                 starterCard2 = (StarterCard) common_board.getStarterConcreteDeck().pop();
             }
@@ -467,8 +463,14 @@ public class GameModel {
         }
     }
 
+    public void placeStarterCard(Player p, Orientation o) {
+        PersonalBoard personal_board = p.getPersonalBoard();
+        StarterCard starter_card = p.getStarterCard();
+        personal_board.placeStarterCard(starter_card);
+    }
+
     // for resource cards
-    public void placeCard(ResourceCard card_chosen, Player p, int x, int y)  {
+    public void placeCard(ResourceCard card_chosen, Player p, int x, int y) {
         PersonalBoard personal_board = p.getPersonalBoard();
 
         if (!personal_board.board[x][y].is_full) {
@@ -572,11 +574,7 @@ public class GameModel {
             throw new GameNotStartedException();
         }
 
-//        while (players_connected.size() <= 1) {
-//            // we wait for another player to connect
-//            // TODO:
-//            // IDEA: look for timeout in the requirements of disconnection
-//        }
+        // while (players_connected.size() <= 1) {}
 
         // Proceeding to the next turn means changing the current player,
         // namely the peek of the queue.

@@ -3,11 +3,14 @@ package it.polimi.demo.view;
 import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
+import it.polimi.demo.model.interfaces.GameModelInterface;
+import it.polimi.demo.model.interfaces.PlayerIC;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GameView implements Serializable {
     @Serial
@@ -16,7 +19,8 @@ public class GameView implements Serializable {
     /**
      * The index of the player who is receiving this GameView.
      */
-    private final int myIndex;
+    private String my_nickname;
+
     /**
      * The matrix of the actual living room board.
      */
@@ -63,11 +67,15 @@ public class GameView implements Serializable {
      */
     private final String errorMessage;
 
-    public GameView(GameModel game, int receivingPlayerIndex){
-        this.myIndex = receivingPlayerIndex;
-
+    public GameView(GameModelInterface game, String nickname) {
+        this.my_nickname = nickname;
         this.common_board = game.getCommonBoard();
-        this.personal_objective_card = game.getAllPlayers().get(this.myIndex).getChosenObjectiveCard();
+        this.personal_objective_card = game.getAllPlayers()
+                .stream()
+                .filter(player -> player.getNickname().equals(nickname))
+                .findFirst()
+                .map(PlayerIC::getChosenObjectiveCard) // Map the Optional<Player> to Optional<ChosenObjectiveCard>
+                .orElse(null); // Provide a default value if the Optional is empty
         //this.currentPlayerIndex = game.getCurrentPlayerIndex();
         this.finalPlayerIndex = game.getFinalPlayerIndex();
         //this.currentPlayerNickname= game.getCurrentPlayer().getNickname();

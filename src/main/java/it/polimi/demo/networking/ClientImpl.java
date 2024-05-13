@@ -3,6 +3,7 @@ package it.polimi.demo.networking;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.UIListener;
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
@@ -165,6 +166,41 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         }
     }
 
+    @Override
+    public void placeStarterCard(Orientation orientation) {
+        try {
+            server.placeStarterCard(orientation);
+        } catch (RemoteException e) {
+            System.err.println("Network error while placing starter card.");
+        }
+    }
+
+    @Override
+    public void chooseCard(int which_card) {
+        try {
+            server.chooseCard(which_card);
+        } catch (RemoteException e) {
+            System.err.println("Network error while choosing card.");
+        }
+    }
+
+    @Override
+    public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) {
+        try {
+            server.placeCard(where_to_place_x, where_to_place_y, orientation);
+        } catch (RemoteException e) {
+            System.err.println("Network error while placing card.");
+        }
+    }
+
+    @Override
+    public void drawCard(int index) {
+        try {
+            server.drawCard(index);
+        } catch (RemoteException e) {
+            System.err.println("Network error while drawing card.");
+        }
+    }
 
     @Override
     public void exit() {
@@ -241,13 +277,11 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         this.server.pong();
     }
 
-    @Override
-    public void performTurn() {
-//        try {
-//            server.performTurn();
-//        } catch (RemoteException e) {
-//            System.err.println("Network error while performing turn.");
+//    private void showPlayerHand(List<ResourceCard> playerHand) {
+//        System.out.println("Player's Hand:");
+//        for (ResourceCard card : playerHand) {
+//            System.out.println(card); // Assuming ResourceCard has a meaningful toString() method
 //        }
-    }
+//    }
 
 }

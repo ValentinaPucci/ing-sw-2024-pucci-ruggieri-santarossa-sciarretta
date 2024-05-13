@@ -30,7 +30,7 @@ public class GameControllerTest {
         Player p = new Player("Player1");
         Integer id = gameModel.getGameId();
         //GameController = new GameController(gameModel);
-        GameModel actualGameModel = GameController.getModel();
+        GameModel actualGameModel = (GameModel) GameController.getModel();
         assertEquals(gameModel, actualGameModel);
     }
 

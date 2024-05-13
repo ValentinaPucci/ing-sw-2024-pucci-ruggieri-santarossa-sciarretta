@@ -26,7 +26,7 @@ public interface Listener {
      * @param lambda lambda expression that should call a method on the listener
      * @param <L> type of the listener
      */
-    static <L extends Listener> void notifyListeners(List<L> listeners, ConsumerWithRemoteException<L> lambda){
+    static <L extends Listener> void notifyListeners(List<L> listeners, ConsumerWithRemoteException<L> lambda) {
         List<L> tmp = new ArrayList<>(listeners);
         tmp.forEach(listener -> {
             try {
