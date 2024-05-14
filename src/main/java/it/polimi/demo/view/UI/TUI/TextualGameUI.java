@@ -2,6 +2,8 @@ package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.listener.UIListener;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.cards.gameCards.StarterCard;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.view.UI.GameUI;
 import it.polimi.demo.view.GameView;
@@ -14,6 +16,7 @@ import java.util.Scanner;
 
 import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.view.UI.TUI.TextualUtils.*;
+import static org.fusesource.jansi.Ansi.Color.RED;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class TextualGameUI extends GameUI {
@@ -42,7 +45,8 @@ public class TextualGameUI extends GameUI {
     @Override
     public void run() {
         AnsiConsole.systemInstall();
-
+        //System.out.println("RUN pre while");
+        System.out.println(getState());
         while (true) {
             while (getState() == State.NOT_MY_TURN) {
                 synchronized (lock) {
@@ -51,7 +55,6 @@ public class TextualGameUI extends GameUI {
                     } catch (InterruptedException ignored) {}
                 }
             }
-
             if (getState() == State.MY_TURN) {
                 inputThread = new Thread(this::executeMyTurn);
                 inputThread.start();
@@ -91,26 +94,61 @@ public class TextualGameUI extends GameUI {
      * with the placement of the card on the board.
      */
     private void executeMyTurn() {
-
         while (getState() == State.MY_TURN) {
-            notifyListeners(lst, UIListener -> UIListener.chooseCard(
-                    askIndex("Select the index of the card you want to play")));
-            notifyListeners(lst, UIListener -> UIListener.placeCard(
-                    askIndex("Select the x coordinate of the card you want to place"),
-                    askIndex("Select the y coordinate of the card you want to place"),
-                    chooseCardOrientation()));
-            notifyListeners(lst, UIListener -> UIListener.drawCard(
-                    askIndex("""
-                            Select the index of the card you want to draw;\s
-                             1: Resource Deck
-                             2: First Resource Card on the table
-                             3: Second Resource Card on the table
-                             4: Gold Deck
-                             5: First Gold Card on the table
-                             6: Second Gold Card on the table""")));
-            setState(State.NOT_MY_TURN);
+            System.out.println("Sono in executeMyTurn ed è il MYTURN");
+            GameStatus current_status = lastGameView.getStatus();
+            System.out.println("il current status è: "+ current_status );
+            switch(current_status) {
+                case FIRST_ROUND:
+                    System.out.println("Sono in executeMyTurn ed è il FIRST_ROUND");
+                    this.showStarterCard();
+                    System.out.println("Ho mostrato la mia starterCard");
+                    notifyListeners(lst, UIListener -> UIListener.placeStarterCard(chooseCardOrientation()));
+                    notifyListeners(lst, UIListener -> UIListener.drawCard(
+                            askIndex("""
+                        Select the index of the card you want to draw;\s
+                         1: Resource Deck
+                         2: First Resource Card on the table
+                         3: Second Resource Card on the table
+                         4: Gold Deck
+                         5: First Gold Card on the table
+                         6: Second Gold Card on the table""")));
+                    break;
 
+                case RUNNING, SECOND_LAST_ROUND:
+                    notifyListeners(lst, UIListener -> UIListener.chooseCard(
+                            askIndex("Select the index of the card you want to play")));
+                    notifyListeners(lst, UIListener -> UIListener.placeCard(
+                            askIndex("Select the x coordinate of the card you want to place"),
+                            askIndex("Select the y coordinate of the card you want to place"),
+                            chooseCardOrientation()));
+                    notifyListeners(lst, UIListener -> UIListener.drawCard(
+                            askIndex("""
+                        Select the index of the card you want to draw;\s
+                         1: Resource Deck
+                         2: First Resource Card on the table
+                         3: Second Resource Card on the table
+                         4: Gold Deck
+                         5: First Gold Card on the table
+                         6: Second Gold Card on the table""")));
+                    break;
+
+                case LAST_ROUND:
+                    notifyListeners(lst, UIListener -> UIListener.chooseCard(
+                            askIndex("Select the index of the card you want to play")));
+                    notifyListeners(lst, UIListener -> UIListener.placeCard(
+                            askIndex("Select the x coordinate of the card you want to place"),
+                            askIndex("Select the y coordinate of the card you want to place"),
+                            chooseCardOrientation()));
+                    break;
+            }
+            setState(State.NOT_MY_TURN);
         }
+    }
+
+    private void showStarterCard() {
+        StarterCard starter_card = lastGameView.getPersonalStarterCard();
+        System.out.println("These are the details of your starter card:\n " + starter_card.toString());
     }
 
     public int askIndex(String message) {
@@ -137,11 +175,65 @@ public class TextualGameUI extends GameUI {
 
     @Override
     public void update(GameView gameView) {
+        this.lastGameView = gameView;
+        // System.out.println("ciao sono entrato in update"); ci entra!
+        if (gameView.isGamePaused()) {
+            this.gamePaused();
+            setState(State.NOT_MY_TURN);
+            return;
+        }
+        if (gameView.getErrorMessage() != null){
+            System.out.println("\n" + ansi().fg(RED).bold().a(gameView.getErrorMessage()).reset() + "\n");
+        }
 
+        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname()) && getState() == State.MY_TURN) {
+            return;
+        }
+
+        this.updateBoard(gameView);
+
+        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname())) {
+            System.out.println("Your turn!");
+            setState(State.MY_TURN);
+        } else {
+            System.out.println("Player " + gameView.getCurrentPlayerNickname() + "'s turn.");
+            setState(State.NOT_MY_TURN);
+        }
     }
 
     @Override
     public void gameEnded(GameView gameView) {
 
+    }
+
+    /**
+     * This method is called when the game is paused.
+     */
+    public void gamePaused() {
+        System.out.println();
+        updateBoard(lastGameView);
+        System.out.println(ansi().bold().fg(Ansi.Color.YELLOW)
+                .a("""
+                        Game has been paused since you're the only player left in the game.
+                        Waiting for someone else to reconnect...
+                        """).reset());
+        if (inputThread != null) {
+            inputThread.interrupt();
+        }
+    }
+
+    private void updateBoard(GameView gameView) {
+        clearScreen(gameView);
+    }
+
+    private void clearScreen(GameView gameView) {
+        System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+        //this.showPlayers(gameView);
+        this.showCommonBoard(gameView);
+    }
+
+    private void showCommonBoard(GameView gameView) {
+        System.out.println(ansi().fg(Ansi.Color.BLUE).a("\nCurrent COMMON BOARD:").reset());
+        //TODO: to implement
     }
 }

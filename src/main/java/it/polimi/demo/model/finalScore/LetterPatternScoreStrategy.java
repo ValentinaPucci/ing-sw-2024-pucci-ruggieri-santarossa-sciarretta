@@ -4,7 +4,9 @@ import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.objectiveCards.LetterPatternObjectiveCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 
-public class LetterPatternScoreStrategy implements ScoreStrategy {
+import java.io.Serializable;
+
+public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
 
     /**
      * @param objectiveCard

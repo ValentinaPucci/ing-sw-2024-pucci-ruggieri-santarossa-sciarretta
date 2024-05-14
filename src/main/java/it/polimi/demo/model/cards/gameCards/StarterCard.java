@@ -13,9 +13,9 @@ import java.util.Optional;
 public class StarterCard extends Card {
 
     public static final int STARTER_CARD_COORDINATE = 500;
-    public Optional<Resource> front_resource1;
-    public Optional<Resource> front_resource2;
-    public Optional<Resource> front_resource3;
+    public transient Optional<Resource> front_resource1;
+    public transient Optional<Resource> front_resource2;
+    public transient Optional<Resource> front_resource3;
     public Corner[][] corners;
     public Orientation orientation;
 

@@ -4,10 +4,11 @@ import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.Stack;
 
-public class ConcreteDeck {
+public class ConcreteDeck implements Serializable {
 
     private String type;
     private CardsCollection concrete_cards_bunch;

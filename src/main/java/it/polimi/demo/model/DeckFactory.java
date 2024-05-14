@@ -1,6 +1,8 @@
 package it.polimi.demo.model;
 
-public class DeckFactory {
+import java.io.Serializable;
+
+public class DeckFactory implements Serializable {
     public CardsCollection createDeck(String type) {
         CardsCollection cardsCollection = new CardsCollection();
         switch (type) {

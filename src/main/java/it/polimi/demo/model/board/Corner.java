@@ -5,6 +5,7 @@ import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Item;
 import it.polimi.demo.model.enumerations.Resource;
 
+import java.io.Serializable;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -15,11 +16,11 @@ import java.util.Optional;
  * that we need to 'track' the resources and the items which are present
  * inside the PersonalBoard.
  */
-public class Corner {
+public class Corner implements Serializable {
 
     private Coordinate coordinate;
-    public Optional<Resource> resource;
-    public Optional<Item> item;
+    public transient Optional<Resource> resource;
+    public transient Optional<Item> item;
     public boolean is_visible;
     public ResourceCard reference_card;
 

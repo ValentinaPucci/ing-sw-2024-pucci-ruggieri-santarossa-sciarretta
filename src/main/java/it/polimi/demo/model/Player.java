@@ -9,10 +9,11 @@ import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.listener.*;
 import it.polimi.demo.model.interfaces.ResourceCardIC;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player implements PlayerIC {
+public class Player implements PlayerIC, Serializable {
 
     private String nickname;
     private List<ResourceCard> card_hand;

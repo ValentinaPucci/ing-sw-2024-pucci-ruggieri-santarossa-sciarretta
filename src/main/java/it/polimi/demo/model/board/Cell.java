@@ -1,5 +1,7 @@
 package it.polimi.demo.model.board;
 
+import java.io.Serializable;
+
 /**
  * This class is thought to be complementary to the class Corner.
  * Indeed, Corner class has to interact in some way with Cell class.
@@ -10,7 +12,7 @@ package it.polimi.demo.model.board;
  * a cell and the corner it represents using a mapping from the cell to the
  * corner.
  */
-public class Cell {
+public class Cell implements Serializable {
 
     private Corner corner;
     public int level;

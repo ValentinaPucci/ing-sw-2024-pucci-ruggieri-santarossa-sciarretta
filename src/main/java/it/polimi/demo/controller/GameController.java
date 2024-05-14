@@ -482,6 +482,7 @@ public class GameController implements GameControllerInterface, Serializable {
 
         model.getPlayersConnected().remove(first_player);
         model.getPlayersConnected().addFirst(first_player);
+        notifyListeners(model.getListeners(), GameListener::modelChanged);
     }
 
     /**

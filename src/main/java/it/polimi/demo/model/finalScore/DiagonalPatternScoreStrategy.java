@@ -4,7 +4,9 @@ import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.objectiveCards.DiagonalPatternObjectiveCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 
-public class DiagonalPatternScoreStrategy implements ScoreStrategy {
+import java.io.Serializable;
+
+public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable {
 
     /**
      * @param objectiveCard

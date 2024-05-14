@@ -1,11 +1,13 @@
 package it.polimi.demo.model.board;
 
+import java.io.Serializable;
+
 /**
  * This class provide the needed mapping between the Coordinate-based
  * description of a given corner and its matrix-based (i.e. using indexes)
  * description.
  */
-public class BoardCellCoordinate {
+public class BoardCellCoordinate implements Serializable {
 
     /**
      * these are the REAL indexes of the matrix that represents the board

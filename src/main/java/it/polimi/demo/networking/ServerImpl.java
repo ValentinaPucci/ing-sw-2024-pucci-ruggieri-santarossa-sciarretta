@@ -137,6 +137,8 @@ public class ServerImpl implements Server, GameListener {
             game_controller.startIfFull();
             // READY_TO_START --> FIRST_ROUND
             game_controller.gameFlow();
+            // todo: there could be a problem of concurrency
+            client.modelChanged(new GameView(model, nickname));
         }
     }
 

@@ -4,6 +4,7 @@ import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.CardsCollection;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
+import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.enumerations.GameStatus;
@@ -11,6 +12,7 @@ import it.polimi.demo.view.PlayerDetails;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public interface GameModelInterface {
 
@@ -57,4 +59,10 @@ public interface GameModelInterface {
     void placeCard(ResourceCard card, Player p, int x, int y);
 
     void placeCard(GoldCard card, Player p, int x, int y);
+
+    List<Player> getWinners();
+
+    Map<Player, Integer> getLeaderBoard();
+
+    PersonalBoard getPersonalBoard(String myNickname);
 }

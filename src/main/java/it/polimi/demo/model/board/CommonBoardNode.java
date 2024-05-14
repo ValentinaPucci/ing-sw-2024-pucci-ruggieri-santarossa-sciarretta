@@ -1,8 +1,9 @@
 package it.polimi.demo.model.board;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class CommonBoardNode {
+public class CommonBoardNode implements Serializable {
     private int node_number; // Number of the node
     private boolean[] players; // Array of booleans to indicate player presence
 

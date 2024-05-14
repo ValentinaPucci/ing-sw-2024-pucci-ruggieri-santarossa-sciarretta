@@ -6,7 +6,9 @@ import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.IllegalMoveException;
 
-public class PersonalBoard {
+import java.io.Serializable;
+
+public class PersonalBoard implements Serializable {
 
     public Cell[][] board;
     private final int dim1;

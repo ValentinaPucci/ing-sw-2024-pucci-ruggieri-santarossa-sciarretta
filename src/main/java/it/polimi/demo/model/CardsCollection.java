@@ -1,5 +1,6 @@
 package it.polimi.demo.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ import it.polimi.demo.model.enumerations.*;
 import java.io.File;
 
 // TODO: Correct Gold card upload.
-public  class CardsCollection {
+public  class CardsCollection implements Serializable {
     public List<Card> cards;
 
     public CardsCollection() {

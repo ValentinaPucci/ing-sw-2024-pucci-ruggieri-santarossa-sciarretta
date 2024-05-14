@@ -2,7 +2,9 @@ package it.polimi.demo.model.cards;
 
 import it.polimi.demo.model.enumerations.Orientation;
 
-public abstract class Card {
+import java.io.Serializable;
+
+public abstract class Card implements Serializable {
 
     protected int id;
     public Orientation orientation;

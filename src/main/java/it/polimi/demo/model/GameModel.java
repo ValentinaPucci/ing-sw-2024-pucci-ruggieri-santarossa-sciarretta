@@ -19,6 +19,7 @@ import it.polimi.demo.model.interfaces.GameModelInterface;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.PlayerDetails;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,7 +27,7 @@ import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 //TODO: Check how first_finished_player is set.
 
-public class GameModel implements GameModelInterface {
+public class GameModel implements GameModelInterface, Serializable {
 
     // the first list let us keep the order of players. It is immutable!!
     // aux_order_player.size() always >= players_connected.size()
@@ -47,7 +48,8 @@ public class GameModel implements GameModelInterface {
     private List<Player> winners;
     private Map<Player, Integer> leaderboard;
     //private int current_player_index;
-    private boolean is_paused;
+    private boolean is_ended = false;
+    private boolean is_paused = false;
     private String errorMessage;
 
     public GameModel() {
@@ -641,6 +643,20 @@ public class GameModel implements GameModelInterface {
         return winners;
     }
 
+    @Override
+    public Map<Player, Integer> getLeaderBoard() {
+        return this.leaderboard;
+    }
+
+    @Override
+    public PersonalBoard getPersonalBoard(String myNickname) {
+        for (Player p : aux_order_players){
+            if (p.getNickname().equals(myNickname))
+                return p.getPersonalBoard();
+        }
+        return null;
+    }
+
 
     /**
      * Retrieves the leaderboard containing player indexes and their corresponding scores.
@@ -723,7 +739,7 @@ public class GameModel implements GameModelInterface {
     }
 
     public boolean isEnded() {
-        return false;
+        return is_ended;
     }
 
     public boolean isPaused() {
