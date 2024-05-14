@@ -1,5 +1,7 @@
 package it.polimi.demo.view.UI.TUI;
 
+import it.polimi.demo.model.enumerations.Orientation;
+
 import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -18,6 +20,21 @@ public class TextualUtils {
             } catch (InputMismatchException ex) {
                 System.out.print("Input is not a number. Please retry: ");
                 in.nextLine();
+            }
+        }
+    }
+
+    public static Orientation nextOrientation(Scanner in) {
+        while (true) {
+            String line = in.next();
+            if (line.equals("FRONT")) {
+                return Orientation.FRONT;
+            }
+            else if (line.equals("BACK")) {
+                return Orientation.BACK;
+            }
+            else {
+                System.out.println("Invalid orientation. Please retry: ");
             }
         }
     }

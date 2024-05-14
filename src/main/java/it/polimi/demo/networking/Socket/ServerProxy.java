@@ -4,6 +4,7 @@ import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.networking.ClientImpl;
 import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
 import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
@@ -126,7 +127,27 @@ public class ServerProxy  implements Server {
             }
         }
 
-        @Override
+    @Override
+    public void placeStarterCard(Orientation orientation) throws RemoteException {
+
+    }
+
+    @Override
+    public void chooseCard(int which_card) throws RemoteException {
+
+    }
+
+    @Override
+    public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
+
+    }
+
+    @Override
+    public void drawCard(int index) throws RemoteException {
+
+    }
+
+    @Override
         public void pong () throws RemoteException {
             try {
                 out_serialized.reset();
@@ -136,6 +157,7 @@ public class ServerProxy  implements Server {
                 throw new RemoteException("Cannot pong", e);
             }
         }
+
 
 
 //    @Override

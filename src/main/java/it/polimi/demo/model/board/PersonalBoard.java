@@ -469,6 +469,17 @@ public class PersonalBoard {
             }
         }
     }
+
+    public void placeStarterCard(StarterCard card) {
+        int i = dim1 / 2;
+        int j = dim2 / 2;
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                this.board[i + k][j + h].setCellAsFull(card.getCornerAt(k, h));
+                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
+            }
+        }
+    }
     
 
     /**
@@ -1155,12 +1166,16 @@ public class PersonalBoard {
     public Cell[][] getBoard() {
         return board;
     }
-/*
+
     public void printBoardIDs() {
         for (int i = 0; i < dim1; i++) {
             for (int j = 0; j < dim2; j++) {
-                System.out.println("Cell at position (" + i + "," + j + ") has ID: " + board[i][j].getId());
+                if (board[i][j].getCornerFromCell() != null && board[i][j].getCornerFromCell().reference_card != null) {
+                    System.out.println("Cell at position (" + i + "," + j + ") has ID: " + board[i][j].getCornerFromCell().reference_card.getId());
+                } else {
+                    // niente
+                }
             }
         }
-    }*/
+    }
 }

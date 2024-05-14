@@ -1,5 +1,9 @@
 package it.polimi.demo.networking;
 
+import it.polimi.demo.model.cards.gameCards.GoldCard;
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
@@ -7,8 +11,11 @@ import org.fusesource.jansi.Ansi;
 
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
@@ -70,6 +77,7 @@ public class ServerExecutor extends UnicastRemoteObject implements Server {
         });
     }
 
+
     @Override
     public void getGamesList() throws RemoteException {
         executorService.submit(() -> {
@@ -78,6 +86,58 @@ public class ServerExecutor extends UnicastRemoteObject implements Server {
             } catch (RemoteException e) {
                 try {
                     client.showError("Error while getting the games list.");
+                } catch (RemoteException ignored) {}
+            }
+        });
+    }
+
+    @Override
+    public void placeStarterCard(Orientation orientation) throws RemoteException {
+        executorService.submit(() -> {
+            try {
+                server.placeStarterCard(orientation);
+            } catch (RemoteException e) {
+                try {
+                    client.showError("Error while placing the starter card.");
+                } catch (RemoteException ignored) {}
+            }
+        });
+    }
+
+    @Override
+    public void chooseCard(int which_card) throws RemoteException {
+        executorService.submit(() -> {
+            try {
+                server.chooseCard(which_card);
+            } catch (RemoteException e) {
+                try {
+                    client.showError("Error while choosing the card.");
+                } catch (RemoteException ignored) {}
+            }
+        });
+    }
+
+    @Override
+    public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
+        executorService.submit(() -> {
+            try {
+                server.placeCard(where_to_place_x, where_to_place_y, orientation);
+            } catch (RemoteException e) {
+                try {
+                    client.showError("Error while placing the card.");
+                } catch (RemoteException ignored) {}
+            }
+        });
+    }
+
+    @Override
+    public void drawCard(int index) throws RemoteException {
+        executorService.submit(() -> {
+            try {
+                server.drawCard(index);
+            } catch (RemoteException e) {
+                try {
+                    client.showError("Error while drawing the card.");
                 } catch (RemoteException ignored) {}
             }
         });

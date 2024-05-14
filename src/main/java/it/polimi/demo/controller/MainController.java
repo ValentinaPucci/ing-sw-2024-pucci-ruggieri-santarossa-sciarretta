@@ -247,8 +247,6 @@ public class MainController implements MainControllerInterface {
                                 return game;
                             } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
                                 return null;
-                            } catch (GameEndedException e) {
-                                throw new RuntimeException(e);
                             }
                         }))
                 .orElseGet(() -> null);

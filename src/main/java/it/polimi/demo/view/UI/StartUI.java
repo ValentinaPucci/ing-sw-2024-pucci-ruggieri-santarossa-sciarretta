@@ -11,6 +11,8 @@ abstract public class StartUI implements Runnable {
 
     protected final List<UIListener> lst = new ArrayList<>();
 
+    public abstract void placeStarterCard();
+
     public abstract void showGamesList(List<GameDetails> o);
 
     public abstract void showError(String err);

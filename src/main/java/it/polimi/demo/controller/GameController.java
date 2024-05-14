@@ -9,6 +9,8 @@ import it.polimi.demo.model.*;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
+import it.polimi.demo.model.interfaces.GameModelInterface;
+import it.polimi.demo.view.UI.TUI.TextualUtils;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -38,8 +40,8 @@ public class GameController implements GameControllerInterface, Serializable {
         model = new GameModel(gameID, numberOfPlayers, player);
     }
 
-    public GameModel getModel() {
-        return model;
+    public GameModelInterface getModel() {
+        return (GameModelInterface) model;
     }
 
     //------------------------------------gameFlow-----------------------------------------------
@@ -324,9 +326,7 @@ public class GameController implements GameControllerInterface, Serializable {
 
     @Override
     public void startIfFull() {
-
         if (model.getAllPlayers().size() == model.getNumPlayersToPlay()) {
-            // System.out.println("Game " + this.model.getGameId() + " is full and ready to start");
             notifyListeners(model.getListeners(), GameListener::gameStarted);
             this.startGame();
         }
@@ -386,7 +386,7 @@ public class GameController implements GameControllerInterface, Serializable {
      *
      * @return the player who is playing the turn
      */
-    public Player currentPlayer() {
+    public Player getCurrentPlayer() {
         return model.getPlayersConnected().peek();
     }
 
@@ -492,20 +492,38 @@ public class GameController implements GameControllerInterface, Serializable {
     public GameStatus getStatus() {
         return model.getStatus();
     }
-
+    //TODO
     // Section: Overrides
+
+    @Override
+    public void placeStarterCard(Player p) {
+        // model.placeStarterCard(p);
+    }
+
+    /**
+     * Choose a card from the hand
+     * @param p the player
+     * @param which_card the index of the card to choose
+     * @throws RemoteException if there is an error
+     */
+    @Override
+    public void chooseCardFromHand(Player p, int which_card) throws RemoteException {
+        model.getPlayersConnected().stream()
+                .filter(player -> player.getNickname().equals(p.getNickname()))
+                .findFirst()
+                .ifPresent(player -> player.setChosenGameCard(player.getHand().get(which_card)));
+    }
 
     /**
      * Place a card in the common board
      *
-     * @param card_chosen the card to place
      * @param p           the player that places the card
      * @param x           the x coordinate
      * @param y           the y coordinate
      * @throws RemoteException if there is an  error.
      */
     @Override
-    public void placeCard(ResourceCard card_chosen, Player p, int x, int y)
+    public void placeCard( Player p, int x, int y, Orientation orientation)
             throws RemoteException {
 
         if (!getConnectedPlayers().contains(p))
@@ -514,8 +532,22 @@ public class GameController implements GameControllerInterface, Serializable {
             throw new RemoteException("It's not your turn");
 
         try {
-            // Call the placeCard method in GameModel
-            model.placeCard(card_chosen, p, x, y);
+            if (orientation == Orientation.FRONT) {
+                System.out.println("FRONT PLACING");
+                if(p.getChosenGameCard() instanceof GoldCard) {
+                    model.placeCard((GoldCard) p.getChosenGameCard(), p, x, y);
+//                    System.out.println("Gold Placing");
+//                    System.out.println("Personal board of: " + p.getNickname());
+                    p.getPersonalBoard().printBoardIDs();
+                }else {
+//                    System.out.println("Resource placing");
+//                    System.out.println("Personal board of: " + p.getNickname());
+                    model.placeCard(p.getChosenGameCard(), p, x, y);
+                }
+            }else{
+                System.out.println("BACK PLACING, doesn't matter the card type");
+                model.placeCard(p.getChosenGameCard().getBack(), p, x, y);
+            }
         } catch (IllegalMoveException e) {
             throw new RemoteException("Illegal move");
         }
@@ -525,35 +557,35 @@ public class GameController implements GameControllerInterface, Serializable {
         }
     }
 
-    /**
-     * Place a card in the commonboard
-     *
-     * @param card_chosen the card to place
-     * @param p           the player that places the card
-     * @param x           the x coordinate
-     * @param y           the y coordinate
-     * @throws RemoteException if there is an  error.
-     */
-    @Override
-    public void placeCard(GoldCard card_chosen, Player p, int x, int y)
-            throws RemoteException {
-
-        if (!getConnectedPlayers().contains(p))
-            throw new RemoteException("Player not connected");
-        else if (!isMyTurn(p.getNickname()))
-            throw new RemoteException("It's not your turn");
-
-        try {
-            // Call the placeCard method in GameModel
-            model.placeCard(card_chosen, p, x, y);
-        } catch (IllegalMoveException e) {
-            throw new RemoteException("Illegal move");
-        }
-
-        if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
-            model.setStatus(GameStatus.SECOND_LAST_ROUND);
-        }
-    }
+//    /**
+//     * Place a card in the commonboard
+//     *
+//     * @param card_chosen the card to place
+//     * @param p           the player that places the card
+//     * @param x           the x coordinate
+//     * @param y           the y coordinate
+//     * @throws RemoteException if there is an  error.
+//     */
+//    @Override
+//    public void placeCard(GoldCard card_chosen, Player p, int x, int y)
+//            throws RemoteException {
+//
+//        if (!getConnectedPlayers().contains(p))
+//            throw new RemoteException("Player not connected");
+//        else if (!isMyTurn(p.getNickname()))
+//            throw new RemoteException("It's not your turn");
+//
+//        try {
+//            // Call the placeCard method in GameModel
+//            model.placeCard(card_chosen, p, x, y);
+//        } catch (IllegalMoveException e) {
+//            throw new RemoteException("Illegal move");
+//        }
+//
+//        if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
+//            model.setStatus(GameStatus.SECOND_LAST_ROUND);
+//        }
+//    }
 
     /**
      * Draw a card from the deck in commonBoard. It also incorporates the logic of the game
@@ -566,7 +598,7 @@ public class GameController implements GameControllerInterface, Serializable {
         if (!(1 <= index && index <= 6))
             throw new IllegalArgumentException("invalid index");
         model.drawCard(getPlayerEntity(player_nickname), index);
-        //this.myTurnIsFinished();
+        this.myTurnIsFinished();
     }
 
     // aux method for drawCard
@@ -593,6 +625,15 @@ public class GameController implements GameControllerInterface, Serializable {
     public int getGameId() {
         return model.getGameId();
     }
+
+
+
+//    private void showPlayerHand(List<ResourceCard> playerHand) {
+//        System.out.println("Player's Hand:");
+//        for (ResourceCard card : playerHand) {
+//            System.out.println(card); // Assuming ResourceCard has a meaningful toString() method
+//        }
+//    }
 
 
 //---------------------------------listeners management---------------------------------------

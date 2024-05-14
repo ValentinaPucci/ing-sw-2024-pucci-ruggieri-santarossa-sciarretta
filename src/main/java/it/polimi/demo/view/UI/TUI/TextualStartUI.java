@@ -2,6 +2,7 @@ package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.PlayerDetails;
 import it.polimi.demo.view.UI.StartUI;
@@ -95,6 +96,11 @@ public class TextualStartUI extends StartUI {
         // Here we create the game using observer design pattern
         notifyListeners(lst, startUIListener -> startUIListener.createGame(this.username, num_players));
         waitingForPlayers = true;
+
+        // Here we eventually put the starter cards on the table. This is a procedure which is
+        // necessary to start the game and is separated from the real execution of the game. Moreover,
+        // it can be done without an effective synchronization with the other players.
+
     }
 
     public void askID() {
@@ -102,9 +108,9 @@ public class TextualStartUI extends StartUI {
         do {
             System.out.print("Which game do you want to join? ");
             gameID = TextualUtils.nextInt(s);
-            if (gameID <= 0)
+            if (gameID < 0)
                 System.out.println("GameID is a positive number!");
-        } while (gameID <= 0);
+        } while (gameID < 0);
     }
 
     /**
@@ -113,12 +119,27 @@ public class TextualStartUI extends StartUI {
     @Override
     public void joinGame() {
         askID();
-        try {
-            notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            showError(e.getMessage());
+        if (gameID == 0){
+            try {
+                createGame();
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                showError(e.getMessage());
+            }
+        }else{
+            try {
+                notifyListeners(lst, startUIListener -> startUIListener.joinGame(gameID, this.username));
+            } catch (IllegalArgumentException | IllegalStateException e) {
+                showError(e.getMessage());
+            }
         }
         waitingForPlayers = true;
+    }
+
+    @Override
+    public void placeStarterCard() {
+        Scanner s = new Scanner(System.in);
+        Orientation orientation = TextualUtils.nextOrientation(s);
+        notifyListeners(lst, UIListener -> UIListener.placeStarterCard(orientation));
     }
 
     /**

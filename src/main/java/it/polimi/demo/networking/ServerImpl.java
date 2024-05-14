@@ -7,18 +7,24 @@ import it.polimi.demo.controller.GameController;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.GameNotStartedException;
 import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.interfaces.GameModelInterface;
 import it.polimi.demo.view.GameDetails;
 import it.polimi.demo.view.GameView;
 import it.polimi.demo.view.PlayerDetails;
+import it.polimi.demo.view.UI.TUI.TextualUtils;
 import org.fusesource.jansi.Ansi;
 
 import java.rmi.RemoteException;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -43,16 +49,20 @@ public class ServerImpl implements Server, GameListener {
      * We could also avoid to having it as an attribute, but it is
      * far more convenient to have it here.
      */
-    protected GameModel model;
-    protected MainController main_controller;
+    protected GameModelInterface model;
+    protected MainControllerInterface main_controller;
     protected GameControllerInterface game_controller;
 
     // Here we exploit the interface
     protected Client client;
+
     /**
      * Index of the player served by this ServerImpl.
      */
     protected int playerIndex;
+
+    protected String nickname;
+
     /**
      * The ping-pong thread reference used to check if the client is still connected.
      */
@@ -92,7 +102,10 @@ public class ServerImpl implements Server, GameListener {
         model = game_controller.getModel();
         model.addListener(this);
 
-        playerIndex = 0;
+        //playerIndex = 0;
+
+        // We can track the player in the mini-server by saving the nickname.
+        this.nickname = nickname;
         playerJoinedGame();
         client.showStatus(model.getStatus());
         // Here, we do not need to call game_controller.gameFlow() because the WAIT status is already set
@@ -126,6 +139,126 @@ public class ServerImpl implements Server, GameListener {
             game_controller.gameFlow();
         }
     }
+
+    @Override
+    public void placeStarterCard(Orientation orientation) throws RemoteException {
+        if (!this.nickname.equals(game_controller.getCurrentPlayer().getNickname()))
+            this.game_controller.setError("Player " + this.nickname + " tried to place a starter card while it was not his turn.");
+        else
+            game_controller.placeStarterCard(game_controller.getCurrentPlayer());
+    }
+
+    @Override
+    public void chooseCard(int which_card) throws RemoteException {
+        if (!this.nickname.equals(game_controller.getCurrentPlayer().getNickname()))
+            this.game_controller.setError("Player " + this.nickname + " tried to select a card while it was not his turn.");
+        else {
+//            switch (game_controller.getStatus()) {
+//                case FIRST_ROUND -> {
+//                    model.
+//                }
+//            }
+            game_controller.chooseCardFromHand(game_controller.getCurrentPlayer(), which_card);
+        }
+    }
+
+    @Override
+    public void placeCard(int x, int y, Orientation orientation) throws RemoteException {
+        if (!this.nickname.equals(game_controller.getCurrentPlayer().getNickname()))
+            this.game_controller.setError("Player " + this.nickname + " tried to place a card while it was not his turn.");
+        else
+            game_controller.placeCard(game_controller.getCurrentPlayer(), x, y, orientation);
+    }
+
+    @Override
+    public void drawCard(int index) throws RemoteException {
+        if (!this.nickname.equals(game_controller.getCurrentPlayer().getNickname()))
+            this.game_controller.setError("Player " + this.nickname + " tried to draw a card while it was not his turn.");
+        else
+            game_controller.drawCard(game_controller.getCurrentPlayer().getNickname(), index);
+    }
+
+    // Tarantino method
+//    /**
+//     * This method calls the controller in order to execute the turn.
+//     * If the player who's trying to perform the turn is not the current player, it will throw a RemoteException.
+//     *
+//     * @see Controller#performTurn(int, Point...)
+//     */
+//    @Override
+//    public void performTurn(int column, Point... points) throws RemoteException {
+//        if(this.playerIndex != this.model.getCurrentPlayerIndex()){
+//            this.controller.setError("Player " + this.model.getPlayer(this.playerIndex).getUsername() + " tried to perform a turn while it was not his turn.");
+//            return;
+//        }
+//
+//        try {
+//            this.controller.performTurn(column, points);
+//        } catch (GameException e) {
+//            this.controller.setError(e.getMessage());
+//        }
+//    }
+
+//    public void performTurn() throws RemoteException {
+//        Scanner s = new Scanner(System.in);
+//        GameStatus actual_status = game_controller.getStatus();
+//        int where_to_draw;
+//        int x, y;
+//        Player currentPlayer = game_controller.getConnectedPlayers().peek();
+//        ResourceCard chosen_card;
+//        switch (actual_status) {
+//            case GameStatus.FIRST_ROUND:
+//                game_controller.placeStarterCard(currentPlayer);
+//                System.out.println("Select where you want to draw your card from: ");
+//                where_to_draw = TextualUtils.nextInt(s);
+//                game_controller.drawCard(currentPlayer.getNickname(), where_to_draw);
+//
+//            case GameStatus.RUNNING:
+//                chosen_card = chooseCardFromHand();
+//                printAsync("Select where you want to put your selected card: ");
+//                x = TextualUtils.nextInt(s);
+//                y = TextualUtils.nextInt(s);
+//                this.server.placeCard(chosen_card, x, y );
+//                printAsync("Select from where you want to draw: ");
+//                where_to_draw = TextualUtils.nextInt(s);
+//                this.server.drawCard(where_to_draw);
+//
+//            case GameStatus.SECOND_LAST_ROUND:
+//                chosen_card = chooseCardFromHand();
+//                printAsync("Select where you want to put your selected card: ");
+//                x = TextualUtils.nextInt(s);
+//                y = TextualUtils.nextInt(s);
+//                this.server.placeCard(chosen_card, x, y);
+//                printAsync("Select from where you want to draw: ");
+//                where_to_draw = TextualUtils.nextInt(s);
+//                this.server.drawCard(where_to_draw);
+//
+//            case GameStatus.LAST_ROUND:
+//                chosen_card = chooseCardFromHand();
+//                printAsync("Select where you want to put your selected card: ");
+//                x = TextualUtils.nextInt(s);
+//                y = TextualUtils.nextInt(s);
+//                this.server.placeCard(chosen_card, x, y);
+//
+//            case GameStatus.ENDED:
+//                this.server.calculateFinalScores();
+//        }
+//    }
+//
+//    public ResourceCard chooseCardFromHand(){
+//        Scanner s = new Scanner(System.in);
+//        int choice = -1;
+//
+//        while (choice < 1 || choice >3){
+//            System.out.print("Select a card from your hand: ");
+//            choice = TextualUtils.nextInt(s);
+//            showPlayerHand(server.getPlayerHand());
+//            if(choice < 1 || choice >3){
+//                System.out.print("Invalid input. Type 1, 2 or 3.");
+//            }
+//        }
+//        return server.getPlayerHand().get(choice);
+//    }
 
     /**
      * When the client asks for the list of games, the server will trigger on the current ServerImpl a fake update of
@@ -206,7 +339,7 @@ public class ServerImpl implements Server, GameListener {
 
     @Override
     public void modelChanged() throws RemoteException {
-        this.client.modelChanged(new GameView(this.model, this.playerIndex));
+        this.client.modelChanged(new GameView(this.model, this.nickname));
 
         // If the game is paused, it will be automatically ended after a certain amount of time.
         if(this.model.isPaused()){
@@ -238,7 +371,7 @@ public class ServerImpl implements Server, GameListener {
 
     @Override
     public void gameEnded() {
-        GameView gameView = new GameView(this.model, this.playerIndex);
+        GameView gameView = new GameView(this.model, this.nickname);
         MainController.getControllerInstance().getGames().remove(model.getGameId());
         this.model.removeListener(this);
         this.model = null;
@@ -265,6 +398,5 @@ public class ServerImpl implements Server, GameListener {
         this.client.gameHasStarted();
     }
     // *** !!
-
 
 }

@@ -6,38 +6,38 @@ import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.interfaces.GameModelInterface;
+import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.GameDetails;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * This interface contains all the action a player can do in a single game */
 public interface GameControllerInterface extends Remote {
 
-    GameModel getModel();
+    GameModelInterface getModel();
+
+    void placeStarterCard(Player p);
+
+    void chooseCardFromHand(Player p, int index) throws RemoteException;
 
     /**
      * This method place a RESOURCECARD in the commonboard.
-     * @param card_chosen the card to place
      * @param p the player that place the card
      * @param x the x coordinate of the card on his/her personal board
      * @param y the y coordinate of the card on his/her personal board
      * @throws RemoteException if the connection fails
      */
-    void placeCard(ResourceCard card_chosen, Player p, int x, int y) throws RemoteException;
+    void placeCard(Player p, int x, int y, Orientation orientation) throws RemoteException;
 
-    /**
-     * This method place a GOLDCARD in the commonboard.
-     * @param card_chosen the card to place
-     * @param p the player that place the card
-     * @param x the x coordinate of the card on his/her personal board
-     * @param y the y coordinate of the card on his/her drawpersonal board
-     * @throws RemoteException if the connection fails
-     */
-    void placeCard(GoldCard card_chosen, Player p, int x, int y) throws RemoteException;
 
     /**
      * Draw a card from the deck in commonBoard
@@ -76,6 +76,10 @@ public interface GameControllerInterface extends Remote {
      * @param p the player to set as connected
      */
     void setPlayerAsConnected(Player p) throws RemoteException;
+
+    LinkedList<Player> getConnectedPlayers();
+
+    Player getCurrentPlayer();
 
     /**
      * This method starts the game
@@ -120,4 +124,6 @@ public interface GameControllerInterface extends Remote {
     void setError(String s);
 
     void gameFlow() throws RemoteException, GameEndedException;
+
+    GameStatus getStatus();
 }
