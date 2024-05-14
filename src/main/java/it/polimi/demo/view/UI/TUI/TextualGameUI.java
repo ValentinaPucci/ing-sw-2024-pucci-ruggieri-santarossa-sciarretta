@@ -42,6 +42,7 @@ public class TextualGameUI extends GameUI {
     @Override
     public void run() {
         AnsiConsole.systemInstall();
+        System.out.println("SONO QUA" + getState());
 
         while (true) {
             while (getState() == State.NOT_MY_TURN) {

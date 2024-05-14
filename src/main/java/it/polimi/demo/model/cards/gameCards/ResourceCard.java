@@ -1,5 +1,6 @@
 package it.polimi.demo.model.cards.gameCards;
 
+import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.interfaces.ResourceCardIC;
 import it.polimi.demo.model.board.BoardCellCoordinate;
 import it.polimi.demo.model.board.Corner;
@@ -107,13 +108,23 @@ public class ResourceCard extends Card implements ResourceCardIC {
         Corner[][] corners_back = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                corners_back[i][j] = new Corner(new BoardCellCoordinate(i, j), this);
+                corners_back[i][j] = new Corner();
                 corners_back[i][j].setEmpty();
                 corners_back[i][j].is_visible = true;
+
             }
         }
+        corners_back[0][0].setCoordinate(Coordinate.NW);
+        corners_back[0][1].setCoordinate(Coordinate.NE);
+        corners_back[1][1].setCoordinate(Coordinate.SE);
+        corners_back[1][0].setCoordinate(Coordinate.SW);
         // We set orientation as Orientation.BACK in order to identify it easily.
-        return new ResourceCard(super.id, Orientation.BACK, this.color, this.points, corners_back);
+        ResourceCard card = new ResourceCard(super.id, Orientation.BACK, this.color, 0, corners_back);
+        corners_back[0][0].setReference_card(card);
+        corners_back[0][1].setReference_card(card);
+        corners_back[1][1].setReference_card(card);
+        corners_back[1][0].setReference_card(card);
+        return card;
     }
 
 

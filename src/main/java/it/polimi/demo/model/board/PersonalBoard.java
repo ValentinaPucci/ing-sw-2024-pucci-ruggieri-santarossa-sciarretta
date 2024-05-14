@@ -410,6 +410,7 @@ public class PersonalBoard {
      * @return true iff the planed move is doable
      */
     public boolean subMatrixCellChecker(int i, int j) {
+
         for (int k = 0; k < 2; k++) {
             for (int h = 0; h < 2; h++) {
                 if (board[i + k][j + h].is_full) {
@@ -503,17 +504,21 @@ public class PersonalBoard {
 
         Corner corner_aux = game_card.getCornerAtNE();
 
+
         if (!corner_aux.is_visible)
             throw new IllegalMoveException();
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
+
+
         /**
          * i + 1 is a technicality: the checker starts always
          * form the position (0, 0) of the submatrix 2 x 2 it is
          * analyzing.
          */
+
         if (!subMatrixCellChecker(i - 1, j))
             throw new IllegalMoveException();
 
