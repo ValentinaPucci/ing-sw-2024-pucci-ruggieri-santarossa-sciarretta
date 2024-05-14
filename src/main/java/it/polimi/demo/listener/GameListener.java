@@ -27,7 +27,6 @@ public interface GameListener extends Listener {
      */
     void gameStarted() throws RemoteException;
 
-
     /**
      * This method is invoked when a player joins the game.
      */

@@ -17,6 +17,7 @@ import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.model.interfaces.GameModelInterface;
 import it.polimi.demo.model.interfaces.PlayerIC;
+import it.polimi.demo.view.GameView;
 import it.polimi.demo.view.PlayerDetails;
 
 import java.io.Serializable;
@@ -408,6 +409,7 @@ public class GameModel implements GameModelInterface, Serializable {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
+        notifyListeners(listeners, GameListener::modelChanged);
     }
 
     /**

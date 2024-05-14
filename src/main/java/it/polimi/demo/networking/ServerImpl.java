@@ -138,7 +138,7 @@ public class ServerImpl implements Server, GameListener {
             // READY_TO_START --> FIRST_ROUND
             game_controller.gameFlow();
             // todo: there could be a problem of concurrency
-            client.modelChanged(new GameView(model, nickname));
+            // client.modelChanged(new GameView(model, nickname));
         }
     }
 
@@ -341,6 +341,7 @@ public class ServerImpl implements Server, GameListener {
 
     @Override
     public void modelChanged() throws RemoteException {
+
         this.client.modelChanged(new GameView(this.model, this.nickname));
 
         // If the game is paused, it will be automatically ended after a certain amount of time.
