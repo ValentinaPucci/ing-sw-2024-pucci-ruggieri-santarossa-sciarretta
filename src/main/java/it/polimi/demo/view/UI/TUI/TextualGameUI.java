@@ -1,10 +1,12 @@
 package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.listener.UIListener;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
+import it.polimi.demo.model.enumerations.Resource;
 import it.polimi.demo.view.UI.GameUI;
 import it.polimi.demo.view.GameView;
 import org.fusesource.jansi.Ansi;
@@ -236,4 +238,22 @@ public class TextualGameUI extends GameUI {
         System.out.println(ansi().fg(Ansi.Color.BLUE).a("\nCurrent COMMON BOARD:").reset());
         //TODO: to implement
     }
+
+    private void showPlayerHand(ArrayList<ResourceCard> player_hand){
+        for(int i = 0; i < 3; i++){
+            if (player_hand.get(i) instanceof GoldCard)
+                showGoldCard((GoldCard)player_hand.get(i));
+            else
+                showResourceCard(player_hand.get(i));
+        }
+    }
+
+    private void showResourceCard(ResourceCard card){
+        TuiCardGraphics.showResourceCard(card);
+    }
+
+    private void showGoldCard(GoldCard card){
+        TuiCardGraphics.showGoldCard(card);
+    }
+
 }
