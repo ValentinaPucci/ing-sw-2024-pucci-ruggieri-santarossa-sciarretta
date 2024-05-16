@@ -45,10 +45,6 @@ public class CommonBoard implements CommonBoardIC, Serializable {
      * Board initializer
      */
     public void initializeBoard() {
-
-        for (int i = 0; i <= 29; i++) {
-            board_nodes[i] = new CommonBoardNode(i);
-        }
         setInitialPosition();
         // Populate the table with cards from the decks
         for (int i = 0; i < 2; i++) {
@@ -223,6 +219,9 @@ public class CommonBoard implements CommonBoardIC, Serializable {
     }
 
     public void setInitialPosition() {
+        for (int i = 0; i <= 29; i++) {
+            board_nodes[i] = new CommonBoardNode(i);
+        }
         for (int i = 0; i < getPlayerCount(); i++) {
             board_nodes[0].setPlayer(i, true);
         }
