@@ -309,21 +309,21 @@ public class TuiCardGraphics {
                 }
             }
             if(gold_card.getMushroomRequired() != 0)
-                System.out.println("Mushroom required:" + gold_card.getMushroomRequired());
+                System.out.println("\nMushroom required:" + gold_card.getMushroomRequired());
             if(gold_card.getLeafRequired() != 0)
-                System.out.println("Leaf required:" + gold_card.getLeafRequired());
+                System.out.println("\nLeaf required:" + gold_card.getLeafRequired());
             if(gold_card.getButterflyRequired() != 0)
-                System.out.println("Butterfly required:" + gold_card.getButterflyRequired());
+                System.out.println("\nButterfly required:" + gold_card.getButterflyRequired());
             if(gold_card.getWolfRequired() != 0)
-                System.out.println("Mushroom required:" + gold_card.getWolfRequired());
+                System.out.println("\nMushroom required:" + gold_card.getWolfRequired());
             if(gold_card.getIsCornerCoverageRequired())
-                System.out.println("You earn 2 points for every corner that this card covers.");
+                System.out.println("\nYou earn 2 points for every corner that this card covers.");
             if(gold_card.getIsFeatherRequired())
-                System.out.println("You earn a points for every feather present on you personal board.");
+                System.out.println("\nYou earn a points for every feather present on you personal board.");
             if(gold_card.getIsPotionRequired())
-                System.out.println("You earn a points for every potion present on you personal board.");
+                System.out.println("\nYou earn a points for every potion present on you personal board.");
             if(gold_card.getIsParchmentRequired())
-                System.out.println("You earn a points for every parchment present on you personal board.");
+                System.out.println("\nYou earn a points for every parchment present on you personal board.");
 
             TuiCardGraphics graphic_card = new TuiCardGraphics(corners_string.get(0), corners_string.get(1), corners_string.get(2), corners_string.get(3), gold_card.getPoints());
             graphic_card.printCard(graphic_color);

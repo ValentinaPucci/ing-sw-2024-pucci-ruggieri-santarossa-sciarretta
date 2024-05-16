@@ -102,4 +102,8 @@ public class GameView implements Serializable {
     public List<PlayerDetails> getPlayerDetails(){
         return playersData;
     }
+
+    public CommonBoard getCommonBoard() {
+        return common_board;
+    }
 }
