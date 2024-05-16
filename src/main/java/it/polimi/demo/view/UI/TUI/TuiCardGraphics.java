@@ -570,7 +570,6 @@ public class TuiCardGraphics {
 //        gold_card.getCornerAtSE().is_visible = false;
 //        gold_card.setCornerCoverageRequired();
 //        showGoldCard(gold_card);
-
 //        ConcreteDeck deck_starter = new ConcreteDeck("Starter");
 //        for (int i = 0; i < 12; i++) {
 //            StarterCard starterCard = (StarterCard) deck_starter.pop();
