@@ -1,5 +1,6 @@
 package it.polimi.demo.model.interfaces;
 
+import it.polimi.demo.model.board.Cell;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
@@ -164,5 +165,5 @@ public interface PersonalBoardIC {
     int getNumItem(Item item);
 
 
-
+    Cell[][] getBoard();
 }
