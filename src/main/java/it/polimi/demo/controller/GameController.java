@@ -17,7 +17,6 @@ import java.rmi.RemoteException;
 import java.util.*;
 
 import static it.polimi.demo.listener.Listener.notifyListeners;
-import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 public class GameController implements GameControllerInterface, Serializable {
 
@@ -54,6 +53,7 @@ public class GameController implements GameControllerInterface, Serializable {
                     model.setStatus(GameStatus.READY_TO_START);
             }
             case READY_TO_START -> {
+                // System.out.println("Game is ready to start");
                 model.setStatus(GameStatus.FIRST_ROUND);
             }
             case FIRST_ROUND -> {
@@ -325,14 +325,6 @@ public class GameController implements GameControllerInterface, Serializable {
     }
 
     @Override
-    public void startIfFull() {
-        if (model.getAllPlayers().size() == model.getNumPlayersToPlay()) {
-            notifyListeners(model.getListeners(), GameListener::gameStarted);
-            this.startGame();
-        }
-    }
-
-    @Override
     public void setError(String error){
         this.model.setErrorMessage(error);
     }
@@ -400,17 +392,6 @@ public class GameController implements GameControllerInterface, Serializable {
 
     // Section: Overrides
 
-    /**
-     * Set the @param p player ready to start
-     * When all the players are ready to start, the game starts (game status changes to running)
-     *
-     * @param nickname Player to set has ready
-     */
-    @Override
-    public synchronized void setPlayerAsReadyToStart(String nickname) {
-        model.setPlayerAsReadyToStart(getPlayerEntity(nickname));
-    }
-
     @Override
     public synchronized void setPlayerAsConnected(Player p) {
         model.setPlayerAsConnected(p);
@@ -427,14 +408,25 @@ public class GameController implements GameControllerInterface, Serializable {
 
     // ***************************************** IMPORTANT *****************************************
 
+    @Override
+    public void startIfFull() throws GameEndedException, RemoteException {
+        if (model.getAllPlayers().size() == model.getNumPlayersToPlay()) {
+            this.startGame();
+        }
+    }
+
     /**
      * Start the game if it's ready
      */
     @Override
-    public void startGame() {
+    public void startGame() throws GameEndedException, RemoteException {
         System.out.println("Game " + this.model.getGameId() + " is starting...");
         extractFirstPlayerToPlay();
         model.initializeGame();
+        // WAIT --> READY_TO_START
+        gameFlow();
+        // READY_TO_START --> FIRST_ROUND
+        gameFlow();
     }
 
     //***********************************************************************************************
@@ -474,6 +466,7 @@ public class GameController implements GameControllerInterface, Serializable {
     /**
      * Re-orders the players lists and sets the first player in both lists
      */
+    // todo: check if it's correct
     private void extractFirstPlayerToPlay() {
 
         Player first_player = getPlayers().get(random.nextInt(getPlayers().size()));
@@ -535,17 +528,17 @@ public class GameController implements GameControllerInterface, Serializable {
         try {
             if (orientation == Orientation.FRONT) {
                 System.out.println("FRONT PLACING");
-                if(p.getChosenGameCard() instanceof GoldCard) {
+                if (p.getChosenGameCard() instanceof GoldCard) {
                     model.placeCard((GoldCard) p.getChosenGameCard(), p, x, y);
 //                    System.out.println("Gold Placing");
 //                    System.out.println("Personal board of: " + p.getNickname());
                     p.getPersonalBoard().printBoardIDs();
-                }else {
+                } else {
 //                    System.out.println("Resource placing");
 //                    System.out.println("Personal board of: " + p.getNickname());
                     model.placeCard(p.getChosenGameCard(), p, x, y);
                 }
-            }else{
+            } else {
                 System.out.println("BACK PLACING, doesn't matter the card type");
                 model.placeCard(p.getChosenGameCard().getBack(), p, x, y);
             }

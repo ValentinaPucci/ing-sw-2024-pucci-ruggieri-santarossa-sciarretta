@@ -30,7 +30,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
 public class ServerImpl implements Server, GameListener {
@@ -132,11 +131,11 @@ public class ServerImpl implements Server, GameListener {
             model.addListener(this);
             playerJoinedGame();
             // WAIT --> READY_TO_START
-            game_controller.gameFlow();
+            // game_controller.gameFlow();
             // Start the game if it is full
             game_controller.startIfFull();
             // READY_TO_START --> FIRST_ROUND
-            game_controller.gameFlow();
+            // game_controller.gameFlow();
             // todo: there could be a problem of concurrency
             // client.modelChanged(new GameView(model, nickname));
         }
@@ -345,9 +344,9 @@ public class ServerImpl implements Server, GameListener {
         this.client.modelChanged(new GameView(this.model, this.nickname));
 
         // If the game is paused, it will be automatically ended after a certain amount of time.
-        if(this.model.isPaused()){
+        if (this.model.isPaused()) {
             scheduler.schedule(() -> {
-                if(this.model.isPaused()){
+                if (this.model.isPaused()) {
                     System.out.println("Game " + this.model.getGameId() + " has been paused for too long. It will be ended.");
 
                     //TODO: adjust walkover ---> executor.submit(() -> this.controller.walkover());

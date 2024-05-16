@@ -5,6 +5,7 @@ import it.polimi.demo.model.*;
 import it.polimi.demo.*;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.IllegalMoveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MainControllerTest {
 
     @Test
-    public void createGameTest() throws RemoteException {
+    public void createGameTest() throws RemoteException, GameEndedException {
         MainController mainController = new MainController();
         GameListener lis = new GameListener() {
             @Override

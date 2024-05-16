@@ -6,7 +6,6 @@ import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
-import it.polimi.demo.model.*;
 
 import java.util.List;
 
@@ -38,11 +37,15 @@ public interface PlayerIC {
      */
     StarterCard getStarterCard();
 
+    List<StarterCard> getStarterCardToChose();
+
     /**
      * This method is used to get the ObjectiveCard that the player chose
      * @return chosen_objective
      */
     ObjectiveCard getChosenObjectiveCard();
+
+    List<ObjectiveCard> getSecretObjectiveCards();
 
     /**
      * set the secret objective at the start of the game. Then, the player
