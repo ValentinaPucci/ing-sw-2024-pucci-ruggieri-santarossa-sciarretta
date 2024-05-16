@@ -2,13 +2,35 @@ package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.CommonBoardNode;
+import it.polimi.demo.model.cards.Card;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 
 public class TuiCommonBoardGraphics {
 
     public static void showCommonBoard(CommonBoard common_board) {
         int[][] grid = createGrid(common_board);
         printGridWithPlayers(grid, common_board);
+        printCommonCards(common_board);
     }
+
+//     table_cards[0][0] = resource
+//     table_cards[0][1] = resource
+//     table_cards[1][0] = gold
+//     table_cards[1][1] = gold
+//     table_cards[0][1] = resource
+    public static void printCommonCards(CommonBoard common_board){
+        Card[][] table_cards =  common_board.getTableCards();
+        TuiCardGraphics.showResourceCard((ResourceCard) table_cards[0][0]);
+        TuiCardGraphics.showResourceCard((ResourceCard) table_cards[0][1]);
+        TuiCardGraphics.showGoldCard((GoldCard) table_cards[1][0]);
+        TuiCardGraphics.showGoldCard((GoldCard) table_cards[1][1]);
+        //TODO: show objective card
+        //TuiCardGraphics.showObjectiveCard((ObjectiveCard) table_cards[2][0]);
+        //TuiCardGraphics.showObjectiveCard((ObjectiveCard) table_cards[2][1]);
+    }
+
 
 
     public static void printGridWithPlayers(int[][] grid, CommonBoard common_board) {
@@ -93,6 +115,8 @@ public class TuiCommonBoardGraphics {
 
         common_board.setPlayerCount(3);
         common_board.setInitialPosition();
+        common_board.initializeBoard();
+
         showCommonBoard(common_board);
     }
 }
