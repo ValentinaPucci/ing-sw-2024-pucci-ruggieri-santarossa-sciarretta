@@ -101,7 +101,7 @@ public class TextualGameUI extends GameUI {
             switch(current_status) {
                 case FIRST_ROUND:
                     System.out.println("Sono in executeMyTurn ed è il FIRST_ROUND");
-                    this.showStarterCard();
+                    // this.showStarterCard();
                     System.out.println("Ho mostrato la mia starterCard");
                     notifyListeners(lst, UIListener -> UIListener.placeStarterCard(chooseCardOrientation()));
                     notifyListeners(lst, UIListener -> UIListener.drawCard(
@@ -146,10 +146,10 @@ public class TextualGameUI extends GameUI {
         }
     }
 
-    private void showStarterCard() {
-        StarterCard starter_card = lastGameView.getPersonalStarterCard();
-        System.out.println("These are the details of your starter card:\n " + starter_card.toString());
-    }
+//    private void showStarterCard() {
+//        StarterCard starter_card = lastGameView.getPersonalStarterCard();
+//        System.out.println("These are the details of your starter card:\n " + starter_card.toString());
+//    }
 
     public int askIndex(String message) {
         Scanner s = new Scanner(System.in);
