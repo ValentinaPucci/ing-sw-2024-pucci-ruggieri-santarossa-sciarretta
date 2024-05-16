@@ -4,6 +4,7 @@ import it.polimi.demo.model.board.Cell;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.enumerations.Color;
 import it.polimi.demo.model.enumerations.Item;
 import it.polimi.demo.model.enumerations.Orientation;
@@ -43,15 +44,30 @@ public class TuiPersonalBoardGraphics {
 
         GoldCard gold_card_1 = new GoldCard( 54, Orientation.FRONT, Color.PURPLE);
         gold_card.getCornerAtNW().setEmpty();
-        gold_card.getCornerAtNW().is_visible = true;
+        gold_card.getCornerAtNW().is_visible = false;
         gold_card.getCornerAtSW().setCornerItem(Item.POTION);
         gold_card.getCornerAtSE().is_visible = false;
         gold_card.setCornerCoverageRequired();
 
+        StarterCard starterCard = new StarterCard(86, Orientation.BACK);
+        starterCard.getCornerAtNW().setEmpty();
+        gold_card.getCornerAtNW().is_visible = false;
+        gold_card.getCornerAtSW().setCornerResource(Resource.LEAF);
+        gold_card.getCornerAtSE().is_visible = false;
+
+        personal_board.bruteForcePlaceCardSE(starterCard, 500, 500);
+
         personal_board.bruteForcePlaceCardSE(resource_card, 491, 491);
         personal_board.bruteForcePlaceCardSE(gold_card, 499, 499);
-        personal_board.bruteForcePlaceCardSE(resource_card_1, 500, 500);
+        personal_board.bruteForcePlaceCardSE(resource_card_1, 502, 502);
         personal_board.bruteForcePlaceCardSE(gold_card_1, 498, 498);
+
+
+
+
+
+
+
 
 
         //showObjectsCount(personal_board);
@@ -63,11 +79,14 @@ public class TuiPersonalBoardGraphics {
         int last_column = 510;
 
 
-
         for (int i = first_row; i <= last_row; i++) {
             System.out.print("|");
             for (int j = first_column; j <= last_column; j++) {
-                if (matrix[i][j].getCornerFromCell() != null && matrix[i][j].getCornerFromCell().reference_card != null) {
+                if (matrix[i][j].getCornerFromCell() != null && matrix[i][j].getCornerFromCell().reference_card == null){
+                    System.out.print(" S ");
+                }
+
+                else if (matrix[i][j].getCornerFromCell() != null && matrix[i][j].getCornerFromCell().reference_card != null) {
                     if(matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.RED)){
                         System.out.print(ANSI_RED + matrix[i][j].getCornerFromCell().reference_card.getId()+ANSI_RST);
 
@@ -79,7 +98,9 @@ public class TuiPersonalBoardGraphics {
 
                     }else if(matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.PURPLE)){
                         System.out.print(ANSI_PURPLE + matrix[i][j].getCornerFromCell().reference_card.getId()+ANSI_RST);
+
                     }
+
 
                 }else {
                     System.out.print("   ");
