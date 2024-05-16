@@ -92,6 +92,8 @@ public class TuiCardGraphics {
         this.front_resource2 = front_resource2;
         this.front_resource3 = front_resource3;
     }
+
+    // Normal objective card constructor
     public TuiCardGraphics(String el1, String el2, String el3, int points ){
         this.el1 = el1;
         this.el2 = el2;
