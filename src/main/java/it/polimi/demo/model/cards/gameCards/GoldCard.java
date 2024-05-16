@@ -105,6 +105,10 @@ public class GoldCard extends ResourceCard {
 
     // TODO: override updatePoints to adapt it to this class
 
+    public void setCornerCoverageRequired(){
+        this.isCornerCoverageRequired = true;
+    }
+
 }
 
 
