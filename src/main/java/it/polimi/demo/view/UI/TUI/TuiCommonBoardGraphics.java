@@ -1,6 +1,6 @@
 package it.polimi.demo.view.UI.TUI;
 
-public class CommonGraphics {
+public class TuiCommonBoardGraphics {
 
 
     public static void printGridWithPlayers(int[][] grid, char[][] players) {
