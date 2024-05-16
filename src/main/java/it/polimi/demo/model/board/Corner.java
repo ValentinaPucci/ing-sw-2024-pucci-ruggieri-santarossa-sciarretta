@@ -134,7 +134,7 @@ public class Corner implements Serializable {
     public String toString() {
         return "Corner{" +
                 "is_visible=" + is_visible +
-                ", resource=" + (resource.isPresent() ? resource.get().name() : "null") +
+               // ", resource=" + (resource.isPresent() ? resource.get().name() : "null") +
                 '}';
     }
 

@@ -8,6 +8,7 @@ import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.enumerations.Resource;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class StarterCard extends Card {
@@ -118,35 +119,32 @@ public class StarterCard extends Card {
     }
 
 
-    //TODO: LOLLOOOOOOOOOOO
-//    @Override
 //    public Optional<Resource> getFront_resource1() {
-//        return Optional.empty();
+//        return Optional.of(front_resource1);
 //    }
-//
-//    @Override
 //    public Optional<Resource> getFront_resource2() {
 //        return Optional.empty();
 //    }
-//
-//    @Override
 //    public Optional<Resource> getFront_resource3() {
 //        return Optional.empty();
 //    }
-//
-//    @Override
-//    public Orientation getOrientation() {
-//        return null;
-//    }
 
+    public Orientation getOrientation() {
+        return orientation;
+    }
+
+    @Override
     public String toString() {
-
         return "StarterCard{" +
                 "id=" + id +
                 ", orientation=" + orientation +
                 ", front_resource1=" + front_resource1.orElse(null) +
                 ", front_resource2=" + front_resource2.orElse(null) +
                 ", front_resource3=" + front_resource3.orElse(null) +
+                ", cornerNW=" + getCornerAtNW().toString() +
+                ", cornerNE=" + getCornerAtNE().toString() +
+                ", cornerSW=" + getCornerAtSW().toString() +
+                ", cornerSE=" + getCornerAtSE().toString() +
                 '}';
     }
 
