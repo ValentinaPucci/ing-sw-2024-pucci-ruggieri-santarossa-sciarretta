@@ -235,8 +235,7 @@ public class TextualGameUI extends GameUI {
     }
 
     private void showCommonBoard(GameView gameView) {
-        System.out.println(ansi().fg(Ansi.Color.BLUE).a("\nCurrent COMMON BOARD:").reset());
-        //TODO: to implement
+        TuiCommonBoardGraphics.showCommonBoard(gameView.getCommonBoard());
     }
 
     private void showPlayerHand(ArrayList<ResourceCard> player_hand){
