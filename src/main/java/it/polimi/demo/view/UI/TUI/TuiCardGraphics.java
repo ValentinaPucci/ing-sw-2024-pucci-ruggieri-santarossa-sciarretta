@@ -5,6 +5,7 @@ import it.polimi.demo.model.board.Corner;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
+import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.enumerations.Color;
 import it.polimi.demo.model.enumerations.Item;
 import it.polimi.demo.model.enumerations.Orientation;
@@ -60,12 +61,13 @@ public class TuiCardGraphics {
             "│               │",
             "╰───────────────╯"
     };
+    private int objective_pattern_id;
 
     private static final String[] OBJECTIVE_CARD_GRAPHICS = {
             "╭──────────────╮",
             "│    Points: %d │",
-            "│              │",
-            "│ %s   %s   %s │",
+            "│      %s      │",
+            "│ %s        %s │",
             "╰───────────────╯"
     };
     private String el1;
@@ -99,6 +101,11 @@ public class TuiCardGraphics {
         this.el2 = el2;
         this.el3 = el3;
         this.points = points;
+    }
+
+    public TuiCardGraphics(int id, int points){
+        this.points = points;
+        this.objective_pattern_id = id;
     }
 
     //Gold Card creation
@@ -161,9 +168,9 @@ public class TuiCardGraphics {
                 System.out.println(String.format(OBJECTIVE_CARD_GRAPHICS[i], points));
             }
             else if(i== 3){
-                System.out.println(String.format(OBJECTIVE_CARD_GRAPHICS[i], el1, el2, el3));
+                System.out.println(String.format(OBJECTIVE_CARD_GRAPHICS[i], el2, el3));
             } else{
-                System.out.println(OBJECTIVE_CARD_GRAPHICS[i]);
+                System.out.println(String.format(OBJECTIVE_CARD_GRAPHICS[i], el1));
             }
         }
         System.out.println(ANSI_RESET + CARD_GRAPHICS[4] + ANSI_RESET);
@@ -171,26 +178,97 @@ public class TuiCardGraphics {
 
     }
 
-    public void printIncrDiagPatternObjectiveCard(Color color){
+    public void printIncrDiagPatternObjectiveCard(String color){
         System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[0] + ANSI_RESET);
         for (int i = 1; i < STARTER_CARD_GRAPHICS.length - 1; i++) {
             if (i == 1){
-                String row = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[1], points);
-                System.out.println(ANSI_RESET + row.substring(0,6)+ color + row.substring(6,7));
+                String row = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[i], points);
+                System.out.println(ANSI_RESET + row.substring(0,9)+ color + row.substring(10,13) + ANSI_RESET + row.substring(11,16));
             }
             else if(i== 3){
-                String row3 = String.format(STARTER_CARD_GRAPHICS[i], corner3, front_resource3, corner4);
-
-                System.out.println(ANSI_RESET  + row3.substring(0,4) + Color + row3.substring(4,7) + ANSI_RESET + row3.substring(8,10) + Color + row3.substring(10,14) + Color+ ANSI_RESET + row3.substring(14,18) + ANSI_RESET);
+                String row2 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[i], points);
+                System.out.println(ANSI_RESET + row2.substring(0,3)+ color + row2.substring(3,6) + ANSI_RESET + row2.substring(6,17));
             } else if (i == 2){
-                String row2 = String.format(STARTER_CARD_GRAPHICS[i], front_resource2);
-                System.out.println(ANSI_RESET  + row2.substring(0,2) + Color+ row2.substring(2,7) + ANSI_RESET + row2.substring(8,10) + Color + row2.substring(10,16) + ANSI_RESET + row2.substring(16,18) + ANSI_RESET);
+                String row3 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[i], points);
+                System.out.println(ANSI_RESET + row3.substring(0,6)+ color + row3.substring(6,9) + ANSI_RESET + row3.substring(10,18));
             }
         }
         System.out.println(ANSI_RESET + STARTER_CARD_GRAPHICS[4] + ANSI_RESET);
         System.out.println("\n");
 
     }
+
+    public void printDecrDiagPatternObjectiveCard(String color){
+        System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[0] + ANSI_RESET);
+        for (int i = 1; i < STARTER_CARD_GRAPHICS.length - 1; i++) {
+            if (i == 1){
+                String row = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[i], points);
+                System.out.println(ANSI_RESET + row.substring(0,3)+ color + row.substring(3,6) + ANSI_RESET + row.substring(5,16));
+            }
+            else if(i== 3){
+                String row2 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[i], points);
+                System.out.println(ANSI_RESET + row2.substring(0,9)+ color + row2.substring(10,13) + ANSI_RESET + row2.substring(12,17));
+            } else if (i == 2){
+                String row3 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[i], points);
+                System.out.println(ANSI_RESET + row3.substring(0,6)+ color + row3.substring(6,9) + ANSI_RESET + row3.substring(10,18));
+            }
+        }
+        System.out.println(ANSI_RESET + STARTER_CARD_GRAPHICS[4] + ANSI_RESET);
+        System.out.println("\n");
+
+    }
+
+
+    // Geberal method to print all objective cards
+    public void printPatternObjectivecard(){
+         if(objective_pattern_id == 87){
+                printIncrDiagPatternObjectiveCard(ANSI_RED_BACKGROUND);
+         }else if(objective_pattern_id == 88){
+             printDecrDiagPatternObjectiveCard(ANSI_GREEN_BACKGROUND);
+         }else if( objective_pattern_id == 89){
+             printIncrDiagPatternObjectiveCard(ANSI_CYAN_BACKGROUND);
+         }else if(objective_pattern_id == 90){
+             printDecrDiagPatternObjectiveCard(ANSI_PURPLE_BACKGROUND);
+         }else if(objective_pattern_id == 91){
+             System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[0]+ ANSI_RESET);
+             String row1 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[1], points);
+             System.out.println(ANSI_RESET + row1.substring(0,3) + ANSI_RED_BACKGROUND + row1.substring(3, 6) + ANSI_RESET + row1.substring(5,16));
+             String row2 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[2]);
+             System.out.println(ANSI_RESET + row2.substring(0,3) + ANSI_RED_BACKGROUND + row2.substring(3, 6) + ANSI_RESET + row2.substring(7,18));
+             String row3 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[3]);
+             System.out.println(ANSI_RESET + row3.substring(0,6)+ ANSI_GREEN_BACKGROUND + row3.substring(6, 9)+ ANSI_RESET + row3.substring(9, 17));
+             System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[4]+ ANSI_RESET);
+         }else if(objective_pattern_id == 92){
+             System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[0]+ ANSI_RESET);
+             String row1 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[1], points);
+             System.out.println(ANSI_RESET + row1.substring(0,6) + ANSI_GREEN_BACKGROUND + row1.substring(6, 9) + ANSI_RESET + row1.substring(8,16));
+             String row2 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[2]);
+             System.out.println(ANSI_RESET + row2.substring(0,6) + ANSI_GREEN_BACKGROUND + row2.substring(6, 9) + ANSI_RESET + row2.substring(10,18));
+             String row3 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[3]);
+             System.out.println(ANSI_RESET + row3.substring(0,3)+ ANSI_PURPLE_BACKGROUND + row3.substring(3, 6)+ ANSI_RESET + row3.substring(6, 17));
+             System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[4]+ ANSI_RESET);
+         }else if(objective_pattern_id == 93){
+             System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[0]+ ANSI_RESET);
+             String row1 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[1], points);
+             System.out.println(ANSI_RESET + row1.substring(0,6) + ANSI_RED_BACKGROUND + row1.substring(6, 9) + ANSI_RESET + row1.substring(8,16));
+             String row2 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[2]);
+             System.out.println(ANSI_RESET + row2.substring(0,3) + ANSI_CYAN_BACKGROUND + row2.substring(4, 7) + ANSI_RESET + row2.substring(7,18));
+             String row3 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[3]);
+             System.out.println(ANSI_RESET + row3.substring(0,3)+ ANSI_CYAN_BACKGROUND + row3.substring(3, 6)+ ANSI_RESET + row3.substring(6, 17));
+             System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[4]+ ANSI_RESET);
+         }else if(objective_pattern_id == 94){
+             System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[0]+ ANSI_RESET);
+             String row1 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[1], points);
+             System.out.println(ANSI_RESET + row1.substring(0,3) + ANSI_CYAN_BACKGROUND + row1.substring(3, 6) + ANSI_RESET + row1.substring(5,16));
+             String row2 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[2]);
+             System.out.println(ANSI_RESET + row2.substring(0,6) + ANSI_PURPLE_BACKGROUND + row2.substring(6, 9) + ANSI_RESET + row2.substring(10,18));
+             String row3 = String.format(PATTERN_OBJECTIVE_CARD_GRAPHICS[3]);
+             System.out.println(ANSI_RESET + row3.substring(0,6)+ ANSI_PURPLE_BACKGROUND + row3.substring(6, 9)+ ANSI_RESET + row3.substring(9, 17));
+             System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[4]+ ANSI_RESET);
+         }
+    }
+
+
 
     public static void showResourceCard(ResourceCard resource_card){
 
@@ -506,6 +584,7 @@ public class TuiCardGraphics {
         TuiCardGraphics normal_objective_card = new TuiCardGraphics("MU", "MU", "MU", 2);
         normal_objective_card.printObjectiveCard();
 
-        TuiCardGraphics ob_card = new TuiCardGraphics()
+        TuiCardGraphics ob_card = new TuiCardGraphics(91, 3);
+        ob_card.printPatternObjectivecard();
     }
 }
