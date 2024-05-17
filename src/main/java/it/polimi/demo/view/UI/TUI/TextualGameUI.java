@@ -1,10 +1,12 @@
 package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.listener.UIListener;
+import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
+import it.polimi.demo.model.enumerations.Resource;
 import it.polimi.demo.view.UI.GameUI;
 import it.polimi.demo.view.GameView;
 import org.fusesource.jansi.Ansi;
@@ -66,25 +68,16 @@ public class TextualGameUI extends GameUI {
      * with the placement of the card on the board.
      */
     private void executeMyTurn() {
-        if (getState() == State.MY_TURN) {
+        while (getState() == State.MY_TURN) {
             System.out.println("Sono in executeMyTurn ed è il MYTURN");
             GameStatus current_status = lastGameView.getStatus();
-            System.out.println("il current status è: " + current_status );
-            switch (current_status) {
+            System.out.println("il current status è: "+ current_status );
+            switch(current_status) {
                 case FIRST_ROUND:
                     System.out.println("Sono in executeMyTurn ed è il FIRST_ROUND");
-                    // this.showStarterCard();
+                    this.showStarterCard();
                     System.out.println("Ho mostrato la mia starterCard");
                     notifyListeners(lst, UIListener -> UIListener.placeStarterCard(chooseCardOrientation()));
-                    break;
-
-                case RUNNING, SECOND_LAST_ROUND:
-                    notifyListeners(lst, UIListener -> UIListener.chooseCard(
-                            askIndex("Select the index of the card you want to play")));
-                    notifyListeners(lst, UIListener -> UIListener.placeCard(
-                            askIndex("Select the x coordinate of the card you want to place"),
-                            askIndex("Select the y coordinate of the card you want to place"),
-                            chooseCardOrientation()));
                     notifyListeners(lst, UIListener -> UIListener.drawCard(
                             askIndex("""
                         Select the index of the card you want to draw;\s
@@ -94,25 +87,57 @@ public class TextualGameUI extends GameUI {
                          4: Gold Deck
                          5: First Gold Card on the table
                          6: Second Gold Card on the table""")));
+                    //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
+                    TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
                     break;
 
-                case LAST_ROUND:
+                case RUNNING, SECOND_LAST_ROUND:
+                    this.showPlayerHand(lastGameView.getPlayerHand());
                     notifyListeners(lst, UIListener -> UIListener.chooseCard(
                             askIndex("Select the index of the card you want to play")));
+                    TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
                     notifyListeners(lst, UIListener -> UIListener.placeCard(
                             askIndex("Select the x coordinate of the card you want to place"),
                             askIndex("Select the y coordinate of the card you want to place"),
                             chooseCardOrientation()));
+                    notifyListeners(lst, UIListener -> UIListener.drawCard(
+                            askIndex("""
+                        Select the index of the card you want to draw:\s
+                         1: Resource Deck
+                         2: First Resource Card on the table
+                         3: Second Resource Card on the table
+                         4: Gold Deck
+                         5: First Gold Card on the table
+                         6: Second Gold Card on the table""")));
+
+                    //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
+                    TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
+                    TuiCommonBoardGraphics.showCommonBoard(lastGameView.getCommonBoard());
+                    break;
+
+
+                case LAST_ROUND:
+                    this.showPlayerHand(lastGameView.getPlayerHand());
+                    notifyListeners(lst, UIListener -> UIListener.chooseCard(
+                            askIndex("Select the index of the card you want to play")));
+                    TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
+                    notifyListeners(lst, UIListener -> UIListener.placeCard(
+                            askIndex("Select the x coordinate of the card you want to place"),
+                            askIndex("Select the y coordinate of the card you want to place"),
+                            chooseCardOrientation()));
+                    //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
+                    TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
+                    TuiCommonBoardGraphics.showCommonBoard(lastGameView.getCommonBoard());
                     break;
             }
             setState(State.NOT_MY_TURN);
         }
     }
 
-//    private void showStarterCard() {
-//        StarterCard starter_card = lastGameView.getPersonalStarterCard();
-//        System.out.println("These are the details of your starter card:\n " + starter_card.toString());
-//    }
+    private void showStarterCard() {
+        StarterCard starter_card = lastGameView.getPersonalStarterCard();
+        TuiCardGraphics.showStarterCard(starter_card);
+    }
 
     public int askIndex(String message) {
         Scanner s = new Scanner(System.in);
@@ -199,7 +224,24 @@ public class TextualGameUI extends GameUI {
     }
 
     private void showCommonBoard(GameView gameView) {
-        System.out.println(ansi().fg(Ansi.Color.BLUE).a("\nCurrent COMMON BOARD:").reset());
-        //TODO: to implement
+        TuiCommonBoardGraphics.showCommonBoard(gameView.getCommonBoard());
     }
+
+    private void showPlayerHand(ArrayList<ResourceCard> player_hand){
+        for(int i = 0; i < 3; i++){
+            if (player_hand.get(i) instanceof GoldCard)
+                showGoldCard((GoldCard)player_hand.get(i));
+            else
+                showResourceCard(player_hand.get(i));
+        }
+    }
+
+    private void showResourceCard(ResourceCard card){
+        TuiCardGraphics.showResourceCard(card);
+    }
+
+    private void showGoldCard(GoldCard card){
+        TuiCardGraphics.showGoldCard(card);
+    }
+
 }

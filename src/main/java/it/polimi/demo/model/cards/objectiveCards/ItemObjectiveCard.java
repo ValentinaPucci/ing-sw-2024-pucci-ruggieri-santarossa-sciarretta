@@ -33,6 +33,8 @@ public class ItemObjectiveCard extends ObjectiveCard {
         }
     }
 
+
+    //TODO: è SBAGLIATO --> BISOGNA CONTROLLARE I SUOI UTILIZZI
     public Item getItemType() {
         if (num_feathers > 0)
             return Item.FEATHER;

@@ -42,8 +42,16 @@ public class ConcreteDeck implements Serializable {
         return (ResourceCard) this.deck.pop();
     }
 
+    public ResourceCard selectFirstResourceCard() {
+        return (ResourceCard) this.deck.peek();
+    }
+
     public GoldCard popGoldCard() {
         return (GoldCard) this.deck.pop();
+    }
+
+    public GoldCard selectFirstGoldCard() {
+        return (GoldCard) this.deck.peek();
     }
 
     // TODO: Implement this method in other classes.
