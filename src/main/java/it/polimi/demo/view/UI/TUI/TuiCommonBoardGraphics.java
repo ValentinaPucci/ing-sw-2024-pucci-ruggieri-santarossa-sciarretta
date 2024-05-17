@@ -1,5 +1,6 @@
 package it.polimi.demo.view.UI.TUI;
 
+import it.polimi.demo.model.ConcreteDeck;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.CommonBoardNode;
 import it.polimi.demo.model.cards.Card;
@@ -13,6 +14,7 @@ public class TuiCommonBoardGraphics {
         int[][] grid = createGrid(common_board);
         printGridWithPlayers(grid, common_board);
         printCommonCards(common_board);
+        printCommonDecks(common_board);
     }
 
 //     table_cards[0][0] = resource
@@ -21,16 +23,23 @@ public class TuiCommonBoardGraphics {
 //     table_cards[1][1] = gold
 //     table_cards[0][1] = resource
     public static void printCommonCards(CommonBoard common_board){
-        Card[][] table_cards =  common_board.getTableCards();
+        Card[][] table_cards = common_board.getTableCards();
         TuiCardGraphics.showResourceCard((ResourceCard) table_cards[0][0]);
         TuiCardGraphics.showResourceCard((ResourceCard) table_cards[0][1]);
         TuiCardGraphics.showGoldCard((GoldCard) table_cards[1][0]);
         TuiCardGraphics.showGoldCard((GoldCard) table_cards[1][1]);
-        //TODO: show objective card
-        //TuiCardGraphics.showObjectiveCard((ObjectiveCard) table_cards[2][0]);
-        //TuiCardGraphics.showObjectiveCard((ObjectiveCard) table_cards[2][1]);
+        TuiCardGraphics.showObjectiveCard((ObjectiveCard) table_cards[2][0]);
+        TuiCardGraphics.showObjectiveCard((ObjectiveCard) table_cards[2][1]);
     }
 
+    public static void printCommonDecks(CommonBoard common_board){
+        ConcreteDeck objective_deck = common_board.getObjectiveConcreteDeck();
+        ConcreteDeck resource_deck = common_board.getResourceConcreteDeck();
+        ConcreteDeck gold_deck = common_board.getGoldConcreteDeck();
+
+        TuiCardGraphics.showGoldCard(gold_deck.selectFirstGoldCard());
+        TuiCardGraphics.showResourceCard(resource_deck.selectFirstResourceCard());
+    }
 
 
     public static void printGridWithPlayers(int[][] grid, CommonBoard common_board) {

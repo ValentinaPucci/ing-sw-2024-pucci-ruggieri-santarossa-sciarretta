@@ -118,6 +118,7 @@ public class TextualGameUI extends GameUI {
                     break;
 
                 case RUNNING, SECOND_LAST_ROUND:
+                    this.showPlayerHand(lastGameView.getPlayerHand());
                     notifyListeners(lst, UIListener -> UIListener.chooseCard(
                             askIndex("Select the index of the card you want to play")));
                     notifyListeners(lst, UIListener -> UIListener.placeCard(
@@ -150,7 +151,7 @@ public class TextualGameUI extends GameUI {
 
     private void showStarterCard() {
         StarterCard starter_card = lastGameView.getPersonalStarterCard();
-        System.out.println("These are the details of your starter card:\n " + starter_card.toString());
+        TuiCardGraphics.showStarterCard(starter_card);
     }
 
     public int askIndex(String message) {
@@ -241,18 +242,10 @@ public class TextualGameUI extends GameUI {
     private void showPlayerHand(ArrayList<ResourceCard> player_hand){
         for(int i = 0; i < 3; i++){
             if (player_hand.get(i) instanceof GoldCard)
-                showGoldCard((GoldCard)player_hand.get(i));
+                TuiCardGraphics.showGoldCard((GoldCard)player_hand.get(i));
             else
-                showResourceCard(player_hand.get(i));
+                TuiCardGraphics.showResourceCard(player_hand.get(i));
         }
-    }
-
-    private void showResourceCard(ResourceCard card){
-        TuiCardGraphics.showResourceCard(card);
-    }
-
-    private void showGoldCard(GoldCard card){
-        TuiCardGraphics.showGoldCard(card);
     }
 
 }

@@ -3,6 +3,7 @@ package it.polimi.demo.view;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.PersonalBoard;
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.enumerations.GameStatus;
@@ -11,6 +12,7 @@ import it.polimi.demo.model.interfaces.PlayerIC;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ public class GameView implements Serializable {
     private final Map<Player, Integer> leaderboard;
     private final PersonalBoard personal_board;
     private final ObjectiveCard personal_objective_card;
+    private final ArrayList<ResourceCard> player_hand;
     private final StarterCard personal_starter_card;
     private final String my_nickname;
     private final List<PlayerDetails> playersData;
@@ -64,6 +67,12 @@ public class GameView implements Serializable {
                 .map(PlayerIC::getStarterCard) // Map the Optional<Player> to Optional<ChosenObjectiveCard>
                 .orElse(null); // Provide a default value if the Optional is empty
         System.out.println("sono nel costruttore di GameView 5");
+        player_hand = (ArrayList<ResourceCard>) model.getAllPlayers()
+                .stream()
+                .filter(player -> player.getNickname().equals(nickname))
+                .findFirst()
+                .map(Player::getHand)
+                .orElse(null);
         this.gameEnded = model.isEnded();
         this.gamePaused = model.isPaused();
         this.playersData = model.getPlayersDetails();
@@ -105,5 +114,9 @@ public class GameView implements Serializable {
 
     public CommonBoard getCommonBoard() {
         return common_board;
+    }
+
+    public ArrayList<ResourceCard> getPlayerHand() {
+        return player_hand;
     }
 }
