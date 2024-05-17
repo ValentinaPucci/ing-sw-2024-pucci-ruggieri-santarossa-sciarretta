@@ -33,7 +33,7 @@ public class TuiCommonBoardGraphics {
     }
 
     public static void printCommonDecks(CommonBoard common_board){
-        ConcreteDeck objective_deck = common_board.getObjectiveConcreteDeck();
+        //ConcreteDeck objective_deck = common_board.getObjectiveConcreteDeck();
         ConcreteDeck resource_deck = common_board.getResourceConcreteDeck();
         ConcreteDeck gold_deck = common_board.getGoldConcreteDeck();
 

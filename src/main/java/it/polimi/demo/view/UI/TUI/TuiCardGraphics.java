@@ -17,6 +17,12 @@ import java.util.Date;
 //TODO: place in the correct position the front_resource when there is only one, in starter card front
 // Remark: if you have to print the back of a card you have to specify it before calling this class
 
+
+// TODO x lollo da vale: voglio che nella commmon_board e nella player_hand le carte vengano stampate affiancate,
+//  nella common_board ho 2 resource (front), 2 gold (front), 2 objective (front), 1 resource (back), 1 gold (back) e le vorrei sotto alla gridWithPlayers  (reference: metodo in TuiCommonBoardGraphics linea 13)
+//  nella player_hand ho 3 carte tra resource e gold (reference: metodo in TextualGameUI linea 251)
+
+
 public class TuiCardGraphics {
 
     // Sequenze di escape ANSI per colorare il testo e lo sfondo
