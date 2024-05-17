@@ -105,7 +105,6 @@ public class TuiCommonBoardGraphics {
                 grid[i][j] = count++;
             }
         }
-
         return grid;
     }
 
@@ -121,11 +120,9 @@ public class TuiCommonBoardGraphics {
     public static void main(String[] args) {
 
         CommonBoard common_board = new CommonBoard();
-
         common_board.setPlayerCount(3);
         common_board.setInitialPosition();
         common_board.initializeBoard();
-
         showCommonBoard(common_board);
     }
 }

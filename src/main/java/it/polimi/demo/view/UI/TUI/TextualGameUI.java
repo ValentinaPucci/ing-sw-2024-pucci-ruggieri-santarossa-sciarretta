@@ -115,6 +115,8 @@ public class TextualGameUI extends GameUI {
                          4: Gold Deck
                          5: First Gold Card on the table
                          6: Second Gold Card on the table""")));
+                    //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
+                    TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
                     break;
 
                 case RUNNING, SECOND_LAST_ROUND:
@@ -135,7 +137,12 @@ public class TextualGameUI extends GameUI {
                          4: Gold Deck
                          5: First Gold Card on the table
                          6: Second Gold Card on the table""")));
+
+                    //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
+                    TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
+                    TuiCommonBoardGraphics.showCommonBoard(lastGameView.getCommonBoard());
                     break;
+
 
                 case LAST_ROUND:
                     this.showPlayerHand(lastGameView.getPlayerHand());
@@ -146,6 +153,9 @@ public class TextualGameUI extends GameUI {
                             askIndex("Select the x coordinate of the card you want to place"),
                             askIndex("Select the y coordinate of the card you want to place"),
                             chooseCardOrientation()));
+                    //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
+                    TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
+                    TuiCommonBoardGraphics.showCommonBoard(lastGameView.getCommonBoard());
                     break;
             }
             setState(State.NOT_MY_TURN);
@@ -235,10 +245,6 @@ public class TextualGameUI extends GameUI {
     private void clearScreen(GameView gameView) {
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
         //this.showPlayers(gameView);
-        this.showCommonBoard(gameView);
-    }
-
-    private void showCommonBoard(GameView gameView) {
         TuiCommonBoardGraphics.showCommonBoard(gameView.getCommonBoard());
     }
 
@@ -250,5 +256,4 @@ public class TextualGameUI extends GameUI {
                 TuiCardGraphics.showResourceCard(player_hand.get(i));
         }
     }
-
 }

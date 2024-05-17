@@ -137,7 +137,7 @@ public class TuiCardGraphics {
         System.out.println("\n");
 
         if (points != 0) {
-            System.out.print("Card points: " + points);
+            System.out.print("Card points: " + points + "\n");
         }
     }
 
@@ -277,7 +277,7 @@ public class TuiCardGraphics {
         }
 
         if (resource_card.orientation == Orientation.BACK) {
-            TuiCardGraphics graphic_card = new TuiCardGraphics(" ", " ", " ", " ");
+            TuiCardGraphics graphic_card = new TuiCardGraphics("  ", "  ", "  ", "  ");
             graphic_card.printCard(graphic_color);
         } else {
             ArrayList<Corner> corners = new ArrayList<>();
@@ -312,7 +312,7 @@ public class TuiCardGraphics {
                         else if (resource == Resource.MUSHROOM)
                             corners_string.add(i, "MU");
                     } else
-                        corners_string.add(i, " ");
+                        corners_string.add(i, "  ");
                 } else {
                     corners_string.add(i, "XX");
                 }
@@ -537,13 +537,13 @@ public class TuiCardGraphics {
                 TuiCardGraphics normal_objective_card = new TuiCardGraphics("FE", "PO", "PA", 3);
                 normal_objective_card.printObjectiveCard();
             } else if (num_feathers == 2) {
-                TuiCardGraphics normal_objective_card = new TuiCardGraphics("FE", "XX", "FE", 2);
+                TuiCardGraphics normal_objective_card = new TuiCardGraphics("XX", "FE", "FE", 2);
                 normal_objective_card.printObjectiveCard();
             } else if (num_parchments == 2) {
-                TuiCardGraphics normal_objective_card = new TuiCardGraphics("PA", "XX", "PA", 2);
+                TuiCardGraphics normal_objective_card = new TuiCardGraphics("XX", "PA", "PA", 2);
                 normal_objective_card.printObjectiveCard();
             } else if (num_potions == 2) {
-                TuiCardGraphics normal_objective_card = new TuiCardGraphics("PO", "XX", "PO", 2);
+                TuiCardGraphics normal_objective_card = new TuiCardGraphics("XX", "PO", "PO", 2);
                 normal_objective_card.printObjectiveCard();
             } else {
                 System.out.println("Invalid ItemObjectiveCard");
