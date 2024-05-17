@@ -116,6 +116,10 @@ public class GameView implements Serializable {
         return common_board;
     }
 
+    public PersonalBoard getPersonalBoard() {
+        return personal_board;
+    }
+
     public ArrayList<ResourceCard> getPlayerHand() {
         return player_hand;
     }

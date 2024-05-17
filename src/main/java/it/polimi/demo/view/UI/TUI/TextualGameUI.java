@@ -121,13 +121,14 @@ public class TextualGameUI extends GameUI {
                     this.showPlayerHand(lastGameView.getPlayerHand());
                     notifyListeners(lst, UIListener -> UIListener.chooseCard(
                             askIndex("Select the index of the card you want to play")));
+                    TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
                     notifyListeners(lst, UIListener -> UIListener.placeCard(
                             askIndex("Select the x coordinate of the card you want to place"),
                             askIndex("Select the y coordinate of the card you want to place"),
                             chooseCardOrientation()));
                     notifyListeners(lst, UIListener -> UIListener.drawCard(
                             askIndex("""
-                        Select the index of the card you want to draw;\s
+                        Select the index of the card you want to draw:\s
                          1: Resource Deck
                          2: First Resource Card on the table
                          3: Second Resource Card on the table
@@ -137,8 +138,10 @@ public class TextualGameUI extends GameUI {
                     break;
 
                 case LAST_ROUND:
+                    this.showPlayerHand(lastGameView.getPlayerHand());
                     notifyListeners(lst, UIListener -> UIListener.chooseCard(
                             askIndex("Select the index of the card you want to play")));
+                    TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
                     notifyListeners(lst, UIListener -> UIListener.placeCard(
                             askIndex("Select the x coordinate of the card you want to place"),
                             askIndex("Select the y coordinate of the card you want to place"),
