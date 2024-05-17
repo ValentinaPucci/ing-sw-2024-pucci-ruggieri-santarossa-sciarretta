@@ -16,7 +16,6 @@ import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.List;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**

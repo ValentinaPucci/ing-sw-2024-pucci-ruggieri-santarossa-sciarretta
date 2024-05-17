@@ -18,9 +18,9 @@ public class Player implements PlayerIC, Serializable {
     private String nickname;
     private List<ResourceCard> card_hand;
     private PersonalBoard personal_board;
-    private ObjectiveCard[] secret_objectives;
+    private List<ObjectiveCard> secret_objectives;
 
-    private StarterCard[] starter_card_to_chose;
+    private List<StarterCard> starter_card_to_chose;
     private ObjectiveCard chosen_objective;
     private StarterCard starter_card;
     private ResourceCard chosen_card;
@@ -34,8 +34,8 @@ public class Player implements PlayerIC, Serializable {
         this.nickname = nickname;
         this.card_hand = new ArrayList<>();
         this.personal_board = new PersonalBoard();
-        this.secret_objectives = new ObjectiveCard[2];
-        this.starter_card_to_chose = new StarterCard[2];
+        this.secret_objectives = new ArrayList<>();
+        this.starter_card_to_chose = new ArrayList<>();
         this.chosen_objective = null;
         this.starter_card = null;
         this.chosen_card = null;
@@ -87,7 +87,7 @@ public class Player implements PlayerIC, Serializable {
         return chosen_objective;
     }
 
-    public ObjectiveCard[] getSecretObjectiveCards() {
+    public List<ObjectiveCard> getSecretObjectiveCards() {
         return secret_objectives ;
     }
 
@@ -103,16 +103,16 @@ public class Player implements PlayerIC, Serializable {
      */
     @Override
     public void setSecretObjectives(ObjectiveCard objective1, ObjectiveCard objective2) {
-        secret_objectives[0] = objective1;
-        secret_objectives[1] = objective2;
+        secret_objectives.add(objective1);
+        secret_objectives.add(objective2);
     }
 
-    public void setStarterCardToChose(StarterCard starterCard1, StarterCard starterCard2){
-        starter_card_to_chose[0] = starterCard1;
-        starter_card_to_chose[1] = starterCard2;
+    public void setStarterCardToChose(StarterCard starterCard1, StarterCard starterCard2) {
+        starter_card_to_chose.add(starterCard1);
+        starter_card_to_chose.add(starterCard2);
     }
 
-    public StarterCard[] getStarterCardToChose(){ return this.starter_card_to_chose;}
+    public List<StarterCard> getStarterCardToChose() { return this.starter_card_to_chose;}
 
     @Override
     public int getScoreBoardPosition() {

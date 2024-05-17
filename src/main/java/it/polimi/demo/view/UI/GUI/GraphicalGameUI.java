@@ -14,8 +14,4 @@ public class GraphicalGameUI extends GameUI {
 
     }
 
-    @Override
-    public void run() {
-
-    }
 }

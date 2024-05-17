@@ -25,7 +25,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.demo.listener.Listener.notifyListeners;
-import static it.polimi.demo.networking.PrintAsync.printAsync;
 //TODO: Check how first_finished_player is set.
 
 public class GameModel implements GameModelInterface, Serializable {
@@ -307,7 +306,7 @@ public class GameModel implements GameModelInterface, Serializable {
     public void reconnectPlayer(Player p) {
 
         if (players_connected.contains(p)) {
-            printAsync("ERROR: Trying to reconnect a player not offline!");
+            System.out.println("ERROR: Trying to reconnect a player not offline!");
             throw new PlayerAlreadyConnectedException();
         }
         p.setAsConnected();
@@ -320,6 +319,7 @@ public class GameModel implements GameModelInterface, Serializable {
      * (It also cares about the limit case of the first element).
      * @param p player to connect
      */
+    // todo: check if it is correct
     public void connectPlayerInOrder(Player p) {
         // index of previous player in aux_order_players
 
@@ -383,18 +383,21 @@ public class GameModel implements GameModelInterface, Serializable {
      * does not have at least the minimum number of players or the current player index is not set.
      */
     public void setStatus(GameStatus status) {
-        // Check if the game status can be set to "RUNNING"
-//        boolean canSetRunning =
-//                (aux_order_players.size() >= DefaultValues.MinNumOfPlayer) &&
-//                !players_connected.isEmpty();
-
         // Set the game status and notify listeners based on the new status
         this.status = status;
 
+        System.out.println("EII: Game status: " + status);
+
         switch (status) {
-            case WAIT, FIRST_ROUND, RUNNING, LAST_ROUND, SECOND_LAST_ROUND ->
-                    notifyListeners(listeners, GameListener::genericGameStatus);
-            case READY_TO_START -> notifyListeners(listeners, GameListener::gameStarted);
+            case WAIT, READY_TO_START, RUNNING, LAST_ROUND, SECOND_LAST_ROUND -> {
+                // notifyListeners(listeners, GameListener::modelChanged);
+                notifyListeners(listeners, GameListener::genericGameStatus);
+            }
+            case FIRST_ROUND -> {
+                notifyListeners(listeners, GameListener::modelChanged);
+                notifyListeners(listeners, GameListener::gameStarted);
+                notifyListeners(listeners, GameListener::genericGameStatus);
+            }
             case ENDED -> notifyListeners(listeners, GameListener::gameEnded);
         }
     }
@@ -409,7 +412,6 @@ public class GameModel implements GameModelInterface, Serializable {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
-        notifyListeners(listeners, GameListener::modelChanged);
     }
 
     /**
@@ -451,6 +453,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 Card goldCard = common_board.getGoldConcreteDeck().pop();
                 player.addToHand(goldCard);
             }
+
             // Deal 2 secret objective cards
             ObjectiveCard objectiveCard1 = null;
             ObjectiveCard objectiveCard2 = null;
@@ -469,7 +472,11 @@ public class GameModel implements GameModelInterface, Serializable {
 
     public void placeStarterCard(Player p, Orientation o) {
         PersonalBoard personal_board = p.getPersonalBoard();
-        StarterCard starter_card = p.getStarterCard();
+        StarterCard starter_card;
+        if (o == Orientation.FRONT)
+            starter_card = p.getStarterCardToChose().get(0);
+        else
+            starter_card = p.getStarterCardToChose().get(1);
         personal_board.placeStarterCard(starter_card);
     }
 
@@ -813,6 +820,12 @@ public class GameModel implements GameModelInterface, Serializable {
 
     public PlayerIC getPlayer(int playerIndex) {
         return aux_order_players.get(playerIndex);
+    }
+
+    // aux
+
+    public List<StarterCard> getStarterCardsToChose(String nickname) {
+        return getPlayerEntity(nickname).getStarterCardToChose();
     }
 }
 

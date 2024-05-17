@@ -16,7 +16,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static it.polimi.demo.listener.Listener.notifyListeners;
-import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
@@ -90,7 +89,7 @@ public class MainController implements MainControllerInterface {
         }
 
         notifyListeners(game.getModel().getListeners(), GameListener::newGame);
-        printAsync("\t>Player:\" " + nickname + " \"" + " created game " + id);
+        System.out.println("\t>Player:\" " + nickname + " \"" + " created game " + id);
         printRunningGames();
 
         // Here we add the player to the 'statical' list of players
@@ -132,7 +131,7 @@ public class MainController implements MainControllerInterface {
                     // When a player joins a game, he/she is set also as connected!!
                     game.setPlayerAsConnected(player);
 
-                    printAsync("Player \"" + nickname + "\" joined Game " + game.getGameId());
+                    System.out.println("Player \"" + nickname + "\" joined Game " + game.getGameId());
                     printRunningGames();
 
                     return game;
@@ -164,6 +163,7 @@ public class MainController implements MainControllerInterface {
 
         return Optional.ofNullable(game)
                 .filter(g -> g.getStatus() == GameStatus.WAIT ||
+                        g.getStatus() == GameStatus.READY_TO_START ||
                         g.getStatus() == GameStatus.FIRST_ROUND ||
                         g.getStatus() == GameStatus.RUNNING ||
                         g.getStatus() == GameStatus.SECOND_LAST_ROUND ||
@@ -177,7 +177,7 @@ public class MainController implements MainControllerInterface {
                         // Here we add the player to the 'dynamic' list of players connected (the queue!)
                         game.setPlayerAsConnected(player);
                         notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::playerJoinedGame);
-                        printAsync("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
+                        System.out.println("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
                         printRunningGames();
                         return g;
                     } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
@@ -210,7 +210,7 @@ public class MainController implements MainControllerInterface {
 //                // Here we add the player to the 'dynamic' list of players connected (the queue!)
 //                game.setPlayerAsConnected(player);
 //                notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::playerJoinedGame);
-//                printAsync("\t>Game " + game.getGameId() + " player:\"" + nickname + "\" entered player");
+//                System.out.println("\t>Game " + game.getGameId() + " player:\"" + nickname + "\" entered player");
 //                printRunningGames();
 //            } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
 //                // Handle exceptions if needed
@@ -274,7 +274,7 @@ public class MainController implements MainControllerInterface {
                     } catch (RemoteException e) {
                         throw new RuntimeException(e);
                     }
-                    printAsync("\t>Game " + game.getGameId() + " player: \"" + nickname + "\" decided to leave");
+                    System.out.println("\t>Game " + game.getGameId() + " player: \"" + nickname + "\" decided to leave");
                     printRunningGames();
 
                     if (game.getConnectedPlayers().isEmpty()) {
@@ -300,7 +300,7 @@ public class MainController implements MainControllerInterface {
                 .ifPresent(game -> {
                     games.remove(gameId);
                     notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::removedGame);
-                    printAsync("\t>Game " + gameId + " removed from games");
+                    System.out.println("\t>Game " + gameId + " removed from games");
                     printRunningGames();
                 });
     }
@@ -309,12 +309,12 @@ public class MainController implements MainControllerInterface {
      * Prints the IDs of all games currently running.
      */
     private void printRunningGames() {
-        printAsync("RUNNING GAMES: ");
+        System.out.println("RUNNING GAMES: ");
         if(games.isEmpty()){
-            printAsync("No running games available");
+            System.out.println("No running games available");
         }
-        games.values().forEach(game -> printAsync( "GAME #" + game.getGameId() + " "));
-        printAsync("");
+        games.values().forEach(game -> System.out.println( "GAME #" + game.getGameId() + " "));
+        System.out.println("");
     }
 
 

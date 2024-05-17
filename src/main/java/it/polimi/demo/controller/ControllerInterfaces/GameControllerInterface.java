@@ -25,7 +25,7 @@ public interface GameControllerInterface extends Remote {
 
     GameModelInterface getModel();
 
-    void placeStarterCard(Player p);
+    void placeStarterCard(Player p, Orientation orientation);
 
     void chooseCardFromHand(Player p, int index) throws RemoteException;
 
@@ -68,9 +68,6 @@ public interface GameControllerInterface extends Remote {
      */
     int getGameId() throws RemoteException;
 
-
-    void setPlayerAsReadyToStart(String nickname);
-
     /**
      * Set the player as connected
      * @param p the player to set as connected
@@ -86,7 +83,7 @@ public interface GameControllerInterface extends Remote {
      * @throws IllegalStateException if the game is not ready to start
      * @throws RemoteException if the connection fails
      */
-    void startGame();
+    void startGame() throws GameEndedException, RemoteException;
 
 
 //    /**
@@ -119,7 +116,7 @@ public interface GameControllerInterface extends Remote {
      */
     void leave(GameListener lis, String nick) throws RemoteException;
 
-    void startIfFull();
+    void startIfFull() throws GameEndedException, RemoteException;
 
     void setError(String s);
 

@@ -36,38 +36,10 @@ public class TextualGameUI extends GameUI {
     /** Lock used to synchronize methods inside Textual GameUI. */
     private final Object lock = new Object();
 
-    /** A thread dedicated to accepting inputs from the player. */
-    private Thread inputThread;
-
     /** The latest GameView received from the server.
      * Contains data about every aspect of the current Game (board state, player state...).
      * */
     private GameView lastGameView;
-
-    @Override
-    public void run() {
-        AnsiConsole.systemInstall();
-        //System.out.println("RUN pre while");
-        System.out.println(getState());
-        while (true) {
-            while (getState() == State.NOT_MY_TURN) {
-                synchronized (lock) {
-                    try {
-                        lock.wait();
-                    } catch (InterruptedException ignored) {}
-                }
-            }
-            if (getState() == State.MY_TURN) {
-                inputThread = new Thread(this::executeMyTurn);
-                inputThread.start();
-                try {
-                    inputThread.join();
-                } catch (InterruptedException ignored) {}
-            } else if (getState() == State.ENDED){
-                break;
-            }
-        }
-    }
 
     /**
      * This method is used to get the current state of the player.
@@ -96,30 +68,19 @@ public class TextualGameUI extends GameUI {
      * with the placement of the card on the board.
      */
     private void executeMyTurn() {
-        while (getState() == State.MY_TURN) {
-            System.out.println("Sono in executeMyTurn ed è il MYTURN");
+        if (getState() == State.MY_TURN) {
             GameStatus current_status = lastGameView.getStatus();
-            System.out.println("il current status è: "+ current_status );
-            switch(current_status) {
-                case FIRST_ROUND:
-                    System.out.println("Sono in executeMyTurn ed è il FIRST_ROUND");
-                    this.showStarterCard();
-                    System.out.println("Ho mostrato la mia starterCard");
+            switch (current_status) {
+                case FIRST_ROUND -> {
+                    System.out.println("It's your turn to play the starter card!");
+                    // Here we show both sides of the starter card
+                    showStarterCards();
                     notifyListeners(lst, UIListener -> UIListener.placeStarterCard(chooseCardOrientation()));
-                    notifyListeners(lst, UIListener -> UIListener.drawCard(
-                            askIndex("""
-                        Select the index of the card you want to draw;\s
-                         1: Resource Deck
-                         2: First Resource Card on the table
-                         3: Second Resource Card on the table
-                         4: Gold Deck
-                         5: First Gold Card on the table
-                         6: Second Gold Card on the table""")));
-                    //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
+                    // TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
                     TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
-                    break;
+                }
 
-                case RUNNING, SECOND_LAST_ROUND:
+                case RUNNING, SECOND_LAST_ROUND -> {
                     this.showPlayerHand(lastGameView.getPlayerHand());
                     notifyListeners(lst, UIListener -> UIListener.chooseCard(
                             askIndex("Select the index of the card you want to play")));
@@ -130,21 +91,20 @@ public class TextualGameUI extends GameUI {
                             chooseCardOrientation()));
                     notifyListeners(lst, UIListener -> UIListener.drawCard(
                             askIndex("""
-                        Select the index of the card you want to draw:\s
-                         1: Resource Deck
-                         2: First Resource Card on the table
-                         3: Second Resource Card on the table
-                         4: Gold Deck
-                         5: First Gold Card on the table
-                         6: Second Gold Card on the table""")));
+                                    Select the index of the card you want to draw:\s
+                                     1: Resource Deck
+                                     2: First Resource Card on the table
+                                     3: Second Resource Card on the table
+                                     4: Gold Deck
+                                     5: First Gold Card on the table
+                                     6: Second Gold Card on the table""")));
 
                     //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
                     TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
                     TuiCommonBoardGraphics.showCommonBoard(lastGameView.getCommonBoard());
-                    break;
+                }
 
-
-                case LAST_ROUND:
+                case LAST_ROUND -> {
                     this.showPlayerHand(lastGameView.getPlayerHand());
                     notifyListeners(lst, UIListener -> UIListener.chooseCard(
                             askIndex("Select the index of the card you want to play")));
@@ -156,15 +116,71 @@ public class TextualGameUI extends GameUI {
                     //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
                     TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
                     TuiCommonBoardGraphics.showCommonBoard(lastGameView.getCommonBoard());
-                    break;
+                }
             }
             setState(State.NOT_MY_TURN);
         }
     }
 
-    private void showStarterCard() {
-        StarterCard starter_card = lastGameView.getPersonalStarterCard();
-        TuiCardGraphics.showStarterCard(starter_card);
+    @Override
+    public void update(GameView gameView) {
+        // Here we update the game view
+        this.lastGameView = gameView;
+
+        if (gameView.isGamePaused()) {
+            this.gamePaused();
+            setState(State.NOT_MY_TURN);
+            return;
+        }
+        if (gameView.getErrorMessage() != null){
+            System.out.println("\n" + ansi().fg(RED).bold().a(gameView.getErrorMessage()).reset() + "\n");
+        }
+
+//        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname()) && getState() == State.MY_TURN) {
+//            return;
+//        }
+
+        // this.updateBoard(gameView);
+
+        System.out.println("Current player nickname: " + gameView.getCurrentPlayerNickname());
+        System.out.println("My nickname: " + gameView.getMyNickname());
+
+        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname())) {
+            System.out.println("Your turn!");
+            setState(State.MY_TURN);
+            executeMyTurn();
+        }
+        else {
+            System.out.println("Player " + gameView.getCurrentPlayerNickname() + "'s turn.");
+            setState(State.NOT_MY_TURN);
+        }
+    }
+
+    @Override
+    public void gameEnded(GameView gameView) {
+
+    }
+
+    /**
+     * This method is called when the game is paused.
+     */
+    public void gamePaused() {
+        System.out.println();
+        updateBoard(lastGameView);
+        System.out.println(ansi().bold().fg(Ansi.Color.YELLOW)
+                .a("""
+                        Game has been paused since you're the only player left in the game.
+                        Waiting for someone else to reconnect...
+                        """).reset());
+    }
+
+    private void showStarterCards() {
+        List<StarterCard> starter_cards = lastGameView.getPersonalStarterCardsToChose();
+        System.out.println(starter_cards.size());
+        System.out.println(starter_cards.get(0).toString());
+        System.out.println(starter_cards.get(1).toString());
+        TuiCardGraphics.showStarterCard(starter_cards.get(0));
+        TuiCardGraphics.showStarterCard(starter_cards.get(1));
     }
 
     public int askIndex(String message) {
@@ -189,55 +205,6 @@ public class TextualGameUI extends GameUI {
             return Orientation.BACK;
     }
 
-    @Override
-    public void update(GameView gameView) {
-        this.lastGameView = gameView;
-        // System.out.println("ciao sono entrato in update"); ci entra!
-        if (gameView.isGamePaused()) {
-            this.gamePaused();
-            setState(State.NOT_MY_TURN);
-            return;
-        }
-        if (gameView.getErrorMessage() != null){
-            System.out.println("\n" + ansi().fg(RED).bold().a(gameView.getErrorMessage()).reset() + "\n");
-        }
-
-        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname()) && getState() == State.MY_TURN) {
-            return;
-        }
-
-        this.updateBoard(gameView);
-
-        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname())) {
-            System.out.println("Your turn!");
-            setState(State.MY_TURN);
-        } else {
-            System.out.println("Player " + gameView.getCurrentPlayerNickname() + "'s turn.");
-            setState(State.NOT_MY_TURN);
-        }
-    }
-
-    @Override
-    public void gameEnded(GameView gameView) {
-
-    }
-
-    /**
-     * This method is called when the game is paused.
-     */
-    public void gamePaused() {
-        System.out.println();
-        updateBoard(lastGameView);
-        System.out.println(ansi().bold().fg(Ansi.Color.YELLOW)
-                .a("""
-                        Game has been paused since you're the only player left in the game.
-                        Waiting for someone else to reconnect...
-                        """).reset());
-        if (inputThread != null) {
-            inputThread.interrupt();
-        }
-    }
-
     private void updateBoard(GameView gameView) {
         clearScreen(gameView);
     }
@@ -245,15 +212,28 @@ public class TextualGameUI extends GameUI {
     private void clearScreen(GameView gameView) {
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
         //this.showPlayers(gameView);
+        this.showCommonBoard(gameView);
+    }
+
+    private void showCommonBoard(GameView gameView) {
         TuiCommonBoardGraphics.showCommonBoard(gameView.getCommonBoard());
     }
 
-    private void showPlayerHand(ArrayList<ResourceCard> player_hand){
+    private void showPlayerHand(List<ResourceCard> player_hand){
         for(int i = 0; i < 3; i++){
             if (player_hand.get(i) instanceof GoldCard)
-                TuiCardGraphics.showGoldCard((GoldCard)player_hand.get(i));
+                showGoldCard((GoldCard)player_hand.get(i));
             else
-                TuiCardGraphics.showResourceCard(player_hand.get(i));
+                showResourceCard(player_hand.get(i));
         }
     }
+
+    private void showResourceCard(ResourceCard card){
+        TuiCardGraphics.showResourceCard(card);
+    }
+
+    private void showGoldCard(GoldCard card){
+        TuiCardGraphics.showGoldCard(card);
+    }
+
 }
