@@ -7,6 +7,7 @@ import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.view.PlayerDetails;
 
@@ -65,4 +66,6 @@ public interface GameModelInterface {
     Map<Player, Integer> getLeaderBoard();
 
     PersonalBoard getPersonalBoard(String myNickname);
+
+    List<StarterCard> getStarterCardsToChose(String myNickname);
 }

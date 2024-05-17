@@ -282,11 +282,4 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         this.server.pong();
     }
 
-//    private void showPlayerHand(List<ResourceCard> playerHand) {
-//        System.out.println("Player's Hand:");
-//        for (ResourceCard card : playerHand) {
-//            System.out.println(card); // Assuming ResourceCard has a meaningful toString() method
-//        }
-//    }
-
 }

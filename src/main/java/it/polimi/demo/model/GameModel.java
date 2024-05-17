@@ -453,6 +453,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 Card goldCard = common_board.getGoldConcreteDeck().pop();
                 player.addToHand(goldCard);
             }
+
             // Deal 2 secret objective cards
             ObjectiveCard objectiveCard1 = null;
             ObjectiveCard objectiveCard2 = null;
@@ -471,7 +472,11 @@ public class GameModel implements GameModelInterface, Serializable {
 
     public void placeStarterCard(Player p, Orientation o) {
         PersonalBoard personal_board = p.getPersonalBoard();
-        StarterCard starter_card = p.getStarterCard();
+        StarterCard starter_card;
+        if (o == Orientation.FRONT)
+            starter_card = p.getStarterCardToChose().get(0);
+        else
+            starter_card = p.getStarterCardToChose().get(1);
         personal_board.placeStarterCard(starter_card);
     }
 
@@ -815,6 +820,12 @@ public class GameModel implements GameModelInterface, Serializable {
 
     public PlayerIC getPlayer(int playerIndex) {
         return aux_order_players.get(playerIndex);
+    }
+
+    // aux
+
+    public List<StarterCard> getStarterCardsToChose(String nickname) {
+        return getPlayerEntity(nickname).getStarterCardToChose();
     }
 }
 

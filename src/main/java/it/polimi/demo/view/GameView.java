@@ -12,9 +12,7 @@ import it.polimi.demo.model.interfaces.PlayerIC;
 
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GameView implements Serializable {
     @Serial
@@ -29,13 +27,11 @@ public class GameView implements Serializable {
     private final Map<Player, Integer> leaderboard;
     private final PersonalBoard personal_board;
     private final ObjectiveCard personal_objective_card;
-    private final ArrayList<ResourceCard> player_hand;
+    private final List<ResourceCard> player_hand;
     private final StarterCard personal_starter_card;
     private final String my_nickname;
-    private List<ObjectiveCard> personal_objective_cards_to_chose;
-    //private final ObjectiveCard personal_objective_card;
-    private List<StarterCard> personal_starter_cards_to_chose;
-    //private final StarterCard personal_starter_card;
+    private final List<ObjectiveCard> personal_objective_cards_to_chose;
+    private final List<StarterCard> personal_starter_cards_to_chose;
     private final List<PlayerDetails> playersData;
     private final boolean gameEnded;
     private final boolean gamePaused;
@@ -52,23 +48,36 @@ public class GameView implements Serializable {
         this.leaderboard = model.getLeaderBoard();
         this.my_nickname = nickname;
         this.personal_board = model.getPersonalBoard(this.my_nickname);
-        this.personal_objective_card = model.getAllPlayers()
-                .stream()
-                .filter(player -> player.getNickname().equals(nickname))
-                .findFirst()
-                .map(PlayerIC::getChosenObjectiveCard) // Map the Optional<Player> to Optional<ChosenObjectiveCard>
-                .orElse(null); // Provide a default value if the Optional is empty
+        this.personal_starter_cards_to_chose = model.getStarterCardsToChose(this.my_nickname);
+//        this.personal_starter_cards_to_chose = model.getAllPlayers()
+//                .stream()
+//                .filter(player -> player.getNickname().equals(nickname))
+//                .findFirst()
+//                .map(PlayerIC::getStarterCardToChose)
+//                .orElse(null);
         this.personal_starter_card = model.getAllPlayers()
                 .stream()
                 .filter(player -> player.getNickname().equals(nickname))
                 .findFirst()
                 .map(PlayerIC::getStarterCard) // Map the Optional<Player> to Optional<ChosenObjectiveCard>
                 .orElse(null); // Provide a default value if the Optional is empty
-        player_hand = (ArrayList<ResourceCard>) model.getAllPlayers()
+        this.personal_objective_cards_to_chose = model.getAllPlayers()
                 .stream()
                 .filter(player -> player.getNickname().equals(nickname))
                 .findFirst()
-                .map(Player::getHand)
+                .map(PlayerIC::getSecretObjectiveCards) // Map the Optional<Player> to Optional<ChosenObjectiveCard>
+                .orElse(null);
+        this.personal_objective_card = model.getAllPlayers()
+                .stream()
+                .filter(player -> player.getNickname().equals(nickname))
+                .findFirst()
+                .map(PlayerIC::getChosenObjectiveCard) // Map the Optional<Player> to Optional<ChosenObjectiveCard>
+                .orElse(null); // Provide a default value if the Optional is empty
+        this.player_hand = model.getAllPlayers()
+                .stream()
+                .filter(player -> player.getNickname().equals(nickname))
+                .findFirst()
+                .map(PlayerIC::getHand)
                 .orElse(null);
         this.gameEnded = model.isEnded();
         this.gamePaused = model.isPaused();
@@ -120,7 +129,11 @@ public class GameView implements Serializable {
         return personal_board;
     }
 
-    public ArrayList<ResourceCard> getPlayerHand() {
+    public CommonBoard getCommonBoard() {
+        return common_board;
+    }
+
+    public List<ResourceCard> getPlayerHand() {
         return player_hand;
     }
 }

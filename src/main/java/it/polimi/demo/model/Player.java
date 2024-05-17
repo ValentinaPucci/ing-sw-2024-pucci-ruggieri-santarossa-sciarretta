@@ -34,8 +34,8 @@ public class Player implements PlayerIC, Serializable {
         this.nickname = nickname;
         this.card_hand = new ArrayList<>();
         this.personal_board = new PersonalBoard();
-        this.secret_objectives = new ArrayList<>(2);
-        this.starter_card_to_chose = new ArrayList<>(2);
+        this.secret_objectives = new ArrayList<>();
+        this.starter_card_to_chose = new ArrayList<>();
         this.chosen_objective = null;
         this.starter_card = null;
         this.chosen_card = null;
@@ -107,12 +107,12 @@ public class Player implements PlayerIC, Serializable {
         secret_objectives.add(objective2);
     }
 
-    public void setStarterCardToChose(StarterCard starterCard1, StarterCard starterCard2){
+    public void setStarterCardToChose(StarterCard starterCard1, StarterCard starterCard2) {
         starter_card_to_chose.add(starterCard1);
         starter_card_to_chose.add(starterCard2);
     }
 
-    public List<StarterCard> getStarterCardToChose(){ return this.starter_card_to_chose;}
+    public List<StarterCard> getStarterCardToChose() { return this.starter_card_to_chose;}
 
     @Override
     public int getScoreBoardPosition() {

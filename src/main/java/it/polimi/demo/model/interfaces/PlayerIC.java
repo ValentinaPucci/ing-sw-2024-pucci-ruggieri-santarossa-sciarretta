@@ -84,6 +84,8 @@ public interface PlayerIC {
      */
     List<ResourceCardIC> getHandIC();
 
+    List<ResourceCard> getHand();
+
     void addListener(GameListener obj);
 
     public void removeListener(GameListener obj);

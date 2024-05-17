@@ -62,13 +62,13 @@ public class GameController implements GameControllerInterface, Serializable {
             }
             case RUNNING -> {
                 if (model.getPlayersConnected().getFirst().getCurrentPoints() >= 20) {
-                    model.nextTurn();
+                    // model.nextTurn();
                     model.setStatus(GameStatus.SECOND_LAST_ROUND);
                 }
             }
             case SECOND_LAST_ROUND -> {
                 if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname())) {
-                    model.nextTurn();
+                    // model.nextTurn();
                     model.setStatus(GameStatus.LAST_ROUND);
                 }
             }
@@ -485,12 +485,10 @@ public class GameController implements GameControllerInterface, Serializable {
     public GameStatus getStatus() {
         return model.getStatus();
     }
-    //TODO
-    // Section: Overrides
 
     @Override
-    public void placeStarterCard(Player p) {
-        // model.placeStarterCard(p);
+    public void placeStarterCard(Player p, Orientation o) {
+        model.placeStarterCard(p, o);
     }
 
     /**
@@ -516,7 +514,7 @@ public class GameController implements GameControllerInterface, Serializable {
      * @throws RemoteException if there is an  error.
      */
     @Override
-    public void placeCard( Player p, int x, int y, Orientation orientation)
+    public void placeCard(Player p, int x, int y, Orientation orientation)
             throws RemoteException {
 
         if (!getConnectedPlayers().contains(p))

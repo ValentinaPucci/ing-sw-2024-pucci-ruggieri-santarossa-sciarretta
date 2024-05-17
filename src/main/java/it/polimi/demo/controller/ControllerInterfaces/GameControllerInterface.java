@@ -25,7 +25,7 @@ public interface GameControllerInterface extends Remote {
 
     GameModelInterface getModel();
 
-    void placeStarterCard(Player p);
+    void placeStarterCard(Player p, Orientation orientation);
 
     void chooseCardFromHand(Player p, int index) throws RemoteException;
 

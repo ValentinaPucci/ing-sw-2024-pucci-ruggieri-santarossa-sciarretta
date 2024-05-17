@@ -68,30 +68,19 @@ public class TextualGameUI extends GameUI {
      * with the placement of the card on the board.
      */
     private void executeMyTurn() {
-        while (getState() == State.MY_TURN) {
-            System.out.println("Sono in executeMyTurn ed è il MYTURN");
+        if (getState() == State.MY_TURN) {
             GameStatus current_status = lastGameView.getStatus();
-            System.out.println("il current status è: "+ current_status );
-            switch(current_status) {
-                case FIRST_ROUND:
-                    System.out.println("Sono in executeMyTurn ed è il FIRST_ROUND");
-                    this.showStarterCard();
-                    System.out.println("Ho mostrato la mia starterCard");
+            switch (current_status) {
+                case FIRST_ROUND -> {
+                    System.out.println("It's your turn to play the starter card!");
+                    // Here we show both sides of the starter card
+                    showStarterCards();
                     notifyListeners(lst, UIListener -> UIListener.placeStarterCard(chooseCardOrientation()));
-                    notifyListeners(lst, UIListener -> UIListener.drawCard(
-                            askIndex("""
-                        Select the index of the card you want to draw;\s
-                         1: Resource Deck
-                         2: First Resource Card on the table
-                         3: Second Resource Card on the table
-                         4: Gold Deck
-                         5: First Gold Card on the table
-                         6: Second Gold Card on the table""")));
-                    //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
+                    // TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
                     TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
-                    break;
+                }
 
-                case RUNNING, SECOND_LAST_ROUND:
+                case RUNNING, SECOND_LAST_ROUND -> {
                     this.showPlayerHand(lastGameView.getPlayerHand());
                     notifyListeners(lst, UIListener -> UIListener.chooseCard(
                             askIndex("Select the index of the card you want to play")));
@@ -102,21 +91,20 @@ public class TextualGameUI extends GameUI {
                             chooseCardOrientation()));
                     notifyListeners(lst, UIListener -> UIListener.drawCard(
                             askIndex("""
-                        Select the index of the card you want to draw:\s
-                         1: Resource Deck
-                         2: First Resource Card on the table
-                         3: Second Resource Card on the table
-                         4: Gold Deck
-                         5: First Gold Card on the table
-                         6: Second Gold Card on the table""")));
+                                    Select the index of the card you want to draw:\s
+                                     1: Resource Deck
+                                     2: First Resource Card on the table
+                                     3: Second Resource Card on the table
+                                     4: Gold Deck
+                                     5: First Gold Card on the table
+                                     6: Second Gold Card on the table""")));
 
                     //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
                     TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
                     TuiCommonBoardGraphics.showCommonBoard(lastGameView.getCommonBoard());
-                    break;
+                }
 
-
-                case LAST_ROUND:
+                case LAST_ROUND -> {
                     this.showPlayerHand(lastGameView.getPlayerHand());
                     notifyListeners(lst, UIListener -> UIListener.chooseCard(
                             askIndex("Select the index of the card you want to play")));
@@ -128,37 +116,10 @@ public class TextualGameUI extends GameUI {
                     //TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
                     TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
                     TuiCommonBoardGraphics.showCommonBoard(lastGameView.getCommonBoard());
-                    break;
+                }
             }
             setState(State.NOT_MY_TURN);
         }
-    }
-
-    private void showStarterCard() {
-        StarterCard starter_card = lastGameView.getPersonalStarterCard();
-        TuiCardGraphics.showStarterCard(starter_card);
-    }
-
-    public int askIndex(String message) {
-        Scanner s = new Scanner(System.in);
-        System.out.print(message + ", enter here the index required: ");
-        return nextInt(s);
-    }
-
-    public Orientation chooseCardOrientation() {
-        Scanner s = new Scanner(System.in);
-        int choice;
-        do {
-            System.out.print("Choose the card orientation you want to use: \n 1: FRONT \n 2:BACK");
-            choice = nextInt(s);
-            if (choice < 1 || choice > 3){
-                System.out.print("Invalid input. Type 1 or 2.");
-            }
-        }  while (choice < 1 || choice > 2);
-        if (choice == 1)
-            return Orientation.FRONT;
-        else
-            return Orientation.BACK;
     }
 
     @Override
@@ -179,7 +140,7 @@ public class TextualGameUI extends GameUI {
 //            return;
 //        }
 
-        this.updateBoard(gameView);
+        // this.updateBoard(gameView);
 
         System.out.println("Current player nickname: " + gameView.getCurrentPlayerNickname());
         System.out.println("My nickname: " + gameView.getMyNickname());
@@ -213,6 +174,37 @@ public class TextualGameUI extends GameUI {
                         """).reset());
     }
 
+    private void showStarterCards() {
+        List<StarterCard> starter_cards = lastGameView.getPersonalStarterCardsToChose();
+        System.out.println(starter_cards.size());
+        System.out.println(starter_cards.get(0).toString());
+        System.out.println(starter_cards.get(1).toString());
+        TuiCardGraphics.showStarterCard(starter_cards.get(0));
+        TuiCardGraphics.showStarterCard(starter_cards.get(1));
+    }
+
+    public int askIndex(String message) {
+        Scanner s = new Scanner(System.in);
+        System.out.print(message + ", enter here the index required: ");
+        return nextInt(s);
+    }
+
+    public Orientation chooseCardOrientation() {
+        Scanner s = new Scanner(System.in);
+        int choice;
+        do {
+            System.out.print("Choose the card orientation you want to use: \n 1: FRONT \n 2:BACK");
+            choice = nextInt(s);
+            if (choice < 1 || choice > 3){
+                System.out.print("Invalid input. Type 1 or 2.");
+            }
+        }  while (choice < 1 || choice > 2);
+        if (choice == 1)
+            return Orientation.FRONT;
+        else
+            return Orientation.BACK;
+    }
+
     private void updateBoard(GameView gameView) {
         clearScreen(gameView);
     }
@@ -227,7 +219,7 @@ public class TextualGameUI extends GameUI {
         TuiCommonBoardGraphics.showCommonBoard(gameView.getCommonBoard());
     }
 
-    private void showPlayerHand(ArrayList<ResourceCard> player_hand){
+    private void showPlayerHand(List<ResourceCard> player_hand){
         for(int i = 0; i < 3; i++){
             if (player_hand.get(i) instanceof GoldCard)
                 showGoldCard((GoldCard)player_hand.get(i));
