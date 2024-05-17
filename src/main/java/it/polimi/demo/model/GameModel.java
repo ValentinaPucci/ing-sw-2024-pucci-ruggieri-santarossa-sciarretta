@@ -383,11 +383,6 @@ public class GameModel implements GameModelInterface, Serializable {
      * does not have at least the minimum number of players or the current player index is not set.
      */
     public void setStatus(GameStatus status) {
-        // Check if the game status can be set to "RUNNING"
-//        boolean canSetRunning =
-//                (aux_order_players.size() >= DefaultValues.MinNumOfPlayer) &&
-//                !players_connected.isEmpty();
-
         // Set the game status and notify listeners based on the new status
         this.status = status;
 
@@ -417,7 +412,6 @@ public class GameModel implements GameModelInterface, Serializable {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
-        notifyListeners(listeners, GameListener::modelChanged);
     }
 
     /**

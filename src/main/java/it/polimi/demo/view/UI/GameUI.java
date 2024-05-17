@@ -6,7 +6,7 @@ import it.polimi.demo.view.GameView;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract public class GameUI implements Runnable {
+abstract public class GameUI {
 
     protected final List<UIListener> lst = new ArrayList<>();
 

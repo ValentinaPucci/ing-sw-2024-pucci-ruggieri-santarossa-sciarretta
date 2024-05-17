@@ -101,8 +101,6 @@ public class ServerImpl implements Server, GameListener {
         model = game_controller.getModel();
         model.addListener(this);
 
-        //playerIndex = 0;
-
         // We can track the player in the mini-server by saving the nickname.
         this.nickname = nickname;
         playerJoinedGame();
@@ -129,6 +127,9 @@ public class ServerImpl implements Server, GameListener {
             System.out.println("A client is joining game " + gameID + " with username " + nickname + "...");
             model = game_controller.getModel();
             model.addListener(this);
+
+            // We can track the player in the mini-server by saving the nickname.
+            this.nickname = nickname;
             playerJoinedGame();
             // WAIT --> READY_TO_START
             // game_controller.gameFlow();

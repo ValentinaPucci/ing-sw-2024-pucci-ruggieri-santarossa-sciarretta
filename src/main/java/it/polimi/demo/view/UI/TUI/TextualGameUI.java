@@ -34,38 +34,10 @@ public class TextualGameUI extends GameUI {
     /** Lock used to synchronize methods inside Textual GameUI. */
     private final Object lock = new Object();
 
-    /** A thread dedicated to accepting inputs from the player. */
-    private Thread inputThread;
-
     /** The latest GameView received from the server.
      * Contains data about every aspect of the current Game (board state, player state...).
      * */
     private GameView lastGameView;
-
-    @Override
-    public void run() {
-        AnsiConsole.systemInstall();
-        //System.out.println("RUN pre while");
-        System.out.println(getState());
-        while (true) {
-            while (getState() == State.NOT_MY_TURN) {
-                synchronized (lock) {
-                    try {
-                        lock.wait();
-                    } catch (InterruptedException ignored) {}
-                }
-            }
-            if (getState() == State.MY_TURN) {
-                inputThread = new Thread(this::executeMyTurn);
-                inputThread.start();
-                try {
-                    inputThread.join();
-                } catch (InterruptedException ignored) {}
-            } else if (getState() == State.ENDED){
-                break;
-            }
-        }
-    }
 
     /**
      * This method is used to get the current state of the player.
@@ -94,25 +66,16 @@ public class TextualGameUI extends GameUI {
      * with the placement of the card on the board.
      */
     private void executeMyTurn() {
-        while (getState() == State.MY_TURN) {
+        if (getState() == State.MY_TURN) {
             System.out.println("Sono in executeMyTurn ed è il MYTURN");
             GameStatus current_status = lastGameView.getStatus();
-            System.out.println("il current status è: "+ current_status );
-            switch(current_status) {
+            System.out.println("il current status è: " + current_status );
+            switch (current_status) {
                 case FIRST_ROUND:
                     System.out.println("Sono in executeMyTurn ed è il FIRST_ROUND");
                     // this.showStarterCard();
                     System.out.println("Ho mostrato la mia starterCard");
                     notifyListeners(lst, UIListener -> UIListener.placeStarterCard(chooseCardOrientation()));
-                    notifyListeners(lst, UIListener -> UIListener.drawCard(
-                            askIndex("""
-                        Select the index of the card you want to draw;\s
-                         1: Resource Deck
-                         2: First Resource Card on the table
-                         3: Second Resource Card on the table
-                         4: Gold Deck
-                         5: First Gold Card on the table
-                         6: Second Gold Card on the table""")));
                     break;
 
                 case RUNNING, SECOND_LAST_ROUND:
@@ -175,8 +138,9 @@ public class TextualGameUI extends GameUI {
 
     @Override
     public void update(GameView gameView) {
+        // Here we update the game view
         this.lastGameView = gameView;
-        // System.out.println("ciao sono entrato in update"); ci entra!
+
         if (gameView.isGamePaused()) {
             this.gamePaused();
             setState(State.NOT_MY_TURN);
@@ -186,16 +150,21 @@ public class TextualGameUI extends GameUI {
             System.out.println("\n" + ansi().fg(RED).bold().a(gameView.getErrorMessage()).reset() + "\n");
         }
 
-        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname()) && getState() == State.MY_TURN) {
-            return;
-        }
+//        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname()) && getState() == State.MY_TURN) {
+//            return;
+//        }
 
         this.updateBoard(gameView);
+
+        System.out.println("Current player nickname: " + gameView.getCurrentPlayerNickname());
+        System.out.println("My nickname: " + gameView.getMyNickname());
 
         if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname())) {
             System.out.println("Your turn!");
             setState(State.MY_TURN);
-        } else {
+            executeMyTurn();
+        }
+        else {
             System.out.println("Player " + gameView.getCurrentPlayerNickname() + "'s turn.");
             setState(State.NOT_MY_TURN);
         }
@@ -217,9 +186,6 @@ public class TextualGameUI extends GameUI {
                         Game has been paused since you're the only player left in the game.
                         Waiting for someone else to reconnect...
                         """).reset());
-        if (inputThread != null) {
-            inputThread.interrupt();
-        }
     }
 
     private void updateBoard(GameView gameView) {

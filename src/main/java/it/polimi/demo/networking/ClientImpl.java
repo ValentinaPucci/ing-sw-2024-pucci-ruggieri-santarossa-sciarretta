@@ -241,13 +241,19 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
         startUI.joinGame();
     }
 
+    /**
+     * Fictitious method, gameHasStarted in fact only ends the StartUI. We do not need
+     * to start the GameUI, because the game starts when the update method is called.
+     * @throws RemoteException if the connection fails
+     */
     @Override
     public void gameHasStarted() throws RemoteException {
-        System.out.println("Closing StartUI...");
+        // In fact, GameUI is not a thread, it starts whenever an update
+        // call executeMyTurn(). We comment this lines because the print is
+        // async in some sense! I.e. it makes no sense!
+        // System.out.println("Closing StartUI...");
         startUI.close();
-
-        System.out.println("Starting GameUI...");
-        new Thread(gameUI).start();
+        // System.out.println("Starting GameUI...");
         gameUI.addListener(this);
     }
 
