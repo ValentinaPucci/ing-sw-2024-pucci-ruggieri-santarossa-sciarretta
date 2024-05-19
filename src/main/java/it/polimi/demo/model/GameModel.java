@@ -389,13 +389,13 @@ public class GameModel implements GameModelInterface, Serializable {
         System.out.println("EII: Game status: " + status);
 
         switch (status) {
-            case WAIT, READY_TO_START, RUNNING, LAST_ROUND, SECOND_LAST_ROUND -> {
-                // notifyListeners(listeners, GameListener::modelChanged);
+            case READY_TO_START -> {
+                //notifyListeners(listeners, GameListener::modelChanged);
+                notifyListeners(listeners, GameListener::gameStarted);
                 notifyListeners(listeners, GameListener::genericGameStatus);
             }
             case FIRST_ROUND -> {
                 notifyListeners(listeners, GameListener::modelChanged);
-                notifyListeners(listeners, GameListener::gameStarted);
                 notifyListeners(listeners, GameListener::genericGameStatus);
             }
             case ENDED -> notifyListeners(listeners, GameListener::gameEnded);
@@ -472,12 +472,13 @@ public class GameModel implements GameModelInterface, Serializable {
 
     public void placeStarterCard(Player p, Orientation o) {
         PersonalBoard personal_board = p.getPersonalBoard();
-        StarterCard starter_card;
-        if (o == Orientation.FRONT)
-            starter_card = p.getStarterCardToChose().get(0);
-        else
-            starter_card = p.getStarterCardToChose().get(1);
-        personal_board.placeStarterCard(starter_card);
+        if (o == Orientation.FRONT) {
+            p.setStarterCard(p.getStarterCardToChose().get(0));
+        }
+        else {
+            p.setStarterCard(p.getStarterCardToChose().get(1));
+        }
+        personal_board.placeStarterCard(p.getStarterCard());
     }
 
     // for resource cards
@@ -824,8 +825,24 @@ public class GameModel implements GameModelInterface, Serializable {
 
     // aux
 
-    public List<StarterCard> getStarterCardsToChose(String nickname) {
+    public List<StarterCard> getStarterCardsToChoose(String nickname) {
         return getPlayerEntity(nickname).getStarterCardToChose();
+    }
+
+    public StarterCard getStarterCard(String nickname) {
+        return getPlayerEntity(nickname).getStarterCard();
+    }
+
+    public List<ObjectiveCard> getPersonalObjectiveCardsToChoose(String nickname) {
+        return getPlayerEntity(nickname).getSecretObjectiveCards();
+    }
+
+    public ObjectiveCard getObjectiveCard(String nickname) {
+        return getPlayerEntity(nickname).getChosenObjectiveCard();
+    }
+
+    public List<ResourceCard> getPlayerHand(String nickname) {
+        return getPlayerEntity(nickname).getHand();
     }
 }
 

@@ -486,9 +486,17 @@ public class GameController implements GameControllerInterface, Serializable {
         return model.getStatus();
     }
 
+    /**
+     * This method places the starter card in the first round of the game.
+     * Note that, based on the rules, we need to call the end of our turn after
+     * calling this method
+     * @param p the player which place the card
+     * @param o the orientation of the card
+     */
     @Override
     public void placeStarterCard(Player p, Orientation o) {
         model.placeStarterCard(p, o);
+        this.myTurnIsFinished();
     }
 
     /**

@@ -7,6 +7,7 @@ import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.IllegalMoveException;
 
 import java.io.Serializable;
+import java.util.function.Consumer;
 
 public class PersonalBoard implements Serializable {
 
@@ -250,6 +251,9 @@ public class PersonalBoard implements Serializable {
      */
 
     public void addResource(Resource resource) {
+        if (resource == null) {
+            return;
+        }
         switch (resource) {
             case LEAF:
                 this.num_leaves++;
@@ -301,6 +305,8 @@ public class PersonalBoard implements Serializable {
      * @param resource The type of resource to be removed.
      */
     public void removeResource(Resource resource) {
+        if (resource == null)
+            return;
         switch (resource) {
             case LEAF:
                 this.num_leaves--;
@@ -326,6 +332,8 @@ public class PersonalBoard implements Serializable {
      * @param item The type of item to be added.
      */
     public void addItem(Item item) {
+        if (item == null)
+            return;
         switch (item) {
             case PARCHMENT:
                 this.num_parchments++;
@@ -348,6 +356,8 @@ public class PersonalBoard implements Serializable {
      * @param item The type of item to be removed.
      */
     public void removeItem(Item item) {
+        if (item == null)
+            return;
         switch (item) {
             case PARCHMENT:
                 this.num_parchments--;
@@ -455,15 +465,23 @@ public class PersonalBoard implements Serializable {
     // specific method for starter cards
     public void bruteForcePlaceCardSE(StarterCard card, int i, int j) {
 
-        card.front_resource1.ifPresent(res -> this.addResource(res));
-        card.front_resource2.ifPresent(res -> this.addResource(res));
-        card.front_resource3.ifPresent(res -> this.addResource(res));
+        Resource res1_ = card.front_resource1;
+        Resource res2_ = card.front_resource2;
+        Resource res3_ = card.front_resource3;
 
-        card.getCornerAtNW().resource.ifPresent(res -> this.addResource(res));
-        card.getCornerAtNE().resource.ifPresent(res -> this.addResource(res));
-        card.getCornerAtSE().resource.ifPresent(res -> this.addResource(res));
-        card.getCornerAtSW().resource.ifPresent(res -> this.addResource(res));
+        addResource(res1_);
+        addResource(res2_);
+        addResource(res3_);
 
+        Resource res1 = card.getCornerAtNW().resource;
+        Resource res2 = card.getCornerAtNE().resource;
+        Resource res3 = card.getCornerAtSW().resource;
+        Resource res4 = card.getCornerAtSE().resource;
+
+        addResource(res1);
+        addResource(res2);
+        addResource(res3);
+        addResource(res4);
 
         for (int k = 0; k < 2; k++) {
             for (int h = 0; h < 2; h++) {
@@ -1150,8 +1168,10 @@ public class PersonalBoard implements Serializable {
             for (int h = 0; h < 2; h++) {
 
                 if (board[i + k][j + h].is_full) {
-                    board[i + k][j + h].getCornerFromCell().resource.ifPresent(res -> this.removeResource(res));
-                    board[i + k][j + h].getCornerFromCell().item.ifPresent(it -> this.removeItem(it));
+                    Resource res1 = board[i + k][j + h].getCornerFromCell().resource;
+                    Item it1 = board[i + k][j + h].getCornerFromCell().item;
+                    removeResource(res1);
+                    removeItem(it1);
                 }
 
                 // Effective cell-setter
@@ -1160,8 +1180,10 @@ public class PersonalBoard implements Serializable {
                 board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
 
                 if (card_to_play.orientation == Orientation.FRONT) {
-                    board[i + k][j + h].getCornerFromCell().resource.ifPresent(res -> this.addResource(res));
-                    board[i + k][j + h].getCornerFromCell().item.ifPresent(it -> this.addItem(it));
+                    Resource res2 = board[i + k][j + h].getCornerFromCell().resource;
+                    Item it2 = board[i + k][j + h].getCornerFromCell().item;
+                    addResource(res2);
+                    addItem(it2);
                 }
             }
         }

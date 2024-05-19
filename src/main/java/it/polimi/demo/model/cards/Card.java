@@ -15,7 +15,7 @@ public abstract class Card implements Serializable {
         this.orientation = orientation;
     }
 
-    public int getId(){return this.id;}
+    public int getId() {return this.id;}
 
     public String toString(){
         return "Card: " + this.id + " " + this.orientation;

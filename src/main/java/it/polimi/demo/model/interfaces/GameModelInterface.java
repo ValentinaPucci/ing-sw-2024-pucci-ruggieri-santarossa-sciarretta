@@ -8,6 +8,7 @@ import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
+import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.view.PlayerDetails;
 
@@ -67,5 +68,15 @@ public interface GameModelInterface {
 
     PersonalBoard getPersonalBoard(String myNickname);
 
-    List<StarterCard> getStarterCardsToChose(String myNickname);
+    List<StarterCard> getStarterCardsToChoose(String myNickname);
+
+    StarterCard getStarterCard(String myNickname);
+
+    List<ObjectiveCard> getPersonalObjectiveCardsToChoose(String myNickname);
+
+    ObjectiveCard getObjectiveCard(String myNickname);
+
+    List<ResourceCard> getPlayerHand(String myNickname);
+
+
 }

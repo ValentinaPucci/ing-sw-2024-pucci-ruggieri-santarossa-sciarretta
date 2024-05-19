@@ -14,9 +14,9 @@ import java.util.Optional;
 public class StarterCard extends Card {
 
     public static final int STARTER_CARD_COORDINATE = 500;
-    public transient Optional<Resource> front_resource1;
-    public transient Optional<Resource> front_resource2;
-    public transient Optional<Resource> front_resource3;
+    public Resource front_resource1;
+    public Resource front_resource2;
+    public Resource front_resource3;
     public Corner[][] corners;
     public Orientation orientation;
 
@@ -27,9 +27,9 @@ public class StarterCard extends Card {
      */
     public StarterCard(int id, Orientation orientation) {
         super(id, orientation);
-        this.front_resource1 = Optional.empty();
-        this.front_resource2 = Optional.empty();
-        this.front_resource3 = Optional.empty();
+        this.front_resource1 = null;
+        this.front_resource2 = null;
+        this.front_resource3 = null;
 
         this.corners = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
@@ -45,9 +45,9 @@ public class StarterCard extends Card {
      * @param resource2
      */
     public void setStarterCardFront(Resource resource1, Resource resource2, Resource resource3, Corner[][] actual_corners){
-        this.front_resource1 = Optional.ofNullable(resource1);
-        this.front_resource2 = Optional.ofNullable(resource2);
-        this.front_resource3 = Optional.ofNullable(resource3);
+        this.front_resource1 = resource1;
+        this.front_resource2 = resource2;
+        this.front_resource3 = resource3;
         this.orientation = Orientation.FRONT;
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
@@ -138,9 +138,9 @@ public class StarterCard extends Card {
         return "StarterCard{" +
                 "id=" + id +
                 ", orientation=" + orientation +
-                ", front_resource1=" + front_resource1.orElse(null) +
-                ", front_resource2=" + front_resource2.orElse(null) +
-                ", front_resource3=" + front_resource3.orElse(null) +
+                ", front_resource1=" + front_resource1 +
+                ", front_resource2=" + front_resource2 +
+                ", front_resource3=" + front_resource3 +
                 ", cornerNW=" + getCornerAtNW().toString() +
                 ", cornerNE=" + getCornerAtNE().toString() +
                 ", cornerSW=" + getCornerAtSW().toString() +
