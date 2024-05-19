@@ -10,6 +10,11 @@ public class GraphicalGameUI extends GameUI {
     }
 
     @Override
+    public void nextTurn() {
+
+    }
+
+    @Override
     public void gameEnded(GameView gameView) {
 
     }

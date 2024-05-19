@@ -141,6 +141,11 @@ public class ClientProxy implements Client {
     }
 
     @Override
+    public void nextTurn() throws RemoteException {
+
+    }
+
+    @Override
     public void gameEnded(GameView gameView) throws RemoteException{
         try {
             out_serialized.reset();

@@ -1,6 +1,7 @@
 package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.listener.UIListener;
+import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
@@ -80,10 +81,7 @@ public class TextualGameUI extends GameUI {
                     // Here we show both sides of the starter card
                     showStarterCards();
                     Orientation o = chooseCardOrientation();
-                    // System.out.println(lst.size()) == 0 !!!
                     notifyListeners(lst, UIListener -> UIListener.placeStarterCard(o));
-                    // TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
-                    // TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
                 }
 
                 case RUNNING, SECOND_LAST_ROUND -> {
@@ -130,6 +128,7 @@ public class TextualGameUI extends GameUI {
 
     @Override
     public void update(GameView gameView) {
+
         // Here we update the game view
         this.lastGameView = gameView;
 
@@ -142,24 +141,18 @@ public class TextualGameUI extends GameUI {
             System.out.println("\n" + ansi().fg(RED).bold().a(gameView.getErrorMessage()).reset() + "\n");
         }
 
-//        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname()) && getState() == State.MY_TURN) {
-//            return;
-//        }
+        // Here we update the personal board
+        updatePersonalBoard(gameView);
 
-        // this.updateBoard(gameView);
+    }
 
-        System.out.println("Current player nickname: " + gameView.getCurrentPlayerNickname());
-        System.out.println("My nickname: " + gameView.getMyNickname());
-
-        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname())) {
+    @Override
+    public void nextTurn() {
+        if (lastGameView.getCurrentPlayerNickname().equals(lastGameView.getMyNickname())) {
             System.out.println("Your turn!");
             setState(State.MY_TURN);
             // Every time we call the update someone (hopefully) will execute his/her turn.
             executeMyTurn();
-        }
-        else {
-            System.out.println("Player " + gameView.getCurrentPlayerNickname() + "'s turn.");
-            setState(State.NOT_MY_TURN);
         }
     }
 
@@ -212,6 +205,11 @@ public class TextualGameUI extends GameUI {
             return Orientation.FRONT;
         else
             return Orientation.BACK;
+    }
+
+    private void updatePersonalBoard(GameView gameView) {
+        System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+        TuiPersonalBoardGraphics.showPersonalBoard(gameView.getPersonalBoard());
     }
 
     private void updateBoard(GameView gameView) {

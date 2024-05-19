@@ -25,7 +25,7 @@ public interface GameControllerInterface extends Remote {
 
     GameModelInterface getModel();
 
-    void placeStarterCard(Player p, Orientation orientation);
+    void placeStarterCard(Player p, Orientation orientation) throws GameEndedException;
 
     void chooseCardFromHand(Player p, int index) throws RemoteException;
 
@@ -44,7 +44,7 @@ public interface GameControllerInterface extends Remote {
      * @param player_nickname
      * @param index the index of the card to draw
      */
-    void drawCard(String player_nickname, int index) throws RemoteException;
+    void drawCard(String player_nickname, int index) throws RemoteException, GameEndedException;
 
     /**
      * This method checks if it's the turn of player named 'nick'.
