@@ -15,7 +15,7 @@ import java.io.Serializable;
 import java.util.*;
 
 public class GameView implements Serializable {
-    @Serial
+
     private static final long serialVersionUID = 1L;
     private final String initial_player_nickname;
     private final CommonBoard common_board;
@@ -48,37 +48,11 @@ public class GameView implements Serializable {
         this.leaderboard = model.getLeaderBoard();
         this.my_nickname = nickname;
         this.personal_board = model.getPersonalBoard(this.my_nickname);
-        this.personal_starter_cards_to_chose = model.getStarterCardsToChose(this.my_nickname);
-//        this.personal_starter_cards_to_chose = model.getAllPlayers()
-//                .stream()
-//                .filter(player -> player.getNickname().equals(nickname))
-//                .findFirst()
-//                .map(PlayerIC::getStarterCardToChose)
-//                .orElse(null);
-        this.personal_starter_card = model.getAllPlayers()
-                .stream()
-                .filter(player -> player.getNickname().equals(nickname))
-                .findFirst()
-                .map(PlayerIC::getStarterCard) // Map the Optional<Player> to Optional<ChosenObjectiveCard>
-                .orElse(null); // Provide a default value if the Optional is empty
-        this.personal_objective_cards_to_chose = model.getAllPlayers()
-                .stream()
-                .filter(player -> player.getNickname().equals(nickname))
-                .findFirst()
-                .map(PlayerIC::getSecretObjectiveCards) // Map the Optional<Player> to Optional<ChosenObjectiveCard>
-                .orElse(null);
-        this.personal_objective_card = model.getAllPlayers()
-                .stream()
-                .filter(player -> player.getNickname().equals(nickname))
-                .findFirst()
-                .map(PlayerIC::getChosenObjectiveCard) // Map the Optional<Player> to Optional<ChosenObjectiveCard>
-                .orElse(null); // Provide a default value if the Optional is empty
-        this.player_hand = model.getAllPlayers()
-                .stream()
-                .filter(player -> player.getNickname().equals(nickname))
-                .findFirst()
-                .map(PlayerIC::getHand)
-                .orElse(null);
+        this.personal_starter_cards_to_chose = model.getStarterCardsToChoose(this.my_nickname);
+        this.personal_starter_card = model.getStarterCard(this.my_nickname);
+        this.personal_objective_cards_to_chose =  model.getPersonalObjectiveCardsToChoose(this.my_nickname);
+        this.personal_objective_card = model.getObjectiveCard(this.my_nickname);
+        this.player_hand = model.getPlayerHand(this.my_nickname);
         this.gameEnded = model.isEnded();
         this.gamePaused = model.isPaused();
         this.playersData = model.getPlayersDetails();

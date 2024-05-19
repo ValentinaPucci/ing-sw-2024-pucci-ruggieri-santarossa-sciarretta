@@ -1,6 +1,7 @@
 package it.polimi.demo.view.UI;
 
 import it.polimi.demo.listener.UIListener;
+import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.view.GameView;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ abstract public class GameUI {
 
     public abstract void gameEnded(GameView gameView);
 
-    public synchronized void addListener(UIListener o){
+    public synchronized void addListener(UIListener o) {
         if(!lst.contains(o)){
             lst.add(o);
         }

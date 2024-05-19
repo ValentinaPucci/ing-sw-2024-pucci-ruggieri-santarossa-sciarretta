@@ -19,8 +19,8 @@ import java.util.Optional;
 public class Corner implements Serializable {
 
     private Coordinate coordinate;
-    public transient Optional<Resource> resource;
-    public transient Optional<Item> item;
+    public Resource resource;
+    public Item item;
     public boolean is_visible;
     public ResourceCard reference_card;
 
@@ -42,15 +42,15 @@ public class Corner implements Serializable {
     public Corner(BoardCellCoordinate board_coordinate) {
         this.board_coordinate = board_coordinate;
         this.is_visible = true;
-        this.resource = Optional.empty();
-        this.item = Optional.empty();
+        this.resource = null;
+        this.item = null;
     }
 
     public Corner(BoardCellCoordinate board_coordinate, ResourceCard reference_card) {
         this.board_coordinate = board_coordinate;
         this.is_visible = true;
-        this.resource = Optional.empty();
-        this.item = Optional.empty();
+        this.resource = null;
+        this.item = null;
         this.reference_card = reference_card;
     }
 
@@ -75,20 +75,20 @@ public class Corner implements Serializable {
     // Set corner
 // Crea un set resource. per settare resource e poi crea anche un set item per settare item.
     public void setCornerResource(Resource resource) {
-        this.resource = Optional.ofNullable(resource);
+        this.resource = resource;
     }
 
     public void setCornerItem(Item item) {
-        this.item = Optional.ofNullable(item);
+        this.item = item;
     }
 
-    public void setCornerItemEmpty(){this.item = Optional.empty();}
+    public void setCornerItemEmpty() {this.item = null;}
 
-    public void setCornerResourceEmpty(){this.resource = Optional.empty();}
+    public void setCornerResourceEmpty() {this.resource = null;}
 
     public void setEmpty(){
-        this.resource = Optional.empty();
-        this.item = Optional.empty();
+        this.resource = null;
+        this.item = null;
     }
 
 //    public void setBoard_coordinate(Coordinate coord) {
@@ -102,11 +102,11 @@ public class Corner implements Serializable {
      * @throws NoSuchElementException
      */
     public Resource getResource() throws NoSuchElementException {
-        return resource.get();
+        return resource;
     }
 
     public Item getItem() throws NoSuchElementException {
-        return item.get();
+        return item;
     }
 
     public Coordinate getCoordinate() {
@@ -121,8 +121,8 @@ public class Corner implements Serializable {
     public boolean equals(Object obj) {
         Corner corner = (Corner) obj;
         if (this.is_visible && corner.is_visible) {
-            if (this.resource.isPresent() && corner.resource.isPresent()) {
-                return this.resource.get().equals(corner.resource.get());
+            if (this.resource != null && corner.resource != null) {
+                return this.resource.equals(corner.resource);
             } else {
                 return false;
             }

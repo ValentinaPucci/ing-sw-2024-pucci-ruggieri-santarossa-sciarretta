@@ -296,7 +296,7 @@ public class TuiCardGraphics {
 
             for (int i = 0; i < 4; i++) {
                 if (corners.get(i).is_visible) {
-                    if (corners.get(i).item.isPresent()) {
+                    if (corners.get(i).item !=null) {
                         Item item = corners.get(i).getItem();
                         System.out.println(item);
                         if (item == Item.FEATHER)
@@ -307,7 +307,7 @@ public class TuiCardGraphics {
                             corners_string.add(i, "PO");
                         else
                             corners_string.add(i, "  ");
-                    } else if (corners.get(i).resource.isPresent()) {
+                    } else if (corners.get(i).resource != null) {
                         Resource resource = corners.get(i).getResource();
                         if (resource == Resource.LEAF)
                             corners_string.add(i, "LE");
@@ -353,7 +353,7 @@ public class TuiCardGraphics {
 
             for (int i = 0; i < 4; i++) {
                 if (corners.get(i).is_visible) {
-                    if (corners.get(i).item.isPresent()) {
+                    if (corners.get(i).item != null) {
                         Item item = corners.get(i).getItem();
                         if (item == Item.FEATHER)
                             corners_string.add(i, "FE");
@@ -363,7 +363,7 @@ public class TuiCardGraphics {
                             corners_string.add(i, "PO");
                         else
                             corners_string.add(i, "  ");
-                    } else if (corners.get(i).resource.isPresent()) {
+                    } else if (corners.get(i).resource != null) {
                         Resource resource = corners.get(i).getResource();
                         if (resource == Resource.LEAF)
                             corners_string.add(i, "LE");
@@ -415,7 +415,7 @@ public class TuiCardGraphics {
 
         for (int i = 0; i < 4; i++) {
             if (corners.get(i).is_visible) {
-                if (corners.get(i).item != null && corners.get(i).item.isPresent()) {
+                if (corners.get(i).item != null) {
                     Item item = corners.get(i).getItem();
                     if (item == Item.FEATHER)
                         corners_string.add(i, "FE");
@@ -425,7 +425,7 @@ public class TuiCardGraphics {
                         corners_string.add(i, "PO");
                     else
                         corners_string.add(i, "ERROR");
-                } else if (corners.get(i).resource != null && corners.get(i).resource.isPresent()) {
+                } else if (corners.get(i).resource != null) {
                     Resource resource = corners.get(i).getResource();
                     if (resource == Resource.LEAF)
                         corners_string.add(i, "LE");
@@ -441,8 +441,8 @@ public class TuiCardGraphics {
                 corners_string.add(i, "XX");
             }
         }
-        if (starter_card.front_resource1.isPresent()) {
-            Resource res = starter_card.front_resource1.get();
+        if (starter_card.front_resource1 != null) {
+            Resource res = starter_card.front_resource1;
             if (res == Resource.LEAF)
                 front_resource1 = "LE";
             else if (res == Resource.BUTTERFLY)
@@ -454,8 +454,8 @@ public class TuiCardGraphics {
         } else {
             front_resource1 = "  ";
         }
-        if (starter_card.front_resource2.isPresent()) {
-            Resource res = starter_card.front_resource2.get();
+        if (starter_card.front_resource2 != null) {
+            Resource res = starter_card.front_resource2;
             if (res == Resource.LEAF)
                 front_resource2 = "LE";
             else if (res == Resource.BUTTERFLY)
@@ -467,8 +467,8 @@ public class TuiCardGraphics {
         } else {
             front_resource2 = "  ";
         }
-        if (starter_card.front_resource3.isPresent()) {
-            Resource res = starter_card.front_resource3.get();
+        if (starter_card.front_resource3 != null) {
+            Resource res = starter_card.front_resource3;
             if (res == Resource.LEAF)
                 front_resource3 = "LE";
             else if (res == Resource.BUTTERFLY)
@@ -495,7 +495,7 @@ public class TuiCardGraphics {
 
         for (int i = 0; i < 4; i++) {
             if (corners.get(i).is_visible) {
-                if (corners.get(i).item.isPresent()) {
+                if (corners.get(i).item != null) {
                     Item item = corners.get(i).getItem();
                     System.out.println(item);
                     if (item == Item.FEATHER)
@@ -506,7 +506,7 @@ public class TuiCardGraphics {
                         corners_string.add(i, "PO");
                     else
                         corners_string.add(i, "ERROR");
-                } else if (corners.get(i).resource.isPresent()) {
+                } else if (corners.get(i).resource != null) {
                     Resource resource = corners.get(i).getResource();
                     if (resource == Resource.LEAF)
                         corners_string.add(i, "LE");
