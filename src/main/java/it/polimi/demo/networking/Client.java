@@ -50,6 +50,11 @@ public interface Client extends Remote {
     void modelChanged(GameView gameView) throws RemoteException;
 
     /**
+     * This method is called by the server to notify the client that the turn has changed.
+     */
+    void nextTurn() throws RemoteException;
+
+    /**
      * This method is called by the server to notify the client that the game it is in has ended.
      */
     void gameEnded(GameView gameView) throws RemoteException;

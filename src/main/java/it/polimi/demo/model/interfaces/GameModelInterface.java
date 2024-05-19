@@ -10,6 +10,7 @@ import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.view.PlayerDetails;
 
 import java.util.LinkedList;
@@ -56,7 +57,7 @@ public interface GameModelInterface {
 
     List<GameListener> getListeners();
 
-    void drawCard(Player p, int i);
+    void drawCard(Player p, int i) throws GameEndedException;
 
     void placeCard(ResourceCard card, Player p, int x, int y);
 

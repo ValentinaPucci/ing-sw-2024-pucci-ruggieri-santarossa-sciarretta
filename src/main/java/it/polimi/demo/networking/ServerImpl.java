@@ -143,7 +143,7 @@ public class ServerImpl implements Server, GameListener {
     }
 
     @Override
-    public void placeStarterCard(Orientation orientation) throws RemoteException {
+    public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException {
         if (!this.nickname.equals(game_controller.getCurrentPlayer().getNickname()))
             this.game_controller.setError("Player " + this.nickname + " tried to place a starter card while it was not his turn.");
         else
@@ -173,7 +173,7 @@ public class ServerImpl implements Server, GameListener {
     }
 
     @Override
-    public void drawCard(int index) throws RemoteException {
+    public void drawCard(int index) throws RemoteException, GameEndedException {
         if (!this.nickname.equals(game_controller.getCurrentPlayer().getNickname()))
             this.game_controller.setError("Player " + this.nickname + " tried to draw a card while it was not his turn.");
         else
@@ -272,6 +272,11 @@ public class ServerImpl implements Server, GameListener {
                 }
             }, DefaultValues.walkoverTimeout, TimeUnit.MILLISECONDS);
         }
+    }
+
+    @Override
+    public void nextTurn() throws RemoteException {
+        this.client.nextTurn();
     }
 
     // *************************** Status Listeners ***************************

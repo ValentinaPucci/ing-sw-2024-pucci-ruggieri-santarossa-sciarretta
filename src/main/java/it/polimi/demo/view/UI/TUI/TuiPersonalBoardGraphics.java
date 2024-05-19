@@ -21,7 +21,7 @@ public class TuiPersonalBoardGraphics {
 
 
 
-    public static void showPersonalBoard(PersonalBoard personal_board){
+    public static void showPersonalBoard(PersonalBoard personal_board) {
 
 //        ResourceCard resource_card = new ResourceCard( 76, Orientation.FRONT, Color.GREEN);
 //        resource_card.getCornerAtNW().setEmpty();
@@ -78,21 +78,21 @@ public class TuiPersonalBoardGraphics {
                     System.out.print(" S ");
                 }
                 else if (matrix[i][j].getCornerFromCell() != null && matrix[i][j].getCornerFromCell().reference_card != null) {
-                    if(matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.RED)){
+                    if (matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.RED)){
                         System.out.print(ANSI_RED + matrix[i][j].getCornerFromCell().reference_card.getId()+ANSI_RST);
 
-                    }else if(matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.GREEN)){
+                    } else if (matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.GREEN)){
                         System.out.print(ANSI_GREEN + matrix[i][j].getCornerFromCell().reference_card.getId()+ANSI_RST);
 
-                    }else if(matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.BLUE)){
+                    } else if (matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.BLUE)){
                         System.out.print(ANSI_CYAN + matrix[i][j].getCornerFromCell().reference_card.getId()+ANSI_RST);
 
-                    }else if(matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.PURPLE)){
+                    } else if (matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.PURPLE)){
                         System.out.print(ANSI_PURPLE + matrix[i][j].getCornerFromCell().reference_card.getId()+ANSI_RST);
                     }
-                }else {
+                } else {
                     System.out.print("   ");
-                }System.out.print("|");
+                } System.out.print("|");
             }
             System.out.println();
             printHorizontalLine(20);
@@ -123,6 +123,5 @@ public class TuiPersonalBoardGraphics {
     public static void main(String[] args) {
         PersonalBoard personal_board = new PersonalBoard();
         showPersonalBoard(personal_board);
-
     }
 }
