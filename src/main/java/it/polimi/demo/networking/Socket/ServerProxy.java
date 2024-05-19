@@ -41,6 +41,10 @@ public class ServerProxy  implements Server {
         ADD_PLAYER_TO_GAME,
         CREATE,
         GET_GAMES_LIST,
+        PLACE_STARTER_CARD,
+        CHOOSE_CARD,
+        PLACE_CARD,
+        DRAW_CARD,
         PONG
     }
     /**
@@ -129,22 +133,54 @@ public class ServerProxy  implements Server {
 
     @Override
     public void placeStarterCard(Orientation orientation) throws RemoteException {
+            try{
+                out_serialized.reset();
+                out_serialized.writeObject(Methods.PLACE_STARTER_CARD);
+                out_serialized.writeObject(orientation);
+                out_serialized.flush();
+            } catch (IOException e) {
+                throw new RemoteException("Cannot place starter card", e);
+
+            }
 
     }
 
     @Override
     public void chooseCard(int which_card) throws RemoteException {
-
+            try {
+                out_serialized.reset();
+                out_serialized.writeObject(Methods.CHOOSE_CARD);
+                out_serialized.writeObject(which_card);
+                out_serialized.flush();
+            } catch (IOException e) {
+                throw new RemoteException("Cannot choose card", e);
+            }
     }
 
     @Override
     public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
-
+        try {
+            out_serialized.reset();
+            out_serialized.writeObject(Methods.PLACE_CARD);
+            out_serialized.writeObject(where_to_place_x);
+            out_serialized.writeObject(where_to_place_y);
+            out_serialized.writeObject(orientation);
+            out_serialized.flush();
+        } catch (IOException e) {
+            throw new RemoteException("Cannot place card", e);
+        }
     }
 
     @Override
     public void drawCard(int index) throws RemoteException {
-
+            try {
+                out_serialized.reset();
+                out_serialized.writeObject(Methods.DRAW_CARD);
+                out_serialized.writeObject(index);
+                out_serialized.flush();
+            } catch (IOException e) {
+                throw new RemoteException("Cannot draw card", e);
+            }
     }
 
     @Override
@@ -158,63 +194,20 @@ public class ServerProxy  implements Server {
             }
         }
 
-
-
-//    @Override
-//    public void placeStarterCard() {
-//
-//    }
-//
-//    @Override
-//    public void drawCard(int x) {
-//
-//    }
-//
-//    @Override
-//    public void placeCard(ResourceCard chosenCard, int x, int y) {
-//
-//    }
-//
-//    @Override
-//    public void calculateFinalScores() {
-//
-//    }
-//
-//    @Override
-//    public List<ResourceCard> getPlayerHand() {
-//        return null;
-//    }
-
-    // receive messgaes from the server: use not a case based.
-        // Something like this:
-//
         public void ReceiveFromClient(Client client) throws RemoteException {
             try {
                 ClientProxy.Methods client_methods = (ClientProxy.Methods) in_deserialized.readObject();
                 switch (client_methods) {
-                    case UPDATE_GAMES_LIST:
-                        client.updateGamesList((List<GameDetails>) in_deserialized.readObject());
-                        break;
-                    case SHOW_ERROR:
-                        client.showError((String) in_deserialized.readObject());
-                        break;
-                    case UPDATE_PLAYERS_LIST:
-                        client.updatePlayersList((List<String>) in_deserialized.readObject());
-                        break;
-                    case GAME_HAS_STARTED:
-                        client.gameHasStarted();
-                        break;
-                    case MODEL_CHANGED:
-                        client.modelChanged((GameView) in_deserialized.readObject());
-                        break;
-                    case GAME_ENDED:
-                        client.gameEnded((GameView) in_deserialized.readObject());
-                        break;
-                    case PING:
-                        client.ping();
-                        break;
+                    case UPDATE_GAMES_LIST -> client.updateGamesList((List<GameDetails>) in_deserialized.readObject());
+                    case SHOW_ERROR -> client.showError((String) in_deserialized.readObject());
+                    case UPDATE_PLAYERS_LIST -> client.updatePlayersList((List<String>) in_deserialized.readObject());
+                    case GAME_HAS_STARTED -> client.gameHasStarted();
+                    case MODEL_CHANGED -> client.modelChanged((GameView) in_deserialized.readObject());
+                    case GAME_ENDED -> client.gameEnded((GameView) in_deserialized.readObject());
+                    case PING -> client.ping();
                 }
             } catch (SocketException e) {
+                // Entra qus
                 System.exit(0);
             } catch (ClassNotFoundException e) {
                 throw new RuntimeException("Cannot deserialize object", e);

@@ -1,9 +1,15 @@
 package it.polimi.demo.networking.Applications;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.rmi.AccessException;
 import java.util.logging.Logger;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.networking.ClientImpl;
 import it.polimi.demo.networking.ConnectionType;
+import it.polimi.demo.networking.Server;
+import it.polimi.demo.networking.ServerImpl;
+import it.polimi.demo.networking.Socket.ClientProxy;
 import it.polimi.demo.view.UI.TUI.TextualUtils;
 import it.polimi.demo.view.UI.UIType;
 import it.polimi.demo.networking.Socket.ServerProxy;
@@ -14,6 +20,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Scanner;
 
+
 public class AppClient {
 
     private static final Logger logger = Logger.getLogger(AppServer.class.getName());
@@ -21,6 +28,8 @@ public class AppClient {
     private static ConnectionType connectionType;
     private static String ip;
     private static int port;
+    private static int socketPort = DefaultValues.Default_port_SOCKET;
+    private static AppServer instance;
 
     /**
      * Starts a client application.
@@ -126,5 +135,4 @@ public class AppClient {
         }).start();
         client.run();
     }
-
 }

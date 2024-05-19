@@ -136,7 +136,7 @@ public class AppServer extends UnicastRemoteObject implements AppServerInterface
                         Server server = new ServerImpl();
                         server.register(client_proxy);
                         // Check:
-                        while (true) {
+                        while(true) {
                             client_proxy.receiveFromServer(server);
                         }
                     } catch (RemoteException e) {

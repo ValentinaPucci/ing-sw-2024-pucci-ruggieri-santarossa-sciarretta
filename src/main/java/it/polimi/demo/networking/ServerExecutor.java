@@ -29,6 +29,7 @@ public class ServerExecutor extends UnicastRemoteObject implements Server {
     private final Server server;
     private Client client;
 
+
     public ServerExecutor(Server server) throws RemoteException {
         super();
         this.server = server;

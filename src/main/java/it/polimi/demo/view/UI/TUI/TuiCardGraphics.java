@@ -130,17 +130,17 @@ public class TuiCardGraphics {
         for (int i = 1; i < CARD_GRAPHICS.length - 1; i++) {
             if (i == 1) {
                 String row = String.format(CARD_GRAPHICS[i], corner1, corner2);
-                System.out.println(ANSI_RESET + row.substring(0, 4) + Color + row.substring(4, 12) + ANSI_RESET + row.substring(13, 17) + ANSI_RESET);
+                System.out.println(ANSI_RESET + row.substring(0, 4) + Color + row.substring(4, 12) + ANSI_RESET + row.substring(14, 18) + ANSI_RESET);
             } else if (i == 3) {
                 String row3 = String.format(CARD_GRAPHICS[i], corner3, corner4);
-                System.out.println(ANSI_RESET + row3.substring(0, 4) + Color + row3.substring(4, 12) + ANSI_RESET + row3.substring(13, 17) + ANSI_RESET);
+                System.out.println(ANSI_RESET + row3.substring(0, 4) + Color + row3.substring(4, 12) + ANSI_RESET + row3.substring(14, 18) + ANSI_RESET);
             } else {
                 String row4 = String.format(CARD_GRAPHICS[i]);
                 System.out.println(ANSI_RESET + row4.substring(0, 2) + Color + row4.substring(2, 14) + ANSI_RESET + row4.substring(14, 16) + ANSI_RESET);
             }
         }
         System.out.println(ANSI_RESET + CARD_GRAPHICS[4] + ANSI_RESET);
-        System.out.println("\n");
+        //System.out.println("\n");
 
         if (points != 0) {
             System.out.print("Card points: " + points + "\n");
@@ -163,7 +163,7 @@ public class TuiCardGraphics {
             }
         }
         System.out.println(ANSI_RESET + STARTER_CARD_GRAPHICS[4] + ANSI_RESET);
-        System.out.println("\n");
+        // System.out.println("\n");
     }
 
     public void printObjectiveCard() {
@@ -178,7 +178,7 @@ public class TuiCardGraphics {
             }
         }
         System.out.println(ANSI_RESET + CARD_GRAPHICS[4] + ANSI_RESET);
-        System.out.println("\n");
+        //System.out.println("\n");
 
     }
 
@@ -197,7 +197,7 @@ public class TuiCardGraphics {
             }
         }
         System.out.println(ANSI_RESET + STARTER_CARD_GRAPHICS[4] + ANSI_RESET);
-        System.out.println("\n");
+        //System.out.println("\n");
 
     }
 
@@ -216,7 +216,7 @@ public class TuiCardGraphics {
             }
         }
         System.out.println(ANSI_RESET + STARTER_CARD_GRAPHICS[4] + ANSI_RESET);
-        System.out.println("\n");
+        //System.out.println("\n");
 
     }
 
@@ -296,7 +296,7 @@ public class TuiCardGraphics {
 
             for (int i = 0; i < 4; i++) {
                 if (corners.get(i).is_visible) {
-                    if (corners.get(i).item !=null) {
+                    if (corners.get(i).item != null) {
                         Item item = corners.get(i).getItem();
                         System.out.println(item);
                         if (item == Item.FEATHER)
@@ -461,7 +461,7 @@ public class TuiCardGraphics {
             else if (res == Resource.BUTTERFLY)
                 front_resource2 = "BU";
             else if (res == Resource.WOLF)
-                front_resource2 = "WO=";
+                front_resource2 = "WO";
             else if (res == Resource.MUSHROOM)
                 front_resource2 = "MU";
         } else {
@@ -474,7 +474,7 @@ public class TuiCardGraphics {
             else if (res == Resource.BUTTERFLY)
                 front_resource3 = "BU";
             else if (res == Resource.WOLF)
-                front_resource3 = "WO=";
+                front_resource3 = "WO";
             else if (res == Resource.MUSHROOM)
                 front_resource3 = "MU";
         } else {
@@ -543,13 +543,13 @@ public class TuiCardGraphics {
                 TuiCardGraphics normal_objective_card = new TuiCardGraphics("FE", "PO", "PA", 3);
                 normal_objective_card.printObjectiveCard();
             } else if (num_feathers == 2) {
-                TuiCardGraphics normal_objective_card = new TuiCardGraphics("XX", "FE", "FE", 2);
+                TuiCardGraphics normal_objective_card = new TuiCardGraphics("  ", "FE", "FE", 2);
                 normal_objective_card.printObjectiveCard();
             } else if (num_parchments == 2) {
-                TuiCardGraphics normal_objective_card = new TuiCardGraphics("XX", "PA", "PA", 2);
+                TuiCardGraphics normal_objective_card = new TuiCardGraphics("  ", "PA", "PA", 2);
                 normal_objective_card.printObjectiveCard();
             } else if (num_potions == 2) {
-                TuiCardGraphics normal_objective_card = new TuiCardGraphics("XX", "PO", "PO", 2);
+                TuiCardGraphics normal_objective_card = new TuiCardGraphics("  ", "PO", "PO", 2);
                 normal_objective_card.printObjectiveCard();
             } else {
                 System.out.println("Invalid ItemObjectiveCard");
@@ -588,18 +588,16 @@ public class TuiCardGraphics {
             showStarterCardBack(starterCard);
         }
     }
-}
 
 
-
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
 
 //        ResourceCard resource_card = new ResourceCard(11, Orientation.FRONT, Color.GREEN);
 //        resource_card.getCornerAtNW().setEmpty();
 //        resource_card.getCornerAtNW().is_visible = false;
 //        resource_card.getCornerAtSW().setCornerResource(Resource.LEAF);
 //        resource_card.getCornerAtSE().setCornerResource(Resource.LEAF);
-//        showResourceCard(resource_card);    <------------------------------------------method to use in TUI
+//        showResourceCard(resource_card);    // <------------------------------------------method to use in TUI
 
 //        GoldCard gold_card = new GoldCard(67, Orientation.FRONT, Color.BLUE);
 //        gold_card.getCornerAtNW().setEmpty();
@@ -607,19 +605,22 @@ public class TuiCardGraphics {
 //        gold_card.getCornerAtSW().setCornerItem(Item.PARCHMENT);
 //        gold_card.getCornerAtSE().is_visible = false;
 //        gold_card.setCornerCoverageRequired();
-//        showGoldCard(gold_card);        <-----------------------------------------------method to use in TUI
+//        showGoldCard(gold_card);       // <-----------------------------------------------method to use in TUI
 
 
-//        TuiCardGraphics starter_card = new TuiCardGraphics("FE", "PA", "LE", "BU", "FE", "BU", "MU");
-//        starter_card.printStarterCard(ANSI_BEIGE_BACKGROUND);
-//
+        //TuiCardGraphics starter_card = new TuiCardGraphics("FE", "PA", "LE", "BU", "FE", "BU", "MU");
+        //starter_card.printStarterCard(ANSI_BEIGE_BACKGROUND);
 
-//        ConcreteDeck deck_starter = new ConcreteDeck("Starter");
-//        for (int i = 0; i < 12; i++) {
-//            StarterCard starterCard = (StarterCard) deck_starter.pop();
-////            System.out.println("Starter card: " + starterCard.getId());
-////            System.out.println("Starter card orientation: " + starterCard.getOrientation());
-////            System.out.println(starterCard.toString());
-//            showStarterCard(starterCard); <-----------------------------------------------method to use in TUI
-//        }
-//}
+
+
+        ConcreteDeck deck_starter = new ConcreteDeck("Starter");
+        for (int i = 0; i < 12; i++) {
+            StarterCard starterCard = (StarterCard) deck_starter.pop();
+//            System.out.println("Starter card: " + starterCard.getId());
+//            System.out.println("Starter card orientation: " + starterCard.getOrientation());
+//            System.out.println(starterCard.toString());
+            showStarterCard(starterCard); // <-----------------------------------------------method to use in TUI
+        }
+    }
+
+}

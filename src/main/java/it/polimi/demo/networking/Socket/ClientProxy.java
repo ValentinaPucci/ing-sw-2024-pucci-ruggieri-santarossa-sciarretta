@@ -2,6 +2,7 @@ package it.polimi.demo.networking.Socket;
 
 
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.InvalidChoiceException;
 import it.polimi.demo.networking.Client;
@@ -169,30 +170,22 @@ public class ClientProxy implements Client {
         try{
             ServerProxy.Methods server_methods = (ServerProxy.Methods) in_deserialized.readObject();
             switch(server_methods){
-                case REGISTER:
-                    server.register((Client) in_deserialized.readObject());
-                    break;
-                case ADD_PLAYER_TO_GAME:
-                    try {
-                        server.addPlayerToGame((int) in_deserialized.readObject(), (String) in_deserialized.readObject());
-                    } catch (InvalidChoiceException | GameEndedException e) {
-                        // Exception thrown by the server
-                        System.err.println("Invalid choice: " + e.getMessage());
-                    }
-                    break;
-                case CREATE:
-                    //System.out.println(" " + (String) in_deserialized.readObject() + " " + (int) in_deserialized.readObject());
-                    server.create((String) in_deserialized.readObject(), (int) in_deserialized.readObject());
-                    break;
-                case GET_GAMES_LIST:
-                    server.getGamesList();
-                    break;
-                case PONG:
-                    server.pong();
-                    break;
+                case REGISTER -> server.register((Client) in_deserialized.readObject());
+                case ADD_PLAYER_TO_GAME -> server.addPlayerToGame((int) in_deserialized.readObject(), (String) in_deserialized.readObject());
+                case CREATE -> server.create((String) in_deserialized.readObject(), (int) in_deserialized.readObject());
+                case PLACE_STARTER_CARD -> server.placeStarterCard((Orientation) in_deserialized.readObject());
+                case CHOOSE_CARD -> server.chooseCard((int) in_deserialized.readObject());
+                case PLACE_CARD -> server.placeCard((int) in_deserialized.readObject(), (int) in_deserialized.readObject(), (Orientation) in_deserialized.readObject());
+                case DRAW_CARD -> server.drawCard((int) in_deserialized.readObject());
+                case GET_GAMES_LIST -> server.getGamesList();
+                case PONG -> server.pong();
             }
         } catch (IOException | ClassNotFoundException e) {
             throw new RemoteException("error, cannot deserialize the object or cannot connect", e);
+        } catch (InvalidChoiceException e) {
+            throw new RuntimeException(e);
+        } catch (GameEndedException e) {
+            throw new RuntimeException(e);
         }
     }
 
