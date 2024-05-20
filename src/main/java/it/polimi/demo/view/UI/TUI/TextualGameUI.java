@@ -21,7 +21,10 @@ import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.view.UI.TUI.TextualUtils.*;
 import static org.fusesource.jansi.Ansi.Color.RED;
 import static org.fusesource.jansi.Ansi.ansi;
-
+//TODO:
+// - nel secondo che gioca è sempre vuota (quindi mi manca la sua game view aggiornata)
+// - il primo turno viene eseguito all’infinito (client1, client2, client1, client2) come se non ci fosse il set status (probably non è collegato)
+// - anche a chi non gioca quel turno la personal board (che è uguale a quella di prima)
 public class TextualGameUI extends GameUI {
 
     /** Enumeration representing the state of the game from the perspective of the player */
@@ -82,6 +85,7 @@ public class TextualGameUI extends GameUI {
                     showStarterCards();
                     Orientation o = chooseCardOrientation();
                     notifyListeners(lst, UIListener -> UIListener.placeStarterCard(o));
+                    TuiCommonBoardGraphics.showCommonBoard(lastGameView.getCommonBoard());
                 }
 
                 case RUNNING, SECOND_LAST_ROUND -> {

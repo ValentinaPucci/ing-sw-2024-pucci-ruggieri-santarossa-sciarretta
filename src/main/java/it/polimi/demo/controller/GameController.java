@@ -495,7 +495,17 @@ public class GameController implements GameControllerInterface, Serializable {
     @Override
     public void placeStarterCard(Player p, Orientation o) throws GameEndedException {
         model.placeStarterCard(p, o);
-        // this.myTurnIsFinished();
+        this.myTurnIsFinished();
+    }
+
+    public void myTurnIsFinished() throws RuntimeException {
+        try {
+            model.nextTurn();
+            // IMPORTANT: notifies the listeners that the model has changed!
+            //notifyListeners(model.getListeners(), GameListener::modelChanged);
+        } catch (GameEndedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -606,15 +616,7 @@ public class GameController implements GameControllerInterface, Serializable {
 //     * drawn a new game card from the deck/table
 //     * @throws RuntimeException if the connection fails
 //     */
-//    public void myTurnIsFinished() throws RuntimeException {
-//        try {
-//            model.nextTurn();
-//            // IMPORTANT: notifies the listeners that the model has changed!
-//            notifyListeners(model.getListeners(), GameListener::modelChanged);
-//        } catch (GameEndedException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
+
 
     /**
      * @return the ID of the game

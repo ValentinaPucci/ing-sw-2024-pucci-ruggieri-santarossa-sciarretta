@@ -480,7 +480,7 @@ public class GameModel implements GameModelInterface, Serializable {
             p.setStarterCard(p.getStarterCardToChose().get(1));
         }
         personal_board.placeStarterCard(p.getStarterCard());
-        notifyListeners(listeners, GameListener::modelChanged);
+        //notifyListeners(listeners, GameListener::modelChanged);
         nextTurn();
     }
 
@@ -503,7 +503,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
             }
-            // notifyListeners(listeners, GameListener::modelChanged);
+            notifyListeners(listeners, GameListener::modelChanged);
         }
     }
 
@@ -526,7 +526,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
             }
-            // notifyListeners(listeners, GameListener::modelChanged);
+            notifyListeners(listeners, GameListener::modelChanged);
         }
     }
 
@@ -573,7 +573,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
                 break;
         }
-        // notifyListeners(listeners, GameListener::modelChanged);
+        notifyListeners(listeners, GameListener::modelChanged);
         nextTurn();
     }
 
