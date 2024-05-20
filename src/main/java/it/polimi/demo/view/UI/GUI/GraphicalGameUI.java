@@ -15,6 +15,11 @@ public class GraphicalGameUI extends GameUI {
     }
 
     @Override
+    public void printModel() {
+        
+    }
+
+    @Override
     public void gameEnded(GameView gameView) {
 
     }

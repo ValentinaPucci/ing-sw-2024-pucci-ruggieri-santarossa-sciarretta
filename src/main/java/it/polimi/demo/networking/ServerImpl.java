@@ -279,6 +279,11 @@ public class ServerImpl implements Server, GameListener {
         this.client.nextTurn();
     }
 
+    @Override
+    public void printModel() throws RemoteException {
+        this.client.printModel();
+    }
+
     // *************************** Status Listeners ***************************
 
     /**
