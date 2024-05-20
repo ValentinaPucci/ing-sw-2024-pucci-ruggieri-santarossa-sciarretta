@@ -54,6 +54,8 @@ public interface Client extends Remote {
      */
     void nextTurn() throws RemoteException;
 
+    void printModel() throws RemoteException;
+
     /**
      * This method is called by the server to notify the client that the game it is in has ended.
      */

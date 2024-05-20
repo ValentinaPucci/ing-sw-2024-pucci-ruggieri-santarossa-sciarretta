@@ -20,6 +20,8 @@ public interface GameListener extends Listener {
      */
     void nextTurn() throws RemoteException;
 
+    void printModel() throws RemoteException;
+
     /**
      * This method is invoked by the GameModel class when the game is ended.
      * It should trigger the end of the game for the client.

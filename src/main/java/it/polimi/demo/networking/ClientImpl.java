@@ -268,6 +268,11 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     }
 
     @Override
+    public void printModel() {
+        gameUI.printModel();
+    }
+
+    @Override
     public void gameEnded(GameView gameView) throws RemoteException {
         gameUI.gameEnded(gameView);
     }

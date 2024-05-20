@@ -389,6 +389,7 @@ public class GameModel implements GameModelInterface, Serializable {
         switch (status) {
             case READY_TO_START -> {
                 notifyListeners(listeners, GameListener::genericGameStatus);
+                notifyListeners(listeners, GameListener::modelChanged);
                 notifyListeners(listeners, GameListener::gameStarted);
             }
             case FIRST_ROUND -> {
@@ -598,6 +599,7 @@ public class GameModel implements GameModelInterface, Serializable {
         players_connected.offer(q);
 
         notifyListeners(listeners, GameListener::modelChanged);
+        notifyListeners(listeners, GameListener::printModel);
         notifyListeners(listeners, GameListener::nextTurn);
     }
 

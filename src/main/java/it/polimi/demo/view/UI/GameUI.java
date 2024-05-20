@@ -15,6 +15,8 @@ abstract public class GameUI {
 
     public abstract void nextTurn();
 
+    public abstract void printModel();
+
     public abstract void gameEnded(GameView gameView);
 
     public synchronized void addListener(UIListener o) {

@@ -142,7 +142,7 @@ public class TextualGameUI extends GameUI {
         }
 
         // Here we update the personal board
-        updatePersonalBoard(gameView);
+        // updatePersonalBoard(gameView);
 
     }
 
@@ -154,6 +154,12 @@ public class TextualGameUI extends GameUI {
             // Every time we call the update someone (hopefully) will execute his/her turn.
             executeMyTurn();
         }
+    }
+
+    @Override
+    public void printModel() {
+        updatePersonalBoard(lastGameView);
+        // updateBoard(lastGameView);
     }
 
     @Override
