@@ -15,8 +15,6 @@ import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class AppClient {
-
-    private static final Logger logger = Logger.getLogger(AppServer.class.getName());
     private static UIType uiType;
     private static ConnectionType connectionType;
     private static String ip;

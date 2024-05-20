@@ -186,11 +186,6 @@ public class TextualGameUI extends GameUI {
         TuiCardGraphics.showStarterCard(starter_cards.get(1));
     }
 
-    private void showStarterCard() {
-        StarterCard starter_card = lastGameView.getPersonalStarterCard();
-        TuiCardGraphics.showStarterCard(starter_card);
-    }
-
     public int askIndex(String message) {
         Scanner s = new Scanner(System.in);
         System.out.print(message + ", enter here the index required: ");
@@ -215,6 +210,7 @@ public class TextualGameUI extends GameUI {
 
     private void updatePersonalBoard(GameView gameView) {
         System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+
         TuiPersonalBoardGraphics.showPersonalBoard(gameView.getPersonalBoard());
     }
 

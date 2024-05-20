@@ -480,7 +480,7 @@ public class GameModel implements GameModelInterface, Serializable {
             p.setStarterCard(p.getStarterCardToChose().get(1));
         }
         personal_board.placeStarterCard(p.getStarterCard());
-        // notifyListeners(listeners, GameListener::modelChanged);
+        notifyListeners(listeners, GameListener::modelChanged);
         nextTurn();
     }
 

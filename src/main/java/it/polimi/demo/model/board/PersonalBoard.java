@@ -501,6 +501,15 @@ public class PersonalBoard implements Serializable {
                 this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
             }
         }
+
+        addResource(card.getCornerAtNW().resource);
+        addResource(card.getCornerAtNE().resource);
+        addResource(card.getCornerAtSW().resource);
+        addResource( card.getCornerAtSE().resource);
+
+        addResource(card.front_resource1);
+        addResource(card.front_resource2);
+        addResource(card.front_resource3);
     }
     
 
