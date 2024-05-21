@@ -6,6 +6,7 @@ import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.*;
+import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
@@ -636,7 +637,7 @@ public class GameController implements GameControllerInterface, Serializable {
 //    }
 
 
-//---------------------------------listeners management---------------------------------------
+//---------------------------------listeners management--------------------------------------
 
     /**
      * Add listener @param l to model listeners and player listeners

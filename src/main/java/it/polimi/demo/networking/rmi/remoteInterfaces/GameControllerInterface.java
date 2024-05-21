@@ -115,4 +115,8 @@ public interface GameControllerInterface extends Remote {
     void gameFlow() throws RemoteException, GameEndedException;
 
     GameStatus getStatus();
+
+    void playerIsReadyToStart(String nickname);
+
+    boolean isThisMyTurn(String nickname);
 }
