@@ -1,6 +1,5 @@
 package it.polimi.demo.Controller;
 
-//import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import it.polimi.demo.controller.GameController;

@@ -1,5 +1,6 @@
 package it.polimi.demo.model;
 
+import it.polimi.demo.view.PlayerDetails;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.board.CommonBoard;
@@ -18,7 +19,8 @@ import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.model.interfaces.GameModelInterface;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.GameView;
-import it.polimi.demo.view.PlayerDetails;
+
+
 
 import java.io.Serializable;
 import java.util.*;
@@ -247,22 +249,22 @@ public class GameModel implements GameModelInterface, Serializable {
         return this.chat;
     }
 
-//     /**
-//     * Sends a message to the game's chat.
-//     * If the sender of the message is not a player in the game, an exception is thrown.
-//     *
-//     * @param m The message to be sent.
-//     * @throws ActionPerformedByAPlayerNotPlayingException If the sender of the message is not a player in the game.
-//     */
-//    public void sendMessage(Message m) throws ActionPerformedByAPlayerNotPlayingException {
-//        if (players_connected.contains(m.getSender())) {
-//            // Add the message to the chat
-//            chat.addMsg(m);
-//        } else {
-//            // Throw an exception if the sender is not a player in the game
-//            throw new ActionPerformedByAPlayerNotPlayingException();
-//        }
-//    }
+     /**
+     * Sends a message to the game's chat.
+     * If the sender of the message is not a player in the game, an exception is thrown.
+     *
+     * @param m The message to be sent.
+     * @throws ActionPerformedByAPlayerNotPlayingException If the sender of the message is not a player in the game.
+     */
+    public void sendMessage(Message m) throws ActionPerformedByAPlayerNotPlayingException {
+        if (players_connected.contains(m.getSender())) {
+            // Add the message to the chat
+            chat.addMsg(m);
+        } else {
+            // Throw an exception if the sender is not a player in the game
+            throw new ActionPerformedByAPlayerNotPlayingException();
+        }
+    }
 
     //-------------------------connection/disconnection management---------------------------------------------
 
@@ -412,6 +414,17 @@ public class GameModel implements GameModelInterface, Serializable {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
+
+        System.out.println("\n");
+
+        System.out.println(aux_order_players.getFirst().getStarterCardToChose().get(0).toString());
+        System.out.println(aux_order_players.getFirst().getStarterCardToChose().get(1).toString());
+
+        System.out.println("\n");
+
+        System.out.println("wwwwwwwwww");
+        System.out.println(aux_order_players.getLast().getStarterCardToChose().get(0).toString());
+
         notifyListeners(listeners, GameListener::modelChanged);
     }
 
@@ -427,8 +440,9 @@ public class GameModel implements GameModelInterface, Serializable {
     public void dealCards() {
         // Deal cards to players, recall that at this stage
         // aux_order_players and players_connected are the same
-        for (Player player : aux_order_players) {
+        for (Player player : players_connected) {
 
+            System.out.println("row 432");
             StarterCard starterCard1 = null;
             StarterCard starterCard2 = null;
 
