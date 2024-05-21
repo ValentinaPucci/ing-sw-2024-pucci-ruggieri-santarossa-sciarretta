@@ -8,7 +8,10 @@ import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 
+import java.util.Arrays;
+
 public class TuiCommonBoardGraphics {
+
 
     public static void showCommonBoard(CommonBoard common_board) {
         int[][] grid = createGrid(common_board);
@@ -46,9 +49,8 @@ public class TuiCommonBoardGraphics {
 
         char[][] players = new char[common_board.getPlayerCount() + 1][30];
 
-        // Stampa la riga superiore della griglia
+
         printHorizontalLine(grid[0].length);
-        //stampa le altre righe
         players[1][common_board.getPlayerPosition(0)] = 'R';
         players[2][common_board.getPlayerPosition(1)] = 'B';
         if (common_board.getPlayerCount() == 3)
@@ -57,24 +59,24 @@ public class TuiCommonBoardGraphics {
             players[4][common_board.getPlayerPosition(3)] = 'Y';
 
 
-        // Stampa le righe interne della griglia
+
         for (int i = 0; i < grid.length; i++) {
-            System.out.print("|"); // Linea di delimitazione sinistra
+            System.out.print("│");
             for (int j = 0; j < grid[0].length; j++) {
                 char playerSymbol = players[i][j];
-                if (playerSymbol != '\u0000') { // Controllo se il simbolo del giocatore è presente
+                if (playerSymbol != '\u0000') {
                     switch (playerSymbol) {
                         case 'R':
-                            System.out.print("\u001B[31m " + playerSymbol + " \u001B[0m"); // Rosso
+                            System.out.print("\u001B[31m " + playerSymbol + " \u001B[0m");
                             break;
                         case 'B':
-                            System.out.print("\u001B[34m " + playerSymbol + " \u001B[0m"); // Blu
+                            System.out.print("\u001B[34m " + playerSymbol + " \u001B[0m");
                             break;
                         case 'G':
-                            System.out.print("\u001B[32m V \u001B[0m"); // Verde
+                            System.out.print("\u001B[32m V \u001B[0m");
                             break;
                         case 'Y':
-                            System.out.print("\u001B[33m G \u001B[0m"); // Giallo
+                            System.out.print("\u001B[33m G \u001B[0m");
                             break;
                         default:
                             System.out.print(" " + playerSymbol + " ");
@@ -82,17 +84,22 @@ public class TuiCommonBoardGraphics {
                     }
                 } else {
                     if (i == 0) {
-                        System.out.printf("%3d", grid[i][j]); // Numero nella cella solo nella prima riga
+                        System.out.printf("%3d", grid[i][j]);
                     } else {
-                        System.out.print("   "); // Cella vuota senza numero
+                        System.out.print("   ");
                     }
                 }
-                System.out.print("|"); // Linea di delimitazione destra
+
+                System.out.print("│");//"|"
+                //System.out.print("│");
+                //System.out.print(Arrays.toString(LINE_GRAPHICS));
             }
-            System.out.println(); // Nuova riga
-            printHorizontalLine(grid[0].length); // Linea orizzontale
+            System.out.println();
+            printHorizontalLine(grid[0].length);
         }
     }
+
+
 
     public static int[][] createGrid(CommonBoard common_board) {
         int rows = common_board.getPlayerCount() + 1;
@@ -110,11 +117,11 @@ public class TuiCommonBoardGraphics {
 
 
     public static void printHorizontalLine(int columns) {
-        System.out.print("+"); // Angolo in alto a sinistra
+        //System.out.print("+");
         for (int i = 0; i < columns; i++) {
-            System.out.print("---+"); // Linea orizzontale
+            System.out.print("────" ); // "---+"
         }
-        System.out.println(); // Nuova riga
+        System.out.println();
     }
 
     public static void main(String[] args) {
