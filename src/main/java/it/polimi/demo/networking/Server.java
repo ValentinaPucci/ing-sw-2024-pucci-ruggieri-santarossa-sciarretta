@@ -49,7 +49,7 @@ public interface Server extends Remote {
      * This method is called by the client to get the list of players in the game.
      * @param orientation the orientation of the starter card
      */
-    void placeStarterCard(Orientation orientation) throws RemoteException;
+    void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException;
 
     /**
      * This method is called by the client to choose a card.
@@ -71,7 +71,7 @@ public interface Server extends Remote {
      * @param index the index of the card the player wants to draw
      * @throws RemoteException if there is a network error
      */
-    void drawCard(int index) throws RemoteException;
+    void drawCard(int index) throws RemoteException, GameEndedException;
 
     /**
      * This method is called by the client to respond to a ping sent by the server.

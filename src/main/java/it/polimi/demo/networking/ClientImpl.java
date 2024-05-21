@@ -169,7 +169,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public void placeStarterCard(Orientation orientation) {
         try {
             server.placeStarterCard(orientation);
-        } catch (RemoteException e) {
+        } catch (RemoteException | GameEndedException e) {
             System.err.println("Network error while placing starter card.");
         }
     }
@@ -196,7 +196,7 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     public void drawCard(int index) {
         try {
             server.drawCard(index);
-        } catch (RemoteException e) {
+        } catch (RemoteException | GameEndedException e) {
             System.err.println("Network error while drawing card.");
         }
     }
@@ -260,6 +260,16 @@ public class ClientImpl extends UnicastRemoteObject implements Client, Runnable,
     @Override
     public void modelChanged(GameView gameView) throws RemoteException {
         gameUI.update(gameView);
+    }
+
+    @Override
+    public void nextTurn() {
+        gameUI.nextTurn();
+    }
+
+    @Override
+    public void printModel() {
+        gameUI.printModel();
     }
 
     @Override

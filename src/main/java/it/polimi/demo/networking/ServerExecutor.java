@@ -96,7 +96,7 @@ public class ServerExecutor extends UnicastRemoteObject implements Server {
         executorService.submit(() -> {
             try {
                 server.placeStarterCard(orientation);
-            } catch (RemoteException e) {
+            } catch (RemoteException | GameEndedException e) {
                 try {
                     client.showError("Error while placing the starter card.");
                 } catch (RemoteException ignored) {}
@@ -135,7 +135,7 @@ public class ServerExecutor extends UnicastRemoteObject implements Server {
         executorService.submit(() -> {
             try {
                 server.drawCard(index);
-            } catch (RemoteException e) {
+            } catch (RemoteException | GameEndedException e) {
                 try {
                     client.showError("Error while drawing the card.");
                 } catch (RemoteException ignored) {}

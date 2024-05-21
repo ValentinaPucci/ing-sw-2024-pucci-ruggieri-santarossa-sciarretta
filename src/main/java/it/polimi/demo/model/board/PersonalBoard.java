@@ -7,6 +7,7 @@ import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.IllegalMoveException;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class PersonalBoard implements Serializable {
@@ -24,8 +25,8 @@ public class PersonalBoard implements Serializable {
     private int num_potions;
 
     public PersonalBoard() {
-        this.dim1 = 1005;
-        this.dim2 = 1005;
+        this.dim1 = 1000;
+        this.dim2 = 1000;
 
         this.board = new Cell[dim1][dim2];
         for (int i = 0; i < dim1; i++) {
@@ -500,6 +501,15 @@ public class PersonalBoard implements Serializable {
                 this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
             }
         }
+
+        addResource(card.getCornerAtNW().resource);
+        addResource(card.getCornerAtNE().resource);
+        addResource(card.getCornerAtSW().resource);
+        addResource( card.getCornerAtSE().resource);
+
+        addResource(card.front_resource1);
+        addResource(card.front_resource2);
+        addResource(card.front_resource3);
     }
     
 
@@ -1206,5 +1216,23 @@ public class PersonalBoard implements Serializable {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof PersonalBoard)) return false;
+        PersonalBoard that = (PersonalBoard) o;
+        return num_mushrooms == that.num_mushrooms &&
+                num_leaves == that.num_leaves &&
+                num_butterflies == that.num_butterflies &&
+                num_wolves == that.num_wolves &&
+                num_parchments == that.num_parchments &&
+                num_feathers == that.num_feathers &&
+                num_potions == that.num_potions &&
+                points == that.points &&
+                dim1 == that.dim1 &&
+                dim2 == that.dim2 &&
+                Arrays.equals(board, that.board);
     }
 }

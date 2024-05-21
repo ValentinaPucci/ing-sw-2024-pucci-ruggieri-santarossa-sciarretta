@@ -386,17 +386,17 @@ public class GameModel implements GameModelInterface, Serializable {
         // Set the game status and notify listeners based on the new status
         this.status = status;
 
-        System.out.println("EII: Game status: " + status);
-
         switch (status) {
             case READY_TO_START -> {
-                //notifyListeners(listeners, GameListener::modelChanged);
-                notifyListeners(listeners, GameListener::gameStarted);
                 notifyListeners(listeners, GameListener::genericGameStatus);
+                notifyListeners(listeners, GameListener::modelChanged);
+                notifyListeners(listeners, GameListener::gameStarted);
             }
             case FIRST_ROUND -> {
-                notifyListeners(listeners, GameListener::modelChanged);
                 notifyListeners(listeners, GameListener::genericGameStatus);
+                notifyListeners(listeners, GameListener::modelChanged);
+                // needed for the first time
+                notifyListeners(listeners, GameListener::nextTurn);
             }
             case ENDED -> notifyListeners(listeners, GameListener::gameEnded);
         }
@@ -412,6 +412,7 @@ public class GameModel implements GameModelInterface, Serializable {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
+        notifyListeners(listeners, GameListener::modelChanged);
     }
 
     /**
@@ -470,7 +471,7 @@ public class GameModel implements GameModelInterface, Serializable {
         }
     }
 
-    public void placeStarterCard(Player p, Orientation o) {
+    public void placeStarterCard(Player p, Orientation o) throws GameEndedException {
         PersonalBoard personal_board = p.getPersonalBoard();
         if (o == Orientation.FRONT) {
             p.setStarterCard(p.getStarterCardToChose().get(0));
@@ -479,6 +480,8 @@ public class GameModel implements GameModelInterface, Serializable {
             p.setStarterCard(p.getStarterCardToChose().get(1));
         }
         personal_board.placeStarterCard(p.getStarterCard());
+        //notifyListeners(listeners, GameListener::modelChanged);
+        nextTurn();
     }
 
     // for resource cards
@@ -500,6 +503,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
             }
+            notifyListeners(listeners, GameListener::modelChanged);
         }
     }
 
@@ -522,6 +526,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
             }
+            notifyListeners(listeners, GameListener::modelChanged);
         }
     }
 
@@ -537,7 +542,7 @@ public class GameModel implements GameModelInterface, Serializable {
      * @throws IllegalArgumentException If the index is less than 1 or greater than 6.
      */
 
-    public void drawCard(Player p, int index) {
+    public void drawCard(Player p, int index) throws GameEndedException {
         if (index < 1 || index > 6) {
             throw new IllegalArgumentException("It is not possible to draw a card from here");
         }
@@ -568,6 +573,8 @@ public class GameModel implements GameModelInterface, Serializable {
                 p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
                 break;
         }
+        notifyListeners(listeners, GameListener::modelChanged);
+        nextTurn();
     }
 
     /**
@@ -586,12 +593,14 @@ public class GameModel implements GameModelInterface, Serializable {
             throw new GameNotStartedException();
         }
 
-        // while (players_connected.size() <= 1) {}
-
         // Proceeding to the next turn means changing the current player,
         // namely the peek of the queue.
         Player q = players_connected.poll();
         players_connected.offer(q);
+
+        notifyListeners(listeners, GameListener::modelChanged);
+        notifyListeners(listeners, GameListener::printModel);
+        notifyListeners(listeners, GameListener::nextTurn);
     }
 
     /**

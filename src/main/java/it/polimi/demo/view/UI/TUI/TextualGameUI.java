@@ -1,6 +1,7 @@
 package it.polimi.demo.view.UI.TUI;
 
 import it.polimi.demo.listener.UIListener;
+import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
@@ -20,7 +21,10 @@ import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.view.UI.TUI.TextualUtils.*;
 import static org.fusesource.jansi.Ansi.Color.RED;
 import static org.fusesource.jansi.Ansi.ansi;
-
+//TODO:
+// - nel secondo che gioca è sempre vuota (quindi mi manca la sua game view aggiornata)
+// - il primo turno viene eseguito all’infinito (client1, client2, client1, client2) come se non ci fosse il set status (probably non è collegato)
+// - anche a chi non gioca quel turno la personal board (che è uguale a quella di prima)
 public class TextualGameUI extends GameUI {
 
     /** Enumeration representing the state of the game from the perspective of the player */
@@ -80,10 +84,8 @@ public class TextualGameUI extends GameUI {
                     // Here we show both sides of the starter card
                     showStarterCards();
                     Orientation o = chooseCardOrientation();
-                    // System.out.println(lst.size()) == 0 !!!
                     notifyListeners(lst, UIListener -> UIListener.placeStarterCard(o));
-                    // TODO: devo ricevere la gameView aggiornata prima di stampare personal e common board
-                    // TuiPersonalBoardGraphics.showPersonalBoard(lastGameView.getPersonalBoard());
+                    TuiCommonBoardGraphics.showCommonBoard(lastGameView.getCommonBoard());
                 }
 
                 case RUNNING, SECOND_LAST_ROUND -> {
@@ -130,6 +132,7 @@ public class TextualGameUI extends GameUI {
 
     @Override
     public void update(GameView gameView) {
+
         // Here we update the game view
         this.lastGameView = gameView;
 
@@ -142,25 +145,25 @@ public class TextualGameUI extends GameUI {
             System.out.println("\n" + ansi().fg(RED).bold().a(gameView.getErrorMessage()).reset() + "\n");
         }
 
-//        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname()) && getState() == State.MY_TURN) {
-//            return;
-//        }
+        // Here we update the personal board
+        // updatePersonalBoard(gameView);
 
-        // this.updateBoard(gameView);
+    }
 
-        System.out.println("Current player nickname: " + gameView.getCurrentPlayerNickname());
-        System.out.println("My nickname: " + gameView.getMyNickname());
-
-        if (gameView.getCurrentPlayerNickname().equals(gameView.getMyNickname())) {
+    @Override
+    public void nextTurn() {
+        if (lastGameView.getCurrentPlayerNickname().equals(lastGameView.getMyNickname())) {
             System.out.println("Your turn!");
             setState(State.MY_TURN);
             // Every time we call the update someone (hopefully) will execute his/her turn.
             executeMyTurn();
         }
-        else {
-            System.out.println("Player " + gameView.getCurrentPlayerNickname() + "'s turn.");
-            setState(State.NOT_MY_TURN);
-        }
+    }
+
+    @Override
+    public void printModel() {
+        updatePersonalBoard(lastGameView);
+        // updateBoard(lastGameView);
     }
 
     @Override
@@ -187,11 +190,6 @@ public class TextualGameUI extends GameUI {
         TuiCardGraphics.showStarterCard(starter_cards.get(1));
     }
 
-    private void showStarterCard() {
-        StarterCard starter_card = lastGameView.getPersonalStarterCard();
-        TuiCardGraphics.showStarterCard(starter_card);
-    }
-
     public int askIndex(String message) {
         Scanner s = new Scanner(System.in);
         System.out.print(message + ", enter here the index required: ");
@@ -212,6 +210,12 @@ public class TextualGameUI extends GameUI {
             return Orientation.FRONT;
         else
             return Orientation.BACK;
+    }
+
+    private void updatePersonalBoard(GameView gameView) {
+        System.out.print(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+
+        TuiPersonalBoardGraphics.showPersonalBoard(gameView.getPersonalBoard());
     }
 
     private void updateBoard(GameView gameView) {

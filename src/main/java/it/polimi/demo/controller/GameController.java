@@ -53,7 +53,6 @@ public class GameController implements GameControllerInterface, Serializable {
                     model.setStatus(GameStatus.READY_TO_START);
             }
             case READY_TO_START -> {
-                // System.out.println("Game is ready to start");
                 model.setStatus(GameStatus.FIRST_ROUND);
             }
             case FIRST_ROUND -> {
@@ -494,9 +493,19 @@ public class GameController implements GameControllerInterface, Serializable {
      * @param o the orientation of the card
      */
     @Override
-    public void placeStarterCard(Player p, Orientation o) {
+    public void placeStarterCard(Player p, Orientation o) throws GameEndedException {
         model.placeStarterCard(p, o);
         this.myTurnIsFinished();
+    }
+
+    public void myTurnIsFinished() throws RuntimeException {
+        try {
+            model.nextTurn();
+            // IMPORTANT: notifies the listeners that the model has changed!
+            //notifyListeners(model.getListeners(), GameListener::modelChanged);
+        } catch (GameEndedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -593,29 +602,21 @@ public class GameController implements GameControllerInterface, Serializable {
      * @param index the index of the card to draw
      */
     @Override
-    public void drawCard(String player_nickname, int index) {
+    public void drawCard(String player_nickname, int index) throws GameEndedException {
         if (!(1 <= index && index <= 6))
             throw new IllegalArgumentException("invalid index");
         model.drawCard(getPlayerEntity(player_nickname), index);
-        this.myTurnIsFinished();
+        // this.myTurnIsFinished();
     }
 
-    // aux method for drawCard
-    /**
-     * this method must be called every time a player finishes his/her turn,
-     * i.e. whenever he/she has placed a card on his/her personal board and has also
-     * drawn a new game card from the deck/table
-     * @throws RuntimeException if the connection fails
-     */
-    public void myTurnIsFinished() throws RuntimeException {
-        try {
-            model.nextTurn();
-            // IMPORTANT: notifies the listeners that the model has changed!
-            notifyListeners(model.getListeners(), GameListener::modelChanged);
-        } catch (GameEndedException e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    // aux method for drawCard
+//    /**
+//     * this method must be called every time a player finishes his/her turn,
+//     * i.e. whenever he/she has placed a card on his/her personal board and has also
+//     * drawn a new game card from the deck/table
+//     * @throws RuntimeException if the connection fails
+//     */
+
 
     /**
      * @return the ID of the game
