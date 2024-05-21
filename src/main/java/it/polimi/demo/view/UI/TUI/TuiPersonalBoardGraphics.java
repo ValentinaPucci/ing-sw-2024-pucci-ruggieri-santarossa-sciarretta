@@ -73,7 +73,7 @@ public class TuiPersonalBoardGraphics {
 
         printHorizontalLine(20);
         for (int i = first_row; i <= last_row; i++) {
-            System.out.print("|");
+            System.out.print("│");
             for (int j = first_column; j <= last_column; j++) {
                 if (matrix[i][j].getCornerFromCell() != null && matrix[i][j].getCornerFromCell().reference_card == null){
                     System.out.print(" S ");
