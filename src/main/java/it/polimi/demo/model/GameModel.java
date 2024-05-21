@@ -603,9 +603,9 @@ public class GameModel implements GameModelInterface, Serializable {
         if (status.equals(GameStatus.ENDED)) {
             throw new GameEndedException();
         }
-        else if (status.equals(GameStatus.WAIT)) {
-            throw new GameNotStartedException();
-        }
+//        else if (status.equals(GameStatus.WAIT)) {
+//            throw new GameNotStartedException();
+//        }
 
         // Proceeding to the next turn means changing the current player,
         // namely the peek of the queue.
