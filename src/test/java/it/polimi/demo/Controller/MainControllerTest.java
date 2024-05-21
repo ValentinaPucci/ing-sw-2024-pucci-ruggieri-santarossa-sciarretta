@@ -37,6 +37,16 @@ public class MainControllerTest {
             }
 
             @Override
+            public void nextTurn() throws RemoteException {
+
+            }
+
+            @Override
+            public void printModel() throws RemoteException {
+
+            }
+
+            @Override
             public void gameEnded() throws RemoteException {
 
             }
@@ -93,9 +103,9 @@ public class MainControllerTest {
         mainController.getGames().get(1).startIfFull();
 
         //set the starter card for each player
-        mainController.getGames().get(1).getModel().getAllPlayers().getFirst().setStarterCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCardToChose()[0]);
-        System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCardToChose()[0]);
-        mainController.getGames().get(1).getModel().getAllPlayers().get(1).setStarterCard(mainController.getGames().get(1).getModel().getAllPlayers().get(1).getStarterCardToChose()[0]);
+//        mainController.getGames().get(1).getModel().getAllPlayers().getFirst().setStarterCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCardToChose()[0]);
+//        System.out.println(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getStarterCardToChose()[0]);
+//        mainController.getGames().get(1).getModel().getAllPlayers().get(1).setStarterCard(mainController.getGames().get(1).getModel().getAllPlayers().get(1).getStarterCardToChose()[0]);
 
         //set the objective card for each player
         mainController.getGames().get(1).getModel().getAllPlayers().getFirst().setChosenObjectiveCard(mainController.getGames().get(1).getModel().getAllPlayers().getFirst().getSecretObjectiveCards()[0]);

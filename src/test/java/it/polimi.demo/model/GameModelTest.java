@@ -303,7 +303,7 @@ public class GameModelTest {
             {
                 assertNull(player.getStarterCard());
                 assertEquals(3, player.getCardHand().size());
-                assertEquals(2, player.getSecretObjectiveCards().length);
+                assertEquals(2, player.getSecretObjectiveCards().size());
             }
         }
 
@@ -316,9 +316,9 @@ public class GameModelTest {
 
         assertEquals(6, gameModel.getCommonBoard().getStarterConcreteDeck().size());
 
-        assertEquals(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().getFirst().getStarterCardToChose()[1].getId());
-        assertEquals(gameModel.getAllPlayers().get(1).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(1).getStarterCardToChose()[1].getId());
-        assertEquals(gameModel.getAllPlayers().get(2).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(2).getStarterCardToChose()[1].getId());
+        assertEquals(gameModel.getAllPlayers().getFirst().getStarterCardToChose().get(0).getId(), gameModel.getAllPlayers().getFirst().getStarterCardToChose().get(0).getId());
+        assertEquals(gameModel.getAllPlayers().get(1).getStarterCardToChose().get(0).getId(), gameModel.getAllPlayers().get(1).getStarterCardToChose().get(0).getId());
+        assertEquals(gameModel.getAllPlayers().get(2).getStarterCardToChose().get(0).getId(), gameModel.getAllPlayers().get(2).getStarterCardToChose().get(0).getId());
 
         GoldCard gold = gameModel.getCommonBoard().getGoldConcreteDeck().popGoldCard();
         System.out.println(gold.getId());
@@ -362,13 +362,6 @@ public class GameModelTest {
         System.out.println(res1.getCornerAtNE());
         System.out.println(res1.getCornerAtSE());
         System.out.println(res1.getCornerAtNW());
-
-
-
-
-
-
-
 
     }
     @Test

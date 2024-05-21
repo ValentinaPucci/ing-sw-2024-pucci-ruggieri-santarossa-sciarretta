@@ -7,8 +7,7 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.MaxPlayersLimitException;
 import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
-import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.rmi.remoteInterfaces.*;
 import it.polimi.demo.view.GameDetails;
 
 import java.rmi.RemoteException;
