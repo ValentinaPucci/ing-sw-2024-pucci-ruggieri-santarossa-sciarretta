@@ -71,6 +71,7 @@ public class TuiPersonalBoardGraphics {
         int first_column = 490;
         int last_column = 510;
 
+        printHorizontalLine(20);
         for (int i = first_row; i <= last_row; i++) {
             System.out.print("|");
             for (int j = first_column; j <= last_column; j++) {
@@ -92,7 +93,7 @@ public class TuiPersonalBoardGraphics {
                     }
                 } else {
                     System.out.print("   ");
-                } System.out.print("|");
+                } System.out.print("│");//System.out.print("|");
             }
             System.out.println();
             printHorizontalLine(20);
@@ -100,9 +101,9 @@ public class TuiPersonalBoardGraphics {
     }
 
     public static void printHorizontalLine(int columns) {
-        System.out.print("+");
-        for (int i = 490 ; i < 510; i++) {
-            System.out.print("---+");
+        //System.out.print("+");
+        for (int i = 490 ; i < 507; i++) {
+            System.out.print("─────");
         }
         System.out.println();
     }

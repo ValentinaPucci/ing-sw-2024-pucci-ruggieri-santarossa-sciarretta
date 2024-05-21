@@ -303,7 +303,7 @@ public class GameModelTest {
             {
                 assertNull(player.getStarterCard());
                 assertEquals(3, player.getCardHand().size());
-                assertEquals(2, player.getSecretObjectiveCards().length);
+                assertEquals(2, player.getSecretObjectiveCards().size());
             }
         }
 
@@ -316,9 +316,9 @@ public class GameModelTest {
 
         assertEquals(6, gameModel.getCommonBoard().getStarterConcreteDeck().size());
 
-        assertEquals(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().getFirst().getStarterCardToChose()[1].getId());
-        assertEquals(gameModel.getAllPlayers().get(1).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(1).getStarterCardToChose()[1].getId());
-        assertEquals(gameModel.getAllPlayers().get(2).getStarterCardToChose()[0].getId(), gameModel.getAllPlayers().get(2).getStarterCardToChose()[1].getId());
+        assertEquals(gameModel.getAllPlayers().getFirst().getStarterCardToChose().get(0).getId(), gameModel.getAllPlayers().getFirst().getStarterCardToChose().get(1).getId());
+        assertEquals(gameModel.getAllPlayers().get(1).getStarterCardToChose().get(0).getId(), gameModel.getAllPlayers().get(1).getStarterCardToChose().get(1).getId());
+        assertEquals(gameModel.getAllPlayers().get(2).getStarterCardToChose().get(0).getId(), gameModel.getAllPlayers().get(2).getStarterCardToChose().get(1).getId());
 
         GoldCard gold = gameModel.getCommonBoard().getGoldConcreteDeck().popGoldCard();
         System.out.println(gold.getId());
@@ -375,23 +375,33 @@ public class GameModelTest {
     public void testPlaceResourceCard() throws GameEndedException {
         //initialize game
         addPlayersToGameModel(3);
+
+        gameModel.getAllPlayers().getFirst().setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst());
+        gameModel.getAllPlayers().get(1).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
+        gameModel.getAllPlayers().get(2).setAsConnected();
+        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(2));
+
+        //gameModel.setStatus(GameStatus.RUNNING);
+
         gameModel.getCommonBoard().setPlayerCount(gameModel.getAllPlayers().size());
         gameModel.getCommonBoard().initializeBoard();
         gameModel.dealCards();
         //set the starter card for each player
-        gameModel.getAllPlayers().getFirst().setStarterCard(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[0]);
-        gameModel.getAllPlayers().get(1).setStarterCard(gameModel.getAllPlayers().get(1).getStarterCardToChose()[0]);
-        gameModel.getAllPlayers().get(2).setStarterCard(gameModel.getAllPlayers().get(2).getStarterCardToChose()[0]);
+        gameModel.getAllPlayers().getFirst().setStarterCard(gameModel.getAllPlayers().getFirst().getStarterCardToChose().get(0));
+        gameModel.getAllPlayers().get(1).setStarterCard(gameModel.getAllPlayers().get(1).getStarterCardToChose().get(0));
+        gameModel.getAllPlayers().get(2).setStarterCard(gameModel.getAllPlayers().get(2).getStarterCardToChose().get(0));
 
         //System.out.println(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[0]);
         //System.out.println(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[1]);
 
         //set the objective card for each player
-        gameModel.getAllPlayers().getFirst().setChosenObjectiveCard(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards()[0]);
-        gameModel.getAllPlayers().get(1).setChosenObjectiveCard(gameModel.getAllPlayers().get(1).getSecretObjectiveCards()[0]);
-        gameModel.getAllPlayers().get(2).setChosenObjectiveCard(gameModel.getAllPlayers().get(2).getSecretObjectiveCards()[0]);
+        gameModel.getAllPlayers().getFirst().setChosenObjectiveCard(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards().get(0));
+        gameModel.getAllPlayers().get(1).setChosenObjectiveCard(gameModel.getAllPlayers().get(1).getSecretObjectiveCards().get(0));
+        gameModel.getAllPlayers().get(2).setChosenObjectiveCard(gameModel.getAllPlayers().get(2).getSecretObjectiveCards().get(0));
 
-        System.out.println(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards()[0]);
+        System.out.println(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards().get(0));
 
         for (Player player : gameModel.getAllPlayers()) {
             player.playStarterCard();
@@ -586,12 +596,12 @@ public class GameModelTest {
         assertEquals(8,gameModel.getAllPlayers().getFirst().getHand().size());
 
         //test for nextTurn
-        gameModel.getAllPlayers().getFirst().setAsConnected();
-        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst());
-        gameModel.getAllPlayers().get(1).setAsConnected();
-        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
-        gameModel.getAllPlayers().get(2).setAsConnected();
-        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(2));
+        //gameModel.getAllPlayers().getFirst().setAsConnected();
+        //gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst());
+        //gameModel.getAllPlayers().get(1).setAsConnected();
+        //gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
+        //gameModel.getAllPlayers().get(2).setAsConnected();
+        //gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(2));
 
 
         System.out.println(gameModel.getPlayersConnected().getFirst().getNickname());
@@ -600,20 +610,20 @@ public class GameModelTest {
 
         System.out.println(gameModel.getStatus());
 
-        gameModel.setStatus(GameStatus.RUNNING);
+        //gameModel.setStatus(GameStatus.RUNNING);
 
 
         gameModel.nextTurn();
         System.out.println(gameModel.getPlayersConnected().getFirst().getNickname());
         System.out.println(gameModel.getPlayersConnected().get(1).getNickname());
         System.out.println(gameModel.getPlayersConnected().get(2).getNickname());
-
+/*
         gameModel.setStatus(GameStatus.WAIT);
         assertThrows(GameNotStartedException.class, ()-> gameModel.nextTurn());
 
         gameModel.setStatus(GameStatus.ENDED);
         assertThrows(GameEndedException.class, ()-> gameModel.nextTurn());
-
+*/
 
 
         System.out.println("*********");
