@@ -13,8 +13,6 @@ import it.polimi.demo.view.GameDetails;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static it.polimi.demo.listener.Listener.notifyListeners;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
@@ -72,28 +70,38 @@ public class MainController implements MainControllerInterface {
      * @throws RemoteException if the connection fails
      */
     @Override
-    public GameControllerInterface createGame(GameListener listener, String nickname, int num_of_players, int id)
+    public GameControllerInterface createGame(GameListener listener, String nickname, int num_of_players)
             throws RemoteException {
 
+        int game_id;
+
+        if (games.isEmpty())
+            game_id = 0;
+        else
+            game_id = Collections.max(games.keySet()) + 1;
+
         Player player = new Player(nickname);
-        GameController game = new GameController(id, num_of_players, new Player(nickname));
+        GameController game = new GameController(game_id, num_of_players, new Player(nickname));
         game.addListener(listener, player);
 
         synchronized (games) {
             // By adding this check, we avoid the possibility of having two games with the same ID.
-            if (games.containsKey(id)) {
+            if (games.containsKey(game_id)) {
                 throw new RuntimeException("Game ID already exists");
             }
-            games.put(id, game);
-            games.get(id).setNumPlayersToPlay(num_of_players);
+            games.put(game_id, game);
+            games.get(game_id).setNumPlayersToPlay(num_of_players);
         }
 
-        System.out.println("\t>Player:\" " + nickname + " \"" + " created game " + id);
+        System.out.println("\t>Player:\" " + nickname + " \"" + " created game " + game_id);
         printRunningGames();
 
         // Here we add the player to the 'statical' list of players
         game.addPlayer(player.getNickname());
-        System.out.println("Player added to the game: " + player.getNickname() + " " + game.getPlayers().size() + " " + game.getNumPlayersToPlay());
+        System.out.println("Player added to the game: "
+                + player.getNickname() + " "
+                + game.getPlayers().size() + " "
+                + game.getNumPlayersToPlay());
         // Here we add the player to the 'dynamic' list of players connected (the queue!)
         game.setPlayerAsConnected(player);
 

@@ -31,19 +31,12 @@ public class GameModelImmutable implements Serializable {
     private final String current_player_nickname;
     //private final List<Player> winners;
     private final Map<Player, Integer> leaderboard;
-    private final PersonalBoard personal_board;
-    private final ObjectiveCard personal_objective_card;
-    private final List<ResourceCard> player_hand;
-    private final StarterCard personal_starter_card;
-    private final String my_nickname;
-    private final List<ObjectiveCard> personal_objective_cards_to_chose;
-    private final List<StarterCard> personal_starter_cards_to_chose;
     private final List<PlayerDetails> playersData;
     private final boolean gameEnded;
     private final boolean gamePaused;
     private final String errorMessage;
 
-    public GameModelImmutable(GameModelInterface model, String nickname) {
+    public GameModelImmutable(GameModelInterface model) {
         this.gameId = model.getGameId();
         this.aux_order_players = new ArrayList<>(model.getAllPlayers());
         this.players_connected = new LinkedList<>(model.getPlayersConnected());
@@ -56,21 +49,10 @@ public class GameModelImmutable implements Serializable {
         this.current_player_nickname = model.getPlayersConnected().peek().getNickname();
         // this.winners = model.getWinners();
         this.leaderboard = model.getLeaderBoard();
-        this.my_nickname = nickname;
-        this.personal_board = model.getPersonalBoard(this.my_nickname);
-        this.personal_starter_cards_to_chose = model.getStarterCardsToChoose(this.my_nickname);
-        this.personal_starter_card = model.getStarterCard(this.my_nickname);
-        this.personal_objective_cards_to_chose =  model.getPersonalObjectiveCardsToChoose(this.my_nickname);
-        this.personal_objective_card = model.getObjectiveCard(this.my_nickname);
-        this.player_hand = model.getPlayerHand(this.my_nickname);
         this.gameEnded = model.isEnded();
         this.gamePaused = model.isPaused();
         this.playersData = model.getPlayersDetails();
         this.errorMessage = model.getErrorMessage();
-    }
-
-    public StarterCard getPersonalStarterCard(){
-        return personal_starter_card;
     }
 
     public GameStatus getStatus() {
@@ -98,18 +80,6 @@ public class GameModelImmutable implements Serializable {
         return playersData;
     }
 
-    public List<ObjectiveCard> getPersonalObjectiveCardsToChose() {
-        return personal_objective_cards_to_chose;
-    }
-
-    public List<StarterCard> getPersonalStarterCardsToChose() {
-        return personal_starter_cards_to_chose;
-    }
-
-
-    public List<ResourceCard> getPlayerHand() {
-        return player_hand;
-    }
 
 //    public Map<PlayerIC, Integer> getLeaderBoard() {
 //        return leaderBoard;
@@ -141,14 +111,6 @@ public class GameModelImmutable implements Serializable {
 
     public CommonBoardIC getCommonBoard() {
         return common_board;
-    }
-
-    public PersonalBoardIC getPersonalBoard() {
-        return (PersonalBoardIC) personal_board;
-    }
-
-    public String getMyNickname() {
-        return my_nickname;
     }
 
     public PlayerIC getFirstPlayer() {
