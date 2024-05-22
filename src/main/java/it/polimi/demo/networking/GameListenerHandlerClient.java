@@ -22,23 +22,23 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
 
 
     @Override
-    public void placeStarterCard(GameModelImmutable model, Orientation orientation) {
-        flow.placeStarterCard(model, orientation);
+    public void starterCardPlaced(GameModelImmutable model, Orientation orientation) throws RemoteException {
+        flow.starterCardPlaced(model, orientation);
     }
 
     @Override
-    public void chooseCard(GameModelImmutable model, int which_card) {
-        flow.chooseCard(model, which_card);
+    public void cardChosen(GameModelImmutable model, int which_card) throws RemoteException {
+        flow.cardChosen(model, which_card);
     }
 
     @Override
-    public void placeCard(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
-        flow.placeCard(model, where_to_place_x, where_to_place_y, orientation);
+    public void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
+        flow.cardPlaced(model, where_to_place_x, where_to_place_y, orientation);
     }
 
     @Override
-    public void drawCard(GameModelImmutable model, int index) {
-        flow.drawCard(model, index);
+    public void cardDrawn(GameModelImmutable model, int index) throws RemoteException {
+        flow.cardDrawn(model, index);
     }
 
     @Override
@@ -93,8 +93,8 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     }
 
     @Override
-    public void sentMessage(GameModelImmutable gameModel, Message msg) throws RemoteException {
-        flow.sentMessage(gameModel, msg);
+    public void messageSent(GameModelImmutable gameModel, Message msg) throws RemoteException {
+        flow.messageSent(gameModel, msg);
     }
 
     @Override
@@ -114,8 +114,8 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     }
 
     @Override
-    public void lastCircle(GameModelImmutable gamemodel) throws RemoteException {
-        flow.lastCircle(gamemodel);
+    public void lastRound(GameModelImmutable gamemodel) throws RemoteException {
+        flow.lastRound(gamemodel);
     }
 
 }

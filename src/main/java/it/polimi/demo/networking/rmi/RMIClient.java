@@ -168,10 +168,10 @@ public class RMIClient implements CommonClientActions {
      * @throws NotBoundException if the reference could not be accessed
      */
     @Override
-    public void createGame(String nick, int num_of_players, int game_id) throws RemoteException, NotBoundException {
+    public void createGame(String nick, int num_of_players) throws RemoteException, NotBoundException {
         registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-        gameController = requests.createGame(modelInvokedEvents, nick, num_of_players, game_id);
+        gameController = requests.createGame(modelInvokedEvents, nick, num_of_players);
         nickname = nick;
     }
 

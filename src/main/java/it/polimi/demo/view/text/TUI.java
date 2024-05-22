@@ -643,13 +643,11 @@ public class TUI extends UI {
      * Asks the player to choose number of tiles to pick up
      *
      * @param msg       message to be shown
-     * @param gameModel model where the message needs to be shown
      * @param nickname  nickname of the player that needs to have the message shown
      */
     @Override
-    public void show_askNum(String msg, GameModelImmutable gameModel, String nickname) {
-        this.show_alwaysShow(gameModel, nickname);
-        this.removeInput(msg, gameModel);
+    public void show_askNumOfPlayers(String msg, String nickname) {
+
     }
 
     /**
