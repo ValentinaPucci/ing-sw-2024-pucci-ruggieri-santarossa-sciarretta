@@ -1,8 +1,8 @@
 package it.polimi.demo.view.flow.utilities.events;
-
-import polimi.ingsw.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 public class EventElement {
+
     private GameModelImmutable model;
     private EventType type;
 

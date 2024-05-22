@@ -3,16 +3,15 @@ package it.polimi.demo.view.gui;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.util.Duration;
-import polimi.ingsw.model.DefaultValue;
-import polimi.ingsw.model.Player;
-import polimi.ingsw.model.Point;
-import polimi.ingsw.model.chat.Message;
-import polimi.ingsw.model.gameModelImmutable.GameModelImmutable;
-import polimi.ingsw.view.flow.UI;
-import polimi.ingsw.view.flow.utilities.inputReaderGUI;
-import polimi.ingsw.view.gui.controllers.LobbyController;
-import polimi.ingsw.view.gui.controllers.NicknamePopupController;
-import polimi.ingsw.view.gui.scenes.SceneEnum;
+import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.Player;
+import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.view.flow.UI;
+import it.polimi.demo.view.flow.utilities.inputReaderGUI;
+import it.polimi.demo.view.gui.controllers.LobbyController;
+import it.polimi.demo.view.gui.controllers.NicknamePopupController;
+import it.polimi.demo.view.gui.scenes.SceneEnum;
 
 import java.util.ArrayList;
 
@@ -65,7 +64,7 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneEnum.PUBLISHER));
 
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(DefaultValue.time_publisher_showing_seconds));
+        PauseTransition pause = new PauseTransition(Duration.seconds(DefaultValues.time_publisher_showing_seconds));
         pause.setOnFinished(event -> {
             alreadyShowedPublisher = true;
 
@@ -255,18 +254,22 @@ public class GUI extends UI {
      */
     @Override
     protected void show_playerHand(GameModelImmutable gameModel) {
-        callPlatformRunLater(() -> this.guiApplication.showMessageInGame("Player "+gameModel.getNicknameCurrentPlaying()+"hand updated!", null));
+        callPlatformRunLater(() -> this.guiApplication.showMessageInGame("Player "+
+                gameModel.getPlayersConnected().peek().getNickname() +
+                "hand updated!", null));
     }
 
     /**
-     * This method show the grabbed tiles
+     *
      *
      * @param nickname the player that grabbed the tiles
      * @param model    the model in which the player grabbed the tiles
      */
     @Override
-    protected void show_grabbedTile(String nickname, GameModelImmutable model) {
-        callPlatformRunLater(() -> this.guiApplication.showMessageInGame("Player " + model.getNicknameCurrentPlaying() + " has grabbed some tiles", null));
+    protected void show_cardChosen(String nickname, GameModelImmutable model) {
+        callPlatformRunLater(() -> this.guiApplication.showMessageInGame("Player "
+                + model.getPlayersConnected().peek().getNickname()
+                + " has chosen a card to place", null));
     }
 
     @Override
@@ -294,7 +297,7 @@ public class GUI extends UI {
     @Override
     protected void show_grabbedTileMainMsg(GameModelImmutable model, String nickname) {
         callPlatformRunLater(() -> this.guiApplication.showPlayerGrabbedTiles(model, nickname));
-        if (model.getNicknameCurrentPlaying().equals(this.nickname)) {
+        if (model.getPlayersConnected().peek().getNickname().equals(this.nickname)) {
             callPlatformRunLater(() -> this.guiApplication.showSelectionColShelfie());
         }
     }
@@ -331,7 +334,9 @@ public class GUI extends UI {
      */
     @Override
     protected void show_grabbedTileNotCorrect(GameModelImmutable model, String nickname) {
-        callPlatformRunLater(() -> this.guiApplication.showMessageInGame("Tiles grabbed by player "+model.getNicknameCurrentPlaying()+" are not valid!", false));
+        callPlatformRunLater(() -> this.guiApplication.showMessageInGame("Tiles grabbed by player "
+                + model.getPlayersConnected().peek().getNickname()
+                + " are not valid!", false));
     }
 
     /**
@@ -372,28 +377,6 @@ public class GUI extends UI {
     }
 
     /**
-     * This method update and show the point
-     *
-     * @param p     the player that has the points
-     * @param point the points that need to be shown
-     */
-    @Override
-    protected void show_addedPoint(Player p, Point point, GameModelImmutable gameModel) {
-        callPlatformRunLater(() -> this.guiApplication.showPointsUpdated(gameModel, p, this.nickname, point));
-    }
-
-    /**
-     * This method show a message about the selection of the column
-     */
-    @Override
-    protected void columnShelfTooSmall(GameModelImmutable model) {
-        callPlatformRunLater(() -> this.guiApplication.showMessageInGame("The selected column is too small to hold all tiles", false));
-        if (model.getNicknameCurrentPlaying().equals(this.nickname)) {
-            callPlatformRunLater(() -> this.guiApplication.showSelectionColShelfie());
-        }
-    }
-
-    /**
      * This method add an important event to the list of important events, and show it
      * @param input the string of the important event to add
      */
@@ -408,15 +391,15 @@ public class GUI extends UI {
         return 0;
     }
 
-    /**
-     * This method send a message
-     * @param msg   the message to add
-     * @param model the model to which add the message
-     */
-    @Override
-    protected void addMessage(Message msg, GameModelImmutable model) {
-        show_sentMessage(model, model.getChat().getLastMessage().getSender().getNickname());
-    }
+//    /**
+//     * This method send a message
+//     * @param msg   the message to add
+//     * @param model the model to which add the message
+//     */
+//    @Override
+//    protected void addMessage(Message msg, GameModelImmutable model) {
+//        show_sentMessage(model, model.getChat().getLastMessage().getSender().getNickname());
+//    }
 
 
     /**

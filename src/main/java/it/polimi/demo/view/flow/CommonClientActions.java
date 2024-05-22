@@ -12,22 +12,22 @@ public interface CommonClientActions {
     /**
      * Creates a new game
      *
-     * @param nick
+     * @param nickname
      * @throws IOException
      * @throws InterruptedException
      * @throws NotBoundException
      */
-    void createGame(String nick) throws IOException, InterruptedException, NotBoundException;
+    void createGame(String nickname, int num_of_players, int id) throws IOException, InterruptedException, NotBoundException;
 
-    /**
-     * Joins the first game found in the list of games
-     *
-     * @param nick
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws NotBoundException
-     */
-    void joinFirstAvailable(String nick) throws IOException, InterruptedException, NotBoundException;
+//    /**
+//     * Joins the first game found in the list of games
+//     *
+//     * @param nick
+//     * @throws IOException
+//     * @throws InterruptedException
+//     * @throws NotBoundException
+//     */
+//    void joinFirstAvailable(String nick) throws IOException, InterruptedException, NotBoundException;
 
     /**
      * Adds the player to the game
@@ -80,7 +80,7 @@ public interface CommonClientActions {
      * This method is called by the client to get the list of players in the game.
      * @param orientation the orientation of the starter card
      */
-    void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException;
+    void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException;
 
     /**
      * This method is called by the client to choose a card.

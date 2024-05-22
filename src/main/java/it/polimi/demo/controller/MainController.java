@@ -88,7 +88,6 @@ public class MainController implements MainControllerInterface {
             games.get(id).setNumPlayersToPlay(num_of_players);
         }
 
-        notifyListeners(game.getModel().getListeners(), GameListener::newGame);
         System.out.println("\t>Player:\" " + nickname + " \"" + " created game " + id);
         printRunningGames();
 
@@ -98,51 +97,51 @@ public class MainController implements MainControllerInterface {
         // Here we add the player to the 'dynamic' list of players connected (the queue!)
         game.setPlayerAsConnected(player);
 
-        return (GameControllerInterface) game;
+        return game;
     }
 
-    /**
-     * Allows a player to join the first available game.
-     * If there are no available games (i.e., all games are either full or not in the waiting state),
-     * an error message is sent to the provided GameListener.
-     *
-     * @param listener The GameListener representing the player attempting to join the game.
-     * @param nickname The nickname of the player attempting to join the game.
-     * @return The GameControllerInterface associated with the game if the player successfully joins,
-     *         or null if no available games are found.
-     * @throws RemoteException If there is a communication-related issue during the method execution.
-     */
-    @Override
-    public GameControllerInterface joinFirstAvailableGame(GameListener listener, String nickname)
-            throws RemoteException {
-
-        Player player = new Player(nickname);
-
-        synchronized (games) {
-            Optional<GameController> firstAvailableGame = games.values().stream()
-                    .filter(game -> game.getStatus() == GameStatus.WAIT && game.getNumPlayers() < DefaultValues.MaxNumOfPlayer)
-                    .findFirst();
-
-            if (firstAvailableGame.isPresent()) {
-                GameController game = firstAvailableGame.get();
-                try {
-                    //game.addListener(listener, player);
-                    game.addPlayer(player.getNickname());
-                    // When a player joins a game, he/she is set also as connected!!
-                    game.setPlayerAsConnected(player);
-
-                    System.out.println("Player \"" + nickname + "\" joined Game " + game.getGameId());
-                    printRunningGames();
-
-                    return (GameControllerInterface) game;
-                } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-                    //game.removeListener(listener, player);
-                }
-            }
-        }
-
-        return null;
-    }
+//    /**
+//     * Allows a player to join the first available game.
+//     * If there are no available games (i.e., all games are either full or not in the waiting state),
+//     * an error message is sent to the provided GameListener.
+//     *
+//     * @param listener The GameListener representing the player attempting to join the game.
+//     * @param nickname The nickname of the player attempting to join the game.
+//     * @return The GameControllerInterface associated with the game if the player successfully joins,
+//     *         or null if no available games are found.
+//     * @throws RemoteException If there is a communication-related issue during the method execution.
+//     */
+//    @Override
+//    public GameControllerInterface joinFirstAvailableGame(GameListener listener, String nickname)
+//            throws RemoteException {
+//
+//        Player player = new Player(nickname);
+//
+//        synchronized (games) {
+//            Optional<GameController> firstAvailableGame = games.values().stream()
+//                    .filter(game -> game.getStatus() == GameStatus.WAIT && game.getNumPlayers() < DefaultValues.MaxNumOfPlayer)
+//                    .findFirst();
+//
+//            if (firstAvailableGame.isPresent()) {
+//                GameController game = firstAvailableGame.get();
+//                try {
+//                    //game.addListener(listener, player);
+//                    game.addPlayer(player.getNickname());
+//                    // When a player joins a game, he/she is set also as connected!!
+//                    game.setPlayerAsConnected(player);
+//
+//                    System.out.println("Player \"" + nickname + "\" joined Game " + game.getGameId());
+//                    printRunningGames();
+//
+//                    return (GameControllerInterface) game;
+//                } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
+//                    //game.removeListener(listener, player);
+//                }
+//            }
+//        }
+//
+//        return null;
+//    }
 
     /**
      * Allows a player to join a specific game by its ID.
@@ -161,7 +160,7 @@ public class MainController implements MainControllerInterface {
         Player player = new Player(nickname);
         GameController game = games.get(gameId);
 
-        return (GameControllerInterface) Optional.ofNullable(game)
+        return Optional.ofNullable(game)
                 .filter(g -> g.getStatus() == GameStatus.WAIT ||
                         g.getStatus() == GameStatus.READY_TO_START ||
                         g.getStatus() == GameStatus.FIRST_ROUND ||
@@ -172,11 +171,12 @@ public class MainController implements MainControllerInterface {
                         g.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname)))
                 .map(g -> {
                     try {
+                        // todo: check if we add correctly the listener
+                        g.addListener(listener, player);
                         // Here we add the player to the 'statical' list of players
                         g.addPlayer(player.getNickname());
                         // Here we add the player to the 'dynamic' list of players connected (the queue!)
-                        game.setPlayerAsConnected(player);
-                        notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::playerJoinedGame);
+                        g.setPlayerAsConnected(player);
                         System.out.println("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
                         printRunningGames();
                         return g;
@@ -299,7 +299,6 @@ public class MainController implements MainControllerInterface {
                 .findFirst()
                 .ifPresent(game -> {
                     games.remove(gameId);
-                    notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::removedGame);
                     System.out.println("\t>Game " + gameId + " removed from games");
                     printRunningGames();
                 });

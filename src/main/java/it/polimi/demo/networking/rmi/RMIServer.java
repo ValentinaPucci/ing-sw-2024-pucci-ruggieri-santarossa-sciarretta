@@ -60,10 +60,11 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
 
 
     /**
-     * @return the istance of the RMI Server
+     * Singleton pattern
+     * @return the instance of the RMI Server
      */
     public synchronized static RMIServer getInstance() {
-        if(serverObject == null) {
+        if (serverObject == null) {
             try {
                 serverObject = new RMIServer();
             } catch (RemoteException e) {
@@ -82,12 +83,12 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     /**
-     * Constructor that creates a RMI Server
-     * @throws RemoteException
+     * Constructor that creates an RMI Server
+     * @throws RemoteException if the connection fails
      */
     public RMIServer() throws RemoteException {
         super(0);
-        mainController = (MainControllerInterface) MainController.getControllerInstance();
+        mainController = MainController.getControllerInstance();
     }
 
     /**
@@ -102,44 +103,44 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     public GameControllerInterface createGame(GameListener lis, String nick, int num_of_players, int id)
             throws RemoteException {
 
-        //before every call, need to recreate the stub, or java will just GC everything
-        GameControllerInterface ris = serverObject.mainController.createGame(lis, nick, num_of_players, id);
-        //The GameController and the Player have just created so, I need to set them as an Exportable Object
+        // Before every call, we need to recreate the stub, or java will just GC everything.
+        GameControllerInterface game = serverObject.mainController.createGame(lis, nick, num_of_players, id);
+        // The GameController and the Player have just been created. Hence, we need to set them as an Exportable Object
 
         try {
-            UnicastRemoteObject.exportObject(ris, 0);
-        }catch (RemoteException e){
-            //Already exported, due to another RMI Client running on the same machine
+            UnicastRemoteObject.exportObject(game, 0);
+        } catch (RemoteException e){
+            // Already exported, due to another RMI Client running on the same machine
         }
-        //ris.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),0));
+        // ris.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),0));
         printAsync("[RMI] " + nick + " has created a new game");
-        return ris;
+        return game;
     }
 
-    /**
-     * A player requested, through the network, to join a random game
-     *
-     * @param lis GameListener of the player
-     * @param nick of the player
-     * @return GameControllerInterface of the first available game
-     * @throws RemoteException
-     */
-    @Override
-    public GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException {
-
-        //Return the GameController already existed => not necessary to re-Export Object
-        GameControllerInterface ris = serverObject.mainController.joinFirstAvailableGame(lis, nick);
-        if (ris != null) {
-            //ris.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),0));
-            try {
-                UnicastRemoteObject.exportObject(ris, 0);
-            }catch (RemoteException e){
-                //Already exported, due to another RMI Client running on the same machine
-            }
-            printAsync("[RMI] " + nick + " joined in first available game");
-        }
-        return ris;
-    }
+//    /**
+//     * A player requested, through the network, to join a random game
+//     *
+//     * @param lis GameListener of the player
+//     * @param nick of the player
+//     * @return GameControllerInterface of the first available game
+//     * @throws RemoteException
+//     */
+//    @Override
+//    public GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException {
+//
+//        //Return the GameController already existed => not necessary to re-Export Object
+//        GameControllerInterface ris = serverObject.mainController.joinFirstAvailableGame(lis, nick);
+//        if (ris != null) {
+//            //ris.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),0));
+//            try {
+//                UnicastRemoteObject.exportObject(ris, 0);
+//            }catch (RemoteException e){
+//                //Already exported, due to another RMI Client running on the same machine
+//            }
+//            printAsync("[RMI] " + nick + " joined in first available game");
+//        }
+//        return ris;
+//    }
 
     /**
      * A player requested, through the network, to join a specific game
@@ -152,15 +153,15 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     @Override
     public GameControllerInterface joinGame(GameListener lis, String nick, int idGame) throws RemoteException {
 
-        //Return the GameController already existed => not necessary to re-Export Object
+        // Return the GameController already existed => not necessary to re-Export Object
         GameControllerInterface ris = serverObject.mainController.joinGame(lis, nick, idGame);
         if (ris != null) {
             try {
                 UnicastRemoteObject.exportObject(ris, 0);
             }catch (RemoteException e){
-                //Already exported, due to another RMI Client running on the same machine
+                // Already exported, due to another RMI Client running on the same machine
             }
-            //ris.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),0));
+            // ris.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),0));
             printAsync("[RMI] " + nick + " joined to specific game with id: " + idGame);
         }
         return ris;
@@ -184,8 +185,8 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
             }catch (RemoteException e){
                 //Already exported, due to another RMI Client running on the same machine
             }
-            //ris.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),DefaultValue.Default_port_RMI));
-            //printAsync("[RMI] "+nick+" joined to specific game with id: "+idGame);
+            // ris.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),DefaultValue.Default_port_RMI));
+            // printAsync("[RMI] "+nick+" joined to specific game with id: "+idGame);
         }
         return ris;
     }

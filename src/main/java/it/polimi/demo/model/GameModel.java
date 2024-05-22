@@ -18,9 +18,6 @@ import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.model.interfaces.GameModelInterface;
 import it.polimi.demo.model.interfaces.PlayerIC;
-import it.polimi.demo.view.GameView;
-
-
 
 import java.io.Serializable;
 import java.util.*;
@@ -91,7 +88,7 @@ public class GameModel implements GameModelInterface, Serializable {
      * @return True if there are enough players online, otherwise false.
      */
     public boolean areConnectedPlayersEnough() {
-        return players_connected.size() >= DefaultValues.MinNumOfPlayer;
+        return players_connected.size() >= 2;
     }
 
     /**
@@ -227,9 +224,9 @@ public class GameModel implements GameModelInterface, Serializable {
         aux_order_players.remove(p);
 
         if (this.status.equals(GameStatus.RUNNING)) {
-            if (players_connected.size() < DefaultValues.MinNumOfPlayer) {
+            if (players_connected.size() < 2) {
                 // Not enough players to keep playing
-                this.setStatus(GameStatus.ENDED);
+                // this.setStatus(GameStatus.ENDED);
             }
         }
     }
@@ -384,25 +381,25 @@ public class GameModel implements GameModelInterface, Serializable {
      * @throws NotReadyToRunException If attempting to set the game status to "RUNNING" but the lobby
      * does not have at least the minimum number of players or the current player index is not set.
      */
-    public void setStatus(GameStatus status) {
-        // Set the game status and notify listeners based on the new status
-        this.status = status;
-
-        switch (status) {
-            case READY_TO_START -> {
-                notifyListeners(listeners, GameListener::genericGameStatus);
-                notifyListeners(listeners, GameListener::modelChanged);
-                notifyListeners(listeners, GameListener::gameStarted);
-            }
-            case FIRST_ROUND -> {
-                notifyListeners(listeners, GameListener::genericGameStatus);
-                notifyListeners(listeners, GameListener::modelChanged);
-                // needed for the first time
-                notifyListeners(listeners, GameListener::nextTurn);
-            }
-            case ENDED -> notifyListeners(listeners, GameListener::gameEnded);
-        }
-    }
+//    public void setStatus(GameStatus status) {
+//        // Set the game status and notify listeners based on the new status
+//        this.status = status;
+//
+//        switch (status) {
+//            case READY_TO_START -> {
+//                notifyListeners(listeners, GameListener::genericGameStatus);
+//                notifyListeners(listeners, GameListener::modelChanged);
+//                notifyListeners(listeners, GameListener::gameStarted);
+//            }
+//            case FIRST_ROUND -> {
+//                notifyListeners(listeners, GameListener::genericGameStatus);
+//                notifyListeners(listeners, GameListener::modelChanged);
+//                // needed for the first time
+//                notifyListeners(listeners, GameListener::nextTurn);
+//            }
+//            case ENDED -> notifyListeners(listeners, GameListener::gameEnded);
+//        }
+//    }
 
     //-------------------------game logic management---------------------------------------------
 
@@ -414,18 +411,7 @@ public class GameModel implements GameModelInterface, Serializable {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
-
-        System.out.println("\n");
-
-        System.out.println(aux_order_players.getFirst().getStarterCardToChose().get(0).toString());
-        System.out.println(aux_order_players.getFirst().getStarterCardToChose().get(1).toString());
-
-        System.out.println("\n");
-
-        System.out.println("wwwwwwwwww");
-        System.out.println(aux_order_players.getLast().getStarterCardToChose().get(0).toString());
-
-        notifyListeners(listeners, GameListener::modelChanged);
+        // notifyListeners(listeners, GameListener::modelChanged);
     }
 
     /**
@@ -517,7 +503,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
             }
-            notifyListeners(listeners, GameListener::modelChanged);
+            // notifyListeners(listeners, GameListener::modelChanged);
         }
     }
 
@@ -540,7 +526,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
             }
-            notifyListeners(listeners, GameListener::modelChanged);
+            // notifyListeners(listeners, GameListener::modelChanged);
         }
     }
 
@@ -587,7 +573,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
                 break;
         }
-        notifyListeners(listeners, GameListener::modelChanged);
+        // notifyListeners(listeners, GameListener::modelChanged);
         nextTurn();
     }
 
@@ -612,9 +598,9 @@ public class GameModel implements GameModelInterface, Serializable {
         Player q = players_connected.poll();
         players_connected.offer(q);
 
-        notifyListeners(listeners, GameListener::modelChanged);
-        notifyListeners(listeners, GameListener::printModel);
-        notifyListeners(listeners, GameListener::nextTurn);
+//        notifyListeners(listeners, GameListener::modelChanged);
+//        notifyListeners(listeners, GameListener::printModel);
+//        notifyListeners(listeners, GameListener::nextTurn);
     }
 
     /**
