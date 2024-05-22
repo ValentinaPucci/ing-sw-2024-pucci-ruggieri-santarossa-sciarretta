@@ -1,11 +1,11 @@
 package it.polimi.demo.view.flow.utilities;
 
-import polimi.ingsw.model.DefaultValue;
+import it.polimi.demo.DefaultValues;
 
 import java.util.Scanner;
 
+import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
-import static polimi.ingsw.view.text.PrintAsync.printAsync;
 
 /**
  * InputReaderTUI class
@@ -32,7 +32,7 @@ public class inputReaderTUI extends Thread implements InputReader {
             String temp = sc.nextLine();
             buffer.addData(temp);
             printAsync(ansi().cursorUpLine().a(" ".repeat(temp.length())));
-            printAsync(ansi().cursor(DefaultValue.row_input + 1, 0));
+            printAsync(ansi().cursor(DefaultValues.row_input + 1, 0));
         }
     }
 

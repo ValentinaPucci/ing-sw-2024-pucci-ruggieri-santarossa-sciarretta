@@ -2,7 +2,6 @@ package it.polimi.demo.main;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.networking.rmi.RMIServer;
-import it.polimi.demo.networking.socket.server.Server;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -34,8 +33,8 @@ public class MainServer {
 
         RMIServer.bind();
 
-        Server serverSOCKET = new Server();
-        serverSOCKET.start(DefaultValues.Default_port_Socket);
+//        Server serverSOCKET = new Server();
+//        serverSOCKET.start(DefaultValues.Default_port_Socket);
 
     }
 

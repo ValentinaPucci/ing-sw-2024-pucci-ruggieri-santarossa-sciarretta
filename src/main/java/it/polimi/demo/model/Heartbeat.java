@@ -6,25 +6,25 @@ package it.polimi.demo.model;
  * to let him know that we are still connected (needed for rmi connection)<br>
  */
 public class Heartbeat {
-    private final Long beat;
+    private final Long ping;
     private final String nick;
 
     /**
      * Constructor
      *
-     * @param beat
+     * @param ping
      * @param nick
      */
-    public Heartbeat(Long beat, String nick) {
-        this.beat = beat;
+    public Heartbeat(Long ping, String nick) {
+        this.ping = ping;
         this.nick = nick;
     }
 
     /**
      * @return the heartbeat
      */
-    public Long getBeat() {
-        return beat;
+    public Long getPing() {
+        return ping;
     }
 
     /**

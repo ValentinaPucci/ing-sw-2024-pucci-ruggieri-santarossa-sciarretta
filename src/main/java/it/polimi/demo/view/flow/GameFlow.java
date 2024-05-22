@@ -7,7 +7,6 @@ import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.networking.rmi.RMIClient;
-import it.polimi.demo.networking.socket.client.ClientSocket;
 import it.polimi.demo.view.flow.utilities.*;
 import it.polimi.demo.view.flow.utilities.events.EventElement;
 import it.polimi.demo.view.flow.utilities.events.EventList;
@@ -91,7 +90,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     public GameFlow(ConnectionSelection connectionSelection) {
         //Invoked for starting with TUI
         switch (connectionSelection) {
-            case SOCKET -> clientActions = new ClientSocket(this);
+            // case SOCKET -> clientActions = new ClientSocket(this);
             case RMI -> clientActions = new RMIClient(this);
         }
         ui = new TUI();
@@ -114,7 +113,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     public GameFlow(GUIApplication guiApplication, ConnectionSelection connectionSelection) {
         //Invoked for starting with GUI
         switch (connectionSelection) {
-            case SOCKET -> clientActions = new ClientSocket(this);
+            // case SOCKET -> clientActions = new ClientSocket(this);
             case RMI -> clientActions = new RMIClient(this);
         }
         this.inputReader = new inputReaderGUI();
@@ -156,7 +155,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                                 throw new RuntimeException(e);
                             }
                         }
-                        case RUNNING, LAST_CIRCLE -> {
+                        case RUNNING, LAST_ROUND -> {
                             try {
                                 statusRunning(event);
                             } catch (IOException | InterruptedException e) {
@@ -226,7 +225,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      * @throws InterruptedException if there are problems with the connection
      */
     private void statusWait(EventElement event) throws IOException, InterruptedException {
-        String nickLastPlayer = event.getModel().getLastPlayer().getNickname();
+        String nickLastPlayer = event.getModel().getPlayersConnected().getLast().getNickname();
         //If the event is that I joined then I wait until the user inputs 'y'
         switch (event.getType()) {
             case PLAYER_JOINED -> {
@@ -249,6 +248,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      * @throws InterruptedException if there are problems with the connection
      */
     private void statusRunning(EventElement event) throws IOException, InterruptedException {
+        
         switch (event.getType()) {
             case GAMESTARTED -> {
                 ui.show_gameStarted(event.getModel());
@@ -257,15 +257,13 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 this.inputParser.setIdGame(event.getModel().getGameId());
 
             }
-            case COMMON_CARD_EXTRACTED -> {
-                ui.show_commonCards(event.getModel());
-
-            }
+            
             case SENT_MESSAGE -> {
                 ui.show_sentMessage(event.getModel(), nickname);
             }
 
             case NEXT_TURN, PLAYER_RECONNECTED -> {
+
                 ui.show_nextTurnOrPlayerReconnected(event.getModel(), nickname);
 
                 columnChosen = -1;
@@ -275,7 +273,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                     this.inputParser.setIdGame(event.getModel().getGameId());
                 }
 
-                if (event.getModel().getNicknameCurrentPlaying().equals(nickname)) {
+                if (event.getModel().getPlayersConnected().peek().equals(nickname)) {
 
                     if (event.getType().equals(PLAYER_RECONNECTED)) {
 
@@ -291,11 +289,12 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 }
             }
 
-            case GRABBED_TILE, ASK_TO_SELECT_TILE_TO_PLACE -> {
-                if (!event.getType().equals(ASK_TO_SELECT_TILE_TO_PLACE))
+            case CARD_PLACED, ASK_COORDINATES_TO_PLACE_CARD -> {
+                if (!event.getType().equals(ASK_COORDINATES_TO_PLACE_CARD)) {
                     ui.show_grabbedTileMainMsg(event.getModel(), nickname);
+                }
 
-                if (event.getModel().getNicknameCurrentPlaying().equals(nickname)) {
+                if (event.getModel().getPlayersConnected().peek().getNickname().equals(nickname)) {
                     //It's my turn, so I'm the current playing
 
                     if (columnChosen == -1) {
@@ -312,8 +311,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             case POSITIONED_TILE -> {
                 ui.show_positionedTile(event.getModel(), nickname);
 
-                ui.addImportantEvent("Player " + event.getModel().getNicknameCurrentPlaying() + " has positioned a Tile on his shelf!");
-                if (event.getModel().getHandOfCurrentPlaying().size() > 0 && event.getModel().getNicknameCurrentPlaying().equals(nickname)) {
+                ui.addImportantEvent("Player " + event.getModel().getPlayersConnected().peek().getNickname() + " has positioned a Tile on his shelf!");
+                if (event.getModel().getHandOfCurrentPlaying().size() > 0 && event.getModel().getPlayersConnected().peek().getNickname().equals(nickname)) {
                     //Ask to place other tiles
                     events.add(event.getModel(), ASK_TO_SELECT_TILE_TO_PLACE);
                 }
@@ -322,7 +321,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             case GRABBED_TILE_NOT_CORRECT -> {
                 ui.show_grabbedTileNotCorrect(event.getModel(), nickname);
 
-                if (event.getModel().getNicknameCurrentPlaying().equals(nickname)) {
+                if (event.getModel().getPlayersConnected().peek().getNickname().equals(nickname)) {
                     columnChosen = -1;
                     askPickTiles(event.getModel());
                 }
@@ -651,6 +650,11 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
     }
 
+    @Override
+    public void createGame(String nickname, int num_of_players, int id) throws IOException, InterruptedException, NotBoundException {
+
+    }
+
     /**
      * The client asks the server to join a specific game
      *
@@ -726,6 +730,26 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         return false;
     }
 
+    @Override
+    public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
+
+    }
+
+    @Override
+    public void chooseCard(int which_card) throws RemoteException {
+
+    }
+
+    @Override
+    public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
+
+    }
+
+    @Override
+    public void drawCard(int index) throws RemoteException, GameEndedException {
+
+    }
+
     /**
      * The client asks the server to grab a tile from the playground
      *
@@ -781,6 +805,26 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
 
     /*============ Server event received ============*/
+
+    @Override
+    public void placeStarterCard(GameModelImmutable model, Orientation orientation) {
+        
+    }
+
+    @Override
+    public void chooseCard(GameModelImmutable model, int which_card) {
+
+    }
+
+    @Override
+    public void placeCard(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
+
+    }
+
+    @Override
+    public void drawCard(GameModelImmutable model, int index) {
+
+    }
 
     /**
      * A player has joined the game
@@ -950,7 +994,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void grabbedTileNotCorrect(GameModelImmutable gameModel) {
         events.add(gameModel, EventType.GRABBED_TILE_NOT_CORRECT);
-        ui.addImportantEvent("[EVENT]: A set of not grabbable tiles has been requested by Player: " + gameModel.getNicknameCurrentPlaying());
+        ui.addImportantEvent("[EVENT]: A set of not grabbable tiles has been requested by Player: " + gameModel.getPlayersConnected().peek().getNickname());
     }
 
     /**

@@ -17,6 +17,7 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 public class MainClient {
 
     public static void main(String[] args) {
+
         clearCMD();
         int selection;
 
@@ -25,7 +26,6 @@ public class MainClient {
 
         if (!DefaultValues.DEBUG) {
             String input;
-
             do {
                 printAsync(ansi().cursor(1, 0).a("""
                         Insert remote IP (leave empty for localhost)
@@ -46,7 +46,7 @@ public class MainClient {
                         Insert your IP (leave empty for localhost)
                         """));
                 input = new Scanner(System.in).nextLine();
-                if(!input.equals("") && !isValidIP(input)){
+                if (!input.equals("") && !isValidIP(input)) {
                     clearCMD();
                     printAsync("Not valid");
                 }
@@ -79,24 +79,24 @@ public class MainClient {
 
 
         //Get the Communication Protocol wanted
-        ConnectionSelection conSel;
+        ConnectionSelection con_sel;
         if (selection == 1 || selection == 3) {
-            conSel = ConnectionSelection.SOCKET;
+            con_sel = ConnectionSelection.SOCKET;
         } else {
-            conSel = ConnectionSelection.RMI;
+            con_sel = ConnectionSelection.RMI;
         }
 
         printAsync("Starting the game!");
 
-        //Starts the UI wanted
+        // Starts the UI wanted
         if (selection == 1 || selection == 2) {
-            //Starts the game with TUI
-            //I can start directly here the GameFlow
-            new GameFlow(conSel);
+            // Starts the game with TUI
+            // I can start directly here the GameFlow
+            new GameFlow(con_sel);
         } else {
-            //Starts the game with GUI
-            //For doing so, I need to start the Main of GUI (GameFlow needs to be started inside the thread of GUI)
-            Application.launch(GUIApplication.class, conSel.toString());
+            // Starts the game with GUI
+            // For doing so, I need to start the Main of GUI (GameFlow needs to be started inside the thread of GUI)
+            Application.launch(GUIApplication.class, con_sel.toString());
         }
 
     }

@@ -9,22 +9,24 @@ import it.polimi.demo.model.*;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.model.interfaces.GameModelInterface;
-import it.polimi.demo.view.UI.TUI.TextualUtils;
+import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
 
 import static it.polimi.demo.listener.Listener.notifyListeners;
+import static it.polimi.demo.networking.PrintAsync.printAsync;
 
-public class GameController implements GameControllerInterface, Serializable {
+public class GameController implements GameControllerInterface, Serializable, Runnable {
 
     /**
      * The model to control
      */
     private GameModel model;
+
+    private Map<GameListener, Heartbeat> listeners_to_heartbeats = new HashMap<>();
 
     /**
      * A random object for implementing pseudo-random choice
@@ -89,19 +91,19 @@ public class GameController implements GameControllerInterface, Serializable {
     /**
      * This method is called when the thread is started.
      */
-//    @Override
-//    public void run() {
-//        while (!Thread.currentThread().isInterrupted()) {
-//            if (model.getStatus().equals(GameStatus.RUNNING) ||
-//                    model.getStatus().equals(GameStatus.LAST_ROUND) ||
-//                    model.getStatus().equals(GameStatus.ENDED) ||
-//                    model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
-//                    model.getStatus().equals(GameStatus.WAIT)) {
-//                checkForDisconnections();
-//                pauseThread();
-//            }
-//        }
-//    }
+    @Override
+    public void run() {
+        while (!Thread.currentThread().isInterrupted()) {
+            if (model.getStatus().equals(GameStatus.RUNNING) ||
+                    model.getStatus().equals(GameStatus.LAST_ROUND) ||
+                    model.getStatus().equals(GameStatus.ENDED) ||
+                    model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
+                    model.getStatus().equals(GameStatus.WAIT)) {
+                checkForDisconnections();
+                pauseThread();
+            }
+        }
+    }
 
     /**
      * It pauses the thread for 500 milliseconds
@@ -113,7 +115,8 @@ public class GameController implements GameControllerInterface, Serializable {
             throw new RuntimeException(e);
         }
     }
-     // -------------------------------------------------------
+    // -------------------------------------------------------
+
     /**
      * Check if a player is disconnected by checking the heartbeat freshness, if it is expired, the player is disconnected
      * and handleDisconecction will deal with it.
@@ -140,8 +143,8 @@ public class GameController implements GameControllerInterface, Serializable {
     private boolean isHeartbeatExpired(Heartbeat heartbeat) {
         long currentTime = System.currentTimeMillis();
         long lastBeatTime = heartbeat.getPing();
-       //Timeout =
-        return currentTime - lastBeatTime > DefaultValues.timeout;
+        // Timeout =
+        return currentTime - lastBeatTime > DefaultValues.secondsToWaitReconnection;
     }
 
     /**
@@ -153,8 +156,8 @@ public class GameController implements GameControllerInterface, Serializable {
      */
    private void handleDisconnection(Heartbeat heartbeat, GameListener listener) {
     try {
-        disconnectPlayer(heartbeat.getPlayer(), listener);
-        printAsync("Disconnection of player: " + heartbeat.getPlayer().getNickname() + " detected ");
+        disconnectPlayer(getPlayerEntity(heartbeat.getNick()), listener);
+        printAsync("Disconnection of player: " + heartbeat.getNick() + " detected ");
 
         // Now check
         if (getNumConnectedPlayers() == 0) {
@@ -178,12 +181,11 @@ public class GameController implements GameControllerInterface, Serializable {
      *
      * @param nickname the player's nickname associated to the heartbeat
      * @param me   the player's GameListener associated to the heartbeat
-     * @throws RemoteException
      */
     @Override
-    public synchronized void addPing(String nickname, GameListener me) throws RemoteException {
+    public synchronized void addPing(String nickname, GameListener me) {
         synchronized (listeners_to_heartbeats) {
-            listeners_to_heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), getPlayerEntity(nickname)));
+            listeners_to_heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), nickname));
         }
     }
 
@@ -281,15 +283,9 @@ public class GameController implements GameControllerInterface, Serializable {
      *
      * @throws PlayerAlreadyConnectedException if a player tries to rejoin the same game
      * @throws MaxPlayersLimitException    if there are already 4 players in game
-     * @param username the nickname of the player
-     * @return the index of the player in the list of players
      */
-    public int reconnectPlayer(String username) {
-
-        int playerIndex = this.model.getAux_order_players().indexOf(username);
-        this.model.setPlayerAsConnected(model.getAux_order_players().get(playerIndex));
-
-        return playerIndex;
+    public void reconnectPlayer(Player p) throws RemoteException {
+        this.model.reconnectPlayer(p);
     }
 
 //    public void nextPlayer() {
@@ -477,6 +473,16 @@ public class GameController implements GameControllerInterface, Serializable {
      */
     public GameStatus getStatus() {
         return model.getStatus();
+    }
+
+    @Override
+    public void playerIsReadyToStart(String nickname) {
+        model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
+    }
+
+    @Override
+    public boolean isThisMyTurn(String nickname) {
+        return model.getPlayersConnected().peek().getNickname().equals(nickname);
     }
 
     /**

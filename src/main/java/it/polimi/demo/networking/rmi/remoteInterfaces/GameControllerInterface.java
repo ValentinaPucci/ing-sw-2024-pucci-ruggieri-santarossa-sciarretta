@@ -2,6 +2,7 @@ package it.polimi.demo.networking.rmi.remoteInterfaces;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
@@ -78,20 +79,22 @@ public interface GameControllerInterface extends Remote {
     void startGame() throws GameEndedException, RemoteException;
 
 
-//    /**
-//     * This method disconnect a player and remove him from the GameListener list{@link GameListener}
-//     * @param p the player to disconnect
-//     * @param listOfClient the GameListener of the player {@link GameListener}
-//     * @throws RemoteException if the connection fails
-//     */
-//    void disconnectPlayer( Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
+    /**
+     * This method disconnect a player and remove him from the GameListener list{@link GameListener}
+     * @param p the player to disconnect
+     * @param listOfClient the GameListener of the player {@link GameListener}
+     * @throws RemoteException if the connection fails
+     */
+    void disconnectPlayer(Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
 
-//    /**
-//     * Add a message to the chat list
-//     * @param mess the message to send {@link Message}
-//     * @throws RemoteException if the connection fails
-//     */
-//    void sendMessage(Message mess) throws RemoteException;
+    void reconnectPlayer(Player p) throws RemoteException;
+
+    /**
+     * Add a message to the chat list
+     * @param mess the message to send {@link Message}
+     * @throws RemoteException if the connection fails
+     */
+    void sendMessage(Message mess) throws RemoteException;
 
     /**
      * This method return the number of the online players
@@ -119,4 +122,6 @@ public interface GameControllerInterface extends Remote {
     void playerIsReadyToStart(String nickname);
 
     boolean isThisMyTurn(String nickname);
+
+    void addPing(String nickname, GameListener gameListener);
 }
