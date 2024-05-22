@@ -7,8 +7,7 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.MaxPlayersLimitException;
 import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
-import it.polimi.demo.controller.ControllerInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.rmi.remoteInterfaces.*;
 import it.polimi.demo.view.GameDetails;
 
 import java.rmi.RemoteException;
@@ -78,6 +77,7 @@ public class MainController implements MainControllerInterface {
 
         Player player = new Player(nickname);
         GameController game = new GameController(id, num_of_players, new Player(nickname));
+        game.addListener(listener, player);
 
         synchronized (games) {
             // By adding this check, we avoid the possibility of having two games with the same ID.
@@ -98,7 +98,7 @@ public class MainController implements MainControllerInterface {
         // Here we add the player to the 'dynamic' list of players connected (the queue!)
         game.setPlayerAsConnected(player);
 
-        return game;
+        return (GameControllerInterface) game;
     }
 
     /**
@@ -134,7 +134,7 @@ public class MainController implements MainControllerInterface {
                     System.out.println("Player \"" + nickname + "\" joined Game " + game.getGameId());
                     printRunningGames();
 
-                    return game;
+                    return (GameControllerInterface) game;
                 } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
                     //game.removeListener(listener, player);
                 }
@@ -161,7 +161,7 @@ public class MainController implements MainControllerInterface {
         Player player = new Player(nickname);
         GameController game = games.get(gameId);
 
-        return Optional.ofNullable(game)
+        return (GameControllerInterface) Optional.ofNullable(game)
                 .filter(g -> g.getStatus() == GameStatus.WAIT ||
                         g.getStatus() == GameStatus.READY_TO_START ||
                         g.getStatus() == GameStatus.FIRST_ROUND ||

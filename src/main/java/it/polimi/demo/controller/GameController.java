@@ -6,6 +6,7 @@ import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.*;
+import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.controller.ControllerInterfaces.GameControllerInterface;
@@ -636,91 +637,53 @@ public class GameController implements GameControllerInterface, Serializable {
 //    }
 
 
-//---------------------------------listeners management---------------------------------------
+//---------------------------------listeners management--------------------------------------
 
-//    /**
-//     * Add listener @param l to model listeners and player listeners
-//     *
-//     * @param l GameListener to add
-//     * @param p entity of the player
-//     */
-//    public void addListener(GameListener l, Player p) {
-//
-//        model.addListener(l);
-//        Optional.ofNullable(model.getListeners()).ifPresent(listeners ->
-//                listeners.forEach(p::addListener)
-//        );
-//
-//        getPlayers().stream()
-//                .filter(otherPlayer -> !otherPlayer.equals(p))
-//                .forEach(otherPlayer -> otherPlayer.addListener(l));
-//    }
-//
-//    /**
-//     * Remove the listener @param lis to model listeners and player listeners
-//     *
-//     * @param lis GameListener to remove
-//     * @param p   entity of the player to remove
-//     */
-//    public void removeListener(GameListener lis, Player p) {
-//
-//        model.removeListener(lis);
-//        Optional.ofNullable(p.getListeners()).ifPresent(List::clear);
-//
-//        getPlayers().stream()
-//                .filter(otherPlayer -> !otherPlayer.equals(p))
-//                .forEach(otherPlayer -> otherPlayer.removeListener(lis));
-//    }
+    /**
+     * Add listener @param l to model listeners and player listeners
+     *
+     * @param l GameListener to add
+     * @param p entity of the player
+     */
+    public void addListener(GameListener l, Player p) {
+
+        model.addListener(l);
+        Optional.ofNullable(model.getListeners()).ifPresent(listeners ->
+                listeners.forEach(p::addListener)
+        );
+
+        getPlayers().stream()
+                .filter(otherPlayer -> !otherPlayer.equals(p))
+                .forEach(otherPlayer -> otherPlayer.addListener(l));
+    }
+
+    /**
+     * Remove the listener @param lis to model listeners and player listeners
+     *
+     * @param lis GameListener to remove
+     * @param p   entity of the player to remove
+     */
+    public void removeListener(GameListener lis, Player p) {
+
+        model.removeListener(lis);
+        Optional.ofNullable(p.getListeners()).ifPresent(List::clear);
+
+        getPlayers().stream()
+                .filter(otherPlayer -> !otherPlayer.equals(p))
+                .forEach(otherPlayer -> otherPlayer.removeListener(lis));
+    }
 
     //-------------------------------chat management----------------------------
-//    /**
-//     * Add a message to the chat list
-//     *
-//     * @param mess to add
-//     * @throws RemoteException if there is an error
-//     */
-//    @Override
-//    public synchronized void sendMessage(Message mess) throws RemoteException {
-//        model.sendMessage(mess);
-//    }
-
-
-    // TODO: Check the following methods.
-//    public void lastTurn() {
-//        for (int i = 0; i < getNumPlayers(); i++) {
-//            int current_player_index = model.getCurrentPlayer();
-//            List<Player> players = model.getPlayers();
-//            Player current_player = players.get(current_player_index);
-//
-//            assert current_player != null;
-//            int prec_points = current_player.getPersonalBoard().getPoints();
-//
-//            placeCard(current_player.getChosenGameCard(), current_player.getPersonalBoard(),x, y);
-//            int current_points = current_player.getPersonalBoard().getPoints();
-//            int delta = current_points - prec_points;
-//            model.getCommonBoard().movePlayer(current_player_index, delta);
-//        }
-//
-//        model.setStatus(GameStatus.ENDED);
-//    }
-//
-//    public void secondLastTurn() {
-//        for (int i = model.getCommonBoard().getPartialWinner(); i < getNumPlayers(); i++)  {
-//            int current_player_index = model.getCurrentPlayer();
-//            List<Player> players = model.getPlayers();
-//            Player current_player = players.get(current_player_index);
-//
-//            assert current_player != null;
-//            int prec_points = current_player.getPersonalBoard().getPoints();
-//            placeCard(current_player.getChosenGameCard(), current_player.getPersonalBoard(), coordinate, already_placed_card);
-//            int current_points = current_player.getPersonalBoard().getPoints();
-//            int delta = current_points - prec_points;
-//            model.getCommonBoard().movePlayer(current_player_index, delta);
-//            if(!model.getCommonBoard().getResourceConcreteDeck().isEmpty() && !model.getCommonBoard().getGoldConcreteDeck().isEmpty())
-//                current_player.addToHand(drawCard(from_where_draw));
-//        }
-//        lastTurn();
-//    }
+    /**
+     * Add a message to the chat list
+     *
+     * @param mess to add
+     * @throws RemoteException if there is an error
+     */
+    @Override
+    public synchronized void sendMessage(Message mess) throws RemoteException {
+        model.sendMessage(mess);
+    }
 
 }
 
