@@ -3,7 +3,8 @@ package it.polimi.demo.view.flow.utilities;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import polimi.ingsw.model.DefaultValue;
+
+import it.polimi.demo.DefaultValues;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -40,13 +41,13 @@ public class FileDisconnection {
         try (InputStream is = new FileInputStream(file);
              Reader reader = new InputStreamReader(Objects.requireNonNull(is, "Couldn't find json file"), StandardCharsets.UTF_8)) {
             JSONObject obj = (JSONObject) parser.parse(reader);
-            gameId = (String) obj.get(DefaultValue.gameIdData);
-            time = (String) obj.get(DefaultValue.gameIdTime);
+            gameId = (String) obj.get(DefaultValues.gameIdData);
+            time = (String) obj.get(DefaultValues.gameIdTime);
         } catch (ParseException | IOException ex) {
             return -1;
         }
         assert gameId != null;
-        if (LocalDateTime.parse(time).isBefore(LocalDateTime.now().plusSeconds(DefaultValue.twelveHS)))
+        if (LocalDateTime.parse(time).isBefore(LocalDateTime.now().plusSeconds(DefaultValues.twelveHS)))
             return Integer.parseInt(gameId);
         else
             return -1;
@@ -60,8 +61,8 @@ public class FileDisconnection {
     @SuppressWarnings("unchecked")
     public void setLastGameId(String nickname, int gameId) {
         JSONObject data = new JSONObject();
-        data.put(DefaultValue.gameIdData, Integer.toString(gameId));
-        data.put(DefaultValue.gameIdTime, LocalDateTime.now().toString());
+        data.put(DefaultValues.gameIdData, Integer.toString(gameId));
+        data.put(DefaultValues.gameIdTime, LocalDateTime.now().toString());
         //if the directory doesn't exist, create it
         new File(path).mkdirs();
 

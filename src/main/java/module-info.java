@@ -8,6 +8,7 @@ module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
     requires org.fusesource.jansi;
     requires java.logging;
     requires java.desktop;
+    requires json.simple;
 
     opens it.polimi.demo.model to javafx.fxml;
     exports it.polimi.demo.model;

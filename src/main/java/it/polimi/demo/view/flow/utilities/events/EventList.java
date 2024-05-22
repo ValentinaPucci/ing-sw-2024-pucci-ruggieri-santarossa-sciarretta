@@ -1,7 +1,8 @@
 package it.polimi.demo.view.flow.utilities.events;
 
-import polimi.ingsw.model.enumeration.GameStatus;
-import polimi.ingsw.model.gameModelImmutable.GameModelImmutable;
+
+import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -25,11 +26,13 @@ public class EventList {
     public synchronized void add(GameModelImmutable model, EventType type) {
         lists.add(new EventElement(model, type));
 
-        if (type.equals(EventType.PLAYER_JOINED) || (model != null && (model.getStatus().equals(GameStatus.RUNNING) || model.getStatus().equals(GameStatus.LAST_CIRCLE)) ))
+        if (type.equals(EventType.PLAYER_JOINED)
+                || (model != null && (model.getStatus().equals(GameStatus.RUNNING)
+                || model.getStatus().equals(GameStatus.LAST_ROUND)) ))
             joined = true;
 
-        if(type.equals(EventType.APP_MENU))
-            joined=false;
+        if (type.equals(EventType.APP_MENU))
+            joined = false;
     }
 
     /**

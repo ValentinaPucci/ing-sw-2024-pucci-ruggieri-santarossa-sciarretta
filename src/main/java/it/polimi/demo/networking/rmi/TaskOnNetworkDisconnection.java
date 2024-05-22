@@ -1,6 +1,6 @@
 package it.polimi.demo.networking.rmi;
 
-import polimi.ingsw.view.flow.Flow;
+import it.polimi.demo.view.flow.Flow;
 
 import java.util.TimerTask;
 

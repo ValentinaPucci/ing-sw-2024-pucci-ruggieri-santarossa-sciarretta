@@ -1,15 +1,12 @@
 package it.polimi.demo.view.text;
 
 import org.fusesource.jansi.AnsiConsole;
-import polimi.ingsw.model.DefaultValue;
-import polimi.ingsw.model.Player;
-import polimi.ingsw.model.Point;
-import polimi.ingsw.model.chat.Message;
-import polimi.ingsw.model.gameModelImmutable.GameModelImmutable;
-import polimi.ingsw.model.interfaces.CommonCardIC;
-import polimi.ingsw.model.interfaces.PlayerIC;
-import polimi.ingsw.model.interfaces.TileIC;
-import polimi.ingsw.view.flow.UI;
+import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.Player;
+import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.interfaces.PlayerIC;
+import it.polimi.demo.view.flow.UI;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -19,7 +16,7 @@ import java.util.Map;
 
 import static org.fusesource.jansi.Ansi.Color.*;
 import static org.fusesource.jansi.Ansi.ansi;
-import static polimi.ingsw.view.text.PrintAsync.*;
+import static it.polimi.demo.view.text.PrintAsync.*;
 
 /**
  * This class is father to both the TUI  implementation<br>
@@ -51,7 +48,7 @@ public class TUI extends UI {
     @Override
     public void addImportantEvent(String input) {
         //Want to show only the first maxnum_of_last_event_tobe_showed important event happened
-        if (importantEvents.size() + 1 >= DefaultValue.maxnum_of_last_event_tobe_showed) {
+        if (importantEvents.size() + 1 >= DefaultValues.maxnum_of_last_event_tobe_showed) {
             importantEvents.remove(0);
         }
         importantEvents.add(input);
