@@ -33,4 +33,5 @@ public class Heartbeat {
     public String getNick() {
         return nick;
     }
+
 }
