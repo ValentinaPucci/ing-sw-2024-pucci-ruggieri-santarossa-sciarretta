@@ -1,29 +1,38 @@
-package it.polimi.demo.networking.socket.client.mainControllerMessages;
+package it.polimi.demo.networking.socket.client.gameControllerMessages;
 
 import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.enumerations.*;
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
+import it.polimi.demo.model.Player;
 
 import java.rmi.RemoteException;
 
 /**
- * SocketClientMessageCreateGame class.
+ * SocketClientMessagePlaceCard class.
  * Extends SocketClientGenericMessage and is used to send a message to the server
- * indicating the request to create a new game.
+ * indicating the positioning of a tile on the player's shelf.
  */
-public class SocketClientMessageCreateGame extends SocketClientGenericMessage {
-    int num_players;
+public class SocketClientMessagePlaceCard extends SocketClientGenericMessage {
+    int x;
+    int y;
+    private Orientation orientation;
 
     /**
-     * Constructor of the class.
-     * @param nick the player's nickname
+     *
+     * @param x
+     * @param y
+     * @param orientation
      */
-    public SocketClientMessageCreateGame(String nick, int num_players) {
-        this.nick = nick;
-        this.num_players = num_players;
-        this.isMessageForMainController = true;
+    public SocketClientMessagePlaceCard(int x, int y, Orientation orientation) {
+        this.x = x;
+        this.y = y;
+        this.orientation = orientation;
+        this.isMessageForMainController = false;
     }
+
     /**
      * Method to execute the corresponding action for the message.
      * @param lis the game listener
@@ -33,17 +42,17 @@ public class SocketClientMessageCreateGame extends SocketClientGenericMessage {
      */
     @Override
     public GameControllerInterface execute(GameListener lis, MainControllerInterface mainController) throws RemoteException {
-        return mainController.createGame(lis, nick, num_players);
+        return null;
     }
-
 
     /**
      * Method to execute the corresponding action for the message.
-     * @param mainController the game controller interface
+     * @param gameController the game controller interface
      * @throws RemoteException if there is an error in remote communication
+     * @throws GameEndedException if the game has ended
      */
     @Override
-    public void execute(GameControllerInterface mainController) throws RemoteException {
-
+    public void execute(GameControllerInterface gameController) throws RemoteException, GameEndedException {
+        gameController.placeCard(gameController.getCurrentPlayer(), x, y, orientation);
     }
 }

@@ -157,8 +157,8 @@ public class ClientSocket extends Thread implements CommonClientActions {
     }
 
     @Override
-    public void createGame(String nickname, int num_of_players, int id) throws IOException, InterruptedException, NotBoundException {
-        ob_out.writeObject(new SocketClientMessageCreateGame(nickname, num_of_players, id));
+    public void createGame(String nickname, int num_of_players) throws IOException, InterruptedException, NotBoundException {
+        ob_out.writeObject(new SocketClientMessageCreateGame(nickname, num_of_players));
         finishSending();
         if(!socketHeartbeat.isAlive()) {
             socketHeartbeat.start();
@@ -207,7 +207,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
     @Override
     public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
         ob_out.writeObject(new SocketClientMessagePlaceStarterCard(orientation));
-        finsihsSending();
+        finishSending();
 
     }
 
@@ -219,10 +219,9 @@ public class ClientSocket extends Thread implements CommonClientActions {
     }
 
     @Override
-    public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
+    public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException{
         ob_out.writeObject(new SocketClientMessagePlaceCard(where_to_place_x, where_to_place_y, orientation));
         finishSending();
-
     }
 
     @Override

@@ -8,22 +8,25 @@ import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 import java.rmi.RemoteException;
 
 /**
- * SocketClientMessageCreateGame class.
+ * SocketClientMessageJoinGame class.
  * Extends SocketClientGenericMessage and is used to send a message to the server
- * indicating the request to create a new game.
+ * indicating the request to join a specific game by its ID.
  */
-public class SocketClientMessageCreateGame extends SocketClientGenericMessage {
-    int num_players;
+public class SocketClientMessageJoinGame extends SocketClientGenericMessage {
+
+    int idGame;
 
     /**
      * Constructor of the class.
      * @param nick the player's nickname
+     * @param idGame the ID of the game to join
      */
-    public SocketClientMessageCreateGame(String nick, int num_players) {
+    public SocketClientMessageJoinGame(String nick, int idGame) {
+        this.idGame = idGame;
         this.nick = nick;
-        this.num_players = num_players;
         this.isMessageForMainController = true;
     }
+
     /**
      * Method to execute the corresponding action for the message.
      * @param lis the game listener
@@ -33,9 +36,8 @@ public class SocketClientMessageCreateGame extends SocketClientGenericMessage {
      */
     @Override
     public GameControllerInterface execute(GameListener lis, MainControllerInterface mainController) throws RemoteException {
-        return mainController.createGame(lis, nick, num_players);
+        return mainController.joinGame(lis, nick, idGame);
     }
-
 
     /**
      * Method to execute the corresponding action for the message.
