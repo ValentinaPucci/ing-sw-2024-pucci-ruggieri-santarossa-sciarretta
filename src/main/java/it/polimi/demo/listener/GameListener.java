@@ -21,14 +21,14 @@ public interface GameListener extends Remote {
      * @param model the game model
      * @param orientation the orientation of the starter card
      */
-    void placeStarterCard(GameModelImmutable model, Orientation orientation);
+    void starterCardPlaced(GameModelImmutable model, Orientation orientation) throws RemoteException;
 
     /**
      * This method is invoked by gameUI when the player wants to choose a card
      * @param model the game model
      * @param which_card the index of the card the player wants to choose
      */
-    void chooseCard(GameModelImmutable model, int which_card);
+    void cardChosen(GameModelImmutable model, int which_card) throws RemoteException;
 
     /**
      * This method is invoked by gameUI when the player wants to place a card.
@@ -38,14 +38,14 @@ public interface GameListener extends Remote {
      * @param where_to_place_y the y coordinate of the cell where the player wants to place the card
      * @param orientation
      */
-    void placeCard(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation);
+    void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException;
 
     /**
      * This method is invoked by gameUI when the player wants to draw a card.
      * @param model the game model
      * @param index the index of the card the player wants to draw
      */
-    void drawCard(GameModelImmutable model, int index);
+    void cardDrawn(GameModelImmutable model, int index) throws RemoteException;
 
     /**
      * This method is used to notify the socket that a player has joined the game
@@ -123,12 +123,19 @@ public interface GameListener extends Remote {
     void gameEnded(GameModelImmutable gamemodel) throws RemoteException;
 
     /**
+     * This method is used to notify the client entered in the last round
+     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @throws RemoteException if the reference could not be accessed
+     */
+    void lastRound(GameModelImmutable gamemodel) throws RemoteException;
+
+    /**
      * This method is used to notify that a message has been sent {@link Message}
      * @param gameModel is the game model {@link GameModelImmutable}
      * @param msg is the message that has been sent
      * @throws RemoteException if the reference could not be accessed
      */
-    void sentMessage(GameModelImmutable gameModel, Message msg) throws RemoteException;
+    void messageSent(GameModelImmutable gameModel, Message msg) throws RemoteException;
 
     /**
      * This method is used to notify that the next turn triggered
@@ -155,11 +162,5 @@ public interface GameListener extends Remote {
      */
     void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException;
 
-    /**
-     * This method is used to notify that the last circle has started
-     * @param gamemodel is the game model {@link GameModelImmutable}
-     * @throws RemoteException if the reference could not be accessed
-     */
-    void lastCircle(GameModelImmutable gamemodel) throws RemoteException;
 
 }

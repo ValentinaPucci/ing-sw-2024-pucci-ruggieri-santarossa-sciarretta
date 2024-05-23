@@ -17,7 +17,7 @@ public interface CommonClientActions {
      * @throws InterruptedException
      * @throws NotBoundException
      */
-    void createGame(String nickname, int num_of_players, int id) throws IOException, InterruptedException, NotBoundException;
+    void createGame(String nickname, int num_of_players) throws IOException, InterruptedException, NotBoundException;
 
 //    /**
 //     * Joins the first game found in the list of games

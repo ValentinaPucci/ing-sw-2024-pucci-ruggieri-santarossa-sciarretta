@@ -100,11 +100,11 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
      * @throws RemoteException
      */
     @Override
-    public GameControllerInterface createGame(GameListener lis, String nick, int num_of_players, int id)
+    public GameControllerInterface createGame(GameListener lis, String nick, int num_of_players)
             throws RemoteException {
 
         // Before every call, we need to recreate the stub, or java will just GC everything.
-        GameControllerInterface game = serverObject.mainController.createGame(lis, nick, num_of_players, id);
+        GameControllerInterface game = serverObject.mainController.createGame(lis, nick, num_of_players);
         // The GameController and the Player have just been created. Hence, we need to set them as an Exportable Object
 
         try {
