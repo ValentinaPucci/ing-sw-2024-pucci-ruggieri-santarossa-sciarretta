@@ -12,7 +12,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
- * This interface is used to notify the client about the changes in the game
+ * This interface is used to notify the socket about the changes in the game
  */
 public interface GameListener extends Remote {
 
@@ -48,14 +48,14 @@ public interface GameListener extends Remote {
     void drawCard(GameModelImmutable model, int index);
 
     /**
-     * This method is used to notify the client that a player has joined the game
+     * This method is used to notify the socket that a player has joined the game
      * @param model is the game model
      * @throws RemoteException if the reference could not be accessed
      */
     void playerJoined(GameModelImmutable model) throws RemoteException;
 
     /**
-     * This method is used to notify the client that a player has left the game
+     * This method is used to notify the socket that a player has left the game
      * @param model is the game model {@link GameModelImmutable}
      * @param nick is the nickname of the player that has left
      * @throws RemoteException if the reference could not be accessed
@@ -63,7 +63,7 @@ public interface GameListener extends Remote {
     void playerLeft(GameModelImmutable model, String nick) throws RemoteException;
 
     /**
-     * This method is used to notify the client that a player has tried to join the game but the game is full
+     * This method is used to notify the socket that a player has tried to join the game but the game is full
      * @param p is the player that has tried to join the game
      * @param gamemodel is the game model {@link GameModelImmutable}
      * @throws RemoteException if the reference could not be accessed
@@ -71,7 +71,7 @@ public interface GameListener extends Remote {
     void joinUnableGameFull(Player p, GameModelImmutable gamemodel) throws RemoteException;
 
     /**
-     * This method is used to notify the client that a player has reconnected to the game
+     * This method is used to notify the socket that a player has reconnected to the game
      * @param gamemodel is the game model {@link GameModelImmutable}
      * @param nickPlayerReconnected is the nickname of the player that has reconnected
      * @throws RemoteException if the reference could not be accessed
@@ -79,14 +79,14 @@ public interface GameListener extends Remote {
     void playerReconnected(GameModelImmutable gamemodel, String nickPlayerReconnected) throws RemoteException;
 
     /**
-     * This method is used to notify the client that a player has tried to join the game but the nickname is already in use
+     * This method is used to notify the socket that a player has tried to join the game but the nickname is already in use
      * @param wantedToJoin is the player that has tried to join the game
      * @throws RemoteException if the reference could not be accessed
      */
     void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException;
 
     /**
-     * This method is used to notify the client that the game id does not exist
+     * This method is used to notify the socket that the game id does not exist
      * @param gameid is the id of the game
      * @throws RemoteException if the reference could not be accessed
      */
@@ -109,14 +109,14 @@ public interface GameListener extends Remote {
     void playerIsReadyToStart(GameModelImmutable gamemodel, String nick) throws IOException;
 
     /**
-     * This method is used to notify the client that the game has started
+     * This method is used to notify the socket that the game has started
      * @param gamemodel is the game model {@link GameModelImmutable}
      * @throws RemoteException if the reference could not be accessed
      */
     void gameStarted(GameModelImmutable gamemodel) throws RemoteException;
 
     /**
-     * This method is used to notify the client that the game has ended
+     * This method is used to notify the socket that the game has ended
      * @param gamemodel is the game model {@link GameModelImmutable}
      * @throws RemoteException if the reference could not be accessed
      */

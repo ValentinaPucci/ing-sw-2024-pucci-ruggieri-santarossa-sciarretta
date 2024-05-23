@@ -35,7 +35,7 @@ public interface Listener {
                 listeners.remove(listener);
                 System.err.println("Removing listener " +
                         listener +
-                        " because of a RemoteException. Probably the client has disconnected.");
+                        " because of a RemoteException. Probably the socket has disconnected.");
             }
         });
     }

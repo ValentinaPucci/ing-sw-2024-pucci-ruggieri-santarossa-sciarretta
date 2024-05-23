@@ -34,7 +34,7 @@ import static it.polimi.demo.view.flow.utilities.events.EventType.*;
  * We opted for this class hat sets the pace of the game to be the same for both TUI and GUI.<br>
  * we have two additional threads that help us do so: InputReader and InputParser.<br>
  * GameFlow is directly connected to InputParser, which creates InputReader.<br>
- * InputReader reads from the input (in TUI) or matches any action performed by the client as a TUI input (in GUI)<br>
+ * InputReader reads from the input (in TUI) or matches any action performed by the socket as a TUI input (in GUI)<br>
  * For example, if the player was to click on a tile in the GUI's playground, it would register the click as three inputs in TUI (row, column and direction)<br>
  * Then adds the data read to a buffer queue.<br>
  * <br>
@@ -55,7 +55,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     private final EventList events = new EventList();
 
     /**
-     * The action that the client can perform {@link CommonClientActions}
+     * The action that the socket can perform {@link CommonClientActions}
      */
     private CommonClientActions clientActions;
     /**
@@ -574,7 +574,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             ui.show_playerHand(model);
             if (ended) return;
 
-            //Check by client side (// to server)
+            //Check by socket side (// to server)
             if (!(model.getPlayerEntity(this.nickname).getNumOfFreeSpacesInCol(column) >= model.getPlayerEntity(this.nickname).getInHandTile_IC().size())) {
                 ui.columnShelfTooSmall(model);
                 isColumnBigEnough = false;
@@ -610,7 +610,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
 
 
-    /*============ Methods that the client can request to the server ============*/
+    /*============ Methods that the socket can request to the server ============*/
 
     /**
      * Throw a nonConnection error
@@ -620,7 +620,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * The client asks the server to create a new game
+     * The socket asks the server to create a new game
      *
      * @param nick nickname of the player
      */
@@ -636,7 +636,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * The client asks the server to join the first available game
+     * The socket asks the server to join the first available game
      *
      * @param nick nickname of the player
      */
@@ -656,7 +656,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * The client asks the server to join a specific game
+     * The socket asks the server to join a specific game
      *
      * @param nick   nickname of the player
      * @param idGame id of the game to join
@@ -672,7 +672,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * The client asks the server to reconnect to a specific game
+     * The socket asks the server to reconnect to a specific game
      *
      * @param nick   nickname of the player
      * @param idGame id of the game to reconnect
@@ -699,7 +699,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * The client asks the server to leave the game
+     * The socket asks the server to leave the game
      *
      * @param nick   nickname of the player
      * @param idGame id of the game to leave
@@ -714,7 +714,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * The client set himself as ready
+     * The socket set himself as ready
      */
     @Override
     public void setAsReady() {
@@ -751,7 +751,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * The client asks the server to grab a tile from the playground
+     * The socket asks the server to grab a tile from the playground
      *
      * @param x         x coordinate of the tile
      * @param y         y coordinate of the tile
@@ -768,7 +768,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * The client asks the server to position a tile on the shelf
+     * The socket asks the server to position a tile on the shelf
      *
      * @param column column of the shelf
      * @param type   type of the tile {@link TileType}
@@ -788,7 +788,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * The client asks the server to send a message
+     * The socket asks the server to send a message
      *
      * @param msg message to send {@link Message}
      */

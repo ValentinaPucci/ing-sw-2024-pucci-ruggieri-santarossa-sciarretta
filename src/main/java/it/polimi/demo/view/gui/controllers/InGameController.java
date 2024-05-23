@@ -115,7 +115,7 @@ public class InGameController extends GenericController {
                 Integer col = rowCol.col();
 
                 if (!firstClick) {
-                    //Second click so client selected first and last Tile in the playground
+                    //Second click so socket selected first and last Tile in the playground
                     rowSecondTile = row;
                     colSecondTile = col;
                     boolean isValid =checkAlignment(rowFirstTile, colFirstTile, rowSecondTile, colSecondTile);
@@ -841,7 +841,7 @@ public class InGameController extends GenericController {
      * This method show the selected colunm of the shelfi
      */
     public void showSelectionColShelfie() {
-        //Now the client can select a col from his shelfie to position all tiles
+        //Now the socket can select a col from his shelfie to position all tiles
         needToDetectColSelection = true;
         needToDetectTileInHandGrabbing = false;
         changeCursorOnTilesPlayground(Cursor.DEFAULT);
