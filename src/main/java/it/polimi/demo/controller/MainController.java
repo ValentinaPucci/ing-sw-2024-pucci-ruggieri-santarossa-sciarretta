@@ -10,10 +10,13 @@ import it.polimi.demo.model.Player;
 import it.polimi.demo.networking.rmi.remoteInterfaces.*;
 import it.polimi.demo.view.GameDetails;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
-import static org.fusesource.jansi.Ansi.ansi;
+
+import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
 
 /**
  * MainController Class
@@ -21,7 +24,7 @@ import static org.fusesource.jansi.Ansi.ansi;
  * Allowing players to create, join, reconnect, leave and delete games
  * Therefore, the MainController is unique across the app and thus implements the Singleton Pattern
  */
-public class MainController implements MainControllerInterface {
+public class MainController implements MainControllerInterface, Serializable {
 
     /**
      * Singleton Pattern, instance of the class
@@ -56,10 +59,9 @@ public class MainController implements MainControllerInterface {
         return instance;
     }
 
-    public Map<Integer, GameController> getGames() {
+    public Map<Integer, GameController> getGames() throws RemoteException {
         return games;
     }
-
 
     /**
      * Every player can create a game. By doing so, he/her joins the game as the first player
@@ -70,7 +72,7 @@ public class MainController implements MainControllerInterface {
      * @throws RemoteException if the connection fails
      */
     @Override
-    public GameControllerInterface createGame(GameListener listener, String nickname, int num_of_players)
+    public synchronized GameControllerInterface createGame(GameListener listener, String nickname, int num_of_players)
             throws RemoteException {
 
         int game_id;
@@ -81,29 +83,18 @@ public class MainController implements MainControllerInterface {
             game_id = Collections.max(games.keySet()) + 1;
 
         Player player = new Player(nickname);
-        GameController game = new GameController(game_id, num_of_players, new Player(nickname));
+        GameController game = new GameController(game_id, num_of_players, player);
         game.addListener(listener, player);
 
-        synchronized (games) {
-            // By adding this check, we avoid the possibility of having two games with the same ID.
-            if (games.containsKey(game_id)) {
-                throw new RuntimeException("Game ID already exists");
-            }
-            games.put(game_id, game);
-            games.get(game_id).setNumPlayersToPlay(num_of_players);
-        }
+        games.put(game_id, game);
+        games.get(game_id).setNumPlayersToPlay(num_of_players);
 
-        System.out.println("\t>Player:\" " + nickname + " \"" + " created game " + game_id);
+        printAsync("\t>Player:\" " + nickname + " \"" + " created game " + game_id);
         printRunningGames();
 
         // Here we add the player to the 'statical' list of players
-        game.addPlayer(player.getNickname());
-        System.out.println("Player added to the game: "
-                + player.getNickname() + " "
-                + game.getPlayers().size() + " "
-                + game.getNumPlayersToPlay());
-        // Here we add the player to the 'dynamic' list of players connected (the queue!)
-        game.setPlayerAsConnected(player);
+        game.addPlayer(player);
+        // game.setPlayerAsConnected(player);
 
         return game;
     }
@@ -182,7 +173,7 @@ public class MainController implements MainControllerInterface {
                         // todo: check if we add correctly the listener
                         g.addListener(listener, player);
                         // Here we add the player to the 'statical' list of players
-                        g.addPlayer(player.getNickname());
+                        g.addPlayer(player);
                         // Here we add the player to the 'dynamic' list of players connected (the queue!)
                         g.setPlayerAsConnected(player);
                         System.out.println("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
@@ -313,20 +304,18 @@ public class MainController implements MainControllerInterface {
     }
 
     /**
-     * Prints the IDs of all games currently running.
+     * Print all games currently running
      */
     private void printRunningGames() {
-        System.out.println("RUNNING GAMES: ");
-        if(games.isEmpty()){
-            System.out.println("No running games available");
+        printAsyncNoLine("\t\trunningGames: ");
+        for (Integer n : games.keySet()) {
+            printAsync(n + " ");
         }
-        games.values().forEach(game -> System.out.println( "GAME #" + game.getGameId() + " "));
-        System.out.println("");
+        printAsync("");
     }
 
-
     @Override
-    public List<GameDetails> getGamesDetails() {
+    public List<GameDetails> getGamesDetails() throws RemoteException {
         return games.values().stream()
                 .map(gameController -> new GameDetails(
                         gameController.getModel().getGameId(),

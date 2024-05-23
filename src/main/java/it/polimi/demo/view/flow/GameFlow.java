@@ -11,8 +11,6 @@ import it.polimi.demo.view.flow.utilities.*;
 import it.polimi.demo.view.flow.utilities.events.EventElement;
 import it.polimi.demo.view.flow.utilities.events.EventList;
 import it.polimi.demo.view.flow.utilities.events.EventType;
-import it.polimi.demo.view.gui.GUI;
-import it.polimi.demo.view.gui.GUIApplication;
 import it.polimi.demo.view.text.TUI;
 
 import java.io.IOException;
@@ -97,34 +95,36 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         importantEvents = new ArrayList<>();
         nickname = "";
         fileDisconnection = new FileDisconnection();
+        // Thread for reading the input (TUI)
         this.inputReader = new inputReaderTUI();
+        // We bind inputParser and inputReader
         this.inputParser = new InputParser(this.inputReader.getBuffer(), this);
 
         new Thread(this).start();
     }
 
-    /**
-     * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI} (GUI)
-     *
-     * @param guiApplication      the GUI application {@link GUIApplication}
-     * @param connectionSelection the connection type {@link ConnectionSelection}
-     */
-    public GameFlow(GUIApplication guiApplication, ConnectionSelection connectionSelection) {
-        //Invoked for starting with GUI
-        switch (connectionSelection) {
-            // case SOCKET -> clientActions = new ClientSocket(this);
-            case RMI -> clientActions = new RMIClient(this);
-        }
-        this.inputReader = new inputReaderGUI();
-
-        ui = new GUI(guiApplication, (inputReaderGUI) inputReader);
-        importantEvents = new ArrayList<>();
-        nickname = "";
-        fileDisconnection = new FileDisconnection();
-
-        this.inputParser = new InputParser(this.inputReader.getBuffer(), this);
-        new Thread(this).start();
-    }
+//    /**
+//     * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI} (GUI)
+//     *
+//     * @param guiApplication      the GUI application {@link GUIApplication}
+//     * @param connectionSelection the connection type {@link ConnectionSelection}
+//     */
+//    public GameFlow(GUIApplication guiApplication, ConnectionSelection connectionSelection) {
+//        //Invoked for starting with GUI
+//        switch (connectionSelection) {
+//            // case SOCKET -> clientActions = new ClientSocket(this);
+//            case RMI -> clientActions = new RMIClient(this);
+//        }
+//        this.inputReader = new inputReaderGUI();
+//
+//        ui = new GUI(guiApplication, (inputReaderGUI) inputReader);
+//        importantEvents = new ArrayList<>();
+//        nickname = "";
+//        fileDisconnection = new FileDisconnection();
+//
+//        this.inputParser = new InputParser(this.inputReader.getBuffer(), this);
+//        new Thread(this).start();
+//    }
 
     /**
      * The gameFlow works with a list of events<br>
@@ -142,10 +142,10 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
         while (!Thread.interrupted()) {
             if (events.isJoined()) {
-                //Get one event
+                // Get one event
                 event = events.pop();
                 if (event != null) {
-                    //if something happened
+                    // if something happened
                     switch (event.getModel().getStatus()) {
                         case WAIT -> {
                             try {
@@ -185,6 +185,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      *              it says if he's just joined or if he's been kicked and why
      */
     private void statusNotInAGame(EventElement event) {
+
         switch (event.getType()) {
 
             case APP_MENU -> {
@@ -228,7 +229,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      */
     private void statusWait(EventElement event) throws IOException, InterruptedException {
         String nickLastPlayer = event.getModel().getPlayersConnected().getLast().getNickname();
-        //If the event is that I joined then I wait until the user inputs 'y'
+        // If the event is that I joined then I wait until the user inputs 'y'
         switch (event.getType()) {
             case PLAYER_JOINED -> {
                 if (nickLastPlayer.equals(nickname)) {
@@ -259,7 +260,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             }
             
             case MESSAGE_SENT -> {
-                ui.show_sentMessage(event.getModel(), nickname);
+                ui.show_messageSent(event.getModel(), nickname);
             }
 
             case NEXT_TURN, PLAYER_RECONNECTED -> {
@@ -355,13 +356,40 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      */
     private void askNickname() {
         ui.show_insertNicknameMsg();
-        //nickname = scanner.nextLine();
         try {
             nickname = this.inputParser.getDataToProcess().popData();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        ui.show_chosenNickname(nickname);
+        // ui.show_chosenNickname(nickname);
+    }
+
+    /**
+     * Ask the player how many players he wants to play with
+
+     * @return number of tiles to pick up
+     */
+    private Integer askNumOfPlayers() {
+        String temp;
+        Integer num_of_players = null;
+        do {
+            ui.show_insertNumOfPlayersMsg();
+            try {
+                try {
+                    temp = this.inputParser.getDataToProcess().popData();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                if (temp.equals(".")) {
+                    return -1;
+                }
+                num_of_players = Integer.parseInt(temp);
+            } catch (NumberFormatException e) {
+                ui.show_NaNMsg();
+            }
+
+        } while (num_of_players == null);
+        return num_of_players;
     }
 
     /**
@@ -385,8 +413,11 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
         switch (optionChoose) {
             case "c" -> {
-                int num = askNumOfPlayers("How many players do you want to play with? (2-4)");
-                createGame(nickname, num);
+                Integer num_players = askNumOfPlayers();
+                if (num_players < 2 || num_players > 4)
+                    return false;
+                else
+                    createGame(nickname, num_players);
             }
             case "js" -> {
                 Integer gameId = askGameId();
@@ -395,12 +426,13 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 else
                     joinGame(nickname, gameId);
             }
+
             case "x" -> reconnect(nickname, fileDisconnection.getLastGameId(nickname));
+
             default -> {
                 return false;
             }
         }
-
         return true;
     }
 
@@ -448,33 +480,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
 
-    /**
-     * Ask the player how many players he wants to play with
-     *
-     * @param msg message to be shown
-     * @return number of tiles to pick up
-     */
-    private Integer askNumOfPlayers(String msg) {
-        String temp;
-        int num = -1;
-        do {
-            try {
-                ui.show_askNumOfPlayers(msg, nickname);
-                try {
-                    temp = this.inputParser.getDataToProcess().popData();
-                    if (ended) return null;
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                num = Integer.parseInt(temp);
-            } catch (InputMismatchException | NumberFormatException e) {
-                ui.show_NaNMsg();
-            }
-        } while (num < 2 || num > 4);
-        return num;
-    }
-
-
     /*============ Methods that the client can request to the server ============*/
 
     /**
@@ -486,20 +491,25 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
     @Override
     public void createGame(String nickname, int num_of_players) {
-
+        ui.show_creatingNewGameMsg(nickname);
+        try {
+            clientActions.createGame(nickname, num_of_players);
+        } catch (IOException | InterruptedException | NotBoundException e) {
+            noConnectionError();
+        }
     }
 
     /**
      * The client asks the server to join a specific game
      *
      * @param nick   nickname of the player
-     * @param idGame id of the game to join
+     * @param game_id id of the game to join
      */
     @Override
-    public void joinGame(String nick, int idGame) {
-        ui.show_joiningToGameIdMsg(idGame, nick);
+    public void joinGame(String nick, int game_id) {
+        ui.show_joiningToGameIdMsg(game_id, nick);
         try {
-            clientActions.joinGame(nick, idGame);
+            clientActions.joinGame(nick, game_id);
         } catch (IOException | InterruptedException | NotBoundException e) {
             noConnectionError();
         }
@@ -633,10 +643,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     public void playerJoined(GameModelImmutable gameModel) {
         //shared.setLastModelReceived(gameModel);
         events.add(gameModel, EventType.PLAYER_JOINED);
-
         //Print also here because: If a player is in askReadyToStart is blocked and cannot showPlayerJoined by watching the events
         ui.show_playerJoined(gameModel, nickname);
-
     }
 
     /**

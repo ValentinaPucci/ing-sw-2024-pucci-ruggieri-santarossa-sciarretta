@@ -8,14 +8,15 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class EventList {
-    private Queue<EventElement> lists;
+
+    private Queue<EventElement> list;
     private boolean joined = false;
 
     /**
      * Init
      */
     public EventList() {
-        lists = new ArrayDeque<>();
+        list = new ArrayDeque<>();
     }
 
     /**
@@ -24,11 +25,12 @@ public class EventList {
      * @param type
      */
     public synchronized void add(GameModelImmutable model, EventType type) {
-        lists.add(new EventElement(model, type));
 
-        if (type.equals(EventType.PLAYER_JOINED)
-                || (model != null && (model.getStatus().equals(GameStatus.RUNNING)
-                || model.getStatus().equals(GameStatus.LAST_ROUND)) ))
+        list.add(new EventElement(model, type));
+
+        if (type.equals(EventType.PLAYER_JOINED) ||
+                (model != null && (model.getStatus().equals(GameStatus.RUNNING)
+                        || model.getStatus().equals(GameStatus.LAST_ROUND))))
             joined = true;
 
         if (type.equals(EventType.APP_MENU))
@@ -40,7 +42,7 @@ public class EventList {
      * @return an element from the queue(FIFO)
      */
     public synchronized EventElement pop() {
-        return lists.poll();
+        return list.poll();
     }
 
     /**
@@ -48,7 +50,7 @@ public class EventList {
      * @return the list's size
      */
     public synchronized int size() {
-        return lists.size();
+        return list.size();
     }
 
     /**
