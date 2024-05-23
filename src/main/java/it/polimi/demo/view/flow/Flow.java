@@ -1,19 +1,19 @@
 package it.polimi.demo.view.flow;
 
-import polimi.ingsw.listener.GameListener;
-import polimi.ingsw.model.gameModelImmutable.GameModelImmutable;
-import polimi.ingsw.model.interfaces.PlayerIC;
-import polimi.ingsw.view.flow.utilities.FileDisconnection;
-
+import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.interfaces.PlayerIC;
+import it.polimi.demo.view.flow.utilities.FileDisconnection;
 
 public abstract class Flow implements GameListener {
+
     /**
      * Resets the game id
      * @param fileDisconnection file to reset
-     * @param model
+     * @param model model to get players
      */
     protected void resetGameId(FileDisconnection fileDisconnection, GameModelImmutable model) {
-        for (PlayerIC p : model.getPlayers()) {
+        for (PlayerIC p : model.getAllPlayers()) {
             fileDisconnection.setLastGameId(p.getNickname(), -1);
         }
     }
@@ -21,8 +21,8 @@ public abstract class Flow implements GameListener {
     /**
      * Saves latest game id
      * @param fileDisconnection file to write
-     * @param nick
-     * @param gameId
+     * @param nick nickname of the player
+     * @param gameId game id to save
      */
     protected void saveGameId(FileDisconnection fileDisconnection, String nick, int gameId) {
             fileDisconnection.setLastGameId(nick, gameId);

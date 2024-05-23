@@ -1,5 +1,6 @@
 package it.polimi.demo.model;
 
+import it.polimi.demo.listener.ListenersHandler;
 import it.polimi.demo.view.PlayerDetails;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.GameListener;
@@ -18,16 +19,11 @@ import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.model.interfaces.GameModelInterface;
 import it.polimi.demo.model.interfaces.PlayerIC;
-import it.polimi.demo.view.GameView;
-
-
 
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.demo.listener.Listener.notifyListeners;
-//TODO: Check how first_finished_player is set.
 
 public class GameModel implements GameModelInterface, Serializable {
 
@@ -38,7 +34,6 @@ public class GameModel implements GameModelInterface, Serializable {
     // is connected (and actively playing).
     private LinkedList<Player> players_connected;
 
-    private final List<GameListener> listeners = new ArrayList<>();
     private Player initial_player;
     private CommonBoard common_board;
     private int gameId;
@@ -54,6 +49,11 @@ public class GameModel implements GameModelInterface, Serializable {
     private boolean is_paused = false;
     private String errorMessage;
 
+    /**
+     * Listener handler that handles the listeners
+     */
+    private transient ListenersHandler listeners_handler;
+
     public GameModel() {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
@@ -66,6 +66,7 @@ public class GameModel implements GameModelInterface, Serializable {
         chat = new Chat();
         winners = new ArrayList<>();
         leaderboard = new HashMap<>();
+        listeners_handler = new ListenersHandler();
     }
 
     public GameModel(int gameID, int numberOfPlayers, Player player) {
@@ -79,6 +80,7 @@ public class GameModel implements GameModelInterface, Serializable {
         chat = new Chat();
         winners = new ArrayList<>();
         leaderboard = new HashMap<>();
+        listeners_handler = new ListenersHandler();
     }
 
 
@@ -91,7 +93,7 @@ public class GameModel implements GameModelInterface, Serializable {
      * @return True if there are enough players online, otherwise false.
      */
     public boolean areConnectedPlayersEnough() {
-        return players_connected.size() >= DefaultValues.MinNumOfPlayer;
+        return players_connected.size() >= 2;
     }
 
     /**
@@ -196,22 +198,21 @@ public class GameModel implements GameModelInterface, Serializable {
      */
     public void addPlayer(String nickname) {
 
-//        printAsync("the number of player required to start is: " + num_required_players_to_start +
-//                " and the number of players connected is: " + players_connected.size() +
-//                " and the number of players in the game is: " + aux_order_players.size());
-
         List<String> nicknames = this.getAllNicknames();
 
         if (nicknames.contains(nickname)) {
+            listeners_handler.notify_JoinUnableNicknameAlreadyIn(getPlayerEntity(nickname));
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() >= num_required_players_to_start ||
                 aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
+            listeners_handler.notify_JoinUnableGameFull(getPlayerEntity(nickname), this);
             throw new MaxPlayersLimitException();
         }
         else {
             Player p = new Player(nickname);
             aux_order_players.add(p);
+            listeners_handler.notify_playerJoined(this);
         }
     }
 
@@ -226,10 +227,12 @@ public class GameModel implements GameModelInterface, Serializable {
         players_connected.remove(p);
         aux_order_players.remove(p);
 
+        listeners_handler.notify_playerLeft(this, p.getNickname());
+
         if (this.status.equals(GameStatus.RUNNING)) {
-            if (players_connected.size() < DefaultValues.MinNumOfPlayer) {
+            if (players_connected.size() < 2) {
                 // Not enough players to keep playing
-                this.setStatus(GameStatus.ENDED);
+                // this.setStatus(GameStatus.ENDED);
             }
         }
     }
@@ -276,6 +279,7 @@ public class GameModel implements GameModelInterface, Serializable {
 
         if (players_connected.contains(p)) {
             p.setAsNotConnected();
+            listeners_handler.notify_playerDisconnected(this, p.getNickname());
             p.setAsNotReadyToStart();
             players_connected.remove(p);
         }
@@ -312,6 +316,7 @@ public class GameModel implements GameModelInterface, Serializable {
             throw new PlayerAlreadyConnectedException();
         }
         p.setAsConnected();
+        listeners_handler.notify_playerReconnected(this, p.getNickname());
         connectPlayerInOrder(p);
     }
 
@@ -389,18 +394,16 @@ public class GameModel implements GameModelInterface, Serializable {
         this.status = status;
 
         switch (status) {
-            case READY_TO_START -> {
-                notifyListeners(listeners, GameListener::genericGameStatus);
-                notifyListeners(listeners, GameListener::modelChanged);
-                notifyListeners(listeners, GameListener::gameStarted);
+            case RUNNING -> {
+                listeners_handler.notify_GameStarted(this);
+                listeners_handler.notify_nextTurn(this);
             }
-            case FIRST_ROUND -> {
-                notifyListeners(listeners, GameListener::genericGameStatus);
-                notifyListeners(listeners, GameListener::modelChanged);
-                // needed for the first time
-                notifyListeners(listeners, GameListener::nextTurn);
+            case LAST_ROUND -> {
+                listeners_handler.notify_LastRound(this);
             }
-            case ENDED -> notifyListeners(listeners, GameListener::gameEnded);
+            case ENDED -> {
+                listeners_handler.notify_GameEnded(this);
+            }
         }
     }
 
@@ -414,18 +417,7 @@ public class GameModel implements GameModelInterface, Serializable {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
-
-        System.out.println("\n");
-
-        System.out.println(aux_order_players.getFirst().getStarterCardToChose().get(0).toString());
-        System.out.println(aux_order_players.getFirst().getStarterCardToChose().get(1).toString());
-
-        System.out.println("\n");
-
-        System.out.println("wwwwwwwwww");
-        System.out.println(aux_order_players.getLast().getStarterCardToChose().get(0).toString());
-
-        notifyListeners(listeners, GameListener::modelChanged);
+        // notifyListeners(listeners, GameListener::modelChanged);
     }
 
     /**
@@ -494,7 +486,7 @@ public class GameModel implements GameModelInterface, Serializable {
             p.setStarterCard(p.getStarterCardToChose().get(1));
         }
         personal_board.placeStarterCard(p.getStarterCard());
-        //notifyListeners(listeners, GameListener::modelChanged);
+        listeners_handler.notify_starterCardPlaced(this, o);
         nextTurn();
     }
 
@@ -517,7 +509,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
             }
-            notifyListeners(listeners, GameListener::modelChanged);
+            listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
         }
     }
 
@@ -540,7 +532,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 personal_board.placeCardAt(already_placed_card, card_chosen, coord);
             }
-            notifyListeners(listeners, GameListener::modelChanged);
+            listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
         }
     }
 
@@ -587,7 +579,7 @@ public class GameModel implements GameModelInterface, Serializable {
                 p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
                 break;
         }
-        notifyListeners(listeners, GameListener::modelChanged);
+        listeners_handler.notify_cardDrawn(this, index);
         nextTurn();
     }
 
@@ -603,18 +595,16 @@ public class GameModel implements GameModelInterface, Serializable {
         if (status.equals(GameStatus.ENDED)) {
             throw new GameEndedException();
         }
-//        else if (status.equals(GameStatus.WAIT)) {
-//            throw new GameNotStartedException();
-//        }
+        else if (status.equals(GameStatus.WAIT)) {
+            throw new GameNotStartedException();
+        }
 
         // Proceeding to the next turn means changing the current player,
         // namely the peek of the queue.
         Player q = players_connected.poll();
         players_connected.offer(q);
 
-        notifyListeners(listeners, GameListener::modelChanged);
-        notifyListeners(listeners, GameListener::printModel);
-        notifyListeners(listeners, GameListener::nextTurn);
+        listeners_handler.notify_nextTurn(this);
     }
 
     /**
@@ -828,18 +818,25 @@ public class GameModel implements GameModelInterface, Serializable {
 
     // **************************** Listeners ********************************
 
-    public void addListener(GameListener listener) {
-        if (!listeners.contains(listener)) {
-            listeners.add(listener);
-        }
+    /**
+     * @param obj adds the listener to the list
+     */
+    public void addListener(GameListener obj) {
+        listeners_handler.addListener(obj);
     }
 
-    public void removeListener(GameListener listener) {
-        listeners.remove(listener);
+    /**
+     * @param lis removes listener from list
+     */
+    public void removeListener(GameListener lis) {
+        listeners_handler.removeListener(lis);
     }
 
+    /**
+     * @return the list of listeners
+     */
     public List<GameListener> getListeners() {
-        return listeners;
+        return listeners_handler.getListeners();
     }
 
     public PlayerIC getPlayer(int playerIndex) {

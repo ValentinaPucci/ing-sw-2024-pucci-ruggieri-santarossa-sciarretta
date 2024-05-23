@@ -2,6 +2,8 @@ package it.polimi.demo.networking.rmi.remoteInterfaces;
 
 import it.polimi.demo.controller.GameController;
 import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.Player;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.view.GameDetails;
 
 import java.rmi.Remote;
@@ -17,26 +19,28 @@ public interface MainControllerInterface extends Remote {
 
     /**
      * This method creates a new game and add it to the GameListener list
-     * @param lis the GameListener of the player {@link GameListener}
+     *
+     * @param lis  the GameListener of the player {@link GameListener}
      * @param nick the nickname of the player
      * @return the GameControllerInterface of the game {@link GameControllerInterface}
      * @throws RemoteException if the connection fails
      */
-    GameControllerInterface createGame(GameListener lis, String nick, int num_players, int gameID) throws RemoteException;
+    GameControllerInterface createGame(GameListener lis, String nick, int num_players) throws RemoteException;
 
-    /**
-     * This method joins the first available game
-     * @param lis the GameListener of the player {@link GameListener}
-     * @param nick the nickname of the player
-     * @return the GameControllerInterface of the game {@link GameControllerInterface}
-     * @throws RemoteException if the connection fails
-     */
-    GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException;
+//    /**
+//     * This method joins the first available game
+//     * @param lis the GameListener of the player {@link GameListener}
+//     * @param nick the nickname of the player
+//     * @return the GameControllerInterface of the game {@link GameControllerInterface}
+//     * @throws RemoteException if the connection fails
+//     */
+//    GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException;
 
     /**
      * This method joins a specific game
-     * @param lis the GameListener of the player {@link GameListener}
-     * @param nick the nickname of the player
+     *
+     * @param lis    the GameListener of the player {@link GameListener}
+     * @param nick   the nickname of the player
      * @param idGame the id of the game
      * @return the GameControllerInterface of the game {@link GameControllerInterface}
      * @throws RemoteException if the connection fails
@@ -45,8 +49,9 @@ public interface MainControllerInterface extends Remote {
 
     /**
      * This method reconnects a player to a specific game
-     * @param lis the GameListener of the player {@link GameListener}
-     * @param nick the nickname of the player
+     *
+     * @param lis    the GameListener of the player {@link GameListener}
+     * @param nick   the nickname of the player
      * @param idGame the id of the game
      * @return the GameControllerInterface of the game {@link GameControllerInterface}
      * @throws RemoteException if the connection fails
@@ -56,8 +61,9 @@ public interface MainControllerInterface extends Remote {
 
     /**
      * This method leaves a specific game
-     * @param lis the GameListener of the player {@link GameListener}
-     * @param nick the nickname of the player
+     *
+     * @param lis    the GameListener of the player {@link GameListener}
+     * @param nick   the nickname of the player
      * @param idGame the id of the game
      * @return the GameControllerInterface of the game {@link GameControllerInterface}
      * @throws RemoteException if the connection fails
@@ -68,4 +74,5 @@ public interface MainControllerInterface extends Remote {
     List<GameDetails> getGamesDetails();
 
     Map<Integer, GameController> getGames();
+
 }

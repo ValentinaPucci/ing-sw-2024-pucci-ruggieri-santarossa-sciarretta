@@ -1,24 +1,44 @@
-package it.polimi.demo.networking.socket.client;
+package it.polimi.demo.networking;
 
-import polimi.ingsw.listener.GameListener;
-import polimi.ingsw.model.Player;
-import polimi.ingsw.model.Point;
-import polimi.ingsw.model.chat.Message;
-import polimi.ingsw.model.enumeration.TileType;
-import polimi.ingsw.model.gameModelImmutable.GameModelImmutable;
-import polimi.ingsw.view.flow.Flow;
+import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.enumerations.*;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.Player;
+import it.polimi.demo.view.flow.Flow;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class GameListenersHandlerClient implements GameListener, Serializable {
+public class GameListenerHandlerClient implements GameListener, Serializable {
 
 
     private Flow flow;
 
-    public GameListenersHandlerClient(Flow gui) {
+    public GameListenerHandlerClient(Flow gui) {
         this.flow = gui;
+    }
+
+
+    @Override
+    public void starterCardPlaced(GameModelImmutable model, Orientation orientation) throws RemoteException {
+        flow.starterCardPlaced(model, orientation);
+    }
+
+    @Override
+    public void cardChosen(GameModelImmutable model, int which_card) throws RemoteException {
+        flow.cardChosen(model, which_card);
+    }
+
+    @Override
+    public void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
+        flow.cardPlaced(model, where_to_place_x, where_to_place_y, orientation);
+    }
+
+    @Override
+    public void cardDrawn(GameModelImmutable model, int index) throws RemoteException {
+        flow.cardDrawn(model, index);
     }
 
     @Override
@@ -62,11 +82,6 @@ public class GameListenersHandlerClient implements GameListener, Serializable {
     }
 
     @Override
-    public void commonCardsExtracted(GameModelImmutable gamemodel) throws RemoteException {
-        flow.commonCardsExtracted(gamemodel);
-    }
-
-    @Override
     public void gameStarted(GameModelImmutable gamemodel) throws RemoteException {
         flow.gameStarted(gamemodel);
         //setModel(gamemodel);
@@ -78,25 +93,8 @@ public class GameListenersHandlerClient implements GameListener, Serializable {
     }
 
     @Override
-    public void sentMessage(GameModelImmutable gameModel, Message msg) throws RemoteException {
-        flow.sentMessage(gameModel, msg);
-    }
-
-    @Override
-    public void grabbedTile(GameModelImmutable gamemodel) throws RemoteException {
-        flow.grabbedTile(gamemodel);
-        //setModel(gamemodel);
-    }
-
-    @Override
-    public void grabbedTileNotCorrect(GameModelImmutable gamemodel) throws RemoteException {
-        flow.grabbedTileNotCorrect(gamemodel);
-    }
-
-    @Override
-    public void positionedTile(GameModelImmutable gamemodel, TileType type, int column) throws RemoteException {
-        flow.positionedTile(gamemodel, type, column);
-        //setModel(gamemodel);
+    public void messageSent(GameModelImmutable gameModel, Message msg) throws RemoteException {
+        flow.messageSent(gameModel, msg);
     }
 
     @Override
@@ -105,19 +103,10 @@ public class GameListenersHandlerClient implements GameListener, Serializable {
     }
 
     @Override
-    public void addedPoint(Player p, Point point, GameModelImmutable gamemodel) throws RemoteException {
-        flow.addedPoint(p, point,gamemodel);
-    }
-
-    @Override
     public void playerDisconnected(GameModelImmutable gameModel,String nick) throws RemoteException {
         flow.playerDisconnected(gameModel,nick);
     }
 
-    @Override
-    public void columnShelfTooSmall(GameModelImmutable gameModel, int column) throws RemoteException {
-        flow.columnShelfTooSmall(gameModel,column);
-    }
 
     @Override
     public void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
@@ -125,9 +114,8 @@ public class GameListenersHandlerClient implements GameListener, Serializable {
     }
 
     @Override
-    public void lastCircle(GameModelImmutable gamemodel) throws RemoteException {
-        flow.lastCircle(gamemodel);
+    public void lastRound(GameModelImmutable gamemodel) throws RemoteException {
+        flow.lastRound(gamemodel);
     }
-
 
 }

@@ -1,70 +1,95 @@
 package it.polimi.demo.model.gameModelImmutable;
 
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.*;
-import it.polimi.demo.model.cards.Card;
+import it.polimi.demo.model.Player;
+import it.polimi.demo.model.board.CommonBoard;
+import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.cards.gameCards.StarterCard;
+import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.interfaces.*;
+import it.polimi.demo.view.PlayerDetails;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
-/**
- * This class is used to create an immutable version of the GameModel
- */
 public class GameModelImmutable implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
     private final List<PlayerIC> aux_order_players;
     private final LinkedList<PlayerIC> players_connected;
     private final Integer gameId;
     private final List<GameListener> listeners;
-    private final String my_nickname;
+    private final String initial_player_nickname;
+    private final CommonBoard common_board;
+    private final int game_id;
+    private final int num_required_players_to_start;
+    private final GameStatus actual_status;
+    private final String current_player_nickname;
+    //private final List<Player> winners;
+    private final Map<Player, Integer> leaderboard;
+    private final List<PlayerDetails> playersData;
+    private final boolean gameEnded;
+    private final boolean gamePaused;
+    private final String errorMessage;
 
-    private final ChatIC chat;
-    private final GameStatus status;
-    private final PlayerIC first_finishing_player;
-    private final List<PlayerIC> winners;
-    private final CommonBoardIC common_board;
-    private final PersonalBoardIC personal_board;
-    private final PlayerIC first_player;
-    private final Map<PlayerIC, Integer> leaderBoard;
-
-    /**
-     * This is the constructor which is called by the view and in the Observer pattern
-     * @param model_to_copy is the GameModel instance from which we create the immutable version
-     */
-    public GameModelImmutable(GameModel model_to_copy, String nickname) {
-
-        this.aux_order_players = new ArrayList<>(model_to_copy.getAllPlayers());
-        this.players_connected = new LinkedList<>(model_to_copy.getPlayersConnected());
-        this.common_board = model_to_copy.getCommonBoard();
-        this.my_nickname = nickname;
-        this.personal_board = (PersonalBoardIC) aux_order_players.stream()
-                .filter(player -> player.getNickname().equals(nickname))
-                .findFirst()
-                .orElseThrow()
-                .getPersonalBoard();
-        this.listeners = new ArrayList<>(model_to_copy.getListeners());
-
-        this.gameId = model_to_copy.getGameId();
-        this.chat = model_to_copy.getChat();
-        this.status = model_to_copy.getStatus();
-        this.first_finishing_player = model_to_copy.getFirstFinishingPlayer();
-        this.winners = new ArrayList<>(model_to_copy.getWinners());
-        this.first_player = model_to_copy.getBeginnerPlayer();
-        this.leaderBoard = new HashMap<>(model_to_copy.getLeaderboard());
+    public GameModelImmutable(GameModelInterface model) {
+        this.gameId = model.getGameId();
+        this.aux_order_players = new ArrayList<>(model.getAllPlayers());
+        this.players_connected = new LinkedList<>(model.getPlayersConnected());
+        this.listeners = new ArrayList<>(model.getListeners());
+        this.initial_player_nickname = model.getAllPlayers().getFirst().getNickname();
+        this.common_board = model.getCommonBoard();
+        this.game_id =  model.getGameId();
+        this.num_required_players_to_start = model.getNumPlayersToPlay();
+        this.actual_status = model.getStatus();
+        this.current_player_nickname = model.getPlayersConnected().peek().getNickname();
+        // this.winners = model.getWinners();
+        this.leaderboard = model.getLeaderBoard();
+        this.gameEnded = model.isEnded();
+        this.gamePaused = model.isPaused();
+        this.playersData = model.getPlayersDetails();
+        this.errorMessage = model.getErrorMessage();
     }
 
-    public Map<PlayerIC, Integer> getLeaderBoard() {
-        return leaderBoard;
+    public GameStatus getStatus() {
+        return actual_status;
     }
+
+    public boolean isGamePaused() {
+        return gamePaused;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public String getCurrentPlayerNickname() {
+        return current_player_nickname;
+    }
+
+    public String getFirstPlayerNickname() {
+        return initial_player_nickname;
+    }
+
+
+    public List<PlayerDetails> getPlayerDetails(){
+        return playersData;
+    }
+
+
+//    public Map<PlayerIC, Integer> getLeaderBoard() {
+//        return leaderBoard;
+//    }
 
     public Integer getGameId() {
         return gameId;
     }
 
-    public List<PlayerIC> getPlayers() {
+    public List<PlayerIC> getAllPlayers() {
         return aux_order_players;
     }
 
@@ -72,40 +97,24 @@ public class GameModelImmutable implements Serializable {
         return players_connected;
     }
 
-    public ChatIC getChat() {
-        return chat;
-    }
-
-    public GameStatus getStatus() {
-        return status;
-    }
+//    public ChatIC getChat() {
+//        return chat;
+//    }
 
     public List<GameListener> getListeners() {
         return listeners;
     }
 
-    public PlayerIC getFirstFinishedPlayer() {
-        return first_finishing_player;
-    }
-
-    public List<PlayerIC> getWinners() {
-        return winners;
-    }
+//    public List<PlayerIC> getWinners() {
+//        return winners;
+//    }
 
     public CommonBoardIC getCommonBoard() {
         return common_board;
     }
 
-    public PersonalBoardIC getPersonalBoard() {
-        return personal_board;
-    }
-
-    public String getMyNickname() {
-        return my_nickname;
-    }
-
     public PlayerIC getFirstPlayer() {
-        return first_player;
+        return aux_order_players.getFirst();
     }
 
     public List<ResourceCardIC> getHandCurrentPlayer() {
@@ -130,5 +139,4 @@ public class GameModelImmutable implements Serializable {
     public PlayerIC getCurrentPlayerEntity() {
         return players_connected.peek();
     }
-
 }

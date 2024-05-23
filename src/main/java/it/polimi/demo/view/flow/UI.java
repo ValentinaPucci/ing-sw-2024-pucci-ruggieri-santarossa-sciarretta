@@ -1,9 +1,8 @@
 package it.polimi.demo.view.flow;
 
-import polimi.ingsw.model.Player;
-import polimi.ingsw.model.Point;
-import polimi.ingsw.model.chat.Message;
-import polimi.ingsw.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.Player;
+import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.io.IOException;
 import java.util.List;
@@ -125,10 +124,9 @@ public abstract class UI {
      * Message that asks to pick up tiles
      *
      * @param msg       message to be shown
-     * @param gameModel model where the message needs to be shown
      * @param nickname  nickname of the player that needs to have the message shown
      */
-    protected abstract void show_askNum(String msg, GameModelImmutable gameModel, String nickname);
+    protected abstract void show_askNumOfPlayers(String msg, String nickname);
 
     /**
      * Message that shows the player's hand
@@ -143,7 +141,7 @@ public abstract class UI {
      * @param nickname the player that grabbed the tiles
      * @param model    the model in which the player grabbed the tiles
      */
-    protected abstract void show_grabbedTile(String nickname, GameModelImmutable model);
+    protected abstract void show_cardChosen(String nickname, GameModelImmutable model);
 
     /**
      * Shows common cards extracted
@@ -219,22 +217,6 @@ public abstract class UI {
      */
     protected abstract void show_askPickTilesMainMsg();
 
-    /**
-     * Shows the added point message
-     *
-     * @param p         the player to whom the point was added
-     * @param point     the point added to that player
-     * @param gameModel the model in which the player and point exist
-     */
-    protected abstract void show_addedPoint(Player p, Point point, GameModelImmutable gameModel);
-
-    /**
-     * Shows error message when chosen column has too little space
-     *
-     * @param model the model to check
-     */
-    protected abstract void columnShelfTooSmall(GameModelImmutable model);
-
     //----------------------
     //ACTIONS
     //----------------------
@@ -251,11 +233,11 @@ public abstract class UI {
      */
     protected abstract int getLengthLongestMessage(GameModelImmutable model);
 
-    /**
-     * @param msg   the message to add
-     * @param model the model to which add the message
-     */
-    protected abstract void addMessage(Message msg, GameModelImmutable model);
+//    /**
+//     * @param msg   the message to add
+//     * @param model the model to which add the message
+//     */
+//    protected abstract void addMessage(Message msg, GameModelImmutable model);
 
     /**
      * Resets the important events

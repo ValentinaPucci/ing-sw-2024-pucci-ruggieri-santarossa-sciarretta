@@ -5,8 +5,8 @@ import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
+import it.polimi.demo.networking.GameListenerHandlerClient;
 import it.polimi.demo.networking.HeartbeatSender;
-import it.polimi.demo.networking.socket.client.GameListenersHandlerClient;
 import it.polimi.demo.view.flow.CommonClientActions;
 import it.polimi.demo.view.flow.Flow;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
@@ -50,7 +50,7 @@ public class RMIClient implements CommonClientActions {
     /**
      * The remote object on which the server will invoke remote methods
      */
-    private final GameListenersHandlerClient gameListenersHandler;
+    private final GameListenerHandlerClient gameListenersHandler;
     /**
      * Registry of the RMI
      */
@@ -71,7 +71,7 @@ public class RMIClient implements CommonClientActions {
      */
     public RMIClient(Flow flow) {
         super();
-        gameListenersHandler = new GameListenersHandlerClient(flow);
+        gameListenersHandler = new GameListenerHandlerClient(flow);
         connect();
 
         this.flow=flow;
@@ -164,34 +164,30 @@ public class RMIClient implements CommonClientActions {
      * Request the creation of a Game to the server
      *
      * @param nick of the player who wants to create a game
-     * @throws RemoteException
-     * @throws NotBoundException
+     * @throws RemoteException if the reference could not be accessed
+     * @throws NotBoundException if the reference could not be accessed
      */
-    public void createGame(String nick, int num_of_players, int game_id) throws RemoteException, NotBoundException {
-        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
-        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-        gameController = requests.createGame(modelInvokedEvents, nick, num_of_players, game_id);
-        nickname = nick;
-    }
-
     @Override
-    public void createGame(String nick) throws IOException, InterruptedException, NotBoundException {
-
-    }
-
-    /**
-     * Request to join a server game (first game available)
-     *
-     * @param nick of the player who wants to join a game
-     * @throws RemoteException
-     * @throws NotBoundException
-     */
-    public void joinFirstAvailable(String nick) throws RemoteException, NotBoundException {
+    public void createGame(String nick, int num_of_players) throws RemoteException, NotBoundException {
         registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-        gameController = requests.joinFirstAvailableGame(modelInvokedEvents, nick);
+        gameController = requests.createGame(modelInvokedEvents, nick, num_of_players);
         nickname = nick;
     }
+
+//    /**
+//     * Request to join a server game (first game available)
+//     *
+//     * @param nick of the player who wants to join a game
+//     * @throws RemoteException
+//     * @throws NotBoundException
+//     */
+//    public void joinFirstAvailable(String nick) throws RemoteException, NotBoundException {
+//        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
+//        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+//        gameController = requests.joinFirstAvailableGame(modelInvokedEvents, nick);
+//        nickname = nick;
+//    }
 
 
     /**
@@ -202,13 +198,10 @@ public class RMIClient implements CommonClientActions {
      * @throws NotBoundException
      */
     public void joinGame(String nick, int idGame) throws RemoteException, NotBoundException {
-
         registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
         gameController = requests.joinGame(modelInvokedEvents, nick, idGame);
-
         nickname = nick;
-
     }
 
     /**
@@ -224,9 +217,7 @@ public class RMIClient implements CommonClientActions {
         registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
         gameController = requests.reconnect(modelInvokedEvents, nick, idGame);
-
         nickname = nick;
-
     }
 
     /**
@@ -240,10 +231,8 @@ public class RMIClient implements CommonClientActions {
      */
     @Override
     public void leave(String nick, int idGame) throws IOException, NotBoundException {
-
         registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-
         requests.leaveGame(modelInvokedEvents, nick, idGame);
         gameController = null;
         nickname = null;
@@ -258,12 +247,7 @@ public class RMIClient implements CommonClientActions {
      */
     @Override
     public void sendMessage(Message msg) throws RemoteException {
-        gameController.sentMessage(msg);
-    }
-
-    @Override
-    public void heartbeat() throws RemoteException {
-
+        gameController.sendMessage(msg);
     }
 
     /**
@@ -290,7 +274,7 @@ public class RMIClient implements CommonClientActions {
     }
 
     @Override
-    public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException {
+    public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
         if (!this.nickname.equals(gameController.getCurrentPlayer().getNickname()))
             this.gameController.setError("Player " + this.nickname + " tried to place a starter card while it was not his turn.");
         else
@@ -328,18 +312,15 @@ public class RMIClient implements CommonClientActions {
     }
 
     /**
-     * Add a hearthbeat to the list of heartbeats
+     * Send a heartbeat to the server
      *
-     * @param nick the player's nickname associated to the heartbeat
-     * @param me   the player's GameListener associated to the heartbeat
      * @throws RemoteException
      */
     @Override
-    public synchronized void heartbeat(String nick, GameListener me) throws RemoteException {
-        synchronized (heartbeats) {
-            heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), nick));
+    public void heartbeat() throws RemoteException {
+        if (gameController != null) {
+            gameController.addPing(nickname, modelInvokedEvents);
         }
     }
-
 
 }
