@@ -4,13 +4,9 @@ import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.util.Duration;
 import it.polimi.demo.DefaultValues;
-import it.polimi.demo.model.Player;
-import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.view.flow.UI;
 import it.polimi.demo.view.flow.utilities.inputReaderGUI;
-import it.polimi.demo.view.gui.controllers.LobbyController;
-import it.polimi.demo.view.gui.controllers.NicknamePopupController;
 import it.polimi.demo.view.gui.scenes.SceneEnum;
 
 import java.util.ArrayList;
