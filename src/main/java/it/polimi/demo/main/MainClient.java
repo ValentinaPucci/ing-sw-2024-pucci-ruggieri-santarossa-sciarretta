@@ -4,7 +4,6 @@ import javafx.application.Application;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.view.flow.ConnectionSelection;
 import it.polimi.demo.view.flow.GameFlow;
-import it.polimi.demo.view.gui.GUIApplication;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -21,8 +20,8 @@ public class MainClient {
         clearCMD();
         int selection;
 
-        //Disable javaFX logger
-        killLoggers();
+        // Disable javaFX logger
+        // killLoggers();
 
         if (!DefaultValues.DEBUG) {
             String input;
@@ -96,7 +95,7 @@ public class MainClient {
         } else {
             // Starts the game with GUI
             // For doing so, I need to start the Main of GUI (GameFlow needs to be started inside the thread of GUI)
-            Application.launch(GUIApplication.class, con_sel.toString());
+            //Application.launch(GUIApplication.class, con_sel.toString());
         }
 
     }
@@ -125,13 +124,13 @@ public class MainClient {
         return true;
     }
 
-    private static void killLoggers(){
-        com.sun.javafx.util.Logging.getJavaFXLogger().disableLogging();
-        com.sun.javafx.util.Logging.getCSSLogger().disableLogging();
-        com.sun.javafx.util.Logging.getAccessibilityLogger().disableLogging();
-        com.sun.javafx.util.Logging.getFocusLogger().disableLogging();
-        com.sun.javafx.util.Logging.getInputLogger().disableLogging();
-        com.sun.javafx.util.Logging.getLayoutLogger().disableLogging();
-    }
+//    private static void killLoggers(){
+//        com.sun.javafx.util.Logging.getJavaFXLogger().disableLogging();
+//        com.sun.javafx.util.Logging.getCSSLogger().disableLogging();
+//        com.sun.javafx.util.Logging.getAccessibilityLogger().disableLogging();
+//        com.sun.javafx.util.Logging.getFocusLogger().disableLogging();
+//        com.sun.javafx.util.Logging.getInputLogger().disableLogging();
+//        com.sun.javafx.util.Logging.getLayoutLogger().disableLogging();
+//    }
 
 }

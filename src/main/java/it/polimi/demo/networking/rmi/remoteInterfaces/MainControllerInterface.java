@@ -70,9 +70,8 @@ public interface MainControllerInterface extends Remote {
      */
     GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException;
 
+    List<GameDetails> getGamesDetails() throws RemoteException;
 
-    List<GameDetails> getGamesDetails();
-
-    Map<Integer, GameController> getGames();
+    Map<Integer, GameController> getGames() throws RemoteException;
 
 }
