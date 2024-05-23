@@ -32,6 +32,6 @@ public class msgSentMessage extends SocketServerGenericMessage {
      */
     @Override
     public void execute(GameListener lis) throws RemoteException {
-        lis.sentMessage(gameModel, msg);
+        //lis.sentMessage(gameModel, msg);
     }
 }

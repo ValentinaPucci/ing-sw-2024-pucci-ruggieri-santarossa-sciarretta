@@ -1,23 +1,23 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import polimi.ingsw.listener.GameListener;
-import polimi.ingsw.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.rmi.RemoteException;
 
 /**
- * msgLastCircle class.
+ * msgLastRound class.
  * Extends SocketServerGenericMessage and is used to send a message to the client
  * indicating that it is the last circle of the game.
  */
-public class msgLastCircle extends SocketServerGenericMessage {
+public class msgLastRound extends SocketServerGenericMessage {
     private GameModelImmutable gamemodel;
 
     /**
      * Constructor of the class.
      * @param gamemodel the immutable game model
      */
-    public msgLastCircle(GameModelImmutable gamemodel) {
+    public msgLastRound(GameModelImmutable gamemodel) {
         this.gamemodel = gamemodel;
     }
 
@@ -28,6 +28,6 @@ public class msgLastCircle extends SocketServerGenericMessage {
      */
     @Override
     public void execute(GameListener lis) throws RemoteException {
-        lis.lastCircle(gamemodel);
+       lis.lastRound(gamemodel);
     }
 }

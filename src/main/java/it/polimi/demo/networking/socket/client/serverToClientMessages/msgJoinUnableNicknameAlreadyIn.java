@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import polimi.ingsw.listener.GameListener;
-import polimi.ingsw.model.Player;
+import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.Player;
 
 import java.rmi.RemoteException;
 

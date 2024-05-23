@@ -384,7 +384,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     @Override
     public void lastCircle(GameModelImmutable gamemodel) throws RemoteException {
         try {
-            out.writeObject(new msgLastCircle(gamemodel));
+            out.writeObject(new msgLastRound(gamemodel));
             finishSending();
         } catch (IOException e) {
 
