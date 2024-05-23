@@ -46,7 +46,7 @@ public  class CardsCollection implements Serializable {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
-            JsonNode cardsNode = rootNode.path("cards");
+            JsonNode cardsNode = rootNode.path("images/cards");
 
             for (JsonNode cardNode : cardsNode) {
                 int id = cardNode.path("id").asInt();
@@ -206,7 +206,7 @@ public  class CardsCollection implements Serializable {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
-            JsonNode cardsNode = rootNode.path("cards");
+            JsonNode cardsNode = rootNode.path("images/cards");
 
             for (JsonNode cardNode : cardsNode) {
 
@@ -287,7 +287,7 @@ public  class CardsCollection implements Serializable {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
-            JsonNode cardsNode = rootNode.path("cards");
+            JsonNode cardsNode = rootNode.path("images/cards");
 
             for (JsonNode cardNode : cardsNode) {
                 int id = cardNode.path("id").asInt();
