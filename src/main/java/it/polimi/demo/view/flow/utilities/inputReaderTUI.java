@@ -4,7 +4,7 @@ import it.polimi.demo.DefaultValues;
 
 import java.util.Scanner;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static it.polimi.demo.view.text.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
@@ -12,6 +12,7 @@ import static org.fusesource.jansi.Ansi.ansi;
  * InputReaderTUI is the class that reads the input and add it to the buffer
  */
 public class inputReaderTUI extends Thread implements InputReader {
+
     private final BufferData buffer = new BufferData();
 
     /**
@@ -27,8 +28,8 @@ public class inputReaderTUI extends Thread implements InputReader {
     @Override
     public void run(){
         Scanner sc = new Scanner(System.in);
-        while(!this.isInterrupted()){
-            //Reads the input and add what It reads to the buffer synch
+        while (!this.isInterrupted()) {
+            // Reads the input and add what It reads to the buffer sync
             String temp = sc.nextLine();
             buffer.addData(temp);
             printAsync(ansi().cursorUpLine().a(" ".repeat(temp.length())));

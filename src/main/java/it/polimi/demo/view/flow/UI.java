@@ -12,6 +12,7 @@ import java.util.List;
  * it implements methods that everyone needs to have<br>
  */
 public abstract class UI {
+
     protected List<String> importantEvents; //events that needs to be showed always in screen
 
     /**
@@ -69,6 +70,18 @@ public abstract class UI {
     protected abstract void show_insertNicknameMsg();
 
     /**
+     * Message that asks to pick up tiles
+     *
+     */
+    protected abstract void show_insertNumOfPlayersMsg();
+
+    /**
+     * Shows the player's chosen number of players
+     * @param n number of players chosen
+     */
+    protected abstract void show_chosenNumOfPLayers(int n);
+
+    /**
      * Shows the player's chosen nickname
      *
      * @param nickname nickname just chosen by the player
@@ -121,14 +134,6 @@ public abstract class UI {
     protected abstract void show_nextTurnOrPlayerReconnected(GameModelImmutable model, String nickname);
 
     /**
-     * Message that asks to pick up tiles
-     *
-     * @param msg       message to be shown
-     * @param nickname  nickname of the player that needs to have the message shown
-     */
-    protected abstract void show_askNumOfPlayers(String msg, String nickname);
-
-    /**
      * Message that shows the player's hand
      *
      * @param gameModel the model that has the player hand that needs to be shown
@@ -148,7 +153,7 @@ public abstract class UI {
      *
      * @param gameModel the model that has the common cards to show
      */
-    protected abstract void show_commonCards(GameModelImmutable gameModel);
+    protected abstract void show_commonObjectives(GameModelImmutable gameModel);
 
     /**
      * Shows the message that has been sent
@@ -156,25 +161,12 @@ public abstract class UI {
      * @param model    the model where the message need to be shown
      * @param nickname the sender's nickname
      */
-    protected abstract void show_sentMessage(GameModelImmutable model, String nickname);
-
-    /**
-     * Shows player's grabbed tiles
-     *
-     * @param model    the model that called the event
-     * @param nickname the player that grabbed the tiles
-     */
-    protected abstract void show_grabbedTileMainMsg(GameModelImmutable model, String nickname);
+    protected abstract void show_messageSent(GameModelImmutable model, String nickname);
 
     /**
      * Message that asks to pick a tile to place
      */
-    public abstract void show_whichTileToPlaceMsg();
-
-    /**
-     * Error message on tile in hand selection
-     */
-    protected abstract void show_wrongSelectionHandMsg();
+    public abstract void show_whichCardToPlaceMsg();
 
     /**
      * Shows the updated player's shelf
@@ -182,15 +174,7 @@ public abstract class UI {
      * @param model    the model in which the player is found
      * @param nickname the player who positioned the tile
      */
-    protected abstract void show_positionedTile(GameModelImmutable model, String nickname);
-
-    /**
-     * Shows error message on wrong tile selection
-     *
-     * @param model    the model where to show the tiles grabbed weren't correct
-     * @param nickname the player who tried to grab the wrong tiles
-     */
-    protected abstract void show_grabbedTileNotCorrect(GameModelImmutable model, String nickname);
+    protected abstract void show_cardPlaced(GameModelImmutable model, String nickname);
 
     /**
      * Shows generic error message
@@ -205,17 +189,17 @@ public abstract class UI {
     /**
      * Shows the message that asks for column to be chosen
      */
-    protected abstract void show_askColumnMainMsg();
+    protected abstract void show_askCardCoordinatesMainMsg();
 
     /**
      * Shows the message that asks for direction to be chosen
      */
-    protected abstract void show_direction();
+    protected abstract void show_orientation();
 
     /**
      * Shows the message that asks for tiles to be picked
      */
-    protected abstract void show_askPickTilesMainMsg();
+    protected abstract void show_askChooseCardMainMsg();
 
     //----------------------
     //ACTIONS
@@ -233,11 +217,11 @@ public abstract class UI {
      */
     protected abstract int getLengthLongestMessage(GameModelImmutable model);
 
-//    /**
-//     * @param msg   the message to add
-//     * @param model the model to which add the message
-//     */
-//    protected abstract void addMessage(Message msg, GameModelImmutable model);
+    /**
+     * @param msg   the message to add
+     * @param model the model to which add the message
+     */
+    protected abstract void addMessage(Message msg, GameModelImmutable model);
 
     /**
      * Resets the important events

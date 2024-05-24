@@ -74,7 +74,7 @@ public class RMIClient implements CommonClientActions {
         gameListenersHandler = new GameListenerHandlerClient(flow);
         connect();
 
-        this.flow=flow;
+        this.flow = flow;
 
         rmiHeartbeat = new HeartbeatSender(flow,this);
         rmiHeartbeat.start();

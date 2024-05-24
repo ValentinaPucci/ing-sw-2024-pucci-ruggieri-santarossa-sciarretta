@@ -13,7 +13,7 @@ public abstract class Flow implements GameListener {
      * @param model model to get players
      */
     protected void resetGameId(FileDisconnection fileDisconnection, GameModelImmutable model) {
-        for (PlayerIC p : model.getAllPlayers()) {
+        for (PlayerIC p : model.getPlayersConnected()) {
             fileDisconnection.setLastGameId(p.getNickname(), -1);
         }
     }
@@ -32,7 +32,5 @@ public abstract class Flow implements GameListener {
      * Shows no connection error
      */
     public abstract void noConnectionError();
-
-
 
 }

@@ -71,8 +71,9 @@ public class TUI extends UI {
      *
      * @param model
      */
+    // todo: implement the right toString method in PlayerIC
     public void show_allPlayers(GameModelImmutable model) {
-        printAsync("Current Players: \n" + model.toStringListPlayers());
+        printAsync("Current Players: \n" + model.getPlayersConnected().toString());
     }
 
     /**
@@ -99,26 +100,6 @@ public class TUI extends UI {
     @Override
     public void show_playerHand(GameModelImmutable gameModel) {
 
-        StringBuilder ris = new StringBuilder();
-        ris.append(ansi().cursor(DefaultValue.row_input - 2, 0).a(">This is your hand:").cursor(DefaultValue.row_input - 1, 0));
-
-        for (int i = 0; i < gameModel.getPlayerEntity(gameModel.getNicknameCurrentPlaying()).getInHandTile_IC().size(); i++) {
-            switch (gameModel.getPlayerEntity(gameModel.getNicknameCurrentPlaying()).getInHandTile_IC().get(i).getType()) {
-                case CAT ->
-                        ris.append("[").append(i).append("]: ").append(ansi().bg(GREEN).fg(WHITE).a(gameModel.getPlayerEntity(gameModel.getNicknameCurrentPlaying()).getInHandTile_IC().get(i).getType().toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-                case TROPHY ->
-                        ris.append("[").append(i).append("]: ").append(ansi().bg(CYAN).fg(WHITE).a(gameModel.getPlayerEntity(gameModel.getNicknameCurrentPlaying()).getInHandTile_IC().get(i).getType().toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-                case PLANT ->
-                        ris.append("[").append(i).append("]: ").append(ansi().bg(MAGENTA).fg(WHITE).a(gameModel.getPlayerEntity(gameModel.getNicknameCurrentPlaying()).getInHandTile_IC().get(i).getType().toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-                case BOOK ->
-                        ris.append("[").append(i).append("]: ").append(ansi().bg(WHITE).fg(BLACK).a(gameModel.getPlayerEntity(gameModel.getNicknameCurrentPlaying()).getInHandTile_IC().get(i).getType().toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-                case ACTIVITY ->
-                        ris.append("[").append(i).append("]: ").append(ansi().bg(YELLOW).fg(WHITE).a(gameModel.getPlayerEntity(gameModel.getNicknameCurrentPlaying()).getInHandTile_IC().get(i).getType().toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-                case FRAME ->
-                        ris.append("[").append(i).append("]: ").append(ansi().bg(BLUE).fg(WHITE).a(gameModel.getPlayerEntity(gameModel.getNicknameCurrentPlaying()).getInHandTile_IC().get(i).getType().toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-            }
-        }
-        printAsync(ris);
     }
 
     /**
@@ -126,124 +107,41 @@ public class TUI extends UI {
      * @param model    the model in which the player grabbed the tiles
      */
     @Override
-    public void show_grabbedTile(String nickname, GameModelImmutable model) {
-        StringBuilder ris = new StringBuilder();
-        ris.append(ansi().cursor(DefaultValue.row_input - 1, 0).a(nickname).a(": Player: ").a(model.getNicknameCurrentPlaying()).a(" has grabbed some tiles: | "));
-        for (TileIC t : model.getHandOfCurrentPlaying()) {
-            switch (t.getType()) {
-                case CAT ->
-                        ris.append(ansi().fg(WHITE).bg(GREEN).a(t.toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-                case TROPHY ->
-                        ris.append(ansi().fg(WHITE).bg(CYAN).a(t.toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-                case PLANT ->
-                        ris.append(ansi().fg(WHITE).bg(MAGENTA).a(t.toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-                case BOOK ->
-                        ris.append(ansi().fg(BLACK).bg(WHITE).a(t.toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-                case ACTIVITY ->
-                        ris.append(ansi().fg(WHITE).bg(YELLOW).a(t.toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-                case FRAME ->
-                        ris.append(ansi().fg(WHITE).bg(BLUE).a(t.toString()).fg(DEFAULT).bg(DEFAULT)).append(" | ");
-            }
-        }
-        printAsync(ris);
+    public void show_cardChosen(String nickname, GameModelImmutable model) {
+
     }
 
     /**
-     * Shows the playground
-     *
-     * @param model
+     * show the common board
+     * @param model the model that has the common board to show
      */
-    public void show_playground(GameModelImmutable model) {
-        printAsync(model.getPg().toString());
+    public void show_commonBoard(GameModelImmutable model) {
+
     }
 
     /**
-     * Shows all players' shelves
-     *
-     * @param model
+     * show the personal board
+     * @param nickname the player whose personal board we want to show
+     * @param model the model that has the personal board to show
      */
-    public void show_allShelves(GameModelImmutable model) {
-        int i = DefaultValue.col_shelves;
+    public void show_personalBoard(String nickname, GameModelImmutable model) {
 
-        StringBuilder ris = new StringBuilder();
-
-        for (PlayerIC p : model.getPlayers()) {
-            if (model.getFirstTurnIndex() == (model.getPlayers().indexOf(model.getPlayerEntity(p.getNickname())))) {
-                new PrintStream(System.out, true, System.console() != null
-                        ? System.console().charset()
-                        : Charset.defaultCharset()
-                ).println(ansi()
-                        .cursor(DefaultValue.row_shelves, i + DefaultValue.chair_index).fg(WHITE)
-                        .a(" .-===-.")
-                        .cursor(DefaultValue.row_shelves + 1, i + DefaultValue.chair_index).fg(WHITE)
-                        .a(" | . . |")
-                        .cursor(DefaultValue.row_shelves + 2, i + DefaultValue.chair_index).fg(WHITE)
-                        .a(" | .'. |")
-                        .cursor(DefaultValue.row_shelves + 3, i + DefaultValue.chair_index).fg(WHITE)
-                        .a("()_____()")
-                        .cursor(DefaultValue.row_shelves + 4, i + DefaultValue.chair_index).fg(WHITE)
-                        .a("||_____||")
-                        .cursor(DefaultValue.row_shelves + 5, i + DefaultValue.chair_index).fg(WHITE)
-                        .a(" W     W").reset());
-            }
-            ris.append(ansi().cursor(DefaultValue.row_playerName, i - 3).a(p.getNickname() + ": "));
-            ris.append(ansi().cursor(DefaultValue.row_shelves, i - 3).a(p.getShelf().toString(i)).toString());
-            i += DefaultValue.displayShelfNextCol;
-        }
-        printAsync(ris);
     }
 
     /**
      * @param gameModel the model that has the common cards to show
      */
     @Override
-    public void show_commonCards(GameModelImmutable gameModel) {
-        StringBuilder ris = new StringBuilder();
-        ris.append(ansi().cursor(DefaultValue.row_commonCards, DefaultValue.col_commonCards));
+    public void show_commonObjectives(GameModelImmutable gameModel) {
 
-        String title = String.valueOf(ansi().fg(WHITE).cursor(DefaultValue.row_commonCards, DefaultValue.col_commonCards - 1).bold().a("Common Cards: ").fg(DEFAULT).boldOff());
-        printAsync(title);
-
-        int i = 1;
-        for (CommonCardIC c : gameModel.getCommonCards()) {
-            if (gameModel.getFirstFinishedPlayer() == -1)
-                ris.append(c.toString(i, false));
-            else
-                ris.append(c.toString(i, true));
-            i += 3;
-        }
-        printAsync(ris);
-    }
-
-    /**
-     * Shows the player's points
-     *
-     * @param gameModel
-     */
-    public void show_points(GameModelImmutable gameModel) {
-        StringBuilder ris = new StringBuilder();
-        ris.append(ansi().cursor(DefaultValue.row_points, DefaultValue.col_points));
-
-        String title = String.valueOf(ansi().fg(RED).cursor(DefaultValue.row_points, DefaultValue.col_points - 1).bold().a("Points: ").fg(DEFAULT).boldOff());
-        printAsync(title);
-
-        int i = 1;
-        for (PlayerIC p : gameModel.getPlayers()) {
-            ris.append(ansi().cursor(DefaultValue.row_points + i, DefaultValue.col_points).a((p.getNickname().length() > 4
-                    ? p.getNickname().substring(0, 4)
-                    : p.getNickname()) + ": " + p.getTotalPoints() + " points"));
-            i++;
-        }
-        printAsync(ris);
     }
 
     /**
      * Shows the player's goal card
-     *
-     * @param toShow
+     * @param p the player whose goal card we want to show
      */
-    public void show_goalCards(PlayerIC toShow) {
-        printAsync(toShow.getSecretGoal_IC().getLayoutToMatch_IC().toStringGoalCard());
+    public void show_personalObjectiveCard(PlayerIC p) {
+        printAsync(p.getChosenObjectiveCard().toString());
     }
 
     /**
@@ -256,11 +154,10 @@ public class TUI extends UI {
         show_titleMyShelfie();
         printAsync(ansi().cursor(10, 0).a("GameID: [" + gameModel.getGameId().toString() + "]\n").fg(DEFAULT));
         System.out.flush();
-        //StringBuilder players = new StringBuilder();
         StringBuilder ris = new StringBuilder();
 
         int i = 0;
-        for (PlayerIC p : gameModel.getPlayers()) {
+        for (PlayerIC p : gameModel.getPlayersConnected()) {
             if (p.getReadyToStart()) {
                 ris.append(ansi().cursor(12 + i, 0)).append("[EVENT]: ").append(p.getNickname()).append(" is ready!\n");
             } else {
@@ -270,12 +167,10 @@ public class TUI extends UI {
         }
         printAsyncNoCursorReset(ris);
 
-
-        for (PlayerIC p : gameModel.getPlayers())
+        for (PlayerIC p : gameModel.getPlayersConnected())
             if (!p.getReadyToStart() && p.getNickname().equals(nick))
                 printAsyncNoCursorReset(ansi().cursor(17, 0).fg(WHITE).a("> When you are ready to start, enter (y): \n"));
         System.out.flush();
-
     }
 
     /**
@@ -331,7 +226,7 @@ public class TUI extends UI {
                 """).reset());
 
         try {
-            Thread.sleep(DefaultValue.time_publisher_showing_seconds * 1000);
+            Thread.sleep(DefaultValues.time_publisher_showing_seconds * 1000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -346,14 +241,14 @@ public class TUI extends UI {
         StringBuilder ris = new StringBuilder();
         int i = 0;
         int longestImportantEvent = importantEvents.stream().map(String::length).reduce(0, (a, b) -> a > b ? a : b);
-        ris.append(ansi().fg(GREEN).cursor(DefaultValue.row_important_events + i, DefaultValue.col_important_events - 1).bold().a("Latest Events:").fg(DEFAULT).boldOff());
+        ris.append(ansi().fg(GREEN).cursor(DefaultValues.row_important_events + i, DefaultValues.col_important_events - 1).bold().a("Latest Events:").fg(DEFAULT).boldOff());
         for (String s : importantEvents) {
-            ris.append(ansi().fg(WHITE).cursor(DefaultValue.row_important_events + 1 + i, DefaultValue.col_important_events).a(s).a(" ".repeat(longestImportantEvent - s.length())).fg(DEFAULT));
+            ris.append(ansi().fg(WHITE).cursor(DefaultValues.row_important_events + 1 + i, DefaultValues.col_important_events).a(s).a(" ".repeat(longestImportantEvent - s.length())).fg(DEFAULT));
             i++;
         }
         printAsync(ris);
 
-        printAsync(ansi().cursor(DefaultValue.row_input, 0));
+        printAsync(ansi().cursor(DefaultValues.row_input, 0));
     }
 
     /**
@@ -361,20 +256,9 @@ public class TUI extends UI {
      */
     public void clearScreen() {
         try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-            //if not on a Windows machine
-        } catch (IOException | InterruptedException e) {
-            //for mac
-            printAsyncNoCursorReset("\033\143");
-
-            /*This might work too, but exec is deprecated
-            try {
-                Runtime.getRuntime().exec("clear");
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-
-             */
+            Runtime.getRuntime().exec("clear");
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
@@ -384,11 +268,11 @@ public class TUI extends UI {
      * @param model
      */
     public void show_messages(GameModelImmutable model) {
-        String ris = String.valueOf(ansi().fg(GREEN).cursor(DefaultValue.row_chat, DefaultValue.col_chat - 1).bold().a("Latest Messages:").fg(DEFAULT).boldOff()) +
-                ansi().fg(WHITE).cursor(DefaultValue.row_chat + 1, DefaultValue.col_chat).a(model.getChat().toString(this.nickname)).fg(DEFAULT);
+        String ris = String.valueOf(ansi().fg(GREEN).cursor(DefaultValues.row_chat, DefaultValues.col_chat - 1).bold().a("Latest Messages:").fg(DEFAULT).boldOff()) +
+                ansi().fg(WHITE).cursor(DefaultValues.row_chat + 1, DefaultValues.col_chat).a(model.getChat().toString(this.nickname)).fg(DEFAULT);
         printAsync(ris);
-        if (model.getChat().getMsgs().size() > 0) {
-            printAsync(ansi().cursor(DefaultValue.row_input, 0));
+        if (!model.getChat().getMsgs().isEmpty()) {
+            printAsync(ansi().cursor(DefaultValues.row_input, 0));
         }
     }
 
@@ -441,7 +325,7 @@ public class TUI extends UI {
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()
-        ).println(ansi().cursor(DefaultValue.row_nextTurn, 0).fg(GREEN).a("""
+        ).println(ansi().cursor(DefaultValues.row_nextTurn, 0).fg(GREEN).a("""
 
                 ░██████╗░░█████╗░███╗░░░███╗███████╗        ███████╗███╗░░██╗██████╗░███████╗██████╗░
                 ██╔════╝░██╔══██╗████╗░████║██╔════╝        ██╔════╝████╗░██║██╔══██╗██╔════╝██╔══██╗
@@ -455,7 +339,7 @@ public class TUI extends UI {
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()
-        ).println(ansi().cursor(DefaultValue.row_nextTurn + 10, 0).bg(CYAN).a("""
+        ).println(ansi().cursor(DefaultValues.row_nextTurn + 10, 0).bg(CYAN).a("""
 
                 █     █▀▀▀  █▀▀█  █▀▀▄  █▀▀▀  █▀▀█    █▀▀█  █▀▀▀█  █▀▀█  █▀▀█  █▀▀▄
                 █     █▀▀▀  █▄▄█  █  █  █▀▀▀  █▄▄▀    █▀▀▄  █   █  █▄▄█  █▄▄▀  █  █
@@ -467,9 +351,12 @@ public class TUI extends UI {
         int i = 1;
         int classif = 1;
         StringBuilder ris = new StringBuilder();
-        for (Map.Entry<Integer, Integer> entry : model.getLeaderBoard().entrySet()) {
+        for (Map.Entry<PlayerIC, Integer> entry : model.getLeaderBoard().entrySet()) {
             printAsync("");
-            ris.append(ansi().fg(WHITE).cursor(DefaultValue.row_leaderboard + i, DefaultValue.col_leaderboard).a("#" + classif + " " + model.getPlayers().get(entry.getKey()).getNickname() + ": " + entry.getValue() + " points").fg(DEFAULT));
+            ris.append(ansi().fg(WHITE).cursor(DefaultValues.row_leaderboard + i, DefaultValues.col_leaderboard)
+                    .a("#" + classif + " "
+                            + entry.getKey().getNickname() + ": "
+                            + entry.getValue() + " points").fg(DEFAULT));
             i += 2;
             classif++;
         }
@@ -485,13 +372,11 @@ public class TUI extends UI {
      */
     public void show_alwaysShowForAll(GameModelImmutable model) {
         this.clearScreen();
-        //resize();
         show_titleMyShelfie();
         show_gameId(model);
-        show_playground(model);
-        show_commonCards(model);
+        show_commonBoard(model);
+        show_commonObjectives(model);
         show_messages(model);
-        show_points(model);
         show_important_events();
     }
 
@@ -501,7 +386,7 @@ public class TUI extends UI {
      * @param gameModel
      */
     public void show_gameId(GameModelImmutable gameModel) {
-        printAsync(ansi().cursor(DefaultValue.row_gameID, 0).bold().a("Game with id: [" + gameModel.getGameId() + "]").boldOff());
+        printAsync(ansi().cursor(DefaultValues.row_gameID, 0).bold().a("Game with id: [" + gameModel.getGameId() + "]").boldOff());
     }
 
     /**
@@ -510,7 +395,8 @@ public class TUI extends UI {
      * @param gameModel
      */
     public void show_nextTurn(GameModelImmutable gameModel) {
-        printAsync(ansi().cursor(DefaultValue.row_nextTurn, 0).bold().a("Next turn! It's up to: " + gameModel.getNicknameCurrentPlaying()).boldOff());
+        printAsync(ansi().cursor(DefaultValues.row_nextTurn, 0).bold().a("Next turn! It's up to: "
+                + gameModel.getPlayersConnected().peek().getNickname()).boldOff());
     }
 
     /**
@@ -519,7 +405,7 @@ public class TUI extends UI {
      * @param nick
      */
     public void show_welcome(String nick) {
-        printAsync(ansi().cursor(DefaultValue.row_nextTurn + 1, 0).bold().a("Welcome " + nick).boldOff());
+        printAsync(ansi().cursor(DefaultValues.row_nextTurn + 1, 0).bold().a("Welcome " + nick).boldOff());
     }
 
     /**
@@ -551,8 +437,8 @@ public class TUI extends UI {
      * Asks the player to pick a direction
      */
     @Override
-    public void show_direction() {
-        printAsync("\t> Choose direction (r=right,l=left,u=up,d=down): ");
+    public void show_orientation() {
+        printAsync("\t> Choose card orientation (F = FRONT, B = BACK): ");
         printAsyncNoCursorReset(ansi().cursorDownLine().a(""));
     }
 
@@ -560,27 +446,7 @@ public class TUI extends UI {
      * Asks the player to pick up tiles
      */
     @Override
-    protected void show_askPickTilesMainMsg() {
-
-    }
-
-    /**
-     * Shows the player's points
-     *
-     * @param p         the player to whom the point was added
-     * @param point     the point added to that player
-     * @param gameModel the model in which the player and point exist
-     */
-    @Override
-    protected void show_addedPoint(Player p, Point point, GameModelImmutable gameModel) {
-
-    }
-
-    /**
-     * @param model the model to check
-     */
-    @Override
-    protected void columnShelfTooSmall(GameModelImmutable model) {
+    protected void show_askChooseCardMainMsg() {
 
     }
 
@@ -591,7 +457,7 @@ public class TUI extends UI {
      * @param model
      */
     public void removeInput(String msg, GameModelImmutable model) {
-        printAsync(ansi().cursor(DefaultValue.row_input, 0).a(msg).a(" ".repeat(getLengthLongestMessage(model))));
+        printAsync(ansi().cursor(DefaultValues.row_input, 0).a(msg).a(" ".repeat(getLengthLongestMessage(model))));
         printAsyncNoLine(ansi().cursorDownLine());
     }
 
@@ -602,20 +468,10 @@ public class TUI extends UI {
      * @param nickname the sender's nickname
      */
     @Override
-    public void show_sentMessage(GameModelImmutable model, String nickname) {
+    public void show_messageSent(GameModelImmutable model, String nickname) {
         this.show_alwaysShow(model, nickname);
     }
 
-    /**
-     * Shows the player's hand
-     *
-     * @param model    the model that called the event
-     * @param nickname the player that grabbed the tiles
-     */
-    @Override
-    public void show_grabbedTileMainMsg(GameModelImmutable model, String nickname) {
-        this.show_alwaysShow(model, nickname);
-    }
 
     /**
      * Shows the updated shelves
@@ -624,30 +480,8 @@ public class TUI extends UI {
      * @param nickname the player who positioned the tile
      */
     @Override
-    public void show_positionedTile(GameModelImmutable model, String nickname) {
+    public void show_cardPlaced(GameModelImmutable model, String nickname) {
         this.show_alwaysShow(model, nickname);
-    }
-
-    /**
-     * Error message on wrong tile selection on pick up
-     *
-     * @param model    the model where to show the tiles grabbed weren't correct
-     * @param nickname the player who tried to grab the wrong tiles
-     */
-    @Override
-    public void show_grabbedTileNotCorrect(GameModelImmutable model, String nickname) {
-        this.show_alwaysShow(model, nickname);
-    }
-
-    /**
-     * Asks the player to choose number of tiles to pick up
-     *
-     * @param msg       message to be shown
-     * @param nickname  nickname of the player that needs to have the message shown
-     */
-    @Override
-    public void show_askNumOfPlayers(String msg, String nickname) {
-
     }
 
     /**
@@ -687,7 +521,7 @@ public class TUI extends UI {
      * Asks the player to choose a column
      */
     @Override
-    protected void show_askColumnMainMsg() {
+    protected void show_askCardCoordinatesMainMsg() {
 
     }
 
@@ -696,9 +530,8 @@ public class TUI extends UI {
      */
     @Override
     public void show_insertNicknameMsg() {
-        this.clearScreen();
-        this.show_titleMyShelfie();
-        printAsyncNoCursorReset(ansi().cursor(DefaultValue.row_gameID, 0).a("> Insert your nickname: "));
+        clearScreen();
+        printAsyncNoCursorReset(ansi().cursor(DefaultValues.row_gameID, 0).a("> Insert your nickname: "));
     }
 
     /**
@@ -708,7 +541,21 @@ public class TUI extends UI {
      */
     @Override
     public void show_chosenNickname(String nickname) {
-        printAsyncNoCursorReset(ansi().cursor(DefaultValue.row_gameID + 2, 0).a("> Your nickname is: " + nickname));
+        printAsync(ansi().cursor(DefaultValues.row_gameID + 2, 0).a("> Your nickname is: " + nickname));
+    }
+
+    /**
+     * Asks the player to choose number of tiles to pick up
+     */
+    @Override
+    public void show_insertNumOfPlayersMsg() {
+        clearScreen();
+        printAsyncNoCursorReset(ansi().cursor(DefaultValues.row_gameID, 0).a("> Choose the number of players for this game: "));
+    }
+
+    @Override
+    public void show_chosenNumOfPLayers(int n) {
+        printAsync(ansi().cursor(DefaultValues.row_gameID + 2, 0).a("> You have chosen " + n + " players"));
     }
 
     /**
@@ -753,16 +600,8 @@ public class TUI extends UI {
      * Asks which tile to place
      */
     @Override
-    public void show_whichTileToPlaceMsg() {
-        printAsync("> Select which tile do you want to place:");
-    }
-
-    /**
-     * Error when trying to place a wrong in hand tile
-     */
-    @Override
-    public void show_wrongSelectionHandMsg() {
-        printAsync("\tWrong Tile selection offset");
+    public void show_whichCardToPlaceMsg() {
+        printAsync("> Select which card from your hand you want to place:");
     }
 
     /**
@@ -813,16 +652,18 @@ public class TUI extends UI {
      */
     public void show_alwaysShow(GameModelImmutable model, String nick) {
         show_alwaysShowForAll(model);
-        show_goalCards(model.getPlayerEntity(nick));
-        if (model.getPlayerEntity(nick).getInHandTile_IC().size() > 0)
+        show_personalObjectiveCard(model.getPlayerEntity(nick));
+        if (!model.getPlayerEntity(nick).getHand().isEmpty())
             show_playerHand(model);
-        else if (model.getPlayerEntity(model.getNicknameCurrentPlaying()).getInHandTile_IC().size() > 0)
-            show_grabbedTile(model.getNicknameCurrentPlaying(), model);
-        show_allShelves(model);
+        else {
+            if (!model.getPlayersConnected().peek().getHand().isEmpty())
+                show_cardChosen(model.getPlayersConnected().peek().getNickname(), model);
+        }
+        show_personalBoard(nick, model);
         show_nextTurn(model);
         show_welcome(nick);
 
-        printAsync(ansi().cursor(DefaultValue.row_input, 0));
+        printAsync(ansi().cursor(DefaultValues.row_input, 0));
     }
 
 

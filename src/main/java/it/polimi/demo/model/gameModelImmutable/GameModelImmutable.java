@@ -1,40 +1,31 @@
 package it.polimi.demo.model.gameModelImmutable;
 
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
-import it.polimi.demo.model.board.PersonalBoard;
-import it.polimi.demo.model.cards.gameCards.ResourceCard;
-import it.polimi.demo.model.cards.gameCards.StarterCard;
-import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.interfaces.*;
 import it.polimi.demo.view.PlayerDetails;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
 public class GameModelImmutable implements Serializable {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
     private final List<PlayerIC> aux_order_players;
     private final LinkedList<PlayerIC> players_connected;
     private final Integer gameId;
     private final List<GameListener> listeners;
     private final String initial_player_nickname;
     private final CommonBoard common_board;
-    private final int game_id;
     private final int num_required_players_to_start;
     private final GameStatus actual_status;
     private final String current_player_nickname;
     //private final List<Player> winners;
-    private final Map<Player, Integer> leaderboard;
+    private final Map<PlayerIC, Integer> leaderboard;
     private final List<PlayerDetails> playersData;
     private final boolean gameEnded;
     private final boolean gamePaused;
-    private final String errorMessage;
+    private final ChatIC chat;
 
     public GameModelImmutable(GameModelInterface model) {
         this.gameId = model.getGameId();
@@ -43,16 +34,15 @@ public class GameModelImmutable implements Serializable {
         this.listeners = new ArrayList<>(model.getListeners());
         this.initial_player_nickname = model.getAllPlayers().getFirst().getNickname();
         this.common_board = model.getCommonBoard();
-        this.game_id =  model.getGameId();
         this.num_required_players_to_start = model.getNumPlayersToPlay();
         this.actual_status = model.getStatus();
         this.current_player_nickname = model.getPlayersConnected().peek().getNickname();
         // this.winners = model.getWinners();
-        this.leaderboard = model.getLeaderBoard();
         this.gameEnded = model.isEnded();
         this.gamePaused = model.isPaused();
         this.playersData = model.getPlayersDetails();
-        this.errorMessage = model.getErrorMessage();
+        this.chat = model.getChat();
+        this.leaderboard = model.getLeaderBoard();
     }
 
     public GameStatus getStatus() {
@@ -61,10 +51,6 @@ public class GameModelImmutable implements Serializable {
 
     public boolean isGamePaused() {
         return gamePaused;
-    }
-
-    public String getErrorMessage() {
-        return errorMessage;
     }
 
     public String getCurrentPlayerNickname() {
@@ -96,10 +82,6 @@ public class GameModelImmutable implements Serializable {
     public LinkedList<PlayerIC> getPlayersConnected() {
         return players_connected;
     }
-
-//    public ChatIC getChat() {
-//        return chat;
-//    }
 
     public List<GameListener> getListeners() {
         return listeners;
@@ -138,5 +120,13 @@ public class GameModelImmutable implements Serializable {
 
     public PlayerIC getCurrentPlayerEntity() {
         return players_connected.peek();
+    }
+
+    public ChatIC getChat() {
+        return chat;
+    }
+
+    public Map<PlayerIC, Integer> getLeaderBoard() {
+        return leaderboard;
     }
 }

@@ -115,8 +115,6 @@ public interface GameControllerInterface extends Remote {
 
     void setError(String s);
 
-    void gameFlow() throws RemoteException, GameEndedException;
-
     GameStatus getStatus();
 
     void playerIsReadyToStart(String nickname);

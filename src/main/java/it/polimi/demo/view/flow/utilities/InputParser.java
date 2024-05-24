@@ -50,35 +50,34 @@ public class InputParser extends Thread {
      * Parses the data contained in the buffer
      */
     public void run() {
+
         String txt;
         while (!this.isInterrupted()) {
-
-            //I keep popping data from the buffer sync
-            //(so I wait myself if no data is available on the buffer)
+            // I pop the data from the buffer, if there is no data I wait
             try {
                 txt = bufferInput.popData();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
-            //I popped an input from the buffer
+            // I popped an input from the buffer
             if (p != null && txt.startsWith("/cs")) {
                 txt = txt.charAt(3) == ' ' ? txt.substring(4) : txt.substring(3);
-                if(txt.contains(" ")){
+                if (txt.contains(" ")){
                     String receiver = txt.substring(0, txt.indexOf(" "));
                     String msg = txt.substring(receiver.length() + 1);
                     gameFlow.sendMessage(new MessagePrivate(msg, p, receiver));
                 }
             } else if (p != null && txt.startsWith("/c")) {
-                //I send a message
+                // I send a message
                 txt = txt.charAt(2) == ' ' ? txt.substring(3) : txt.substring(2);
                 gameFlow.sendMessage(new Message(txt, p));
 
             } else if (txt.startsWith("/quit") || (txt.startsWith("/leave"))) {
                 assert p != null;
                 System.exit(1);
-                //gameFlow.leave(p.getNickname(), gameId);
-               // gameFlow.youLeft();
+                // gameFlow.leave(p.getNickname(), gameId);
+                // gameFlow.youLeft();
 
             } else {
                 //I didn't pop a message
