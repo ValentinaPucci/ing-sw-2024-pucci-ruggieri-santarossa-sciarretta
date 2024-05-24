@@ -29,7 +29,7 @@ public class GameModel implements GameModelInterface, Serializable {
 
     // the first list let us keep the order of players. It is immutable!!
     // aux_order_player.size() always >= players_connected.size()
-    private final List<Player> aux_order_players;
+    private List<Player> aux_order_players;
     // the second one is used as a queue and let us know which player
     // is connected (and actively playing).
     private LinkedList<Player> players_connected;
@@ -43,11 +43,10 @@ public class GameModel implements GameModelInterface, Serializable {
     private Chat chat;
     private Player first_finishing_player = null;
     private List<Player> winners;
-    private Map<Player, Integer> leaderboard;
+    private Map<PlayerIC, Integer> leaderboard;
     //private int current_player_index;
     private boolean is_ended = false;
     private boolean is_paused = false;
-    private String errorMessage;
 
     /**
      * Listener handler that handles the listeners
@@ -78,7 +77,7 @@ public class GameModel implements GameModelInterface, Serializable {
         gameId = gameID;
         status = GameStatus.WAIT;
         chat = new Chat();
-        winners = new ArrayList<>();
+        // winners = new ArrayList<>();
         leaderboard = new HashMap<>();
         listeners_handler = new ListenersHandler();
     }
@@ -196,9 +195,10 @@ public class GameModel implements GameModelInterface, Serializable {
      * Thus, this method is meant as an adder of new players, not as an adder of disconnected players.
      * Statical add.
      */
-    public void addPlayer(String nickname) {
+    public void addPlayer(Player p) {
 
         List<String> nicknames = this.getAllNicknames();
+        String nickname = p.getNickname();
 
         if (nicknames.contains(nickname)) {
             listeners_handler.notify_JoinUnableNicknameAlreadyIn(getPlayerEntity(nickname));
@@ -210,8 +210,9 @@ public class GameModel implements GameModelInterface, Serializable {
             throw new MaxPlayersLimitException();
         }
         else {
-            Player p = new Player(nickname);
             aux_order_players.add(p);
+            // todo: check if adding a player to players_connected (here) is correct
+            players_connected.add(p);
             listeners_handler.notify_playerJoined(this);
         }
     }
@@ -667,7 +668,7 @@ public class GameModel implements GameModelInterface, Serializable {
     }
 
     @Override
-    public Map<Player, Integer> getLeaderBoard() {
+    public Map<PlayerIC, Integer> getLeaderBoard() {
         return this.leaderboard;
     }
 
@@ -678,16 +679,6 @@ public class GameModel implements GameModelInterface, Serializable {
                 return p.getPersonalBoard();
         }
         return null;
-    }
-
-
-    /**
-     * Retrieves the leaderboard containing player indexes and their corresponding scores.
-     *
-     * @return The leaderboard map with player indexes as keys and scores as values.
-     */
-    public Map<Player, Integer> getLeaderboard() {
-        return this.leaderboard;
     }
 
     /**
@@ -792,11 +783,6 @@ public class GameModel implements GameModelInterface, Serializable {
                 })
                 .toList();
     }
-
-    public String getErrorMessage() {
-        return errorMessage;
-    }
-
 
     //TODO: create for GameDetails in MainController
 

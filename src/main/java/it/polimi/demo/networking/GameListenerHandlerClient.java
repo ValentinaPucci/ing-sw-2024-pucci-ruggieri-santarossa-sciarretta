@@ -20,7 +20,6 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
         this.flow = gui;
     }
 
-
     @Override
     public void starterCardPlaced(GameModelImmutable model, Orientation orientation) throws RemoteException {
         flow.starterCardPlaced(model, orientation);
@@ -106,7 +105,6 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     public void playerDisconnected(GameModelImmutable gameModel,String nick) throws RemoteException {
         flow.playerDisconnected(gameModel,nick);
     }
-
 
     @Override
     public void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {

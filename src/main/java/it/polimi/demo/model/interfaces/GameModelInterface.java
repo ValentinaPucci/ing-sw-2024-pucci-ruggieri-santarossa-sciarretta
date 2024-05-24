@@ -41,8 +41,6 @@ public interface GameModelInterface {
 
     List<PlayerDetails> getPlayersDetails();
 
-    String getErrorMessage();
-
     int getGameId();
 
     List<String> getAllNicknames();
@@ -65,7 +63,7 @@ public interface GameModelInterface {
 
     List<Player> getWinners();
 
-    Map<Player, Integer> getLeaderBoard();
+    Map<PlayerIC, Integer> getLeaderBoard();
 
     PersonalBoard getPersonalBoard(String myNickname);
 
@@ -79,5 +77,5 @@ public interface GameModelInterface {
 
     List<ResourceCard> getPlayerHand(String myNickname);
 
-
+    ChatIC getChat();
 }
