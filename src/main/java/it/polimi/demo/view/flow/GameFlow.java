@@ -87,7 +87,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     public GameFlow(ConnectionSelection connectionSelection) {
         //Invoked for starting with TUI
         switch (connectionSelection) {
-            // case SOCKET -> clientActions = new ClientSocket(this);
+            case SOCKET -> clientActions = new it.polimi.demonetworking.socket.client.ClientSocket(this);
             case RMI -> clientActions = new RMIClient(this);
         }
         ui = new TUI();
@@ -701,6 +701,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             //msg.setText("[PRIVATE]: " + msg.getText());
         }
     }
+
 
     /**
      * A player wanted to join a game but the nickname is already in

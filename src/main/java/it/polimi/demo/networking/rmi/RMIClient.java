@@ -44,7 +44,7 @@ public class RMIClient implements CommonClientActions {
      */
     private static GameListener modelInvokedEvents;
     /**
-     * The nickname associated to the client (!=null only when connected in a game)
+     * The nickname associated to the socket (!=null only when connected in a game)
      */
     private String nickname;
     /**
@@ -131,7 +131,7 @@ public class RMIClient implements CommonClientActions {
 
     /**
      * Send heartbeats to the RMI server
-     * If sending a message takes more than {@link DefaultValue#timeoutConnection_millis} millis, the client
+     * If sending a message takes more than {@link DefaultValue#timeoutConnection_millis} millis, the socket
      * will be considered no longer connected to the server
      */
     /*
@@ -251,7 +251,7 @@ public class RMIClient implements CommonClientActions {
     }
 
     /**
-     * Notify the server that a client is ready to start
+     * Notify the server that a socket is ready to start
      *
      * @throws RemoteException
      */

@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * This class is used to send the details of a specific game to the client.
+ * This class is used to send the details of a specific game to the socket.
  */
 public record GameDetails(int gameID,
                               List<PlayerDetails> playersInfo,
