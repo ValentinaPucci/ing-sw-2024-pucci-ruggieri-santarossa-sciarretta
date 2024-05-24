@@ -16,7 +16,6 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
 
-import static it.polimi.demo.listener.Listener.notifyListeners;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 public class GameController implements GameControllerInterface, Serializable, Runnable {
@@ -44,45 +43,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     public GameModelInterface getModel() {
         return (GameModelInterface) model;
-    }
-
-    //------------------------------------gameFlow-----------------------------------------------
-
-    // todo: reimplement the right conditions to pass from a status to another!
-    public void gameFlow() throws RemoteException, GameEndedException {
-        switch (model.getStatus()) {
-            case WAIT -> {
-                if (model.getNumPlayersToPlay() == getNumConnectedPlayers())
-                    model.setStatus(GameStatus.READY_TO_START);
-            }
-            case READY_TO_START -> {
-                model.setStatus(GameStatus.FIRST_ROUND);
-            }
-            case FIRST_ROUND -> {
-                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
-                    model.setStatus(GameStatus.RUNNING);
-            }
-            case RUNNING -> {
-                if (model.getPlayersConnected().getFirst().getCurrentPoints() >= 20) {
-                    // model.nextTurn();
-                    model.setStatus(GameStatus.SECOND_LAST_ROUND);
-                }
-            }
-            case SECOND_LAST_ROUND -> {
-                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname())) {
-                    // model.nextTurn();
-                    model.setStatus(GameStatus.LAST_ROUND);
-                }
-            }
-            case LAST_ROUND -> {
-                if (model.getPlayersConnected().getFirst().getNickname().equals(model.getBeginnerPlayer().getNickname()))
-                    model.setStatus(GameStatus.ENDED);
-            }
-            case ENDED -> {
-                model.calculateFinalScores();
-                model.getWinners();
-            }
-        }
     }
 
 
@@ -155,20 +115,20 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param listener
      */
    private void handleDisconnection(Heartbeat heartbeat, GameListener listener) {
-    try {
-        disconnectPlayer(getPlayerEntity(heartbeat.getNick()), listener);
-        printAsync("Disconnection of player: " + heartbeat.getNick() + " detected ");
+        try {
+            disconnectPlayer(getPlayerEntity(heartbeat.getNick()), listener);
+            printAsync("Disconnection of player: " + heartbeat.getNick() + " detected ");
 
-        // Now check
-        if (getNumConnectedPlayers() == 0) {
-            stopTimer();
-            MainController.getControllerInstance().deleteGame(getGameId());
+            // Now check
+            if (getNumConnectedPlayers() == 0) {
+                stopTimer();
+                MainController.getControllerInstance().deleteGame(getGameId());
+            }
+        } catch (RemoteException | GameEndedException e) {
+            throw new RuntimeException(e);
         }
-    } catch (RemoteException | GameEndedException e) {
-        throw new RuntimeException(e);
-    }
 
-    listeners_to_heartbeats.remove(listener);
+        listeners_to_heartbeats.remove(listener);
     }
 
     /**
@@ -309,7 +269,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public synchronized void leave(GameListener lis, String nick) throws RemoteException {
-        // removeListener(lis, model.getPlayerEntity(nick));
+        removeListener(lis, model.getPlayerEntity(nick));
         model.removePlayer(model.getPlayerEntity(nick));
     }
 
@@ -325,8 +285,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @throws PlayerAlreadyConnectedException when in the game there is already another Player with the same nickname
      * @throws MaxPlayersLimitException    when the game has already reached its full capability
      */
-    public void addPlayer(String nickname) throws PlayerAlreadyConnectedException, MaxPlayersLimitException {
-        this.model.addPlayer(nickname);
+    public void addPlayer(Player p) throws PlayerAlreadyConnectedException, MaxPlayersLimitException {
+        this.model.addPlayer(p);
     }
 
     /**
@@ -412,10 +372,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         System.out.println("Game " + this.model.getGameId() + " is starting...");
         extractFirstPlayerToPlay();
         model.initializeGame();
-        // WAIT --> READY_TO_START
-        gameFlow();
-        // READY_TO_START --> FIRST_ROUND
-        gameFlow();
     }
 
     //***********************************************************************************************
@@ -673,6 +629,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     //-------------------------------chat management----------------------------
+
     /**
      * Add a message to the chat list
      *
