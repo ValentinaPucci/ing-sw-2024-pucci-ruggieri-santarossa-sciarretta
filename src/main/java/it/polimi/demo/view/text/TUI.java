@@ -79,7 +79,7 @@ public class TUI extends UI {
     /**
      * Shows the game title
      */
-    public void show_titleMyShelfie() {
+    public void show_title() {
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()
@@ -157,7 +157,7 @@ public class TUI extends UI {
     @Override
     public void show_playerJoined(GameModelImmutable gameModel, String nick) {
         clearScreen();
-        show_titleMyShelfie();
+        show_title();
         printAsync(ansi().cursor(10, 0).a("GameID: [" + gameModel.getGameId().toString() + "]\n").fg(DEFAULT));
         System.out.flush();
         StringBuilder ris = new StringBuilder();
@@ -236,7 +236,7 @@ public class TUI extends UI {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        this.show_titleMyShelfie();
+        this.show_title();
     }
 
     /**
@@ -327,7 +327,7 @@ public class TUI extends UI {
     public void show_gameEnded(GameModelImmutable model) {
         clearScreen();
         resize();
-        show_titleMyShelfie();
+        show_title();
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()
@@ -378,7 +378,7 @@ public class TUI extends UI {
      */
     public void show_alwaysShowForAll(GameModelImmutable model) {
         this.clearScreen();
-        show_titleMyShelfie();
+        show_title();
         show_gameId(model);
         show_commonBoard(model);
         show_commonObjectives(model);
@@ -498,7 +498,7 @@ public class TUI extends UI {
     @Override
     public void show_gameStarted(GameModelImmutable model) {
         this.clearScreen();
-        this.show_titleMyShelfie();
+        this.show_title();
         this.show_allPlayers(model);
         this.show_alwaysShowForAll(model);
         this.show_gameId(model);
@@ -570,7 +570,7 @@ public class TUI extends UI {
     @Override
     public void show_menuOptions() {
         this.clearScreen();
-        this.show_titleMyShelfie();
+        this.show_title();
         printAsyncNoCursorReset(ansi().cursor(9, 0).a("""
                 > Select one option:
                 \t(c) Create a new Game
@@ -618,7 +618,7 @@ public class TUI extends UI {
     @Override
     public void show_creatingNewGameMsg(String nickname) {
         this.clearScreen();
-        this.show_titleMyShelfie();
+        this.show_title();
         printAsyncNoCursorReset("> Creating a new game...");
         this.nickname = nickname;
     }
@@ -631,7 +631,7 @@ public class TUI extends UI {
     @Override
     public void show_joiningFirstAvailableMsg(String nickname) {
         this.clearScreen();
-        this.show_titleMyShelfie();
+        this.show_title();
         printAsyncNoCursorReset("> Connecting to the first available game...");
         this.nickname = nickname;
     }
@@ -645,7 +645,7 @@ public class TUI extends UI {
     @Override
     public void show_joiningToGameIdMsg(int idGame, String nickname) {
         this.clearScreen();
-        this.show_titleMyShelfie();
+        this.show_title();
         printAsyncNoCursorReset("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
         this.nickname = nickname;
     }

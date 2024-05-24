@@ -1,4 +1,4 @@
-package it.polimi.demonetworking.socket.client;
+package it.polimi.demo.networking.socket.client;
 
 
 import it.polimi.demo.DefaultValues;

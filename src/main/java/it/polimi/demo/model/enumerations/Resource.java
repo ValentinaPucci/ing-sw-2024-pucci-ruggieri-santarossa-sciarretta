@@ -1,6 +1,8 @@
 package it.polimi.demo.model.enumerations;
 
-public enum Resource {
+import java.io.Serializable;
+
+public enum Resource implements Serializable {
     LEAF,
     MUSHROOM,
     BUTTERFLY,

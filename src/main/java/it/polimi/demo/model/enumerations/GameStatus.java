@@ -5,7 +5,7 @@ import java.io.Serializable;
 /**
  * This enum represents the game status
  */
-public enum GameStatus {
+public enum GameStatus implements Serializable {
     WAIT,
     READY_TO_START,
     FIRST_ROUND,

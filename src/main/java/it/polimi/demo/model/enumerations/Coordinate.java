@@ -1,6 +1,8 @@
 package it.polimi.demo.model.enumerations;
 
-public enum Coordinate {
+import java.io.Serializable;
+
+public enum Coordinate implements Serializable {
     NE,
     SE,
     SW,
