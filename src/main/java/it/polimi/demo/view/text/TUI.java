@@ -1,5 +1,8 @@
 package it.polimi.demo.view.text;
 
+import it.polimi.demo.view.GameDetails;
+import it.polimi.demo.view.PlayerDetails;
+import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.Player;
@@ -12,6 +15,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import static org.fusesource.jansi.Ansi.Color.*;
@@ -55,6 +59,8 @@ public class TUI extends UI {
         show_important_events();
     }
 
+    // ********************* aux ********************* //
+
     /**
      * Resizes the console
      */
@@ -67,19 +73,70 @@ public class TUI extends UI {
     }
 
     /**
-     * Shows all players' nicknames
-     *
-     * @param model
+     * Clears the console
      */
-    // todo: implement the right toString method in PlayerIC
-    public void show_allPlayers(GameModelImmutable model) {
-        printAsync("Current Players: \n" + model.getPlayersConnected().toString());
+    public void clearScreen() {
+        try {
+            Runtime.getRuntime().exec("clear");
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    /**
+     * Shows the publisher's name
+     */
+    @Override
+    public void show_publisher() {
+        this.resize();
+        clearScreen();
+        new PrintStream(System.out, true, System.console() != null
+                ? System.console().charset()
+                : Charset.defaultCharset()
+        ).println(ansi().cursor(1, 1).fg(YELLOW).a("""
+                                                                                                           \s
+                                                                                                           \s
+                  ,----..                                                                                  \s
+                 /   /   \\                                   ,--,                                          \s
+                |   :     :  __  ,-.                 ,---, ,--.'|    ,---.                                 \s
+                .   |  ;. /,' ,'/ /|             ,-+-. /  ||  |,    '   ,'\\                                \s
+                .   ; /--` '  | |' | ,--.--.    ,--.'|'   |`--'_   /   /   |                               \s
+                ;   | ;    |  |   ,'/       \\  |   |  ,"' |,' ,'| .   ; ,. :                               \s
+                |   : |    '  :  / .--.  .-. | |   | /  | |'  | | '   | |: :                               \s
+                .   | '___ |  | '   \\__\\/: . . |   | |  | ||  | : '   | .; :                               \s
+                '   ; : .'|;  : |   ," .--.; | |   | |  |/ '  : |_|   :    |                               \s
+                '   | '/  :|  , ;  /  /  ,.  | |   | |--'  |  | '.'\\   \\  /                                \s
+                |   :    /  ---'  ;  :   .'   \\|   |/      ;  :    ;`----'                                 \s
+                 \\   \\ .'         |  ,     .-./'---'       |  ,   /                                        \s
+                  `---`            `--`---'                 ---`-'                                         \s
+                  ,----..                                   ___                                            \s
+                 /   /   \\                                ,--.'|_    ,--,                                  \s
+                |   :     :  __  ,-.                      |  | :,' ,--.'|    ,---.        ,---,            \s
+                .   |  ;. /,' ,'/ /|                      :  : ' : |  |,    '   ,'\\   ,-+-. /  | .--.--.   \s
+                .   ; /--` '  | |' | ,---.     ,--.--.  .;__,'  /  `--'_   /   /   | ,--.'|'   |/  /    '  \s
+                ;   | ;    |  |   ,'/     \\   /       \\ |  |   |   ,' ,'| .   ; ,. :|   |  ,"' |  :  /`./  \s
+                |   : |    '  :  / /    /  | .--.  .-. |:__,'| :   '  | | '   | |: :|   | /  | |  :  ;_    \s
+                .   | '___ |  | ' .    ' / |  \\__\\/: . .  '  : |__ |  | : '   | .; :|   | |  | |\\  \\    `. \s
+                '   ; : .'|;  : | '   ;   /|  ," .--.; |  |  | '.'|'  : |_|   :    ||   | |  |/  `----.   \\\s
+                '   | '/  :|  , ; '   |  / | /  /  ,.  |  ;  :    ;|  | '.'\\   \\  / |   | |--'  /  /`--'  /\s
+                |   :    /  ---'  |   :    |;  :   .'   \\ |  ,   / ;  :    ;`----'  |   |/     '--'.     / \s
+                 \\   \\ .'          \\   \\  / |  ,     .-./  ---`-'  |  ,   /         '---'        `--'---'  \s
+                  `---`             `----'   `--`---'               ---`-'                                 \s
+                """).reset());
+
+        try {
+            Thread.sleep(DefaultValues.time_publisher_showing_seconds * 1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        this.show_titleMyShelfie();
     }
 
     /**
      * Shows the game title
      */
     public void show_titleMyShelfie() {
+        clearScreen();
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()
@@ -98,6 +155,105 @@ public class TUI extends UI {
                 ░▀░▀░▀░▀░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀
                 
                 """).reset());
+    }
+
+    /**
+     * Shows the last panel
+     *
+     * @param model where the game is ended
+     */
+    @Override
+    public void show_gameEnded(GameModelImmutable model) {
+        clearScreen();
+        resize();
+        show_titleMyShelfie();
+        new PrintStream(System.out, true, System.console() != null
+                ? System.console().charset()
+                : Charset.defaultCharset()
+        ).println(ansi().cursor(DefaultValues.row_nextTurn, 0).fg(GREEN).a("""
+
+                ░██████╗░░█████╗░███╗░░░███╗███████╗        ███████╗███╗░░██╗██████╗░███████╗██████╗░
+                ██╔════╝░██╔══██╗████╗░████║██╔════╝        ██╔════╝████╗░██║██╔══██╗██╔════╝██╔══██╗
+                ██║░░██╗░███████║██╔████╔██║█████╗░░        █████╗░░██╔██╗██║██║░░██║█████╗░░██║░░██║
+                ██║░░╚██╗██╔══██║██║╚██╔╝██║██╔══╝░░        ██╔══╝░░██║╚████║██║░░██║██╔══╝░░██║░░██║
+                ╚██████╔╝██║░░██║██║░╚═╝░██║███████╗        ███████╗██║░╚███║██████╔╝███████╗██████╔╝
+                ░╚═════╝░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚══════╝        ╚══════╝╚═╝░░╚══╝╚═════╝░╚══════╝╚═════╝░
+                                
+                """).fg(DEFAULT).reset());
+
+        new PrintStream(System.out, true, System.console() != null
+                ? System.console().charset()
+                : Charset.defaultCharset()
+        ).println(ansi().cursor(DefaultValues.row_nextTurn + 10, 0).bg(CYAN).a("""
+
+                █     █▀▀▀  █▀▀█  █▀▀▄  █▀▀▀  █▀▀█    █▀▀█  █▀▀▀█  █▀▀█  █▀▀█  █▀▀▄
+                █     █▀▀▀  █▄▄█  █  █  █▀▀▀  █▄▄▀    █▀▀▄  █   █  █▄▄█  █▄▄▀  █  █
+                █▄▄█  █▄▄▄  █  █  █▄▄▀  █▄▄▄  █  █    █▄▄█  █▄▄▄█  █  █  █  █  █▄▄
+                        
+                """).bg(DEFAULT).reset());
+
+
+        int i = 1;
+        int classif = 1;
+        StringBuilder ris = new StringBuilder();
+//        for (Map.Entry<PlayerIC, Integer> entry : model.getLeaderBoard().entrySet()) {
+//            printAsync("");
+//            ris.append(ansi().fg(WHITE).cursor(DefaultValues.row_leaderboard + i, DefaultValues.col_leaderboard)
+//                    .a("#" + classif + " "
+//                            + entry.getKey().getNickname() + ": "
+//                            + entry.getValue() + " points").fg(DEFAULT));
+//            i += 2;
+//            classif++;
+//        }
+
+        printAsync(ris);
+
+    }
+
+    // *********************** SHOW METHODS  *********************** //
+
+    /**
+     * Shows the list of games on the server only if the user has inserted a username.
+     * @param o array of strings representing the list of games on the server
+     */
+    public void show_gamesList(List<GameDetails> o) {
+
+        printAsyncNoCursorReset(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
+
+        if (!o.isEmpty()) {
+            System.out.println(ansi().fg(Ansi.Color.BLUE).a("List of games on the server:").reset());
+            System.out.println(ansi().fg(Ansi.Color.BLUE).a("ID:\tPlayers:").reset());
+
+            for (GameDetails gameDetails : o) {
+                StringBuilder string = new StringBuilder();
+                string.append(" ").append(gameDetails.gameID()).append("\t");
+                for (PlayerDetails playerInfo : gameDetails.playersInfo()) {
+                    if (playerInfo.isConnected())
+                        string.append(playerInfo.username()).append("\t");
+                    else
+                        string.append(ansi().fgBrightBlack().a(playerInfo.username()).reset()).append("\t");
+                }
+                if (gameDetails.isStarted()){
+                    string.append(ansi().fg(Ansi.Color.YELLOW).a("(STARTED)").reset());
+                } else if(gameDetails.isFull()){
+                    string.append(ansi().fg(Ansi.Color.RED).a("(FULL)").reset());
+                }
+
+                System.out.println(string);
+            }
+        } else {
+            System.out.println(ansi().fg(Ansi.Color.BLUE).a("There are no games on the server.").reset());
+        }
+    }
+
+    /**
+     * Shows all players' nicknames
+     *
+     * @param model
+     */
+    // todo: implement the right toString method in PlayerIC
+    public void show_allPlayers(GameModelImmutable model) {
+        printAsync("Current Players: \n" + model.getPlayersConnected().toString());
     }
 
     /**
@@ -162,6 +318,7 @@ public class TUI extends UI {
         System.out.flush();
         StringBuilder ris = new StringBuilder();
 
+        clearScreen();
         int i = 0;
         for (PlayerIC p : gameModel.getPlayersConnected()) {
             if (p.getReadyToStart()) {
@@ -173,6 +330,7 @@ public class TUI extends UI {
         }
         printAsyncNoCursorReset(ris);
 
+        clearScreen();
         for (PlayerIC p : gameModel.getPlayersConnected())
             if (!p.getReadyToStart() && p.getNickname().equals(nick))
                 printAsyncNoCursorReset(ansi().cursor(17, 0).fg(WHITE).a("> When you are ready to start, enter (y): \n"));
@@ -186,57 +344,6 @@ public class TUI extends UI {
     @Override
     protected void show_youReadyToStart(GameModelImmutable gameModel, String nicknameofyou) {
 
-    }
-
-    /**
-     * Shows the publisher's name
-     */
-    @Override
-    public void show_publisher() {
-        this.resize();
-
-
-        clearScreen();
-        new PrintStream(System.out, true, System.console() != null
-                ? System.console().charset()
-                : Charset.defaultCharset()
-        ).println(ansi().cursor(1, 1).fg(YELLOW).a("""
-                                                                                                           \s
-                                                                                                           \s
-                  ,----..                                                                                  \s
-                 /   /   \\                                   ,--,                                          \s
-                |   :     :  __  ,-.                 ,---, ,--.'|    ,---.                                 \s
-                .   |  ;. /,' ,'/ /|             ,-+-. /  ||  |,    '   ,'\\                                \s
-                .   ; /--` '  | |' | ,--.--.    ,--.'|'   |`--'_   /   /   |                               \s
-                ;   | ;    |  |   ,'/       \\  |   |  ,"' |,' ,'| .   ; ,. :                               \s
-                |   : |    '  :  / .--.  .-. | |   | /  | |'  | | '   | |: :                               \s
-                .   | '___ |  | '   \\__\\/: . . |   | |  | ||  | : '   | .; :                               \s
-                '   ; : .'|;  : |   ," .--.; | |   | |  |/ '  : |_|   :    |                               \s
-                '   | '/  :|  , ;  /  /  ,.  | |   | |--'  |  | '.'\\   \\  /                                \s
-                |   :    /  ---'  ;  :   .'   \\|   |/      ;  :    ;`----'                                 \s
-                 \\   \\ .'         |  ,     .-./'---'       |  ,   /                                        \s
-                  `---`            `--`---'                 ---`-'                                         \s
-                  ,----..                                   ___                                            \s
-                 /   /   \\                                ,--.'|_    ,--,                                  \s
-                |   :     :  __  ,-.                      |  | :,' ,--.'|    ,---.        ,---,            \s
-                .   |  ;. /,' ,'/ /|                      :  : ' : |  |,    '   ,'\\   ,-+-. /  | .--.--.   \s
-                .   ; /--` '  | |' | ,---.     ,--.--.  .;__,'  /  `--'_   /   /   | ,--.'|'   |/  /    '  \s
-                ;   | ;    |  |   ,'/     \\   /       \\ |  |   |   ,' ,'| .   ; ,. :|   |  ,"' |  :  /`./  \s
-                |   : |    '  :  / /    /  | .--.  .-. |:__,'| :   '  | | '   | |: :|   | /  | |  :  ;_    \s
-                .   | '___ |  | ' .    ' / |  \\__\\/: . .  '  : |__ |  | : '   | .; :|   | |  | |\\  \\    `. \s
-                '   ; : .'|;  : | '   ;   /|  ," .--.; |  |  | '.'|'  : |_|   :    ||   | |  |/  `----.   \\\s
-                '   | '/  :|  , ; '   |  / | /  /  ,.  |  ;  :    ;|  | '.'\\   \\  / |   | |--'  /  /`--'  /\s
-                |   :    /  ---'  |   :    |;  :   .'   \\ |  ,   / ;  :    ;`----'  |   |/     '--'.     / \s
-                 \\   \\ .'          \\   \\  / |  ,     .-./  ---`-'  |  ,   /         '---'        `--'---'  \s
-                  `---`             `----'   `--`---'               ---`-'                                 \s
-                """).reset());
-
-        try {
-            Thread.sleep(DefaultValues.time_publisher_showing_seconds * 1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        this.show_titleMyShelfie();
     }
 
     /**
@@ -255,17 +362,6 @@ public class TUI extends UI {
         printAsync(ris);
 
         printAsync(ansi().cursor(DefaultValues.row_input, 0));
-    }
-
-    /**
-     * Clears the console
-     */
-    public void clearScreen() {
-        try {
-            Runtime.getRuntime().exec("clear");
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
     }
 
     /**
@@ -313,62 +409,7 @@ public class TUI extends UI {
         String ris = ansi().fg(RED).cursor(11, 4).bold().a(msgToVisualize).fg(DEFAULT).boldOff() +
                 String.valueOf(ansi().fg(RED).cursor(12, 4).bold().a(" Try later or create a new game!").fg(DEFAULT).boldOff());
         ansi().fg(DEFAULT);
-
-
         printAsyncNoCursorReset(ris);
-    }
-
-    /**
-     * Shows the last panel
-     *
-     * @param model where the game is ended
-     */
-    @Override
-    public void show_gameEnded(GameModelImmutable model) {
-        clearScreen();
-        resize();
-        show_titleMyShelfie();
-        new PrintStream(System.out, true, System.console() != null
-                ? System.console().charset()
-                : Charset.defaultCharset()
-        ).println(ansi().cursor(DefaultValues.row_nextTurn, 0).fg(GREEN).a("""
-
-                ░██████╗░░█████╗░███╗░░░███╗███████╗        ███████╗███╗░░██╗██████╗░███████╗██████╗░
-                ██╔════╝░██╔══██╗████╗░████║██╔════╝        ██╔════╝████╗░██║██╔══██╗██╔════╝██╔══██╗
-                ██║░░██╗░███████║██╔████╔██║█████╗░░        █████╗░░██╔██╗██║██║░░██║█████╗░░██║░░██║
-                ██║░░╚██╗██╔══██║██║╚██╔╝██║██╔══╝░░        ██╔══╝░░██║╚████║██║░░██║██╔══╝░░██║░░██║
-                ╚██████╔╝██║░░██║██║░╚═╝░██║███████╗        ███████╗██║░╚███║██████╔╝███████╗██████╔╝
-                ░╚═════╝░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚══════╝        ╚══════╝╚═╝░░╚══╝╚═════╝░╚══════╝╚═════╝░
-                                
-                """).fg(DEFAULT).reset());
-
-        new PrintStream(System.out, true, System.console() != null
-                ? System.console().charset()
-                : Charset.defaultCharset()
-        ).println(ansi().cursor(DefaultValues.row_nextTurn + 10, 0).bg(CYAN).a("""
-
-                █     █▀▀▀  █▀▀█  █▀▀▄  █▀▀▀  █▀▀█    █▀▀█  █▀▀▀█  █▀▀█  █▀▀█  █▀▀▄
-                █     █▀▀▀  █▄▄█  █  █  █▀▀▀  █▄▄▀    █▀▀▄  █   █  █▄▄█  █▄▄▀  █  █
-                █▄▄█  █▄▄▄  █  █  █▄▄▀  █▄▄▄  █  █    █▄▄█  █▄▄▄█  █  █  █  █  █▄▄
-                        
-                """).bg(DEFAULT).reset());
-
-
-        int i = 1;
-        int classif = 1;
-        StringBuilder ris = new StringBuilder();
-        for (Map.Entry<PlayerIC, Integer> entry : model.getLeaderBoard().entrySet()) {
-            printAsync("");
-            ris.append(ansi().fg(WHITE).cursor(DefaultValues.row_leaderboard + i, DefaultValues.col_leaderboard)
-                    .a("#" + classif + " "
-                            + entry.getKey().getNickname() + ": "
-                            + entry.getValue() + " points").fg(DEFAULT));
-            i += 2;
-            classif++;
-        }
-
-        printAsync(ris);
-
     }
 
     /**
@@ -378,10 +419,10 @@ public class TUI extends UI {
      */
     public void show_alwaysShowForAll(GameModelImmutable model) {
         this.clearScreen();
-        show_titleMyShelfie();
-        show_gameId(model);
-        show_commonBoard(model);
-        show_commonObjectives(model);
+//        show_titleMyShelfie();
+//        show_gameId(model);
+//        show_commonBoard(model);
+//        show_commonObjectives(model);
         show_messages(model);
         show_important_events();
     }
@@ -499,9 +540,9 @@ public class TUI extends UI {
     public void show_gameStarted(GameModelImmutable model) {
         this.clearScreen();
         this.show_titleMyShelfie();
-        this.show_allPlayers(model);
+//        this.show_allPlayers(model);
         this.show_alwaysShowForAll(model);
-        this.show_gameId(model);
+//        this.show_gameId(model);
     }
 
     /**
