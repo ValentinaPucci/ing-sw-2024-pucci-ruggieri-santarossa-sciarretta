@@ -80,14 +80,14 @@ public interface CommonClientActions {
      * This method is called by the socket to get the list of players in the game.
      * @param orientation the orientation of the starter card
      */
-    void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException;
+    void placeStarterCard(Orientation orientation) throws IOException, GameEndedException, NotBoundException;
 
     /**
      * This method is called by the socket to choose a card.
      * @param which_card the index of the card the player wants to choose
      * @throws RemoteException if there is a network error
      */
-    void chooseCard(int which_card) throws RemoteException;
+    void chooseCard(int which_card) throws IOException;
 
     /**
      * This method is called by the socket to place a card
@@ -95,14 +95,14 @@ public interface CommonClientActions {
      * @param where_to_place_y the y coordinate of the cell where the player wants to place the card
      * @throws RemoteException if there is a network error
      */
-    void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException;
+    void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws IOException;
 
     /**
      * This method is called by the socket to draw a card.
      * @param index the index of the card the player wants to draw
      * @throws RemoteException if there is a network error
      */
-    void drawCard(int index) throws RemoteException, GameEndedException;
+    void drawCard(int index) throws IOException, GameEndedException;
 
     /**
      * Sends a message in chat

@@ -1,27 +1,30 @@
 package it.polimi.demonetworking.socket.client;
 
 
-import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.DefaultValues;
-import it.polimi.demo.model.enumerations.*;
+import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
+import it.polimi.demo.networking.GameListenerHandlerClient;
 import it.polimi.demo.networking.HeartbeatSender;
 import it.polimi.demo.networking.socket.client.gameControllerMessages.*;
-import it.polimi.demo.networking.socket.client.mainControllerMessages.*;
+import it.polimi.demo.networking.socket.client.mainControllerMessages.SocketClientMessageCreateGame;
+import it.polimi.demo.networking.socket.client.mainControllerMessages.SocketClientMessageJoinGame;
+import it.polimi.demo.networking.socket.client.mainControllerMessages.SocketClientMessageLeave;
+import it.polimi.demo.networking.socket.client.mainControllerMessages.SocketClientMessageReconnect;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage;
-
-import it.polimi.demo.networking.socket.client.SocketServerGenericMessage;
-
-import it.polimi.demo.networking.GameListenerHandlerClient;
 import it.polimi.demo.view.flow.CommonClientActions;
 import it.polimi.demo.view.flow.Flow;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-import static it.polimi.demo.networking.PrintAsync.*;
+import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
 
 public class ClientSocket extends Thread implements CommonClientActions {
 
@@ -205,27 +208,27 @@ public class ClientSocket extends Thread implements CommonClientActions {
     }
 
     @Override
-    public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
+    public void placeStarterCard(Orientation orientation) throws IOException, GameEndedException, NotBoundException {
         ob_out.writeObject(new SocketClientMessagePlaceStarterCard(orientation));
         finishSending();
 
     }
 
     @Override
-    public void chooseCard(int which_card) throws RemoteException {
+    public void chooseCard(int which_card) throws IOException {
         ob_out.writeObject(new SocketClientMessageChooseCard(which_card));
         finishSending();
 
     }
 
     @Override
-    public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException{
+    public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws IOException {
         ob_out.writeObject(new SocketClientMessagePlaceCard(where_to_place_x, where_to_place_y, orientation));
         finishSending();
     }
 
     @Override
-    public void drawCard(int index) throws RemoteException, GameEndedException {
+    public void drawCard(int index) throws IOException, GameEndedException {
         ob_out.writeObject(new SocketClientMessageDrawCard(index));
         finishSending();
     }
