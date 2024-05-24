@@ -212,7 +212,7 @@ public class GameModel implements GameModelInterface, Serializable {
         else {
             aux_order_players.add(p);
             // todo: check if adding a player to players_connected (here) is correct
-            players_connected.add(p);
+            // players_connected.offer(p);
             listeners_handler.notify_playerJoined(this);
         }
     }
