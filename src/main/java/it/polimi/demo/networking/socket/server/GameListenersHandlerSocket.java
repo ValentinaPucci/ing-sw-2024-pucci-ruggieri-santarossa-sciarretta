@@ -7,6 +7,7 @@ import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.*;
 
+
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -30,22 +31,38 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     }
 
     @Override
-    public void starterCardPlaced(GameModelImmutable model, Orientation orientation) throws RemoteException {
+    public void starterCardPlaced(GameModelImmutable gamemodel, Orientation orientation) throws RemoteException {
+        try {
+            //Else the object is not updated!!
+            out.writeObject(new msgStarterCardPlaced(gamemodel, orientation));
+            finishSending();
+        } catch (IOException e) {
+
+        }
 
     }
 
     @Override
     public void cardChosen(GameModelImmutable model, int which_card) throws RemoteException {
+        try {
+            //Else the object is not updated!!
+            out.writeObject(new msgCardChosen(model, which_card));
+            finishSending();
+        } catch (IOException e) {
 
-    }
-
-    @Override
-    public void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
+        }
 
     }
 
     @Override
     public void cardDrawn(GameModelImmutable model, int index) throws RemoteException {
+        try {
+            //Else the object is not updated!!
+            out.writeObject(new msgCardDrawn(model, index));
+            finishSending();
+        } catch (IOException e) {
+
+        }
 
     }
 
@@ -176,22 +193,6 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     }
 
     /**
-     * This method is used to write on the ObjectOutputStream the common cards are extracted
-     * @param gamemodel is the game model {@link GameModelImmutable}
-     * @throws RemoteException if the connection fails
-     */
-    @Override
-    public void commonCardsExtracted(GameModelImmutable gamemodel) throws RemoteException {
-        //System.out.println(card.getCommonType() +" common card extracted by socket");
-        try {
-            out.writeObject(new msgCommonCardsExtracted(gamemodel));
-            finishSending();
-        } catch (IOException e) {
-
-        }
-    }
-
-    /**
      * This method is used to write on the ObjectOutputStream the game started
      * @param gamemodel is the game model {@link GameModelImmutable}
      * @throws RemoteException if the connection fails
@@ -222,16 +223,6 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         }
     }
 
-    @Override
-    public void lastRound(GameModelImmutable gamemodel) throws RemoteException {
-
-    }
-
-    @Override
-    public void messageSent(GameModelImmutable gameModel, Message msg) throws RemoteException {
-
-    }
-
     /**
      * This method is used to write on the ObjectOutputStream that a message has been sent
      * @param gameModel is the game model {@link GameModelImmutable}
@@ -239,7 +230,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void sentMessage(GameModelImmutable gameModel, Message msg) throws RemoteException {
+    public void messageSent(GameModelImmutable gameModel, Message msg) throws RemoteException {
         try {
             out.writeObject(new msgSentMessage(gameModel, msg));
             finishSending();
@@ -248,53 +239,20 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         }
     }
 
-    /**
-     * This method is used to write on the ObjectOutputStream that a Tile has been grabbed
-     * @param gamemodel is the game model {@link GameModelImmutable}
-     * @throws RemoteException if the connection fails
-     */
+
     @Override
-    public void grabbedTile(GameModelImmutable gamemodel) throws RemoteException {
+    public void cardPlaced(GameModelImmutable gamemodel, int x, int y, Orientation orientation) throws RemoteException {
         try {
             //Else the object is not updated!!
-            out.writeObject(new msgGrabbedTile(gamemodel));
+            out.writeObject(new msgCardPlaced(gamemodel, x, y, orientation));
             finishSending();
         } catch (IOException e) {
 
         }
     }
 
-    /**
-     * This method is used to write on the ObjectOutputStream that a Tile has been grabbed but it is not correct
-     * @param gamemodel is the game model {@link GameModelImmutable}
-     * @throws RemoteException if the connection fails
-     */
-    @Override
-    public void grabbedTileNotCorrect(GameModelImmutable gamemodel) throws RemoteException {
-        try {
-            out.writeObject(new msgGrabbedTileNotCorrect(gamemodel));
-            finishSending();
-        } catch (IOException e) {
+   //TODO: Maybe add message for placed card in wrong position.
 
-        }
-    }
-
-    /**
-     * This method is used to write on the ObjectOutputStream that a Tile has been positioned
-     * @param gamemodel is the game model {@link GameModelImmutable}
-     * @param type is the type of the tile {@link TileType}
-     * @param column is the column where the tile has been positioned
-     * @throws RemoteException if the connection fails
-     */
-    @Override
-    public void positionedTile(GameModelImmutable gamemodel, TileType type, int column) throws RemoteException {
-        try {
-            out.writeObject(new msgPositionedTile(gamemodel, type, column));
-            finishSending();
-        } catch (IOException e) {
-
-        }
-    }
 
     /**
      * This method is used to write on the ObjectOutputStream that the next turn is started
@@ -311,22 +269,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         }
     }
 
-    /**
-     * This method is used to write on the ObjectOutputStream that the player has added points
-     * @param p is the player that has added the points
-     * @param point is the number of points that have been added
-     * @param gamemodel is the game model {@link GameModelImmutable}
-     * @throws RemoteException if the connection fails
-     */
-    @Override
-    public void addedPoint(Player p, Point point, GameModelImmutable gamemodel) throws RemoteException {
-        try {
-            out.writeObject(new msgAddedPoint(p, point,gamemodel));
-            finishSending();
-        } catch (IOException e) {
 
-        }
-    }
 
     /**
      * This method is used to write on the ObjectOutputStream that a player has disconnected
@@ -344,21 +287,6 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         }
     }
 
-    /**
-     * This method is used to write on the ObjectOutputStream that a column is too small
-     * @param gameModel is the game model {@link GameModelImmutable}
-     * @param column is the column that is too small
-     * @throws RemoteException if the connection fails
-     */
-    @Override
-    public void columnShelfTooSmall(GameModelImmutable gameModel, int column) throws RemoteException {
-        try {
-            out.writeObject(new msgColumnShelfTooSmall(gameModel,column));
-            finishSending();
-        } catch (IOException e) {
-
-        }
-    }
 
     /**
      * This method is used to write on the ObjectOutputStream that only one player is connected
@@ -382,7 +310,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void lastCircle(GameModelImmutable gamemodel) throws RemoteException {
+    public void lastRound(GameModelImmutable gamemodel) throws RemoteException {
         try {
             out.writeObject(new msgLastRound(gamemodel));
             finishSending();

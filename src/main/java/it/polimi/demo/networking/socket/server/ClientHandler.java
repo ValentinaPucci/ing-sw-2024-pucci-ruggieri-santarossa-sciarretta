@@ -9,10 +9,11 @@ import java.rmi.RemoteException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import it.polimi.demo.controller.MainController;
+import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.GameListenerHandlerClient;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import
 
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
@@ -75,11 +76,6 @@ public class ClientHandler extends Thread {
         this.interrupt();
     }
 
-    /**
-     * Receive all the actions sent by the player, execute them on the specific controller required
-     * It detects client network disconnections by catching Exceptions
-     * {@link MainController} or {@link GameControllerInterface}
-     */
     @Override
     public void run() {
         var th = new Thread(this::runGameLogic);
@@ -95,7 +91,7 @@ public class ClientHandler extends Thread {
                         //it's a heartbeat message I handle it as a "special message"
                         if (temp.isHeartbeat() && !temp.isMessageForMainController()) {
                             if (gameController != null) {
-                                gameController.heartbeat(temp.getNick(), gameListenersHandlerSocket);
+                                gameController.addPing(temp.getNick(), gameListenersHandlerSocket);
                             }
                         } else {
                             processingQueue.add(temp);
@@ -121,7 +117,7 @@ public class ClientHandler extends Thread {
                 temp = processingQueue.take();
 
                 if (temp.isMessageForMainController()) {
-                    gameController = temp.execute(gameListenersHandlerSocket, MainController.getInstance());
+                    gameController = temp.execute(gameListenersHandlerSocket, MainController.getControllerInstance());
                     nick = gameController != null ? temp.getNick() : null;
 
                 } else if (!temp.isHeartbeat()) {
@@ -130,6 +126,8 @@ public class ClientHandler extends Thread {
             }
         } catch (RemoteException | GameEndedException e) {
             throw new RuntimeException(e);
-        } catch (InterruptedException ignored) {}
+        } catch (InterruptedException ignored) {
+
+        }
     }
 }
