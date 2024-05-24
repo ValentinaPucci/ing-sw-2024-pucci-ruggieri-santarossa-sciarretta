@@ -17,8 +17,8 @@ public class HeartbeatSender extends Thread {
     private CommonClientActions server;
 
     public HeartbeatSender(Flow flow, CommonClientActions server) {
-        this.flow=flow;
-        this.server=server;
+        this.flow = flow;
+        this.server = server;
     }
 
 

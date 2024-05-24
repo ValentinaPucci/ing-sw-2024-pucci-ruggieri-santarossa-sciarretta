@@ -25,7 +25,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     private GameModel model;
 
-    private Map<GameListener, Heartbeat> listeners_to_heartbeats = new HashMap<>();
+    private Map<GameListener, Heartbeat> listeners_to_heartbeats;
 
     /**
      * A random object for implementing pseudo-random choice
@@ -39,10 +39,12 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new GameModel(gameID, numberOfPlayers, player);
+        listeners_to_heartbeats = new HashMap<>();
+        new Thread(this).start();
     }
 
     public GameModelInterface getModel() {
-        return (GameModelInterface) model;
+        return model;
     }
 
 
@@ -60,8 +62,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
                     model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
                     model.getStatus().equals(GameStatus.WAIT)) {
                 checkForDisconnections();
-                pauseThread();
             }
+            pauseThread();
         }
     }
 
@@ -79,7 +81,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     /**
      * Check if a player is disconnected by checking the heartbeat freshness, if it is expired, the player is disconnected
-     * and handleDisconecction will deal with it.
+     * and handleDisconnection will deal with it.
      */
     private void checkForDisconnections() {
         synchronized (listeners_to_heartbeats) {
@@ -601,15 +603,15 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param p entity of the player
      */
     public void addListener(GameListener l, Player p) {
-
         model.addListener(l);
-        Optional.ofNullable(model.getListeners()).ifPresent(listeners ->
-                listeners.forEach(p::addListener)
-        );
-
-        getPlayers().stream()
-                .filter(otherPlayer -> !otherPlayer.equals(p))
-                .forEach(otherPlayer -> otherPlayer.addListener(l));
+        for (GameListener othersListener : model.getListeners()) {
+            p.addListener(othersListener);
+        }
+        for (Player otherPlayer : model.getAllPlayers()) {
+            if (!otherPlayer.equals(p)) {
+                otherPlayer.addListener(l);
+            }
+        }
     }
 
     /**
