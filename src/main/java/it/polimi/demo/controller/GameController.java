@@ -156,7 +156,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * If only one player is connected, a timer of  will be started
      *
      * @param p        the player
-     * @param listOfClient the listener of the client
+     * @param listOfClient the listener of the socket
      * @throws RemoteException if there is a connection error (RMI)
      */
     @Override
@@ -183,7 +183,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
                     model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
                     model.getStatus().equals(GameStatus.LAST_ROUND)) &&
                     model.getPlayersConnected().size() == 1) {
-                // Starting a th for waiting until reconnection at least of 1 client to keep playing
+                // Starting a th for waiting until reconnection at least of 1 socket to keep playing
                 if (reconnection_thread == null) {
                     startReconnectionTimer();
                     printAsync("Starting timer for reconnection waiting: "
