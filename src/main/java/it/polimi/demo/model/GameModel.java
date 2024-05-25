@@ -212,7 +212,7 @@ public class GameModel implements GameModelInterface, Serializable {
         else {
             aux_order_players.add(p);
             // todo: check if adding a player to players_connected (here) is correct
-            players_connected.add(p);
+            // players_connected.offer(p);
             listeners_handler.notify_playerJoined(this);
         }
     }
@@ -538,7 +538,7 @@ public class GameModel implements GameModelInterface, Serializable {
     }
 
     /**
-     * Draw a card based on the provided index on the board (by the client)
+     * Draw a card based on the provided index on the board (by the socket)
      * @param index The index indicating which card to draw:
      *              1: Resource Deck
      *              2: First Resource Card on the table

@@ -12,6 +12,7 @@ import it.polimi.demo.view.flow.utilities.events.EventElement;
 import it.polimi.demo.view.flow.utilities.events.EventList;
 import it.polimi.demo.view.flow.utilities.events.EventType;
 import it.polimi.demo.view.text.TUI;
+import org.fusesource.jansi.Ansi;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -21,6 +22,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Objects;
 
+import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static it.polimi.demo.view.flow.utilities.events.EventType.*;
 
 /**
@@ -87,7 +89,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     public GameFlow(ConnectionSelection connectionSelection) {
         //Invoked for starting with TUI
         switch (connectionSelection) {
-            // case SOCKET -> clientActions = new ClientSocket(this);
+            case SOCKET -> clientActions = new it.polimi.demonetworking.socket.client.ClientSocket(this);
             case RMI -> clientActions = new RMIClient(this);
         }
         ui = new TUI();
@@ -389,6 +391,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             }
 
         } while (num_of_players == null);
+        ui.show_chosenNumOfPLayers(num_of_players);
         return num_of_players;
     }
 
@@ -444,6 +447,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     private Integer askGameId() {
         String temp;
         Integer gameId = null;
+        // ui.show_gamesList();
         do {
             ui.show_inputGameIdMsg();
             try {
@@ -701,6 +705,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             //msg.setText("[PRIVATE]: " + msg.getText());
         }
     }
+
 
     /**
      * A player wanted to join a game but the nickname is already in

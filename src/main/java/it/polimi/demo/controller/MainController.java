@@ -84,6 +84,9 @@ public class MainController implements MainControllerInterface, Serializable {
 
         Player player = new Player(nickname);
         GameController game = new GameController(game_id, num_of_players, player);
+        // Here we add the player to the 'statical' list of players
+        game.addPlayer(player);
+        game.setPlayerAsConnected(player);
         game.addListener(listener, player);
 
         games.put(game_id, game);
@@ -91,10 +94,6 @@ public class MainController implements MainControllerInterface, Serializable {
 
         printAsync("\t>Player:\" " + nickname + " \"" + " created game " + game_id);
         printRunningGames();
-
-        // Here we add the player to the 'statical' list of players
-        game.addPlayer(player);
-        // game.setPlayerAsConnected(player);
 
         return game;
     }
