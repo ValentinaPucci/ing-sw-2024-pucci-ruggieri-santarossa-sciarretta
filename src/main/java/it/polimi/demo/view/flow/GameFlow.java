@@ -12,6 +12,7 @@ import it.polimi.demo.view.flow.utilities.events.EventElement;
 import it.polimi.demo.view.flow.utilities.events.EventList;
 import it.polimi.demo.view.flow.utilities.events.EventType;
 import it.polimi.demo.view.text.TUI;
+//import it.polimi.demo.networking.socket.client;
 import org.fusesource.jansi.Ansi;
 
 import java.io.IOException;
@@ -156,6 +157,13 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                                 throw new RuntimeException(e);
                             }
                         }
+                        case FIRST_ROUND -> {
+                            try {
+                                statusFirstRound(event);
+                            } catch (IOException | InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                         case RUNNING, LAST_ROUND -> {
                             try {
                                 statusRunning(event);
@@ -241,6 +249,13 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 }
             }
         }
+    }
+
+    private void statusFirstRound(EventElement event) throws IOException, InterruptedException {
+
+//        switch (event.getType()) {
+//
+//        }
     }
 
     /**
@@ -527,7 +542,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      */
     @Override
     public void reconnect(String nick, int idGame) {
-        //System.out.println("> You have selected to join to Game with id: '" + idGame + "', trying to reconnect");
         if (idGame != -1) {
             ui.show_joiningToGameIdMsg(idGame, nick);
             try {
@@ -764,6 +778,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      */
     @Override
     public void gameStarted(GameModelImmutable gameModel) {
+        ui.addImportantEvent("All players are connected, the game will start soon!");
         events.add(gameModel, EventType.GAME_STARTED);
     }
 
