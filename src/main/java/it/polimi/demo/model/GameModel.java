@@ -24,6 +24,8 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.demo.networking.PrintAsync.printAsync;
+
 
 public class GameModel implements GameModelInterface, Serializable {
 
@@ -80,6 +82,7 @@ public class GameModel implements GameModelInterface, Serializable {
         // winners = new ArrayList<>();
         leaderboard = new HashMap<>();
         listeners_handler = new ListenersHandler();
+        printAsync("listeners_handler created at time " + System.currentTimeMillis());
     }
 
 
@@ -140,15 +143,20 @@ public class GameModel implements GameModelInterface, Serializable {
      */
     public void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
+        printAsync("listeners_handler used for the first time at time " + System.currentTimeMillis());
+        listeners_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
+        if (arePlayersReadyToStartAndEnough()) {
+            setStatus(GameStatus.FIRST_ROUND);
+        }
     }
 
     /**
      * @return true if there are enough players to start, and if every one of them is ready
      */
     public boolean arePlayersReadyToStartAndEnough() {
-        List<Player> p = aux_order_players.stream().filter(Player::getReadyToStart).toList();
+        List<Player> p = players_connected.stream().filter(Player::getReadyToStart).toList();
         // If every player is ready, the game starts
-        return p.containsAll(aux_order_players) && p.size() == num_required_players_to_start;
+        return p.containsAll(players_connected) && p.size() == num_required_players_to_start;
     }
 
     /**
@@ -212,7 +220,7 @@ public class GameModel implements GameModelInterface, Serializable {
         else {
             aux_order_players.add(p);
             // todo: check if adding a player to players_connected (here) is correct
-            // players_connected.offer(p);
+            players_connected.offer(p);
             listeners_handler.notify_playerJoined(this);
         }
     }
@@ -296,7 +304,6 @@ public class GameModel implements GameModelInterface, Serializable {
         if (aux_order_players.contains(p) && !players_connected.contains(p)) {
             // Here we bypass the question 'are you ready to start?'
             p.setAsReadyToStart();
-            players_connected.offer(p);
         }
         else {
             throw new IllegalArgumentException("Player not in the game!");
@@ -395,6 +402,9 @@ public class GameModel implements GameModelInterface, Serializable {
         this.status = status;
 
         switch (status) {
+            case FIRST_ROUND -> {
+                listeners_handler.notify_GameStarted(this);
+            }
             case RUNNING -> {
                 listeners_handler.notify_GameStarted(this);
                 listeners_handler.notify_nextTurn(this);

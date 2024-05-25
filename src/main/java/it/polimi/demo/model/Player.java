@@ -26,7 +26,7 @@ public class Player implements PlayerIC, Serializable {
     private ResourceCard chosen_card;
     private int score_board_position;
     private int final_score;
-    private List<GameListener> listeners;
+    private transient List<GameListener> listeners;
     private boolean is_connected;
     private boolean is_ready_to_start;
 
@@ -157,17 +157,14 @@ public class Player implements PlayerIC, Serializable {
         return new ArrayList<>(card_hand);
     }
 
-    @Override
     public void addListener(GameListener obj) {
         listeners.add(obj);
     }
 
-    @Override
     public void removeListener(GameListener obj) {
         listeners.remove(obj);
     }
 
-    @Override
     public List<GameListener> getListeners() {
         return listeners;
     }

@@ -116,7 +116,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param heartbeat
      * @param listener
      */
-   private void handleDisconnection(Heartbeat heartbeat, GameListener listener) {
+    private void handleDisconnection(Heartbeat heartbeat, GameListener listener) {
         try {
             disconnectPlayer(getPlayerEntity(heartbeat.getNick()), listener);
             printAsync("Disconnection of player: " + heartbeat.getNick() + " detected ");
@@ -607,7 +607,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         for (GameListener othersListener : model.getListeners()) {
             p.addListener(othersListener);
         }
-        for (Player otherPlayer : model.getAllPlayers()) {
+        for (Player otherPlayer : model.getPlayersConnected()) {
             if (!otherPlayer.equals(p)) {
                 otherPlayer.addListener(l);
             }

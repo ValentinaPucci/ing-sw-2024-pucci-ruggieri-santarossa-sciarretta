@@ -24,7 +24,7 @@ public class GameModelImmutable implements Serializable {
     //private final Map<PlayerIC, Integer> leaderboard;
     private final ChatIC chat;
 
-    public GameModelImmutable(GameModelInterface model) {
+    public GameModelImmutable(GameModel model) {
         this.gameId = model.getGameId();
         this.aux_order_players = new ArrayList<>(model.getAllPlayers());
         this.players_connected = new LinkedList<>(model.getPlayersConnected());
@@ -108,4 +108,8 @@ public class GameModelImmutable implements Serializable {
 //    public Map<PlayerIC, Integer> getLeaderBoard() {
 //        return leaderboard;
 //    }
+
+    public Integer getNumRequiredPlayersToStart() {
+        return num_required_players_to_start;
+    }
 }
