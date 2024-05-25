@@ -89,6 +89,7 @@ public class MainController implements MainControllerInterface, Serializable {
         game.addPlayer(player);
 
         games.put(game_id, game);
+        System.out.println(games.get(game_id).getStatus());
         games.get(game_id).setNumPlayersToPlay(num_of_players);
 
         printAsync("\t>Player:\" " + nickname + " \"" + " created game " + game_id);

@@ -1,6 +1,8 @@
 package it.polimi.demo.model.enumerations;
 
-public enum Orientation {
+import java.io.Serializable;
+
+public enum Orientation implements Serializable {
     FRONT,
     BACK
 }

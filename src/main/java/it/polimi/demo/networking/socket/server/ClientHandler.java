@@ -126,7 +126,6 @@ public class ClientHandler extends Thread {
         } catch (RemoteException | GameEndedException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException ignored) {
-
         }
     }
 }
