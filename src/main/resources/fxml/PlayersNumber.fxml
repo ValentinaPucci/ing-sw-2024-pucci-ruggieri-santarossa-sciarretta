@@ -22,7 +22,7 @@
             <Font name="Luminari" size="38.0" />
          </font>
       </Label>
-      <Button fx:id="insertNickname" layoutX="73.0" layoutY="221.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onMouseClicked="#GoToLobby" prefHeight="83.0" prefWidth="114.0" text="2" textFill="#4d0202" textOverrun="LEADING_ELLIPSIS">
+      <Button fx:id="twoPlayers" layoutX="73.0" layoutY="221.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onMouseClicked="#GoToLobby" prefHeight="83.0" prefWidth="114.0" text="2" textFill="#4d0202" textOverrun="LEADING_ELLIPSIS">
          <font>
             <Font name="Luminari" size="36.0" />
          </font>
@@ -38,7 +38,7 @@
             <Image url="@/images/logo.png" />
          </image>
       </ImageView>
-      <Button fx:id="insertNickname1" layoutX="415.0" layoutY="221.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onMouseClicked="#GoToLobby" prefHeight="83.0" prefWidth="114.0" text="4" textFill="#4d0202" textOverrun="LEADING_ELLIPSIS">
+      <Button fx:id="fourPlayers" layoutX="415.0" layoutY="221.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onMouseClicked="#GoToLobby" prefHeight="83.0" prefWidth="114.0" text="4" textFill="#4d0202" textOverrun="LEADING_ELLIPSIS">
          <font>
             <Font name="Luminari" size="36.0" />
          </font>
@@ -46,7 +46,7 @@
             <ColorAdjust hue="0.17" saturation="0.3" />
          </effect>
       </Button>
-      <Button fx:id="insertNickname2" layoutX="244.0" layoutY="221.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onMouseClicked="#GoToLobby" prefHeight="83.0" prefWidth="114.0" text="3" textFill="#4d0202" textOverrun="LEADING_ELLIPSIS">
+      <Button fx:id="threePlayers" layoutX="244.0" layoutY="221.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onMouseClicked="#GoToLobby" prefHeight="83.0" prefWidth="114.0" text="3" textFill="#4d0202" textOverrun="LEADING_ELLIPSIS">
          <font>
             <Font name="Luminari" size="36.0" />
          </font>
