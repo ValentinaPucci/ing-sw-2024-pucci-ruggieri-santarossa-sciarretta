@@ -209,15 +209,18 @@ public class GameModel implements GameModelInterface, Serializable {
         String nickname = p.getNickname();
 
         if (nicknames.contains(nickname)) {
+            System.out.println("if");
             listeners_handler.notify_JoinUnableNicknameAlreadyIn(getPlayerEntity(nickname));
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() >= num_required_players_to_start ||
                 aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
+            System.out.println("else if");
             listeners_handler.notify_JoinUnableGameFull(getPlayerEntity(nickname), this);
             throw new MaxPlayersLimitException();
         }
         else {
+            System.out.println("else");
             aux_order_players.add(p);
             // todo: check if adding a player to players_connected (here) is correct
             players_connected.offer(p);
