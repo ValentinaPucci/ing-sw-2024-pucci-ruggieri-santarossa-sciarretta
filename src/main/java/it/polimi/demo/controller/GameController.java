@@ -78,7 +78,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         }
     }
     // -------------------------------------------------------
-
     /**
      * Check if a player is disconnected by checking the heartbeat freshness, if it is expired, the player is disconnected
      * and handleDisconnection will deal with it.
@@ -88,6 +87,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
             for (Map.Entry<GameListener, Heartbeat> entry : listeners_to_heartbeats.entrySet()) {
                 GameListener listener = entry.getKey();
                 Heartbeat heartbeat = entry.getValue();
+                System.out.println(heartbeat.getNick() + " " + heartbeat.getPing());
 
                 if (isHeartbeatExpired(heartbeat)) {
                     handleDisconnection(heartbeat, listener);
@@ -118,6 +118,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     private void handleDisconnection(Heartbeat heartbeat, GameListener listener) {
         try {
+            // Qui non va, ni kname null
             disconnectPlayer(getPlayerEntity(heartbeat.getNick()), listener);
             printAsync("Disconnection of player: " + heartbeat.getNick() + " detected ");
 
@@ -147,6 +148,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     @Override
     public synchronized void addPing(String nickname, GameListener me) {
         synchronized (listeners_to_heartbeats) {
+            System.out.println("Adding ping for: " + nickname);
             listeners_to_heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), nickname));
         }
     }
@@ -315,16 +317,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * Return the entity of the player associated with the nickname @param
-     *
-     * @param nick the nickname of the player
-     * @return the player by nickname @param
-     */
-    public Player getPlayer(String nick) {
-        return model.getPlayerEntity(nick);
-    }
-
-    /**
      * Return the entity of the player who is playing (it's his turn)
      *
      * @return the player who is playing the turn
@@ -435,6 +427,9 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     @Override
     public void playerIsReadyToStart(String nickname) {
+        printAsync("CIAOOOOO");
+        System.out.println(model.getAllPlayers());
+        System.out.println("--->" + nickname);
         model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
     }
 

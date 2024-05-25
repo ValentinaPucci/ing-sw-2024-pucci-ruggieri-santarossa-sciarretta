@@ -20,6 +20,7 @@ import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.model.interfaces.GameModelInterface;
 import it.polimi.demo.model.interfaces.PlayerIC;
 
+import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,7 +54,7 @@ public class GameModel implements GameModelInterface, Serializable {
     /**
      * Listener handler that handles the listeners
      */
-    private transient ListenersHandler listeners_handler;
+    private ListenersHandler listeners_handler;
 
     public GameModel() {
         aux_order_players = new ArrayList<>();
@@ -143,7 +144,7 @@ public class GameModel implements GameModelInterface, Serializable {
      */
     public void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        printAsync("listeners_handler used for the first time at time " + System.currentTimeMillis());
+
         listeners_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
         if (arePlayersReadyToStartAndEnough()) {
             setStatus(GameStatus.FIRST_ROUND);
@@ -164,10 +165,16 @@ public class GameModel implements GameModelInterface, Serializable {
      * @return player with the given nickname, or null if not found
      */
     public Player getPlayerEntity(String nick) {
-        return aux_order_players.stream()
-                .filter(x -> x.getNickname().equals(nick))
-                .findFirst()
-                .orElse(null);
+        for (Player player : aux_order_players) {
+            System.out.println("Player entity: "+player.getNickname());
+            // Nickname param null
+            System.out.println("Nickname param: "+ nick);
+            if (player.getNickname().equals(nick)) {
+                System.out.println("Found");
+                return player;
+            }
+        }
+        return null;
     }
 
     public List<Player> getAux_order_players() {

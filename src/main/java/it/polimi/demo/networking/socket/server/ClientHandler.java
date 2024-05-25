@@ -85,12 +85,13 @@ public class ClientHandler extends Thread {
             SocketClientGenericMessage temp;
             while (!this.isInterrupted()) {
                 try {
+                    // Non scrive il messaggio, il nickname è a null;
                     temp = (SocketClientGenericMessage) in.readObject();
-
                     try {
                         //it's a heartbeat message I handle it as a "special message"
                         if (temp.isHeartbeat() && !temp.isMessageForMainController()) {
                             if (gameController != null) {
+                                System.out.println("Temp: "+temp.getNick());
                                 gameController.addPing(temp.getNick(), gameListenersHandlerSocket);
                             }
                         } else {

@@ -37,7 +37,6 @@ public class SocketClientMessageCreateGame extends SocketClientGenericMessage im
         return mainController.createGame(lis, nick, num_players);
     }
 
-
     /**
      * Method to execute the corresponding action for the message.
      * @param mainController the game controller interface

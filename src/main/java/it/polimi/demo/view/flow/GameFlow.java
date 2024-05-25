@@ -253,9 +253,15 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
     private void statusFirstRound(EventElement event) throws IOException, InterruptedException {
 
-//        switch (event.getType()) {
-//
-//        }
+        switch (event.getType()) {
+            case GAME_STARTED -> {
+                ui.show_gameStarted(event.getModel());
+
+                this.inputParser.setPlayer(event.getModel().getPlayerEntity(nickname));
+                this.inputParser.setIdGame(event.getModel().getGameId());
+
+            }
+        }
     }
 
     /**
