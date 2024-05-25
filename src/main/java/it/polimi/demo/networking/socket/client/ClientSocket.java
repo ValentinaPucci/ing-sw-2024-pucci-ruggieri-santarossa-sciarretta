@@ -1,4 +1,4 @@
-package it.polimi.demonetworking.socket.client;
+package it.polimi.demo.networking.socket.client;
 
 
 import it.polimi.demo.DefaultValues;
@@ -72,7 +72,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
     public void run() {
         while (true) {
             try {
-                SocketServerGenericMessage msg = (SocketServerGenericMessage) ob_in.readObject();
+                it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage msg = (SocketServerGenericMessage) ob_in.readObject();
                 msg.execute(modelInvokedEvents);
 
             } catch (IOException | ClassNotFoundException | InterruptedException e) {

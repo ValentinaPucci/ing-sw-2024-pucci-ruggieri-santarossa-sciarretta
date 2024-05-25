@@ -257,6 +257,7 @@ public class RMIClient implements CommonClientActions {
      */
     @Override
     public void setAsReady() throws RemoteException {
+
         if (gameController != null) {
             gameController.playerIsReadyToStart(nickname);
         }

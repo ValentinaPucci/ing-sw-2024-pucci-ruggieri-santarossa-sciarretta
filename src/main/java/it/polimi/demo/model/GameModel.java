@@ -143,7 +143,7 @@ public class GameModel implements GameModelInterface, Serializable {
      */
     public void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        printAsync("listeners_handler used for the first time at time " + System.currentTimeMillis());
+        printAsync("listeners_handler used for the second time at time " + System.currentTimeMillis());
         listeners_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
         if (arePlayersReadyToStartAndEnough()) {
             setStatus(GameStatus.FIRST_ROUND);
@@ -222,6 +222,7 @@ public class GameModel implements GameModelInterface, Serializable {
             // todo: check if adding a player to players_connected (here) is correct
             players_connected.offer(p);
             listeners_handler.notify_playerJoined(this);
+            printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
         }
     }
 
@@ -818,7 +819,10 @@ public class GameModel implements GameModelInterface, Serializable {
      * @param obj adds the listener to the list
      */
     public void addListener(GameListener obj) {
+        printAsync("listeners_handler used for the first time at time " + System.currentTimeMillis());
+        printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
         listeners_handler.addListener(obj);
+        printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
     }
 
     /**

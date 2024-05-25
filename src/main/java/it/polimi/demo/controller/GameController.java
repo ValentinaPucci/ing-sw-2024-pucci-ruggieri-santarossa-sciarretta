@@ -40,7 +40,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new GameModel(gameID, numberOfPlayers, player);
         listeners_to_heartbeats = new HashMap<>();
-        new Thread(this).start();
+        // new Thread(this).start();
     }
 
     public GameModelInterface getModel() {
@@ -434,7 +434,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     @Override
-    public void playerIsReadyToStart(String nickname) {
+    public synchronized void playerIsReadyToStart(String nickname) {
         model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
     }
 
@@ -621,10 +621,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param p   entity of the player to remove
      */
     public void removeListener(GameListener lis, Player p) {
-
         model.removeListener(lis);
         Optional.ofNullable(p.getListeners()).ifPresent(List::clear);
-
         getPlayers().stream()
                 .filter(otherPlayer -> !otherPlayer.equals(p))
                 .forEach(otherPlayer -> otherPlayer.removeListener(lis));

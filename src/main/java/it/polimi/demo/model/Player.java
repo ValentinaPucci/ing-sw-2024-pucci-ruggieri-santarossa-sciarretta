@@ -26,9 +26,10 @@ public class Player implements PlayerIC, Serializable {
     private ResourceCard chosen_card;
     private int score_board_position;
     private int final_score;
-    private transient List<GameListener> listeners;
     private boolean is_connected;
     private boolean is_ready_to_start;
+
+    private transient List<GameListener> listeners;
 
     public Player(String nickname) {
         this.nickname = nickname;

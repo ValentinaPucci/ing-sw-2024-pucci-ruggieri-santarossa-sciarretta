@@ -12,7 +12,7 @@ import it.polimi.demo.view.flow.utilities.events.EventElement;
 import it.polimi.demo.view.flow.utilities.events.EventList;
 import it.polimi.demo.view.flow.utilities.events.EventType;
 import it.polimi.demo.view.text.TUI;
-//import it.polimi.demo.networking.socket.client;
+import it.polimi.demo.networking.socket.client.ClientSocket;
 import org.fusesource.jansi.Ansi;
 
 import java.io.IOException;
@@ -90,7 +90,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     public GameFlow(ConnectionSelection connectionSelection) {
         //Invoked for starting with TUI
         switch (connectionSelection) {
-            case SOCKET -> clientActions = new it.polimi.demonetworking.socket.client.ClientSocket(this);
+            case SOCKET -> clientActions = new ClientSocket(this);
             case RMI -> clientActions = new RMIClient(this);
         }
         ui = new TUI();

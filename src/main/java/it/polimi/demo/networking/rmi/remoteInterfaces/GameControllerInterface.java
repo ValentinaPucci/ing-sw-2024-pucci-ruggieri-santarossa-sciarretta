@@ -16,7 +16,7 @@ import java.util.LinkedList;
  * This interface contains all the action a player can do in a single game */
 public interface GameControllerInterface extends Remote {
 
-    GameModelInterface getModel();
+    GameModelInterface getModel() throws RemoteException;
 
     void placeStarterCard(Player p, Orientation orientation) throws GameEndedException;
 
@@ -52,7 +52,7 @@ public interface GameControllerInterface extends Remote {
      * @param nickname
      * @return
      */
-    Player getPlayerEntity(String nickname);
+    Player getPlayerEntity(String nickname) throws RemoteException;
 
     /**
      * This method returns the id of the game
@@ -67,9 +67,9 @@ public interface GameControllerInterface extends Remote {
      */
     void setPlayerAsConnected(Player p) throws RemoteException;
 
-    LinkedList<Player> getConnectedPlayers();
+    LinkedList<Player> getConnectedPlayers() throws RemoteException;
 
-    Player getCurrentPlayer();
+    Player getCurrentPlayer() throws RemoteException;
 
     /**
      * This method starts the game
@@ -113,13 +113,13 @@ public interface GameControllerInterface extends Remote {
 
     void startIfFull() throws GameEndedException, RemoteException;
 
-    void setError(String s);
+    void setError(String s) throws RemoteException;
 
-    GameStatus getStatus();
+    GameStatus getStatus() throws RemoteException;
 
-    void playerIsReadyToStart(String nickname);
+    void playerIsReadyToStart(String nickname) throws RemoteException;
 
-    boolean isThisMyTurn(String nickname);
+    boolean isThisMyTurn(String nickname) throws RemoteException;
 
     void addPing(String nickname, GameListener gameListener) throws RemoteException;
 }
