@@ -88,7 +88,7 @@ public class TUI extends UI {
      */
     @Override
     public void show_publisher() {
-        this.resize();
+        // this.resize();
         clearScreen();
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
@@ -165,7 +165,7 @@ public class TUI extends UI {
     @Override
     public void show_gameEnded(GameModelImmutable model) {
         clearScreen();
-        resize();
+        // resize();
         show_titleMyShelfie();
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
@@ -315,6 +315,7 @@ public class TUI extends UI {
         clearScreen();
         show_titleMyShelfie();
         printAsync(ansi().cursor(10, 0).a("GameID: [" + gameModel.getGameId().toString() + "]\n").fg(DEFAULT));
+        clearScreen();
         System.out.flush();
         StringBuilder ris = new StringBuilder();
 
@@ -334,6 +335,7 @@ public class TUI extends UI {
         for (PlayerIC p : gameModel.getPlayersConnected())
             if (!p.getReadyToStart() && p.getNickname().equals(nick))
                 printAsyncNoCursorReset(ansi().cursor(17, 0).fg(WHITE).a("> When you are ready to start, enter (y): \n"));
+        clearScreen();
         System.out.flush();
     }
 
@@ -351,6 +353,7 @@ public class TUI extends UI {
      */
     public void show_important_events() {
 
+        clearScreen();
         StringBuilder ris = new StringBuilder();
         int i = 0;
         int longestImportantEvent = importantEvents.stream().map(String::length).reduce(0, (a, b) -> a > b ? a : b);
@@ -660,7 +663,7 @@ public class TUI extends UI {
     public void show_creatingNewGameMsg(String nickname) {
         this.clearScreen();
         this.show_titleMyShelfie();
-        printAsyncNoCursorReset("> Creating a new game...");
+        printAsync("> Creating a new game...");
         this.nickname = nickname;
     }
 
@@ -687,7 +690,7 @@ public class TUI extends UI {
     public void show_joiningToGameIdMsg(int idGame, String nickname) {
         this.clearScreen();
         this.show_titleMyShelfie();
-        printAsyncNoCursorReset("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
+        printAsync("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
         this.nickname = nickname;
     }
 

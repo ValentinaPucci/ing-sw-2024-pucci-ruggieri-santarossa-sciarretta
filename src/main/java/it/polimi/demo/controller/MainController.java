@@ -85,9 +85,8 @@ public class MainController implements MainControllerInterface, Serializable {
         Player player = new Player(nickname);
         GameController game = new GameController(game_id, num_of_players, player);
         // Here we add the player to the 'statical' list of players
-        game.addPlayer(player);
-        game.setPlayerAsConnected(player);
         game.addListener(listener, player);
+        game.addPlayer(player);
 
         games.put(game_id, game);
         System.out.println(games.get(game_id).getStatus());
@@ -97,6 +96,44 @@ public class MainController implements MainControllerInterface, Serializable {
         printRunningGames();
 
         return game;
+    }
+
+    /**
+     * Allows a player to join a specific game by its ID.
+     *
+     * @param listener The GameListener of the player attempting to join the game.
+     * @param nickname The nickname of the player attempting to join the game.
+     * @param gameId The ID of the game to join.
+     * @return The GameControllerInterface associated with the game if the player successfully joins,
+     *         or null if the specific game does not exist or is unable to accept players.
+     * @throws RemoteException If there is a communication-related issue during the method execution.
+     */
+    @Override
+    public synchronized GameControllerInterface joinGame(GameListener listener, String nickname, int gameId)
+            throws RemoteException {
+
+        Player player = new Player(nickname);
+        GameController game = games.get(gameId);
+
+        return Optional.ofNullable(game)
+                .filter(g -> g.getStatus() == GameStatus.WAIT)
+                .filter(g -> g.getNumPlayers() < DefaultValues.MaxNumOfPlayer &&
+                        g.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname)))
+                .map(g -> {
+                    try {
+                        // todo: check if we add correctly the listener
+                        g.addListener(listener, player);
+                        // Here we add the player to the 'statical' list of players
+                        g.addPlayer(player);
+                        System.out.println("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
+                        printRunningGames();
+                        return g;
+                    } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
+                        return null;
+                    }
+                })
+                .orElse(null);
+
     }
 
 //    /**
@@ -141,51 +178,6 @@ public class MainController implements MainControllerInterface, Serializable {
 //
 //        return null;
 //    }
-
-    /**
-     * Allows a player to join a specific game by its ID.
-     *
-     * @param listener The GameListener of the player attempting to join the game.
-     * @param nickname The nickname of the player attempting to join the game.
-     * @param gameId The ID of the game to join.
-     * @return The GameControllerInterface associated with the game if the player successfully joins,
-     *         or null if the specific game does not exist or is unable to accept players.
-     * @throws RemoteException If there is a communication-related issue during the method execution.
-     */
-    @Override
-    public synchronized GameControllerInterface joinGame(GameListener listener, String nickname, int gameId)
-            throws RemoteException {
-
-        Player player = new Player(nickname);
-        GameController game = games.get(gameId);
-
-        return Optional.ofNullable(game)
-                .filter(g -> g.getStatus() == GameStatus.WAIT ||
-                        g.getStatus() == GameStatus.READY_TO_START ||
-                        g.getStatus() == GameStatus.FIRST_ROUND ||
-                        g.getStatus() == GameStatus.RUNNING ||
-                        g.getStatus() == GameStatus.SECOND_LAST_ROUND ||
-                        g.getStatus() == GameStatus.LAST_ROUND)
-                .filter(g -> g.getNumPlayers() < DefaultValues.MaxNumOfPlayer &&
-                        g.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname)))
-                .map(g -> {
-                    try {
-                        // todo: check if we add correctly the listener
-                        g.addListener(listener, player);
-                        // Here we add the player to the 'statical' list of players
-                        g.addPlayer(player);
-                        // Here we add the player to the 'dynamic' list of players connected (the queue!)
-                        g.setPlayerAsConnected(player);
-                        System.out.println("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
-                        printRunningGames();
-                        return g;
-                    } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-                        return null;
-                    }
-                })
-                .orElse(null);
-
-    }
 
 //    public synchronized GameControllerInterface joinGame(GameListener listener, String nickname, int gameId)
 //            throws RemoteException {

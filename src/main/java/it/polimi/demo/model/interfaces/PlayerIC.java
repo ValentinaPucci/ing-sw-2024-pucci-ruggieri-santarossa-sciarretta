@@ -86,12 +86,6 @@ public interface PlayerIC {
 
     List<ResourceCard> getHand();
 
-    void addListener(GameListener obj);
-
-    public void removeListener(GameListener obj);
-
-    List<GameListener> getListeners();
-
     /**
      * This method check if the player is ready to start
      * @return true if the player is ready to start
