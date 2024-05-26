@@ -1,11 +1,14 @@
 package it.polimi.demo.model;
 
+import java.io.Serializable;
+
 /**
  * Heartbeat's class<br>
  * This class implements the method we used to ping the server<br>
  * to let him know that we are still connected (needed for rmi connection)<br>
  */
-public class Heartbeat {
+public class Heartbeat implements Serializable {
+
     private final Long ping;
     private final String nick;
 

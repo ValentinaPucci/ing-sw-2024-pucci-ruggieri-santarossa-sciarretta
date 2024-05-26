@@ -197,10 +197,14 @@ public class RMIClient implements CommonClientActions {
      * @throws RemoteException
      * @throws NotBoundException
      */
+    @Override
     public void joinGame(String nick, int idGame) throws RemoteException, NotBoundException {
         registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
         gameController = requests.joinGame(modelInvokedEvents, nick, idGame);
+        printAsync("player in the game and their status: " + gameController.getConnectedPlayers().stream()
+                .map(p -> p.getNickname() + " " + p.getReadyToStart()).toList());
+        printAsync("Proxy class: " + requests.getClass().getName());
         nickname = nick;
     }
 
@@ -256,10 +260,10 @@ public class RMIClient implements CommonClientActions {
      * @throws RemoteException
      */
     @Override
-    public void setAsReady() throws RemoteException {
-        if (gameController != null) {
-            gameController.playerIsReadyToStart(nickname);
-        }
+    public void setAsReady(String nickname, int game_id) throws RemoteException, NotBoundException {
+        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
+        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        requests.setAsReady(modelInvokedEvents, nickname, game_id);
     }
 
     /**

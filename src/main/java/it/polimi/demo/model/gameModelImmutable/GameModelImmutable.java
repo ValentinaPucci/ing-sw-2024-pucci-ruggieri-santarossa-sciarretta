@@ -2,17 +2,18 @@ package it.polimi.demo.model.gameModelImmutable;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.GameModel;
+import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.interfaces.*;
-import it.polimi.demo.view.PlayerDetails;
 
 import java.io.Serializable;
 import java.util.*;
 
+import static it.polimi.demo.networking.PrintAsync.printAsync;
+
 public class GameModelImmutable implements Serializable {
 
-    private final List<PlayerIC> aux_order_players;
     private final LinkedList<PlayerIC> players_connected;
     private final Integer gameId;
     private final String initial_player_nickname;
@@ -24,9 +25,10 @@ public class GameModelImmutable implements Serializable {
     //private final Map<PlayerIC, Integer> leaderboard;
     private final ChatIC chat;
 
-    public GameModelImmutable(GameModelInterface model) {
+    public GameModelImmutable(GameModel model) {
+        printAsync("player in the game and their status (gameModelImmutable): " + model.getPlayersConnected().stream()
+                .map(p -> p.getNickname() + " " + p.getReadyToStart()).toList() + " at current timestamp " + System.currentTimeMillis());
         this.gameId = model.getGameId();
-        this.aux_order_players = new ArrayList<>(model.getAllPlayers());
         this.players_connected = new LinkedList<>(model.getPlayersConnected());
         this.initial_player_nickname = model.getAllPlayers().getFirst().getNickname();
         this.common_board = model.getCommonBoard();
@@ -58,9 +60,6 @@ public class GameModelImmutable implements Serializable {
         return gameId;
     }
 
-    public List<PlayerIC> getAllPlayers() {
-        return aux_order_players;
-    }
 
     public LinkedList<PlayerIC> getPlayersConnected() {
         return players_connected;
@@ -74,10 +73,6 @@ public class GameModelImmutable implements Serializable {
         return common_board;
     }
 
-    public PlayerIC getFirstPlayer() {
-        return aux_order_players.getFirst();
-    }
-
     public List<ResourceCardIC> getHandCurrentPlayer() {
         assert players_connected.peek() != null;
         return players_connected.peek().getHandIC();
@@ -89,12 +84,7 @@ public class GameModelImmutable implements Serializable {
     }
 
     public PlayerIC getPlayerEntity(String nickname) {
-        for (PlayerIC player : aux_order_players) {
-            if (player.getNickname().equals(nickname)) {
-                return player;
-            }
-        }
-        return null;
+        return players_connected.stream().filter(x -> x.getNickname().equals(nickname)).toList().get(0);
     }
 
     public PlayerIC getCurrentPlayerEntity() {
@@ -108,4 +98,8 @@ public class GameModelImmutable implements Serializable {
 //    public Map<PlayerIC, Integer> getLeaderBoard() {
 //        return leaderboard;
 //    }
+
+    public Integer getNumRequiredPlayersToStart() {
+        return num_required_players_to_start;
+    }
 }

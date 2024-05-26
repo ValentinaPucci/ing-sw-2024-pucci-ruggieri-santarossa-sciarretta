@@ -1,8 +1,6 @@
 package it.polimi.demo.networking.socket.client.gameControllerMessages;
 
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.Player;
-import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;

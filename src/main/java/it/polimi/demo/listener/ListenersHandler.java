@@ -7,6 +7,7 @@ import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.Player;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -19,7 +20,7 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
  * and for notifying the view when a change occurs in the GameModel {@link GameModel}. <br>
  * When notifying an event, we need to pass the GameModelImmutable {@link GameModelImmutable} to the view to have access to the updated GameModel.
  */
-public class ListenersHandler {
+public class ListenersHandler implements Serializable {
 
     private List<GameListener> listeners;
 

@@ -6,6 +6,7 @@ import java.io.Serializable;
  * A class containing all the default values we need in the project<br>
  */
 public class DefaultValues implements Serializable {
+
     public final static boolean DEBUG = false;
 
     public final static int[] NE_StarterCard_index = {500,501};

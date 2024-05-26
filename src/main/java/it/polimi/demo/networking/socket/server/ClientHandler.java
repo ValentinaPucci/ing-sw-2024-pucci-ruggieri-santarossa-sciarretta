@@ -11,7 +11,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.GameListenerHandlerClient;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 
@@ -127,7 +126,6 @@ public class ClientHandler extends Thread {
         } catch (RemoteException | GameEndedException e) {
             throw new RuntimeException(e);
         } catch (InterruptedException ignored) {
-
         }
     }
 }
