@@ -1,7 +1,5 @@
 package it.polimi.demo.view.text;
 
-import it.polimi.demo.view.GameDetails;
-import it.polimi.demo.view.PlayerDetails;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import it.polimi.demo.DefaultValues;
@@ -211,40 +209,6 @@ public class TUI extends UI {
     }
 
     // *********************** SHOW METHODS  *********************** //
-
-    /**
-     * Shows the list of games on the server only if the user has inserted a username.
-     * @param o array of strings representing the list of games on the server
-     */
-    public void show_gamesList(List<GameDetails> o) {
-
-        printAsyncNoCursorReset(ansi().eraseScreen(Ansi.Erase.BACKWARD).cursor(1, 1).reset());
-
-        if (!o.isEmpty()) {
-            System.out.println(ansi().fg(Ansi.Color.BLUE).a("List of games on the server:").reset());
-            System.out.println(ansi().fg(Ansi.Color.BLUE).a("ID:\tPlayers:").reset());
-
-            for (GameDetails gameDetails : o) {
-                StringBuilder string = new StringBuilder();
-                string.append(" ").append(gameDetails.gameID()).append("\t");
-                for (PlayerDetails playerInfo : gameDetails.playersInfo()) {
-                    if (playerInfo.isConnected())
-                        string.append(playerInfo.username()).append("\t");
-                    else
-                        string.append(ansi().fgBrightBlack().a(playerInfo.username()).reset()).append("\t");
-                }
-                if (gameDetails.isStarted()){
-                    string.append(ansi().fg(Ansi.Color.YELLOW).a("(STARTED)").reset());
-                } else if(gameDetails.isFull()){
-                    string.append(ansi().fg(Ansi.Color.RED).a("(FULL)").reset());
-                }
-
-                System.out.println(string);
-            }
-        } else {
-            System.out.println(ansi().fg(Ansi.Color.BLUE).a("There are no games on the server.").reset());
-        }
-    }
 
     /**
      * Shows all players' nicknames

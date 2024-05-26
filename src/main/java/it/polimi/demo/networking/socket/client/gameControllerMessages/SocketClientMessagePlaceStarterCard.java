@@ -6,7 +6,6 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
-import it.polimi.demo.model.Player;
 
 import java.rmi.RemoteException;
 

@@ -8,6 +8,7 @@ import it.polimi.demo.model.Player;
 
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 

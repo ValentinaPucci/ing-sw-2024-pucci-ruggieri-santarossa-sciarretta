@@ -3,7 +3,6 @@ package it.polimi.demo.view.flow;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
-import it.polimi.demo.view.GameDetails;
 
 import java.io.IOException;
 import java.util.List;
@@ -234,6 +233,5 @@ public abstract class UI {
      */
     protected abstract void show_noConnectionError();
 
-    protected abstract void show_gamesList(List<GameDetails> list);
 
 }

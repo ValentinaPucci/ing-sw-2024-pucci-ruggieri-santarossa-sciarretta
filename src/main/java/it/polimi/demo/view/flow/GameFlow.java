@@ -12,7 +12,7 @@ import it.polimi.demo.view.flow.utilities.events.EventElement;
 import it.polimi.demo.view.flow.utilities.events.EventList;
 import it.polimi.demo.view.flow.utilities.events.EventType;
 import it.polimi.demo.view.text.TUI;
-//import it.polimi.demo.networking.socket.client;
+import it.polimi.demo.networking.socket.client.ClientSocket;
 import org.fusesource.jansi.Ansi;
 
 import java.io.IOException;
@@ -49,6 +49,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      * Nickname of the player {@link Player}
      */
     private String nickname;
+
+    private int game_id;
 
     /**
      * The list of events {@link EventList}
@@ -90,7 +92,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     public GameFlow(ConnectionSelection connectionSelection) {
         //Invoked for starting with TUI
         switch (connectionSelection) {
-            case SOCKET -> clientActions = new it.polimi.demo.networking.socket.client.ClientSocket(this);
+            case SOCKET -> clientActions = new ClientSocket(this);
             case RMI -> clientActions = new RMIClient(this);
         }
         ui = new TUI();
@@ -242,6 +244,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         // If the event is that I joined then I wait until the user inputs 'y'
         switch (event.getType()) {
             case PLAYER_JOINED -> {
+                // we execute this only one time, i.e. the first time we enter the game
                 if (nickLastPlayer.equals(nickname)) {
                     ui.show_playerJoined(event.getModel(), nickname);
                     saveGameId(fileDisconnection, nickname, event.getModel().getGameId());
@@ -253,10 +256,11 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
     private void statusFirstRound(EventElement event) throws IOException, InterruptedException {
 
+        printAsync("I am in statusFirstRound, line 256");
+
         switch (event.getType()) {
             case GAME_STARTED -> {
                 ui.show_gameStarted(event.getModel());
-
                 this.inputParser.setPlayer(event.getModel().getPlayerEntity(nickname));
                 this.inputParser.setIdGame(event.getModel().getGameId());
 
@@ -275,12 +279,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     private void statusRunning(EventElement event) throws IOException, InterruptedException {
         
         switch (event.getType()) {
-
-            case GAME_STARTED -> {
-                ui.show_gameStarted(event.getModel());
-                this.inputParser.setPlayer(event.getModel().getPlayerEntity(nickname));
-                this.inputParser.setIdGame(event.getModel().getGameId());
-            }
             
             case MESSAGE_SENT -> {
                 ui.show_messageSent(event.getModel(), nickname);
@@ -467,7 +465,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      */
     private Integer askGameId() {
         String temp;
-        Integer gameId = null;
         // ui.show_gamesList();
         do {
             ui.show_inputGameIdMsg();
@@ -480,13 +477,13 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 if (temp.equals(".")) {
                     return -1;
                 }
-                gameId = Integer.parseInt(temp);
+                game_id = Integer.parseInt(temp);
             } catch (NumberFormatException e) {
                 ui.show_NaNMsg();
             }
 
-        } while (gameId == null);
-        return gameId;
+        } while (game_id < 0);
+        return game_id;
     }
 
     /**
@@ -501,7 +498,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 throw new RuntimeException(e);
             }
         } while (!ris.equals("y"));
-        setAsReady();
+        setAsReady(nickname, game_id);
     }
 
 
@@ -537,6 +534,20 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             clientActions.joinGame(nick, game_id);
         } catch (IOException | InterruptedException | NotBoundException e) {
             noConnectionError();
+        }
+    }
+
+    /**
+     * The client set himself as ready
+     */
+    @Override
+    public void setAsReady(String nickname, int game_id) {
+        try {
+            clientActions.setAsReady(nickname, game_id);
+        } catch (IOException e) {
+            noConnectionError();
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -577,18 +588,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         try {
             clientActions.leave(nick, idGame);
         } catch (IOException | NotBoundException e) {
-            noConnectionError();
-        }
-    }
-
-    /**
-     * The client set himself as ready
-     */
-    @Override
-    public void setAsReady() {
-        try {
-            clientActions.setAsReady();
-        } catch (IOException e) {
             noConnectionError();
         }
     }
@@ -665,10 +664,28 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      */
     @Override
     public void playerJoined(GameModelImmutable gameModel) {
-        //shared.setLastModelReceived(gameModel);
+        // shared.setLastModelReceived(gameModel);
+        game_id = gameModel.getGameId();
         events.add(gameModel, EventType.PLAYER_JOINED);
         //Print also here because: If a player is in askReadyToStart is blocked and cannot showPlayerJoined by watching the events
         ui.show_playerJoined(gameModel, nickname);
+    }
+
+    /**
+     * A player is ready to start
+     * @param gameModel game model {@link GameModelImmutable}
+     * @param nick nickname of the player
+     * @throws IOException if the reference could not be accessed
+     */
+    @Override
+    public void playerIsReadyToStart(GameModelImmutable gameModel, String nick) throws IOException {
+        ui.show_playerJoined(gameModel, nickname);
+//        if (nick.equals(nickname)) {
+//            ui.show_youReadyToStart(gameModel, nickname);
+//        }
+        // if(nick.equals(nickname))
+        //    toldIAmReady=true;
+        events.add(gameModel, PLAYER_IS_READY_TO_START);
     }
 
     /**
@@ -758,24 +775,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     public void genericErrorWhenEnteringGame(String why) throws RemoteException {
         ui.show_noAvailableGamesToJoin(why);
         events.add(null, GENERIC_ERROR_WHEN_ENTERING_GAME);
-    }
-
-    /**
-     * A player is ready to start
-     * @param gameModel game model {@link GameModelImmutable}
-     * @param nick nickname of the player
-     * @throws IOException if the reference could not be accessed
-     */
-    @Override
-    public void playerIsReadyToStart(GameModelImmutable gameModel, String nick) throws IOException {
-        ui.show_playerJoined(gameModel, nickname);
-
-        if (nick.equals(nickname)) {
-            ui.show_youReadyToStart(gameModel, nickname);
-        }
-        // if(nick.equals(nickname))
-        //    toldIAmReady=true;
-        events.add(gameModel, PLAYER_IS_READY_TO_START);
     }
 
     /**

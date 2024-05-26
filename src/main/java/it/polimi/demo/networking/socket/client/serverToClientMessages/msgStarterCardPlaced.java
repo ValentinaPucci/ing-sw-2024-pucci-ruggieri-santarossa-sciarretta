@@ -1,6 +1,5 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
