@@ -197,10 +197,15 @@ public class ClientSocket extends Thread implements CommonClientActions {
     }
 
     @Override
-    public void setAsReady() throws IOException {
-        ob_out.writeObject(new SocketClientMessageSetReady(nickname));
-        finishSending();
+    public void setAsReady(String nickname, int game_id) throws RemoteException, NotBoundException {
+
     }
+
+//    @Override
+//    public void setAsReady() throws IOException {
+//        ob_out.writeObject(new SocketClientMessageSetReady(nickname));
+//        finishSending();
+//    }
 
     @Override
     public boolean isMyTurn() throws RemoteException {

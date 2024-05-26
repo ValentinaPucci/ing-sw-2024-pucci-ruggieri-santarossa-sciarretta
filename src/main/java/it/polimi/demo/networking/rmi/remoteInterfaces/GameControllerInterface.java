@@ -6,7 +6,6 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.model.interfaces.GameModelInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -15,8 +14,6 @@ import java.util.LinkedList;
 /**
  * This interface contains all the action a player can do in a single game */
 public interface GameControllerInterface extends Remote {
-
-    GameModelInterface getModel() throws RemoteException;
 
     void placeStarterCard(Player p, Orientation orientation) throws GameEndedException;
 
@@ -71,13 +68,6 @@ public interface GameControllerInterface extends Remote {
 
     Player getCurrentPlayer() throws RemoteException;
 
-    /**
-     * This method starts the game
-     * @throws IllegalStateException if the game is not ready to start
-     * @throws RemoteException if the connection fails
-     */
-    void startGame() throws GameEndedException, RemoteException;
-
 
     /**
      * This method disconnect a player and remove him from the GameListener list{@link GameListener}
@@ -110,8 +100,6 @@ public interface GameControllerInterface extends Remote {
      * @throws RemoteException if the connection fails
      */
     void leave(GameListener lis, String nick) throws RemoteException;
-
-    void startIfFull() throws GameEndedException, RemoteException;
 
     void setError(String s) throws RemoteException;
 

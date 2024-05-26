@@ -1,15 +1,9 @@
 package it.polimi.demo.networking.rmi.remoteInterfaces;
 
-import it.polimi.demo.controller.GameController;
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.Player;
-import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.view.GameDetails;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * IT IS THE SKELETON --> VIRTUAL VIEW
@@ -47,6 +41,8 @@ public interface MainControllerInterface extends Remote {
      */
     GameControllerInterface joinGame(GameListener lis, String nick, int idGame) throws RemoteException;
 
+    GameControllerInterface setAsReady(GameListener modelInvokedEvents, String nick, int idGame) throws RemoteException;
+
     /**
      * This method reconnects a player to a specific game
      *
@@ -70,8 +66,5 @@ public interface MainControllerInterface extends Remote {
      */
     GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException;
 
-    List<GameDetails> getGamesDetails() throws RemoteException;
-
-    Map<Integer, GameController> getGames() throws RemoteException;
 
 }
