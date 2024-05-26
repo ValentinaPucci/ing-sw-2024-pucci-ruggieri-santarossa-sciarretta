@@ -255,15 +255,20 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     private void statusFirstRound(EventElement event) throws IOException, InterruptedException {
-
-        printAsync("I am in statusFirstRound, line 256");
-
+        // We opted for async starter card placement for simplicity
         switch (event.getType()) {
             case GAME_STARTED -> {
                 ui.show_gameStarted(event.getModel());
                 this.inputParser.setPlayer(event.getModel().getPlayerEntity(nickname));
                 this.inputParser.setIdGame(event.getModel().getGameId());
-
+            }
+            case NEXT_TURN -> {
+                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                    ui.show_objectiveCards(event.getModel());
+                    askWhichObjectiveCard();
+                    ui.show_starterCards(event.getModel());
+                    askStarterCardOrientation();
+                }
             }
         }
     }
@@ -284,7 +289,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 ui.show_messageSent(event.getModel(), nickname);
             }
 
-            case NEXT_TURN, PLAYER_RECONNECTED -> {
+            case NEXT_TURN -> {
+
 
             }
 
@@ -498,7 +504,41 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 throw new RuntimeException(e);
             }
         } while (!ris.equals("y"));
-        setAsReady(nickname, game_id);
+        setAsReady();
+    }
+
+    public void askWhichObjectiveCard() {
+        String ris;
+        do {
+            ui.show_whichObjectiveToChooseMsg();
+            try {
+                ris = this.inputParser.getDataToProcess().popData();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } while (!(ris.equals("1") || ris.equals("2")));
+        try {
+            chooseCard(Integer.parseInt(ris) - 1);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void askStarterCardOrientation() {
+        String ris;
+        do {
+            ui.show_orientation("Choose the orientation of the starter card");
+            try {
+                ris = this.inputParser.getDataToProcess().popData();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } while (!(ris.equals("FRONT") || ris.equals("BACK")));
+        try {
+            placeStarterCard(Orientation.valueOf(ris));
+        } catch (RemoteException | GameEndedException | NotBoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -541,12 +581,31 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      * The client set himself as ready
      */
     @Override
-    public void setAsReady(String nickname, int game_id) {
+    public void setAsReady() {
         try {
-            clientActions.setAsReady(nickname, game_id);
+            clientActions.setAsReady();
         } catch (IOException e) {
             noConnectionError();
         } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
+    public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
+        try {
+            clientActions.placeStarterCard(orientation);
+        } catch (GameEndedException | NotBoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void chooseCard(int which_card) throws RemoteException {
+        try {
+            clientActions.chooseCard(which_card);
+        } catch (GameEndedException | NotBoundException | IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -598,16 +657,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     @Override
-    public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
-
-    }
-
-    @Override
-    public void chooseCard(int which_card) throws RemoteException {
-
-    }
-
-    @Override
     public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
 
     }
@@ -639,8 +688,9 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     /*============ Server event received ============*/
 
     @Override
-    public void starterCardPlaced(GameModelImmutable model, Orientation orientation) {
-        
+    public void starterCardPlaced(GameModelImmutable model, Orientation orientation, String nick) {
+        if (model.getCurrentPlayerNickname().equals(nickname))
+            ui.show_personalBoard(nickname, model);
     }
 
     @Override
@@ -807,7 +857,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void nextTurn(GameModelImmutable gameModel) {
         events.add(gameModel, EventType.NEXT_TURN);
-
         //I remove all the input that the user sends when It is not his turn
         this.inputParser.getDataToProcess().popAllData();
     }

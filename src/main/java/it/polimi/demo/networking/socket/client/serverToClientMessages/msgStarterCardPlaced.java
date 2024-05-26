@@ -17,7 +17,7 @@ public class msgStarterCardPlaced extends SocketServerGenericMessage{
 
     @Override
     public void execute(GameListener lis) throws RemoteException {
-        lis.starterCardPlaced(gameModel, orientation);
+        lis.starterCardPlaced(gameModel, orientation, gameModel.getCurrentPlayerNickname());
     }
 
 }

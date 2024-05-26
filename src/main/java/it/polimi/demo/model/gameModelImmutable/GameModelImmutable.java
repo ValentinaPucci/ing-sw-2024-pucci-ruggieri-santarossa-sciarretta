@@ -4,6 +4,8 @@ import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
+import it.polimi.demo.model.cards.gameCards.StarterCard;
+import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.interfaces.*;
 
@@ -24,10 +26,10 @@ public class GameModelImmutable implements Serializable {
     //private final List<Player> winners;
     //private final Map<PlayerIC, Integer> leaderboard;
     private final ChatIC chat;
+    private final List<StarterCard> starter_cards;
+    private final List<ObjectiveCard> objective_cards;
 
     public GameModelImmutable(GameModel model) {
-        printAsync("player in the game and their status (gameModelImmutable): " + model.getPlayersConnected().stream()
-                .map(p -> p.getNickname() + " " + p.getReadyToStart()).toList() + " at current timestamp " + System.currentTimeMillis());
         this.gameId = model.getGameId();
         this.players_connected = new LinkedList<>(model.getPlayersConnected());
         this.initial_player_nickname = model.getAllPlayers().getFirst().getNickname();
@@ -38,6 +40,8 @@ public class GameModelImmutable implements Serializable {
         // this.winners = model.getWinners();
         this.chat = model.getChat();
         //this.leaderboard = model.getLeaderBoard();
+        this.starter_cards = new ArrayList<>(model.getStarterCardsToChoose(current_player_nickname));
+        this.objective_cards = new ArrayList<>(model.getPersonalObjectiveCardsToChoose(current_player_nickname));
     }
 
     public GameStatus getStatus() {
@@ -101,5 +105,22 @@ public class GameModelImmutable implements Serializable {
 
     public Integer getNumRequiredPlayersToStart() {
         return num_required_players_to_start;
+    }
+
+    public List<StarterCard> getStarterCards(String nick) {
+        if (nick.equals(current_player_nickname)) {
+            return starter_cards;
+        }
+        else
+            return null;
+
+    }
+
+    public List<ObjectiveCard> getObjectiveCards(String nick) {
+        if (nick.equals(current_player_nickname)) {
+            return objective_cards;
+        }
+        else
+            return null;
     }
 }
