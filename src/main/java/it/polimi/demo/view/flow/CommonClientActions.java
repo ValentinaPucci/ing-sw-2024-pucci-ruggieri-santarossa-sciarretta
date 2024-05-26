@@ -19,16 +19,6 @@ public interface CommonClientActions {
      */
     void createGame(String nickname, int num_of_players) throws IOException, InterruptedException, NotBoundException;
 
-//    /**
-//     * Joins the first game found in the list of games
-//     *
-//     * @param nick
-//     * @throws IOException
-//     * @throws InterruptedException
-//     * @throws NotBoundException
-//     */
-//    void joinFirstAvailable(String nick) throws IOException, InterruptedException, NotBoundException;
-
     /**
      * Adds the player to the game
      *
@@ -62,7 +52,7 @@ public interface CommonClientActions {
     void leave(String nick, int idGame) throws IOException, NotBoundException;
 
 
-    void setAsReady(String nickname, int game_id) throws RemoteException, NotBoundException;
+    void setAsReady() throws RemoteException, NotBoundException;
 
     /**
      * Checks if it's the invoker's turn
@@ -83,7 +73,7 @@ public interface CommonClientActions {
      * @param which_card the index of the card the player wants to choose
      * @throws RemoteException if there is a network error
      */
-    void chooseCard(int which_card) throws IOException;
+    void chooseCard(int which_card) throws IOException, NotBoundException, GameEndedException;
 
     /**
      * This method is called by the socket to place a card

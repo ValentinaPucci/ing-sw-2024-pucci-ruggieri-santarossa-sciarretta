@@ -170,12 +170,12 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_starterCardPlaced(GameModel model, Orientation o) {
+    public synchronized void notify_starterCardPlaced(GameModel model, Orientation o, String nick) {
         Iterator<GameListener> i = listeners.iterator();
         while (i.hasNext()) {
             GameListener l = i.next();
             try {
-                l.starterCardPlaced(new GameModelImmutable(model), o);
+                l.starterCardPlaced(new GameModelImmutable(model), o, nick);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_starterCardPlaced, a disconnection has been detected before heartbeat");
                 i.remove();

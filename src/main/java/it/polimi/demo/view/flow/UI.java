@@ -117,6 +117,14 @@ public abstract class UI {
      */
     protected abstract void show_playerJoined(GameModelImmutable gameModel, String nick);
 
+    protected abstract void show_starterCards(GameModelImmutable gameModel);
+
+    protected abstract void show_objectiveCards(GameModelImmutable gameModel);
+
+    protected abstract void show_personalBoard(String nick, GameModelImmutable gameModel);
+
+
+
     /**
      * Shows that the playing player is ready to start
      *
@@ -163,6 +171,9 @@ public abstract class UI {
      */
     protected abstract void show_messageSent(GameModelImmutable model, String nickname);
 
+
+    public abstract void show_whichObjectiveToChooseMsg();
+
     /**
      * Message that asks to pick a tile to place
      */
@@ -194,7 +205,7 @@ public abstract class UI {
     /**
      * Shows the message that asks for direction to be chosen
      */
-    protected abstract void show_orientation();
+    protected abstract void show_orientation(String message);
 
     /**
      * Shows the message that asks for tiles to be picked

@@ -27,10 +27,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     private Map<GameListener, Heartbeat> listeners_to_heartbeats;
 
     /**
-     * A random object for implementing pseudo-random choice
-     */
-    private final Random random = new Random();
-    /**
      * Timer started when only one player is playing
      * it ends the game if no one reconnects within seconds
      */
@@ -372,20 +368,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * Re-orders the players lists and sets the first player in both lists
-     */
-    // todo: check if it's correct
-    private void extractFirstPlayerToPlay() {
-
-        Player first_player = getPlayers().get(random.nextInt(getPlayers().size()));
-        model.getAllPlayers().remove(first_player);
-        model.getAllPlayers().addFirst(first_player);
-
-        model.getPlayersConnected().remove(first_player);
-        model.getPlayersConnected().addFirst(first_player);
-    }
-
-    /**
      * Return the status of the model
      *
      * @return status
@@ -397,8 +379,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     @Override
     public synchronized void playerIsReadyToStart(String nickname) {
         model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
-//        if (model.arePlayersReadyToStartAndEnough())
-//            model.setStatus(GameStatus.FIRST_ROUND);
     }
 
     @Override
@@ -410,37 +390,34 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * This method places the starter card in the first round of the game.
      * Note that, based on the rules, we need to call the end of our turn after
      * calling this method
-     * @param p the player which place the card
+     * @param nick the player which place the card
      * @param o the orientation of the card
      */
     @Override
-    public void placeStarterCard(Player p, Orientation o) throws GameEndedException {
-        model.placeStarterCard(p, o);
-        this.myTurnIsFinished();
-    }
-
-    public void myTurnIsFinished() throws RuntimeException {
-        try {
-            model.nextTurn();
-            // IMPORTANT: notifies the listeners that the model has changed!
-            //notifyListeners(model.getListeners(), GameListener::modelChanged);
-        } catch (GameEndedException e) {
-            throw new RuntimeException(e);
-        }
+    public void placeStarterCard(String nick, Orientation o) throws GameEndedException {
+        model.placeStarterCard(getPlayerEntity(nick), o);
     }
 
     /**
      * Choose a card from the hand
-     * @param p the player
+     * @param nick the player
      * @param which_card the index of the card to choose
      * @throws RemoteException if there is an error
      */
     @Override
-    public void chooseCardFromHand(Player p, int which_card) throws RemoteException {
-        model.getPlayersConnected().stream()
-                .filter(player -> player.getNickname().equals(p.getNickname()))
-                .findFirst()
-                .ifPresent(player -> player.setChosenGameCard(player.getHand().get(which_card)));
+    public void chooseCardFromHand(String nick, int which_card) throws RemoteException {
+        if (model.getStatus() == GameStatus.FIRST_ROUND) {
+            model.getPlayersConnected().stream()
+                    .filter(player -> player.getNickname().equals(nick))
+                    .findFirst()
+                    .ifPresent(player -> player.setChosenObjectiveCard(player.getSecretObjectiveCards().get(which_card)));
+        }
+        else
+            model.getPlayersConnected().stream()
+                    .filter(player -> player.getNickname().equals(nick))
+                    .findFirst()
+                    .ifPresent(player -> player.setChosenGameCard(player.getHand().get(which_card)));
+
     }
 
     /**
