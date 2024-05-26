@@ -6,7 +6,6 @@ import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
-import it.polimi.demo.view.GameDetails;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -155,14 +154,29 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
 
         // Return the GameController already existed => not necessary to re-Export Object
         GameControllerInterface ris = serverObject.mainController.joinGame(lis, nick, idGame);
+        printAsync("player in the game and their status: " + ris.getConnectedPlayers().stream()
+                .map(p -> p.getNickname() + " " + p.getReadyToStart()).toList());
         if (ris != null) {
             try {
                 UnicastRemoteObject.exportObject(ris, 0);
-            }catch (RemoteException e){
+            } catch (RemoteException e){
                 // Already exported, due to another RMI Client running on the same machine
             }
             // ris.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),0));
             printAsync("[RMI] " + nick + " joined to specific game with id: " + idGame);
+        }
+        return ris;
+    }
+
+    @Override
+    public GameControllerInterface setAsReady(GameListener lis, String nick, int idGame) throws RemoteException {
+        GameControllerInterface ris = serverObject.mainController.setAsReady(lis, nick, idGame);
+        if (ris != null) {
+            try {
+                UnicastRemoteObject.exportObject(ris, 0);
+            } catch (RemoteException e){
+                // Already exported, due to another RMI Client running on the same machine
+            }
         }
         return ris;
     }
@@ -203,19 +217,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
      */
     @Override
     public GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException {
-
         serverObject.mainController.leaveGame(lis,nick,idGame);
-
-        return null;
-    }
-
-    @Override
-    public List<GameDetails> getGamesDetails() {
-        return null;
-    }
-
-    @Override
-    public Map<Integer, GameController> getGames() {
         return null;
     }
 

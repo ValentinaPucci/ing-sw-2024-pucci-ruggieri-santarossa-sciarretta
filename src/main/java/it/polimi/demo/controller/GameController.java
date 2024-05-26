@@ -9,7 +9,6 @@ import it.polimi.demo.model.*;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.model.interfaces.GameModelInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 
 import java.io.Serializable;
@@ -42,11 +41,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         listeners_to_heartbeats = new HashMap<>();
         new Thread(this).start();
     }
-
-    public GameModelInterface getModel() {
-        return model;
-    }
-
 
     //------------------------------------connection/reconnection management-----------------------------------------------
     // Threads management ---------------------------------------
@@ -250,18 +244,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         this.model.reconnectPlayer(p);
     }
 
-//    public void nextPlayer() {
-//        if(this.model.getPlayersConnected().size() > 1) {
-//            int i = (this.model.getCurrentPlayerIndex() + 1) % this.model.getNumPlayersToPlay();
-//            while(!this.model.getAux_order_players().get(i).getIsConnected()){
-//                i = (i + 1) % this.model.getNumPlayersToPlay();
-//            }
-//            this.model.setCurrentPlayerIndex(i);
-//        } else {
-//            this.model.setAsPaused();
-//        }
-//    }
-
     /**
      * It removes a player by nickname @param nick from the game including the associated listeners
      *
@@ -345,7 +327,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     @Override
     public synchronized void setPlayerAsConnected(Player p) {
-        model.setPlayerAsConnected(p);
+        // model.setPlayerAsConnected(p);
     }
 
     /**
@@ -353,30 +335,9 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param nickname the nickname of the player
      * @return the player entity
      */
-    public Player getPlayerEntity(String nickname){
+    public Player getPlayerEntity(String nickname) {
         return model.getPlayerEntity(nickname);
     }
-
-    // ***************************************** IMPORTANT *****************************************
-
-    @Override
-    public void startIfFull() throws GameEndedException, RemoteException {
-        if (model.getAllPlayers().size() == model.getNumPlayersToPlay()) {
-            this.startGame();
-        }
-    }
-
-    /**
-     * Start the game if it's ready
-     */
-    @Override
-    public void startGame() throws GameEndedException, RemoteException {
-        System.out.println("Game " + this.model.getGameId() + " is starting...");
-        extractFirstPlayerToPlay();
-        model.initializeGame();
-    }
-
-    //***********************************************************************************************
 
     /**
      * Check if it's your turn
@@ -434,8 +395,10 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     @Override
-    public void playerIsReadyToStart(String nickname) {
+    public synchronized void playerIsReadyToStart(String nickname) {
         model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
+//        if (model.arePlayersReadyToStartAndEnough())
+//            model.setStatus(GameStatus.FIRST_ROUND);
     }
 
     @Override
@@ -604,14 +567,14 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     public void addListener(GameListener l, Player p) {
         model.addListener(l);
-        for (GameListener othersListener : model.getListeners()) {
-            p.addListener(othersListener);
-        }
-        for (Player otherPlayer : model.getPlayersConnected()) {
-            if (!otherPlayer.equals(p)) {
-                otherPlayer.addListener(l);
-            }
-        }
+//        for (GameListener othersListener : model.getListeners()) {
+//            p.addListener(othersListener);
+//        }
+//        for (Player otherPlayer : model.getAllPlayers()) {
+//            if (!otherPlayer.equals(p)) {
+//                otherPlayer.addListener(l);
+//            }
+//        }
     }
 
     /**
@@ -621,13 +584,11 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param p   entity of the player to remove
      */
     public void removeListener(GameListener lis, Player p) {
-
         model.removeListener(lis);
-        Optional.ofNullable(p.getListeners()).ifPresent(List::clear);
-
-        getPlayers().stream()
-                .filter(otherPlayer -> !otherPlayer.equals(p))
-                .forEach(otherPlayer -> otherPlayer.removeListener(lis));
+//        Optional.ofNullable(p.getListeners()).ifPresent(List::clear);
+//        getPlayers().stream()
+//                .filter(otherPlayer -> !otherPlayer.equals(p))
+//                .forEach(otherPlayer -> otherPlayer.removeListener(lis));
     }
 
     //-------------------------------chat management----------------------------

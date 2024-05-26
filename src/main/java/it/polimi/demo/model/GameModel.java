@@ -1,7 +1,6 @@
 package it.polimi.demo.model;
 
 import it.polimi.demo.listener.ListenersHandler;
-import it.polimi.demo.view.PlayerDetails;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.board.CommonBoard;
@@ -17,8 +16,6 @@ import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.model.interfaces.GameModelInterface;
-import it.polimi.demo.model.interfaces.PlayerIC;
 
 import java.io.Serializable;
 import java.util.*;
@@ -27,14 +24,14 @@ import java.util.stream.Collectors;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 
-public class GameModel implements GameModelInterface, Serializable {
+public class GameModel implements Serializable {
 
     // the first list let us keep the order of players. It is immutable!!
     // aux_order_player.size() always >= players_connected.size()
-    private List<Player> aux_order_players;
+    private final List<Player> aux_order_players;
     // the second one is used as a queue and let us know which player
     // is connected (and actively playing).
-    private LinkedList<Player> players_connected;
+    private final LinkedList<Player> players_connected;
 
     private Player initial_player;
     private CommonBoard common_board;
@@ -45,15 +42,12 @@ public class GameModel implements GameModelInterface, Serializable {
     private Chat chat;
     private Player first_finishing_player = null;
     private List<Player> winners;
-    private Map<PlayerIC, Integer> leaderboard;
-    //private int current_player_index;
-    private boolean is_ended = false;
-    private boolean is_paused = false;
+    private Map<Player, Integer> leaderboard;
 
     /**
      * Listener handler that handles the listeners
      */
-    private transient ListenersHandler listeners_handler;
+    private ListenersHandler listeners_handler;
 
     public GameModel() {
         aux_order_players = new ArrayList<>();
@@ -141,11 +135,20 @@ public class GameModel implements GameModelInterface, Serializable {
     /**
      * @param p is set as ready, then everyone is notified
      */
-    public void setPlayerAsReadyToStart(Player p) {
+    public synchronized void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        printAsync("listeners_handler used for the first time at time " + System.currentTimeMillis());
+        printAsync("Player " + p.getNickname() + " is ready to start at time " + System.currentTimeMillis() + " "
+        + p.getReadyToStart());
+        printAsync("Player (from players_connected) "
+                + getPlayerEntity(p.getNickname()).getNickname()
+                + " is ready to start at time " + System.currentTimeMillis() + " "
+                + getPlayerEntity(p.getNickname()).getNickname()
+        + " " + getPlayerEntity(p.getNickname()).getReadyToStart());
+        printAsync("listeners_handler used for the second time at time " + System.currentTimeMillis());
+
         listeners_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
         if (arePlayersReadyToStartAndEnough()) {
+            printAsync("players are ready to start and enough, model line 149");
             setStatus(GameStatus.FIRST_ROUND);
         }
     }
@@ -164,14 +167,22 @@ public class GameModel implements GameModelInterface, Serializable {
      * @return player with the given nickname, or null if not found
      */
     public Player getPlayerEntity(String nick) {
-        return aux_order_players.stream()
-                .filter(x -> x.getNickname().equals(nick))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public List<Player> getAux_order_players() {
-        return aux_order_players;
+//        return aux_order_players.stream()
+//                .filter(x -> x.getNickname().equals(nick))
+//                .findFirst()
+//                .orElse(null);
+//        for (Player p : players_connected) {
+//            if (p.getNickname().equals(nick)) {
+//                return p;
+//            }
+//        }
+//        return null;
+        for (int i = 0; i < players_connected.size(); i++) {
+            if (players_connected.get(i).getNickname().equals(nick)) {
+                return players_connected.get(i);
+            }
+        }
+        return null;
     }
 
     /**
@@ -209,22 +220,20 @@ public class GameModel implements GameModelInterface, Serializable {
         String nickname = p.getNickname();
 
         if (nicknames.contains(nickname)) {
-            System.out.println("if");
             listeners_handler.notify_JoinUnableNicknameAlreadyIn(getPlayerEntity(nickname));
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() >= num_required_players_to_start ||
                 aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
-            System.out.println("else if");
             listeners_handler.notify_JoinUnableGameFull(getPlayerEntity(nickname), this);
             throw new MaxPlayersLimitException();
         }
         else {
-            System.out.println("else");
             aux_order_players.add(p);
             // todo: check if adding a player to players_connected (here) is correct
             players_connected.offer(p);
             listeners_handler.notify_playerJoined(this);
+            printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
         }
     }
 
@@ -249,9 +258,6 @@ public class GameModel implements GameModelInterface, Serializable {
         }
     }
 
-    public int getCurrentPlayerIndex() {
-        return getAllPlayers().indexOf(players_connected.getFirst());
-    }
 
     //-------------------------chat and messages---------------------------------------------
 
@@ -376,15 +382,6 @@ public class GameModel implements GameModelInterface, Serializable {
     }
 
     /**
-     * Sets the game id
-     *
-     * @param gameId new game id
-     */
-    public void setGameId(Integer gameId) {
-        this.gameId = gameId;
-    }
-
-    /**
      * Gets the game status
      *
      * @return the game status
@@ -448,7 +445,6 @@ public class GameModel implements GameModelInterface, Serializable {
         // aux_order_players and players_connected are the same
         for (Player player : players_connected) {
 
-            System.out.println("row 432");
             StarterCard starterCard1 = null;
             StarterCard starterCard2 = null;
 
@@ -680,20 +676,6 @@ public class GameModel implements GameModelInterface, Serializable {
         return winners;
     }
 
-    @Override
-    public Map<PlayerIC, Integer> getLeaderBoard() {
-        return this.leaderboard;
-    }
-
-    @Override
-    public PersonalBoard getPersonalBoard(String myNickname) {
-        for (Player p : aux_order_players){
-            if (p.getNickname().equals(myNickname))
-                return p.getPersonalBoard();
-        }
-        return null;
-    }
-
     /**
      * Retrieves the common board associated with the game.
      *
@@ -761,58 +743,9 @@ public class GameModel implements GameModelInterface, Serializable {
 //        return aux_order_players.get(current_player_index);
 //    }
 
-    public PlayerIC getFirstPlayer() {
-        return initial_player;
-    }
 
-    public boolean isEnded() {
-        return is_ended;
-    }
-
-    public boolean isPaused() {
-        return is_paused;
-    }
-
-    public void setPaused(boolean paused) {
-        is_paused = paused;
-    }
-
-    public List<PlayerDetails> getPlayersDetails() {
-        return this.getAux_order_players()
-                .stream()
-                .map(p -> {
-                    boolean isLast = false;
-                    if (getFinalPlayerIndex() != -1) {
-                        isLast = Objects.equals(p, aux_order_players.get((getFinalPlayerIndex() - 1) >= 0 ? (getFinalPlayerIndex() - 1) : (getNumPlayersToPlay() - 1)));
-                    }
-
-                    return new PlayerDetails(
-                            p.getNickname(),
-                            p.getScoreBoardPosition(),
-                            p.getLastChosenCard(),
-                            p.getIsConnected(),
-                            p.isLast()
-                    );
-                })
-                .toList();
-    }
-
-    //TODO: create for GameDetails in MainController
-
-    public boolean isStarted() {
-        return false;
-    }
-
-    public boolean isFull() {
-        return false;
-    }
-
-    //TODO: in GameController
     public void setErrorMessage(String error) {
 
-    }
-
-    public void setAsPaused() {
     }
 
     // **************************** Listeners ********************************
@@ -821,7 +754,10 @@ public class GameModel implements GameModelInterface, Serializable {
      * @param obj adds the listener to the list
      */
     public void addListener(GameListener obj) {
+        printAsync("listeners_handler used for the first time at time " + System.currentTimeMillis());
+        printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
         listeners_handler.addListener(obj);
+        printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
     }
 
     /**
@@ -836,10 +772,6 @@ public class GameModel implements GameModelInterface, Serializable {
      */
     public List<GameListener> getListeners() {
         return listeners_handler.getListeners();
-    }
-
-    public PlayerIC getPlayer(int playerIndex) {
-        return aux_order_players.get(playerIndex);
     }
 
     // aux

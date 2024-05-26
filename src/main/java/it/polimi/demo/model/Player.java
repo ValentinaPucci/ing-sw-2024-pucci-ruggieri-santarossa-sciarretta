@@ -26,9 +26,10 @@ public class Player implements PlayerIC, Serializable {
     private ResourceCard chosen_card;
     private int score_board_position;
     private int final_score;
-    private transient List<GameListener> listeners;
     private boolean is_connected;
     private boolean is_ready_to_start;
+
+    //private transient List<GameListener> listeners;
 
     public Player(String nickname) {
         this.nickname = nickname;
@@ -41,7 +42,7 @@ public class Player implements PlayerIC, Serializable {
         this.chosen_card = null;
         this.score_board_position = 0;
         this.final_score = 0;
-        this.listeners = new ArrayList<>();
+        //this.listeners = new ArrayList<>();
         this.is_connected = false;
         this.is_ready_to_start = false;
     }
@@ -156,18 +157,18 @@ public class Player implements PlayerIC, Serializable {
     public List<ResourceCardIC> getHandIC() {
         return new ArrayList<>(card_hand);
     }
-
-    public void addListener(GameListener obj) {
-        listeners.add(obj);
-    }
-
-    public void removeListener(GameListener obj) {
-        listeners.remove(obj);
-    }
-
-    public List<GameListener> getListeners() {
-        return listeners;
-    }
+//
+//    public void addListener(GameListener obj) {
+//        listeners.add(obj);
+//    }
+//
+//    public void removeListener(GameListener obj) {
+//        listeners.remove(obj);
+//    }
+//
+//    public List<GameListener> getListeners() {
+//        return listeners;
+//    }
 
     @Override
     public boolean getReadyToStart() {

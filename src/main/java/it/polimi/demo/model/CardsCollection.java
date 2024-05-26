@@ -21,6 +21,7 @@ import java.io.File;
 
 // TODO: Correct Gold card upload.
 public  class CardsCollection implements Serializable {
+
     public List<Card> cards;
 
     public CardsCollection() {

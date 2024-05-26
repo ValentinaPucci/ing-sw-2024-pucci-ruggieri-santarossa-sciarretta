@@ -6,7 +6,6 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.model.interfaces.GameModelInterface;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -15,8 +14,6 @@ import java.util.LinkedList;
 /**
  * This interface contains all the action a player can do in a single game */
 public interface GameControllerInterface extends Remote {
-
-    GameModelInterface getModel();
 
     void placeStarterCard(Player p, Orientation orientation) throws GameEndedException;
 
@@ -52,7 +49,7 @@ public interface GameControllerInterface extends Remote {
      * @param nickname
      * @return
      */
-    Player getPlayerEntity(String nickname);
+    Player getPlayerEntity(String nickname) throws RemoteException;
 
     /**
      * This method returns the id of the game
@@ -67,16 +64,9 @@ public interface GameControllerInterface extends Remote {
      */
     void setPlayerAsConnected(Player p) throws RemoteException;
 
-    LinkedList<Player> getConnectedPlayers();
+    LinkedList<Player> getConnectedPlayers() throws RemoteException;
 
-    Player getCurrentPlayer();
-
-    /**
-     * This method starts the game
-     * @throws IllegalStateException if the game is not ready to start
-     * @throws RemoteException if the connection fails
-     */
-    void startGame() throws GameEndedException, RemoteException;
+    Player getCurrentPlayer() throws RemoteException;
 
 
     /**
@@ -111,15 +101,13 @@ public interface GameControllerInterface extends Remote {
      */
     void leave(GameListener lis, String nick) throws RemoteException;
 
-    void startIfFull() throws GameEndedException, RemoteException;
+    void setError(String s) throws RemoteException;
 
-    void setError(String s);
+    GameStatus getStatus() throws RemoteException;
 
-    GameStatus getStatus();
+    void playerIsReadyToStart(String nickname) throws RemoteException;
 
-    void playerIsReadyToStart(String nickname);
-
-    boolean isThisMyTurn(String nickname);
+    boolean isThisMyTurn(String nickname) throws RemoteException;
 
     void addPing(String nickname, GameListener gameListener) throws RemoteException;
 }
