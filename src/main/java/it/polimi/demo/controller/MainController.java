@@ -110,30 +110,40 @@ public class MainController implements MainControllerInterface, Serializable {
 
         Player player = new Player(nickname);
 
+        if (!games.containsKey(gameId) ||
+                games.get(gameId).getStatus() != GameStatus.WAIT ||
+                games.get(gameId).getNumPlayersToPlay() == games.get(gameId).getNumPlayers()) {
+            listener.genericErrorWhenEnteringGame("Game not found or not available");
+            return null;
+        }
+
         games.get(gameId).addListener(listener, player);
         games.get(gameId).addPlayer(player);
         System.out.println("\t>Game " + games.get(gameId).getGameId() + " player:\"" + nickname + "\" entered player");
         printRunningGames();
 
         return games.get(gameId);
+    }
 
-//        return Optional.ofNullable(game)
-//                .filter(g -> g.getStatus() == GameStatus.WAIT)
-//                .map(g -> {
-//                    try {
-//                        // todo: check if we add correctly the listener
-//                        g.addListener(listener, player);
-//                        // Here we add the player to the 'statical' list of players
-//                        g.addPlayer(player);
-//                        System.out.println("\t>Game " + g.getGameId() + " player:\"" + nickname + "\" entered player");
-//                        printRunningGames();
-//                        return g;
-//                    } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-//                        return null;
-//                    }
-//                })
-//                .orElse(null);
+    @Override
+    public synchronized GameControllerInterface joinFirstAvailableGame(GameListener listener, String nickname)
+            throws RemoteException {
+        Optional<GameController> firstAvailableGame = games.values().stream()
+                .filter(game -> game.getStatus() == GameStatus.WAIT && game.getNumPlayers() < DefaultValues.MaxNumOfPlayer)
+                .findFirst();
 
+        if (firstAvailableGame.isPresent()) {
+            GameController game = firstAvailableGame.get();
+            Player player = new Player(nickname);
+            game.addListener(listener, player);
+            game.addPlayer(player);
+            System.out.println("\t>Game " + game.getGameId() + " player:\"" + nickname + "\" entered player");
+            printRunningGames();
+            return game;
+        }
+
+        listener.genericErrorWhenEnteringGame("No games currently available to join...");
+        return null;
     }
 
     @Override

@@ -55,7 +55,6 @@ public class GameModel implements Serializable {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
         common_board = new CommonBoard();
-
         Random random = new Random();
         gameId = random.nextInt(1000000);
         num_required_players_to_start = -1; // invalid value on purpose
@@ -78,7 +77,6 @@ public class GameModel implements Serializable {
         // winners = new ArrayList<>();
         leaderboard = new HashMap<>();
         listeners_handler = new ListenersHandler();
-        printAsync("listeners_handler created at time " + System.currentTimeMillis());
     }
 
 
@@ -527,8 +525,8 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    // After the placement, we remove the card
-                    p.getHand().remove(card_chosen);
+                    // remove the card from the player's hand
+                    p.removeFromHand(p.getChosenGameCard());
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                 }
             }
@@ -540,8 +538,8 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    // After the placement, we remove the card
-                    p.getHand().remove(card_chosen);
+                    // remove the card from the player's hand
+                    p.removeFromHand(p.getChosenGameCard());
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                 }
             }
@@ -566,8 +564,8 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    // After the placement, we remove the card
-                    p.getHand().remove(card_chosen);
+                    // remove the card from the player's hand
+                    p.removeFromHand(p.getChosenGameCard());
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                 }
             }
@@ -579,8 +577,8 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    // After the placement, we remove the card
-                    p.getHand().remove(card_chosen);
+                    // remove the card from the player's hand
+                    p.removeFromHand(p.getChosenGameCard());
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                 }
             }

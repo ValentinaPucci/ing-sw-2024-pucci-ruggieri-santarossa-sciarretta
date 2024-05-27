@@ -232,11 +232,11 @@ public class TUI extends UI {
         List<ResourceCard> player_hand = gameModel.getPlayerEntity(nickname).getHand();
         for (ResourceCard c : player_hand) {
             if (c instanceof GoldCard) {
-                System.out.println("** GOLD CARD **" + " " + (player_hand.indexOf(c) + 1) + "\n");
+                System.out.println("** GOLD CARD **" + " " + "(" + (player_hand.indexOf(c) + 1) + ")" + "\n");
                 TuiCardGraphics.showGoldCard((GoldCard) c);
             }
             else {
-                System.out.println("** RESOURCE CARD **" + " " + (player_hand.indexOf(c) + 1) + "\n");
+                System.out.println("** RESOURCE CARD **" + " " + "(" + (player_hand.indexOf(c) + 1) + ")" + "\n");
                 TuiCardGraphics.showResourceCard(c);
             }
         }
@@ -716,7 +716,7 @@ public class TUI extends UI {
     public void show_joiningFirstAvailableMsg(String nickname) {
         this.clearScreen();
         this.show_titleCodexNaturalis();
-        printAsyncNoCursorReset("> Connecting to the first available game...");
+        printAsync("> Connecting to the first available game...");
         this.nickname = nickname;
     }
 
