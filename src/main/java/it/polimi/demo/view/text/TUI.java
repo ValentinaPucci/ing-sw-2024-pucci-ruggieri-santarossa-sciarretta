@@ -1,5 +1,7 @@
 package it.polimi.demo.view.text;
 
+import it.polimi.demo.model.cards.gameCards.StarterCard;
+import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import it.polimi.demo.DefaultValues;
@@ -127,13 +129,13 @@ public class TUI extends UI {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        this.show_titleMyShelfie();
+        this.show_titleCodexNaturalis();
     }
 
     /**
      * Shows the game title
      */
-    public void show_titleMyShelfie() {
+    public void show_titleCodexNaturalis() {
         clearScreen();
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
@@ -164,7 +166,7 @@ public class TUI extends UI {
     public void show_gameEnded(GameModelImmutable model) {
         clearScreen();
         // resize();
-        show_titleMyShelfie();
+        show_titleCodexNaturalis();
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()
@@ -228,6 +230,21 @@ public class TUI extends UI {
 
     }
 
+    @Override
+    public void show_objectiveCards(GameModelImmutable gameModel) {
+        printAsync("First, we show you the two objective cards you can choose from: \n");
+        List<ObjectiveCard> objectiveCards = gameModel.getObjectiveCards(nickname);
+        TuiCardGraphics.showObjectiveCard(objectiveCards.get(0));
+        TuiCardGraphics.showObjectiveCard(objectiveCards.get(1));
+    }
+
+    @Override
+    public void show_starterCards(GameModelImmutable gameModel) {
+        List<StarterCard> starterCards = gameModel.getStarterCards(nickname);
+        TuiCardGraphics.showStarterCardFront(starterCards.get(0));
+        TuiCardGraphics.showStarterCardBack(starterCards.get(1));
+    }
+
     /**
      * @param nickname the player that grabbed the tiles
      * @param model    the model in which the player grabbed the tiles
@@ -250,8 +267,9 @@ public class TUI extends UI {
      * @param nickname the player whose personal board we want to show
      * @param model the model that has the personal board to show
      */
+    @Override
     public void show_personalBoard(String nickname, GameModelImmutable model) {
-
+        TuiPersonalBoardGraphics.showPersonalBoard(model.getPlayerEntity(nickname).getPersonalBoard());
     }
 
     /**
@@ -277,6 +295,7 @@ public class TUI extends UI {
     @Override
     public void show_playerJoined(GameModelImmutable gameModel, String nick) {
         clearScreen();
+        show_titleCodexNaturalis();
         printAsync(ansi().cursor(10, 0).a("GameID: [" + gameModel.getGameId().toString() + "]\n").fg(DEFAULT));
         clearScreen();
         System.out.flush();
@@ -320,12 +339,13 @@ public class TUI extends UI {
         StringBuilder ris = new StringBuilder();
         int i = 0;
         int longestImportantEvent = importantEvents.stream().map(String::length).reduce(0, (a, b) -> a > b ? a : b);
-        ris.append(ansi().fg(GREEN).cursor(DefaultValues.row_important_events + i, DefaultValues.col_important_events - 1).bold().a("Latest Events:").fg(DEFAULT).boldOff());
+        ris.append(ansi().fg(GREEN).cursor(DefaultValues.row_important_events + i, DefaultValues.col_important_events - 1).bold().a("Latest Events: ").fg(DEFAULT).boldOff());
         for (String s : importantEvents) {
             ris.append(ansi().fg(WHITE).cursor(DefaultValues.row_important_events + 1 + i, DefaultValues.col_important_events).a(s).a(" ".repeat(longestImportantEvent - s.length())).fg(DEFAULT));
             i++;
         }
         printAsync(ris);
+        clearScreen();
 
         printAsync(ansi().cursor(DefaultValues.row_input, 0));
     }
@@ -450,8 +470,8 @@ public class TUI extends UI {
      * Asks the player to pick a direction
      */
     @Override
-    public void show_orientation() {
-        printAsync("\t> Choose card orientation (F = FRONT, B = BACK): ");
+    public void show_orientation(String message) {
+        printAsync(message + "\n" + "\t> Choose card orientation (FRONT / BACK): ");
         printAsyncNoCursorReset(ansi().cursorDownLine().a(""));
     }
 
@@ -505,7 +525,7 @@ public class TUI extends UI {
     @Override
     public void show_gameStarted(GameModelImmutable model) {
         this.clearScreen();
-        this.show_titleMyShelfie();
+        this.show_titleCodexNaturalis();
 //        this.show_allPlayers(model);
         this.show_alwaysShowForAll(model);
 //        this.show_gameId(model);
@@ -577,7 +597,7 @@ public class TUI extends UI {
     @Override
     public void show_menuOptions() {
         this.clearScreen();
-        this.show_titleMyShelfie();
+        this.show_titleCodexNaturalis();
         printAsyncNoCursorReset(ansi().cursor(9, 0).a("""
                 > Select one option:
                 \t(c) Create a new Game
@@ -617,6 +637,11 @@ public class TUI extends UI {
         printAsync("> Select which card from your hand you want to place:");
     }
 
+    @Override
+    public void show_whichObjectiveToChooseMsg() {
+        printAsync("> Select which objective card you want to choose (1 / 2):");
+    }
+
     /**
      * Creating game message
      *
@@ -625,7 +650,7 @@ public class TUI extends UI {
     @Override
     public void show_creatingNewGameMsg(String nickname) {
         this.clearScreen();
-        this.show_titleMyShelfie();
+        this.show_titleCodexNaturalis();
         printAsync("> Creating a new game...");
         this.nickname = nickname;
     }
@@ -638,7 +663,7 @@ public class TUI extends UI {
     @Override
     public void show_joiningFirstAvailableMsg(String nickname) {
         this.clearScreen();
-        this.show_titleMyShelfie();
+        this.show_titleCodexNaturalis();
         printAsyncNoCursorReset("> Connecting to the first available game...");
         this.nickname = nickname;
     }
@@ -652,7 +677,7 @@ public class TUI extends UI {
     @Override
     public void show_joiningToGameIdMsg(int idGame, String nickname) {
         this.clearScreen();
-        this.show_titleMyShelfie();
+        this.show_titleCodexNaturalis();
         printAsync("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
         this.nickname = nickname;
     }

@@ -21,7 +21,6 @@ import java.io.File;
 
 // TODO: Correct Gold card upload.
 public  class CardsCollection implements Serializable {
-
     public List<Card> cards;
 
     public CardsCollection() {
@@ -47,7 +46,7 @@ public  class CardsCollection implements Serializable {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
-            JsonNode cardsNode = rootNode.path("database/databaseGameCards.json");
+            JsonNode cardsNode = rootNode.path("cards");
 
             for (JsonNode cardNode : cardsNode) {
                 int id = cardNode.path("id").asInt();
@@ -102,7 +101,7 @@ public  class CardsCollection implements Serializable {
                                 SE_corner_content.equals("Butterfly")||SE_corner_content.equals("Wolf")){
                             actual_corners[1][1].setCornerResource(Resource.valueOf(SE_corner_content.toUpperCase()));
                             actual_corners[1][1].setCornerItemEmpty();
-                         }else{
+                        }else{
                             actual_corners[1][1].setCornerItem(Item.valueOf(SE_corner_content.toUpperCase()));
                             actual_corners[1][1].setCornerResourceEmpty();
                         }
@@ -178,10 +177,10 @@ public  class CardsCollection implements Serializable {
                     int CoverCorners = cardNode.path("CoverCorners").asInt();
 
                     // Problem: Item optional!
-                   boolean isPotionRequired = cardNode.path("isPotionRequired").asBoolean();
-                   boolean isFeatherRequired = cardNode.path("isFeatherRequired").asBoolean();
-                   boolean isParchmentRequired = cardNode.path("isParchmentRequired").asBoolean();
-                   boolean isCornerCoverageRequired = cardNode.path("isCornerCoverageRequired").asBoolean();
+                    boolean isPotionRequired = cardNode.path("isPotionRequired").asBoolean();
+                    boolean isFeatherRequired = cardNode.path("isFeatherRequired").asBoolean();
+                    boolean isParchmentRequired = cardNode.path("isParchmentRequired").asBoolean();
+                    boolean isCornerCoverageRequired = cardNode.path("isCornerCoverageRequired").asBoolean();
 
                     GoldCard gold_card = new GoldCard(id, orientation, color,score, actual_corners);
                     gold_card.type = "Gold";
@@ -192,21 +191,22 @@ public  class CardsCollection implements Serializable {
                     actual_corners[1][1].setReference_card(gold_card);
                     actual_corners[1][0].setReference_card(gold_card);
 
+
                     this.addCard(gold_card);
-                    }
                 }
-                //System.out.println("Deck populated successfully.");
-            } catch(Exception e){
-                System.err.println("Error populating deck: " + e.getMessage());
             }
+            //System.out.println("Deck populated successfully.");
+        } catch(Exception e){
+            System.err.println("Error populating deck: " + e.getMessage());
         }
+    }
 
     // populate objective cards draft
     public void populateDeckObjective(String jsonFilePath) {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
-            JsonNode cardsNode = rootNode.path("database/databaseObjectiveCards.json");
+            JsonNode cardsNode = rootNode.path("cards");
 
             for (JsonNode cardNode : cardsNode) {
 
@@ -214,7 +214,7 @@ public  class CardsCollection implements Serializable {
                 Orientation orientation = Orientation.FRONT;
                 int points = cardNode.path("points").asInt();
                 String pattern = cardNode.path("pattern").asText();
-               // System.out.println(pattern);
+                // System.out.println(pattern);
                 if (pattern.equals("L")) {
                     //System.out.println("L pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
@@ -254,23 +254,23 @@ public  class CardsCollection implements Serializable {
                     this.addCard(card);
                 }
                 if (pattern.equals("None")) {
-                   int num_feathers = cardNode.path("numFeathers").asInt();
-                   int num_potions = cardNode.path("numPotions").asInt();
-                   int num_parchments = cardNode.path("numParchments").asInt();
-                   int num_mushrooms = cardNode.path("numMushrooms").asInt();
-                   int num_leaves = cardNode.path("numLeaves").asInt();
-                   int num_butterflies = cardNode.path("numButterflies").asInt();
-                   int num_wolves = cardNode.path("numWolves").asInt();
+                    int num_feathers = cardNode.path("numFeathers").asInt();
+                    int num_potions = cardNode.path("numPotions").asInt();
+                    int num_parchments = cardNode.path("numParchments").asInt();
+                    int num_mushrooms = cardNode.path("numMushrooms").asInt();
+                    int num_leaves = cardNode.path("numLeaves").asInt();
+                    int num_butterflies = cardNode.path("numButterflies").asInt();
+                    int num_wolves = cardNode.path("numWolves").asInt();
 
-                   if(num_feathers != 0 || num_potions != 0 || num_parchments != 0) {
-                       ItemObjectiveCard card = new ItemObjectiveCard(id, orientation, points, num_feathers, num_potions, num_parchments);
-                       //System.out.println("item objective card");
-                       this.addCard(card);
-                   } else {
-                       ResourceObjectiveCard card = new ResourceObjectiveCard(id, orientation, points, num_mushrooms, num_leaves, num_butterflies, num_wolves);
-                       //System.out.println("Resource objective card");
-                       this.addCard(card);
-                   }
+                    if(num_feathers != 0 || num_potions != 0 || num_parchments != 0) {
+                        ItemObjectiveCard card = new ItemObjectiveCard(id, orientation, points, num_feathers, num_potions, num_parchments);
+                        //System.out.println("item objective card");
+                        this.addCard(card);
+                    } else {
+                        ResourceObjectiveCard card = new ResourceObjectiveCard(id, orientation, points, num_mushrooms, num_leaves, num_butterflies, num_wolves);
+                        //System.out.println("Resource objective card");
+                        this.addCard(card);
+                    }
                 }
             }
             //System.out.println("Objective cards Deck populated successfully.");
@@ -287,7 +287,7 @@ public  class CardsCollection implements Serializable {
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
-            JsonNode cardsNode = rootNode.path("database/databaseStarterCards.json");
+            JsonNode cardsNode = rootNode.path("cards");
 
             for (JsonNode cardNode : cardsNode) {
                 int id = cardNode.path("id").asInt();
@@ -342,8 +342,8 @@ public  class CardsCollection implements Serializable {
                     actual_corners_front[0][0].setEmpty();
                 } else {
                     if(!front_NO.equals("Empty")){
-                    actual_corners_front[0][0].setCornerResource(Resource.valueOf(front_NO.toUpperCase()));
-                    actual_corners_front[0][0].setCornerItemEmpty();
+                        actual_corners_front[0][0].setCornerResource(Resource.valueOf(front_NO.toUpperCase()));
+                        actual_corners_front[0][0].setCornerItemEmpty();
                     }
                 }
 
@@ -353,8 +353,8 @@ public  class CardsCollection implements Serializable {
                     actual_corners_front[1][0].setEmpty();
                 } else {
                     if(!front_SO.equals("Empty")){
-                    actual_corners_front[1][0].setCornerResource(Resource.valueOf(front_SO.toUpperCase()));
-                    actual_corners_front[1][0].setCornerItemEmpty();
+                        actual_corners_front[1][0].setCornerResource(Resource.valueOf(front_SO.toUpperCase()));
+                        actual_corners_front[1][0].setCornerItemEmpty();
                     }
                 }
                 // Back of Starter Card

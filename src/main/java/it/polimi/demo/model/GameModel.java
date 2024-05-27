@@ -33,6 +33,8 @@ public class GameModel implements Serializable {
     // is connected (and actively playing).
     private final LinkedList<Player> players_connected;
 
+    private final Random random = new Random();
+
     private Player initial_player;
     private CommonBoard common_board;
     private int gameId;
@@ -137,20 +139,20 @@ public class GameModel implements Serializable {
      */
     public synchronized void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        printAsync("Player " + p.getNickname() + " is ready to start at time " + System.currentTimeMillis() + " "
-        + p.getReadyToStart());
-        printAsync("Player (from players_connected) "
-                + getPlayerEntity(p.getNickname()).getNickname()
-                + " is ready to start at time " + System.currentTimeMillis() + " "
-                + getPlayerEntity(p.getNickname()).getNickname()
-        + " " + getPlayerEntity(p.getNickname()).getReadyToStart());
-        printAsync("listeners_handler used for the second time at time " + System.currentTimeMillis());
-
         listeners_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
         if (arePlayersReadyToStartAndEnough()) {
-            printAsync("players are ready to start and enough, model line 149");
+            extractFirstPlayerToPlay();
+            initializeGame();
             setStatus(GameStatus.FIRST_ROUND);
         }
+    }
+
+    public synchronized void extractFirstPlayerToPlay() {
+        Player first_player = players_connected.get(random.nextInt(players_connected.size()));
+        aux_order_players.remove(first_player);
+        aux_order_players.addFirst(first_player);
+        players_connected.remove(first_player);
+        players_connected.addFirst(first_player);
     }
 
     /**
@@ -167,23 +169,9 @@ public class GameModel implements Serializable {
      * @return player with the given nickname, or null if not found
      */
     public Player getPlayerEntity(String nick) {
-//        return aux_order_players.stream()
-//                .filter(x -> x.getNickname().equals(nick))
-//                .findFirst()
-//                .orElse(null);
-//        for (Player p : players_connected) {
-//            if (p.getNickname().equals(nick)) {
-//                return p;
-//            }
-//        }
-//        return null;
         for (int i = 0; i < players_connected.size(); i++) {
-            System.out.println("In getPLayerEntity" + players_connected.get(i).getNickname());
             if (players_connected.get(i).getNickname().equals(nick)) {
-                System.out.println("found and returned " + players_connected.get(i).getNickname() + " " +  players_connected.get(i));
-                Player p;
-                p = players_connected.get(i);
-                return p;
+                return players_connected.get(i);
             }
         }
         return null;
@@ -408,10 +396,12 @@ public class GameModel implements Serializable {
         switch (status) {
             case FIRST_ROUND -> {
                 listeners_handler.notify_GameStarted(this);
+                // Here we are not really calling the nextTurn() method
+                // inside the model!!
+                listeners_handler.notify_nextTurn(this);
             }
             case RUNNING -> {
-                listeners_handler.notify_GameStarted(this);
-                listeners_handler.notify_nextTurn(this);
+                // listeners_handler.notify_nextTurn(this);
             }
             case LAST_ROUND -> {
                 listeners_handler.notify_LastRound(this);
@@ -432,7 +422,6 @@ public class GameModel implements Serializable {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
-        //notifyListeners(listeners, GameListener::modelChanged);
     }
 
     /**
@@ -500,7 +489,12 @@ public class GameModel implements Serializable {
             p.setStarterCard(p.getStarterCardToChose().get(1));
         }
         personal_board.placeStarterCard(p.getStarterCard());
-        listeners_handler.notify_starterCardPlaced(this, o);
+        if (players_connected.stream()
+                .filter(q -> q.getStarterCard() != null)
+                .toList()
+                .size() == players_connected.size())
+            setStatus(GameStatus.RUNNING);
+        listeners_handler.notify_starterCardPlaced(this, o, p.getNickname());
         nextTurn();
     }
 
@@ -613,10 +607,12 @@ public class GameModel implements Serializable {
             throw new GameNotStartedException();
         }
 
+        printAsync("current player pre next turn: " + players_connected.peek().getNickname());
         // Proceeding to the next turn means changing the current player,
         // namely the peek of the queue.
         Player q = players_connected.poll();
         players_connected.offer(q);
+        printAsync("current player post next turn: " + players_connected.peek().getNickname());
 
         listeners_handler.notify_nextTurn(this);
     }

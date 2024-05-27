@@ -1,6 +1,8 @@
 package it.polimi.demo.networking.rmi.remoteInterfaces;
 
 import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.enumerations.Orientation;
+import it.polimi.demo.model.exceptions.GameEndedException;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -21,15 +23,6 @@ public interface MainControllerInterface extends Remote {
      */
     GameControllerInterface createGame(GameListener lis, String nick, int num_players) throws RemoteException;
 
-//    /**
-//     * This method joins the first available game
-//     * @param lis the GameListener of the player {@link GameListener}
-//     * @param nick the nickname of the player
-//     * @return the GameControllerInterface of the game {@link GameControllerInterface}
-//     * @throws RemoteException if the connection fails
-//     */
-//    GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException;
-
     /**
      * This method joins a specific game
      *
@@ -42,6 +35,10 @@ public interface MainControllerInterface extends Remote {
     GameControllerInterface joinGame(GameListener lis, String nick, int idGame) throws RemoteException;
 
     GameControllerInterface setAsReady(GameListener modelInvokedEvents, String nick, int idGame) throws RemoteException;
+
+    GameControllerInterface placeStarterCard(GameListener modelInvokedEvents, String nick, Orientation o, int idGame) throws RemoteException, GameEndedException;
+
+    GameControllerInterface chooseCard(GameListener modelInvokedEvents, String nick, int cardIndex, int idGame) throws RemoteException, GameEndedException;
 
     /**
      * This method reconnects a player to a specific game
@@ -65,6 +62,8 @@ public interface MainControllerInterface extends Remote {
      * @throws RemoteException if the connection fails
      */
     GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException;
+
+    GameControllerInterface getGameController(int idGame) throws RemoteException;
 
 
 }

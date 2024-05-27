@@ -47,6 +47,6 @@ public class SocketClientMessageChooseCard extends SocketClientGenericMessage im
      */
     @Override
     public void execute(GameControllerInterface gameController) throws RemoteException, GameEndedException {
-        gameController.chooseCardFromHand(gameController.getCurrentPlayer(), which_card);
+        gameController.chooseCardFromHand(gameController.getCurrentPlayer().getNickname(), which_card);
     }
 }

@@ -31,7 +31,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     }
 
     @Override
-    public void starterCardPlaced(GameModelImmutable gamemodel, Orientation orientation) throws RemoteException {
+    public void starterCardPlaced(GameModelImmutable gamemodel, Orientation orientation, String nick) throws RemoteException {
         try {
             //Else the object is not updated!!
             out.writeObject(new msgStarterCardPlaced(gamemodel, orientation));
