@@ -55,7 +55,6 @@ public class GameModel implements Serializable {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
         common_board = new CommonBoard();
-
         Random random = new Random();
         gameId = random.nextInt(1000000);
         num_required_players_to_start = -1; // invalid value on purpose
@@ -78,7 +77,6 @@ public class GameModel implements Serializable {
         // winners = new ArrayList<>();
         leaderboard = new HashMap<>();
         listeners_handler = new ListenersHandler();
-        printAsync("listeners_handler created at time " + System.currentTimeMillis());
     }
 
 
