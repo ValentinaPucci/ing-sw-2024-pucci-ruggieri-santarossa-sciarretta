@@ -10,7 +10,7 @@ public class InsertNickname {
     private Button insertNickname;
 
     @FXML
-    void GoToLobby(MouseEvent event) {
+    void GoToLobby(MouseEvent event) { //da sistemare
 
     }
 
