@@ -398,12 +398,15 @@ public class GameModel implements Serializable {
                 // inside the model!!
                 listeners_handler.notify_nextTurn(this);
             }
-            case RUNNING -> {
-                // listeners_handler.notify_nextTurn(this);
+
+            case SECOND_LAST_ROUND -> {
+                listeners_handler.notify_secondLastRound(this);
             }
+
             case LAST_ROUND -> {
-                listeners_handler.notify_LastRound(this);
+                listeners_handler.notify_lastRound(this);
             }
+
             case ENDED -> {
                 listeners_handler.notify_GameEnded(this);
             }
@@ -601,7 +604,10 @@ public class GameModel implements Serializable {
         switch (index) {
             case 1:
                 // Draw from Resource Deck
-                p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0));
+                if (!common_board.getResourceConcreteDeck().isEmpty())
+                    p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0));
+                else
+                    // todo: manage this exception
                 break;
             case 2:
                 // Draw first Resource Card from table
@@ -613,7 +619,10 @@ public class GameModel implements Serializable {
                 break;
             case 4:
                 // Draw from Gold Deck
-                p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1));
+                if (!common_board.getGoldConcreteDeck().isEmpty())
+                    p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1));
+                else
+                    // todo: manage this exception
                 break;
             case 5:
                 // Draw first Gold Card from table

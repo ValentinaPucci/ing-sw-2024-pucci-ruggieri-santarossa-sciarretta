@@ -126,6 +126,8 @@ public abstract class UI {
 
     protected abstract void show_commonBoard(GameModelImmutable gameModel);
 
+    protected abstract void show_myTurnIsFinished();
+
     /**
      * Message that shows the player's hand
      *

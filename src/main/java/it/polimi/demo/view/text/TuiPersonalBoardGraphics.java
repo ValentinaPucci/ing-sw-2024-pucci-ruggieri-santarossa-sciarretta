@@ -63,7 +63,8 @@ public class TuiPersonalBoardGraphics {
     }
 
 
-    public static void showObjectsCount(PersonalBoard personal_board){
+    public static void showObjectsCount(PersonalBoard personal_board) {
+        System.out.println("Your currents point counter is: *** [" + personal_board.getPoints() + "] *** points.");
         System.out.println("These are the objects on your Personal Board:");
         System.out.println("Mushrooms: " + personal_board.getNum_mushrooms());
         System.out.println("Butterflies: " + personal_board.getNum_butterflies());

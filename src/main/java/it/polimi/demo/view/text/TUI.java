@@ -307,6 +307,13 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    @Override
+    public void show_myTurnIsFinished() {
+        clearScreen();
+        printAsync("Your turn is finished. Now, wait until it is again your turn! \n");
+        clearScreen();
+    }
+
     /**
      * show the personal board
      * @param nickname the player whose personal board we want to show

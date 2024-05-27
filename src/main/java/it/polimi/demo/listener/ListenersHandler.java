@@ -236,7 +236,20 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_LastRound(GameModel model) {
+    public synchronized void notify_secondLastRound(GameModel model) {
+        Iterator<GameListener> i = listeners.iterator();
+        while (i.hasNext()) {
+            GameListener l = i.next();
+            try {
+                l.secondLastRound(new GameModelImmutable(model));
+            } catch (RemoteException e) {
+                printAsync("During notification of notify_SecondLastRound, a disconnection has been detected before heartbeat");
+                i.remove();
+            }
+        }
+    }
+
+    public synchronized void notify_lastRound(GameModel model) {
         Iterator<GameListener> i = listeners.iterator();
         while (i.hasNext()) {
             GameListener l = i.next();

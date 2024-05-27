@@ -45,6 +45,8 @@ import static it.polimi.demo.view.flow.utilities.events.EventType.*;
  */
 public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
+    // todo: solve the issue of second_last_turn ----> last_turn transition
+
     /**
      * Nickname of the player {@link Player}
      */
@@ -166,9 +168,16 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                                 throw new RuntimeException(e);
                             }
                         }
-                        case RUNNING, LAST_ROUND -> {
+                        case RUNNING, SECOND_LAST_ROUND -> {
                             try {
                                 statusRunning(event);
+                            } catch (IOException | InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        case LAST_ROUND -> {
+                            try {
+                                statusLastRound(event);
                             } catch (IOException | InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
@@ -307,6 +316,31 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             case CARD_PLACED -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
                     askWhereToDrawFrom();
+                }
+            }
+        }
+    }
+
+    private void statusLastRound(EventElement event) throws IOException, InterruptedException {
+
+        switch (event.getType()) {
+
+            case MESSAGE_SENT -> {
+                ui.show_messageSent(event.getModel(), nickname);
+            }
+
+            case NEXT_TURN -> {
+                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                    ui.show_personalObjectiveCard(event.getModel());
+                    ui.show_playerHand(event.getModel());
+                    askWhichCard();
+                }
+            }
+
+            case ASK_WHICH_ORIENTATION, ILLEGAL_MOVE -> {
+                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                    ui.show_cardChosen(nickname, event.getModel());
+                    askGameCardOrientationAndPlace();
                 }
             }
         }
@@ -780,8 +814,11 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     public void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
             ui.show_personalBoard(nickname, model);
-            ui.show_commonBoard(model);
-            events.add(model, CARD_PLACED);
+            // ui.show_commonBoard(model);
+            if (model.getStatus() == GameStatus.RUNNING)
+                events.add(model, CARD_PLACED);
+            else if (model.getStatus() == GameStatus.SECOND_LAST_ROUND)
+                events.add(model, EventType.NEXT_TURN);
         }
     }
 
@@ -800,6 +837,19 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
 
         }
+    }
+
+    /**
+     * It adds the NextTurn event to the event list
+     * @param gameModel game model {@link GameModelImmutable}
+     */
+    @Override
+    public void nextTurn(GameModelImmutable gameModel) {
+        if (gameModel.getStatus() == GameStatus.RUNNING)
+            ui.show_myTurnIsFinished();
+        events.add(gameModel, EventType.NEXT_TURN);
+        //I remove all the input that the user sends when It is not his turn
+        this.inputParser.getDataToProcess().popAllData();
     }
 
     /**
@@ -940,17 +990,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * It adds the NextTurn event to the event list
-     * @param gameModel game model {@link GameModelImmutable}
-     */
-    @Override
-    public void nextTurn(GameModelImmutable gameModel) {
-        events.add(gameModel, EventType.NEXT_TURN);
-        //I remove all the input that the user sends when It is not his turn
-        this.inputParser.getDataToProcess().popAllData();
-    }
-
-    /**
      * A player has been disconnected
      * @param gameModel game model {@link GameModelImmutable}
      * @param nick nickname of the player
@@ -976,6 +1015,12 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         ui.addImportantEvent("Only one player is connected, waiting " + secondsToWaitUntilGameEnded + " seconds before calling Game Ended!");
     }
 
+    @Override
+    public void secondLastRound(GameModelImmutable gameModel) {
+        ui.addImportantEvent("*** Second last round begins! ***");
+        events.add(gameModel, EventType.NEXT_TURN);
+    }
+
     /**
      * Last circle begins
      * @param gameModel game model {@link GameModelImmutable}
@@ -983,9 +1028,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      */
     @Override
     public void lastRound(GameModelImmutable gameModel) throws RemoteException {
-        ui.addImportantEvent("Last round begins!");
+        ui.addImportantEvent("*** Last round begins! Now you will not be able to draw any additional card! ***");
     }
-
 
     /*==Testing purpose==*/
     
