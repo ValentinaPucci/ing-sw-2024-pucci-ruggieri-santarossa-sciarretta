@@ -30,6 +30,8 @@ public interface CommonClientActions {
      */
     void joinGame(String nick, int idGame) throws IOException, InterruptedException, NotBoundException;
 
+    void joinFirstAvailableGame(String nick) throws IOException, InterruptedException, NotBoundException;
+
     /**
      * Reconnect the player to the game
      *

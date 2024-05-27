@@ -525,8 +525,8 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    // After the placement, we remove the card
-                    p.getHand().remove(card_chosen);
+                    // remove the card from the player's hand
+                    p.removeFromHand(p.getChosenGameCard());
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                 }
             }
@@ -538,8 +538,8 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    // After the placement, we remove the card
-                    p.getHand().remove(card_chosen);
+                    // remove the card from the player's hand
+                    p.removeFromHand(p.getChosenGameCard());
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                 }
             }
@@ -564,8 +564,8 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    // After the placement, we remove the card
-                    p.getHand().remove(card_chosen);
+                    // remove the card from the player's hand
+                    p.removeFromHand(p.getChosenGameCard());
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                 }
             }
@@ -577,8 +577,8 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    // After the placement, we remove the card
-                    p.getHand().remove(card_chosen);
+                    // remove the card from the player's hand
+                    p.removeFromHand(p.getChosenGameCard());
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                 }
             }

@@ -433,6 +433,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
                 model.placeCard(getPlayerEntity(nick).getChosenGameCard(), getPlayerEntity(nick), x, y);
             }
         } else {
+            // does not matter whether the card is gold or resource only, the back is always resource!
             model.placeCard(getPlayerEntity(nick).getChosenGameCard().getBack(), getPlayerEntity(nick), x, y);
         }
 

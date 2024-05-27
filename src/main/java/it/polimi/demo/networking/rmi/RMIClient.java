@@ -194,6 +194,17 @@ public class RMIClient implements CommonClientActions {
         game_id = gameController.getGameId();
     }
 
+    @Override
+    public void joinFirstAvailableGame(String nick) throws RemoteException, NotBoundException {
+        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
+        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        gameController = requests.joinFirstAvailableGame(modelInvokedEvents, nick);
+        if (gameController != null) {
+            nickname = nick;
+            game_id = gameController.getGameId();
+        }
+    }
+
     /**
      * Notify the server that a socket is ready to start
      *

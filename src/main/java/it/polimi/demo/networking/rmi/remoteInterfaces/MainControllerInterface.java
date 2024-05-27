@@ -34,6 +34,8 @@ public interface MainControllerInterface extends Remote {
      */
     GameControllerInterface joinGame(GameListener lis, String nick, int idGame) throws RemoteException;
 
+    GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException;
+
     GameControllerInterface setAsReady(GameListener modelInvokedEvents, String nick, int idGame) throws RemoteException;
 
     GameControllerInterface placeStarterCard(GameListener modelInvokedEvents, String nick, Orientation o, int idGame) throws RemoteException, GameEndedException;

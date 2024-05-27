@@ -323,14 +323,12 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         switch (event.getType()) {
             case GAME_ENDED -> {
                 ui.show_returnToMenuMsg();
-                //new Scanner(System.in).nextLine();
                 this.inputParser.getDataToProcess().popAllData();
                 try {
                     this.inputParser.getDataToProcess().popData();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
-
                 this.leave(nickname, event.getModel().getGameId());
                 this.youLeft();
             }
@@ -437,6 +435,9 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 else
                     createGame(nickname, num_players);
             }
+            case "j" -> {
+                joinFirstAvailableGame(nickname);
+            }
             case "js" -> {
                 Integer gameId = askGameId();
                 if (gameId == -1)
@@ -444,7 +445,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 else
                     joinGame(nickname, gameId);
             }
-
             case "x" -> reconnect(nickname, fileDisconnection.getLastGameId(nickname));
 
             default -> {
@@ -613,6 +613,16 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         ui.show_creatingNewGameMsg(nickname);
         try {
             clientActions.createGame(nickname, num_of_players);
+        } catch (IOException | InterruptedException | NotBoundException e) {
+            noConnectionError();
+        }
+    }
+
+    @Override
+    public void joinFirstAvailableGame(String nick) {
+        ui.show_joiningFirstAvailableMsg(nick);
+        try {
+            clientActions.joinFirstAvailableGame(nick);
         } catch (IOException | InterruptedException | NotBoundException e) {
             noConnectionError();
         }
