@@ -178,8 +178,12 @@ public class GameModel implements Serializable {
 //        }
 //        return null;
         for (int i = 0; i < players_connected.size(); i++) {
+            System.out.println("In getPLayerEntity" + players_connected.get(i).getNickname());
             if (players_connected.get(i).getNickname().equals(nick)) {
-                return players_connected.get(i);
+                System.out.println("found and returned " + players_connected.get(i).getNickname() + " " +  players_connected.get(i));
+                Player p;
+                p = players_connected.get(i);
+                return p;
             }
         }
         return null;
@@ -428,7 +432,7 @@ public class GameModel implements Serializable {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
-        // notifyListeners(listeners, GameListener::modelChanged);
+        //notifyListeners(listeners, GameListener::modelChanged);
     }
 
     /**

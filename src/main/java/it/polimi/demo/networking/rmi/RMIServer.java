@@ -111,7 +111,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
         } catch (RemoteException e){
             // Already exported, due to another RMI Client running on the same machine
         }
-        // ris.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),0));
+        // game.setPlayerIdentity((PlayerInterface) UnicastRemoteObject.exportObject(ris.getPlayerIdentity(),0));
         printAsync("[RMI] " + nick + " has created a new game");
         return game;
     }

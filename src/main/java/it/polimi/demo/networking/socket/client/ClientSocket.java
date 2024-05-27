@@ -19,6 +19,7 @@ import it.polimi.demo.view.flow.Flow;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -26,7 +27,7 @@ import java.rmi.RemoteException;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
 
-public class ClientSocket extends Thread implements CommonClientActions {
+public class ClientSocket extends Thread implements CommonClientActions, Serializable {
 
     /**
      * This is the socket that represents the client
@@ -161,6 +162,8 @@ public class ClientSocket extends Thread implements CommonClientActions {
 
     @Override
     public void createGame(String nickname, int num_of_players) throws IOException, InterruptedException, NotBoundException {
+        this.nickname = nickname;
+        System.out.println("Nickname in Client socket [out]: " + nickname);
         ob_out.writeObject(new SocketClientMessageCreateGame(nickname, num_of_players));
         finishSending();
         if(!socketHeartbeat.isAlive()) {
@@ -170,6 +173,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
 
     @Override
     public void joinGame(String nick, int idGame) throws IOException, InterruptedException, NotBoundException {
+        nickname = nick;
         ob_out.writeObject(new SocketClientMessageJoinGame(nick, idGame));
         finishSending();
         if(!socketHeartbeat.isAlive()) {
@@ -179,6 +183,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
 
     @Override
     public void reconnect(String nick, int idGame) throws IOException, InterruptedException, NotBoundException {
+        nickname = nick;
         ob_out.writeObject(new SocketClientMessageReconnect(nick, idGame));
         finishSending();
         if(!socketHeartbeat.isAlive()) {
@@ -197,8 +202,9 @@ public class ClientSocket extends Thread implements CommonClientActions {
     }
 
     @Override
-    public void setAsReady(String nickname, int game_id) throws RemoteException, NotBoundException {
-
+    public void setAsReady(String nickname, int game_id) throws IOException, NotBoundException {
+        ob_out.writeObject(new SocketClientMessageSetReady(nickname));
+        finishSending();
     }
 
 //    @Override
@@ -253,6 +259,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
     public void heartbeat() throws RemoteException {
         if (ob_out != null) {
             try {
+                //System.out.println("Heartbeat message with nick: " + nickname);
                 ob_out.writeObject(new SocketClientMessageHeartBeat(nickname));
                 finishSending();
             } catch (IOException e) {

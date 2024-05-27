@@ -6,6 +6,7 @@ import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 /**
@@ -13,7 +14,7 @@ import java.rmi.RemoteException;
  * Extends SocketClientGenericMessage and is used to send a message to the server
  * indicating the positioning of a tile on the player's shelf.
  */
-public class SocketClientMessageChooseCard extends SocketClientGenericMessage {
+public class SocketClientMessageChooseCard extends SocketClientGenericMessage implements Serializable {
 
     private int which_card;
 

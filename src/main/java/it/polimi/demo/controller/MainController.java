@@ -109,6 +109,7 @@ public class MainController implements MainControllerInterface, Serializable {
 
         Player player = new Player(nickname);
 
+        System.out.println("ID in Main: " + gameId);
         games.get(gameId).addListener(listener, player);
         games.get(gameId).addPlayer(player);
         System.out.println("\t>Game " + games.get(gameId).getGameId() + " player:\"" + nickname + "\" entered player");

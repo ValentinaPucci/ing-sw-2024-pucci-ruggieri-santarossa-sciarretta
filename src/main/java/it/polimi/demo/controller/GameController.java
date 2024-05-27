@@ -113,7 +113,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     private void handleDisconnection(Heartbeat heartbeat, GameListener listener) {
         try {
             disconnectPlayer(getPlayerEntity(heartbeat.getNick()), listener);
-            printAsync("Disconnection of player: " + heartbeat.getNick() + " detected ");
+            //printAsync("Disconnection of player: " + heartbeat.getNick() + " detected ");
 
             // Now check
             if (getNumConnectedPlayers() == 0) {
@@ -270,7 +270,9 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @throws MaxPlayersLimitException    when the game has already reached its full capability
      */
     public void addPlayer(Player p) throws PlayerAlreadyConnectedException, MaxPlayersLimitException {
+        System.out.println("In GameController added player: " + p.getNickname());
         this.model.addPlayer(p);
+        System.out.println("In  GameController/AddPlayer the players are: " + model.getAllPlayers().get(0));
     }
 
     /**
@@ -396,6 +398,10 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     @Override
     public synchronized void playerIsReadyToStart(String nickname) {
+        // model is not updated and you don t have players....
+
+        // Nickname is here but get Player entity cannot find the player
+        System.out.println("Nick in get entity: " + this.model.getPlayerEntity(nickname));
         model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
 //        if (model.arePlayersReadyToStartAndEnough())
 //            model.setStatus(GameStatus.FIRST_ROUND);

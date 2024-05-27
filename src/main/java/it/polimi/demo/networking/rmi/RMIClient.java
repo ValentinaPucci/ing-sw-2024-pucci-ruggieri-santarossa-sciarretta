@@ -325,7 +325,7 @@ public class RMIClient implements CommonClientActions {
     @Override
     public void heartbeat() throws RemoteException {
         if (gameController != null) {
-            System.out.println("Nick in heartbeat: " + nickname);
+           // System.out.println("Nick in heartbeat: " + nickname);
             gameController.addPing(nickname, modelInvokedEvents);
         }
     }

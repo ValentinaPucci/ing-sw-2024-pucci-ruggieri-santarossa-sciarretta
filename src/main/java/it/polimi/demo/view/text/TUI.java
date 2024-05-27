@@ -277,7 +277,6 @@ public class TUI extends UI {
     @Override
     public void show_playerJoined(GameModelImmutable gameModel, String nick) {
         clearScreen();
-        show_titleMyShelfie();
         printAsync(ansi().cursor(10, 0).a("GameID: [" + gameModel.getGameId().toString() + "]\n").fg(DEFAULT));
         clearScreen();
         System.out.flush();
