@@ -4,13 +4,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class PlayersNumberController {
+public class GameIdController {
 
     @FXML
-    private TextField numPlayers;
+    private TextField GameId;
 
     @FXML
-    void enterGame(ActionEvent event) {
+    void EnterGame(ActionEvent event) {
 
     }
 
