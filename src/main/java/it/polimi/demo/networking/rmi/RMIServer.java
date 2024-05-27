@@ -207,6 +207,32 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
         return ris;
     }
 
+    @Override
+    public GameControllerInterface placeCard(GameListener lis, String nick, int where_to_place_x, int where_to_place_y, Orientation orientation, int idGame) throws RemoteException, GameEndedException {
+        GameControllerInterface ris = serverObject.mainController.placeCard(lis, nick, where_to_place_x, where_to_place_y, orientation, idGame);
+        if (ris != null) {
+            try {
+                UnicastRemoteObject.exportObject(ris, 0);
+            } catch (RemoteException e){
+                // Already exported, due to another RMI Client running on the same machine
+            }
+        }
+        return ris;
+    }
+
+    @Override
+    public GameControllerInterface drawCard(GameListener lis, String nick, int index, int idGame) throws RemoteException, GameEndedException {
+        GameControllerInterface ris = serverObject.mainController.drawCard(lis, nick, index, idGame);
+        if (ris != null) {
+            try {
+                UnicastRemoteObject.exportObject(ris, 0);
+            } catch (RemoteException e){
+                // Already exported, due to another RMI Client running on the same machine
+            }
+        }
+        return ris;
+    }
+
     /**
      * A player requested, through the network, to reconnect to a game
      *

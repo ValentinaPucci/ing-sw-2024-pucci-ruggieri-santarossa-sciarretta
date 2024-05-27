@@ -209,6 +209,20 @@ public class ListenersHandler implements Serializable {
         }
     }
 
+    public synchronized void notify_illegalMove(GameModel model) {
+        Iterator<GameListener> i = listeners.iterator();
+        while (i.hasNext()) {
+            GameListener l = i.next();
+            try {
+                printAsync("Illegal move detected");
+                l.illegalMove(new GameModelImmutable(model));
+            } catch (RemoteException e) {
+                printAsync("During notification of notify_illegalMove, a disconnection has been detected before heartbeat");
+                i.remove();
+            }
+        }
+    }
+
     public synchronized void notify_cardDrawn(GameModel model, int index) {
         Iterator<GameListener> i = listeners.iterator();
         while (i.hasNext()) {

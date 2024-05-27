@@ -40,6 +40,10 @@ public interface MainControllerInterface extends Remote {
 
     GameControllerInterface chooseCard(GameListener modelInvokedEvents, String nick, int cardIndex, int idGame) throws RemoteException, GameEndedException;
 
+    GameControllerInterface placeCard(GameListener modelInvokedEvents, String nick, int x, int y, Orientation o, int idGame) throws RemoteException, GameEndedException;
+
+    GameControllerInterface drawCard(GameListener modelInvokedEvents, String nick, int index, int idGame) throws RemoteException, GameEndedException;
+
     /**
      * This method reconnects a player to a specific game
      *

@@ -1,5 +1,6 @@
 package it.polimi.demo.view.flow;
 
+import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
@@ -123,7 +124,28 @@ public abstract class UI {
 
     protected abstract void show_personalBoard(String nick, GameModelImmutable gameModel);
 
+    protected abstract void show_commonBoard(GameModelImmutable gameModel);
 
+    /**
+     * Message that shows the player's hand
+     *
+     * @param gameModel the model that has the player hand that needs to be shown
+     */
+    protected abstract void show_playerHand(GameModelImmutable gameModel);
+
+    protected abstract void show_personalObjectiveCard(GameModelImmutable gameModel);
+
+    /**
+     * Shows player's grabbed tiles
+     *
+     * @param nickname the player that grabbed the tiles
+     * @param model    the model in which the player grabbed the tiles
+     */
+    protected abstract void show_cardChosen(String nickname, GameModelImmutable model);
+
+    protected abstract void show_illegalMove();
+
+    protected abstract void show_whereToDrawFrom();
 
     /**
      * Shows that the playing player is ready to start
@@ -140,21 +162,6 @@ public abstract class UI {
      * @param nickname nick of reconnected player (or of the player that is now in turn)
      */
     protected abstract void show_nextTurnOrPlayerReconnected(GameModelImmutable model, String nickname);
-
-    /**
-     * Message that shows the player's hand
-     *
-     * @param gameModel the model that has the player hand that needs to be shown
-     */
-    protected abstract void show_playerHand(GameModelImmutable gameModel);
-
-    /**
-     * Shows player's grabbed tiles
-     *
-     * @param nickname the player that grabbed the tiles
-     * @param model    the model in which the player grabbed the tiles
-     */
-    protected abstract void show_cardChosen(String nickname, GameModelImmutable model);
 
     /**
      * Shows common cards extracted
@@ -211,6 +218,8 @@ public abstract class UI {
      * Shows the message that asks for tiles to be picked
      */
     protected abstract void show_askChooseCardMainMsg();
+
+    protected abstract void show_genericMessage(String s);
 
     //----------------------
     //ACTIONS

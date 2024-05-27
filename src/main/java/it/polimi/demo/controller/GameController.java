@@ -35,7 +35,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new GameModel(gameID, numberOfPlayers, player);
         listeners_to_heartbeats = new HashMap<>();
-        new Thread(this).start();
+        // new Thread(this).start();
     }
 
     //------------------------------------connection/reconnection management-----------------------------------------------
@@ -406,92 +406,40 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public void chooseCardFromHand(String nick, int which_card) throws RemoteException {
-        if (model.getStatus() == GameStatus.FIRST_ROUND) {
-            model.getPlayersConnected().stream()
-                    .filter(player -> player.getNickname().equals(nick))
-                    .findFirst()
-                    .ifPresent(player -> player.setChosenObjectiveCard(player.getSecretObjectiveCards().get(which_card)));
-        }
-        else
-            model.getPlayersConnected().stream()
-                    .filter(player -> player.getNickname().equals(nick))
-                    .findFirst()
-                    .ifPresent(player -> player.setChosenGameCard(player.getHand().get(which_card)));
-
+        model.chooseCardFromHand(getPlayerEntity(nick), which_card);
     }
 
     /**
      * Place a card in the common board
      *
-     * @param p           the player that places the card
+     * @param nick           the player that places the card
      * @param x           the x coordinate
      * @param y           the y coordinate
      * @throws RemoteException if there is an  error.
      */
     @Override
-    public void placeCard(Player p, int x, int y, Orientation orientation)
-            throws RemoteException {
+    public void placeCard(String nick, int x, int y, Orientation orientation) throws RemoteException {
 
-        if (!getConnectedPlayers().contains(p))
+        if (!getConnectedPlayers().contains(getPlayerEntity(nick)))
             throw new RemoteException("Player not connected");
-        else if (!isMyTurn(p.getNickname()))
+        else if (!isMyTurn(getPlayerEntity(nick).getNickname()))
             throw new RemoteException("It's not your turn");
 
-        try {
-            if (orientation == Orientation.FRONT) {
-                System.out.println("FRONT PLACING");
-                if (p.getChosenGameCard() instanceof GoldCard) {
-                    model.placeCard((GoldCard) p.getChosenGameCard(), p, x, y);
-//                    System.out.println("Gold Placing");
-//                    System.out.println("Personal board of: " + p.getNickname());
-                    p.getPersonalBoard().printBoardIDs();
-                } else {
-//                    System.out.println("Resource placing");
-//                    System.out.println("Personal board of: " + p.getNickname());
-                    model.placeCard(p.getChosenGameCard(), p, x, y);
-                }
-            } else {
-                System.out.println("BACK PLACING, doesn't matter the card type");
-                model.placeCard(p.getChosenGameCard().getBack(), p, x, y);
+        if (orientation == Orientation.FRONT) {
+            if (getPlayerEntity(nick).getChosenGameCard() instanceof GoldCard) {
+                model.placeCard((GoldCard) getPlayerEntity(nick).getChosenGameCard(), getPlayerEntity(nick), x, y);
             }
-        } catch (IllegalMoveException e) {
-            throw new RemoteException("Illegal move");
+            else {
+                model.placeCard(getPlayerEntity(nick).getChosenGameCard(), getPlayerEntity(nick), x, y);
+            }
+        } else {
+            model.placeCard(getPlayerEntity(nick).getChosenGameCard().getBack(), getPlayerEntity(nick), x, y);
         }
 
-        if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
+        if (getPlayerEntity(nick).getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
             model.setStatus(GameStatus.SECOND_LAST_ROUND);
         }
     }
-
-//    /**
-//     * Place a card in the commonboard
-//     *
-//     * @param card_chosen the card to place
-//     * @param p           the player that places the card
-//     * @param x           the x coordinate
-//     * @param y           the y coordinate
-//     * @throws RemoteException if there is an  error.
-//     */
-//    @Override
-//    public void placeCard(GoldCard card_chosen, Player p, int x, int y)
-//            throws RemoteException {
-//
-//        if (!getConnectedPlayers().contains(p))
-//            throw new RemoteException("Player not connected");
-//        else if (!isMyTurn(p.getNickname()))
-//            throw new RemoteException("It's not your turn");
-//
-//        try {
-//            // Call the placeCard method in GameModel
-//            model.placeCard(card_chosen, p, x, y);
-//        } catch (IllegalMoveException e) {
-//            throw new RemoteException("Illegal move");
-//        }
-//
-//        if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
-//            model.setStatus(GameStatus.SECOND_LAST_ROUND);
-//        }
-//    }
 
     /**
      * Draw a card from the deck in commonBoard. It also incorporates the logic of the game
@@ -501,19 +449,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public void drawCard(String player_nickname, int index) throws GameEndedException {
-        if (!(1 <= index && index <= 6))
-            throw new IllegalArgumentException("invalid index");
         model.drawCard(getPlayerEntity(player_nickname), index);
-        // this.myTurnIsFinished();
     }
-
-//    // aux method for drawCard
-//    /**
-//     * this method must be called every time a player finishes his/her turn,
-//     * i.e. whenever he/she has placed a card on his/her personal board and has also
-//     * drawn a new game card from the deck/table
-//     * @throws RuntimeException if the connection fails
-//     */
 
 
     /**
@@ -524,14 +461,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         return model.getGameId();
     }
 
-
-
-//    private void showPlayerHand(List<ResourceCard> playerHand) {
-//        System.out.println("Player's Hand:");
-//        for (ResourceCard card : playerHand) {
-//            System.out.println(card); // Assuming ResourceCard has a meaningful toString() method
-//        }
-//    }
 
 
 //---------------------------------listeners management--------------------------------------
