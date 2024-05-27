@@ -267,7 +267,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                     ui.show_objectiveCards(event.getModel());
                     askWhichObjectiveCard();
                     ui.show_starterCards(event.getModel());
-                    askStarterCardOrientation();
+                    askStarterCardOrientationAndPlace();
                 }
             }
         }
@@ -290,36 +290,26 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             }
 
             case NEXT_TURN -> {
-
-
+                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                    ui.show_personalObjectiveCard(event.getModel());
+                    ui.show_playerHand(event.getModel());
+                    askWhichCard();
+                }
             }
 
-            case ASK_WHICH_CARD_TO_PLACE -> {
-
-            }
-
-            case ASK_WHICH_ORIENTATION -> {
-
-            }
-
-            case ASK_COORDINATES_TO_PLACE_CARD -> {
-
-            }
-
-            case ERRONEOUS_COORDINATES -> {
-
+            case ASK_WHICH_ORIENTATION, ILLEGAL_MOVE -> {
+                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                    ui.show_cardChosen(nickname, event.getModel());
+                    askGameCardOrientationAndPlace();
+                }
             }
 
             case CARD_PLACED -> {
-
+                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                    askWhereToDrawFrom();
+                }
             }
-
-            case ASK_WHERE_TO_DRAW_CARD -> {
-
-            }
-
         }
-
     }
 
     /**
@@ -524,7 +514,24 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
     }
 
-    public void askStarterCardOrientation() {
+    public void askWhichCard() {
+        String ris;
+        do {
+            ui.show_whichCardToPlaceMsg();
+            try {
+                ris = this.inputParser.getDataToProcess().popData();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } while (!(ris.equals("1") || ris.equals("2") || ris.equals("3")));
+        try {
+            chooseCard(Integer.parseInt(ris) - 1);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void askStarterCardOrientationAndPlace() {
         String ris;
         do {
             ui.show_orientation("Choose the orientation of the starter card");
@@ -537,6 +544,56 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         try {
             placeStarterCard(Orientation.valueOf(ris));
         } catch (RemoteException | GameEndedException | NotBoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void askGameCardOrientationAndPlace() {
+        String ris;
+        String ris1;
+        String ris2;
+        do {
+            ui.show_orientation("Choose the orientation of the card to place");
+            try {
+                ris = this.inputParser.getDataToProcess().popData();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } while (!(ris.equals("FRONT") || ris.equals("BACK")));
+        do {
+            ui.show_genericMessage("Choose the ** x ** coordinates where to place the card (insert a number between 0 and 1000)");
+            try {
+                ris1 = this.inputParser.getDataToProcess().popData();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            ui.show_genericMessage("Choose the ** y ** coordinates where to place the card (insert a number between 0 and 1000)");
+            try {
+                ris2 = this.inputParser.getDataToProcess().popData();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } while (false);
+        try {
+            placeCard(Integer.parseInt(ris1), Integer.parseInt(ris2), Orientation.valueOf(ris));
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void askWhereToDrawFrom() {
+        String ris;
+        do {
+            ui.show_whereToDrawFrom();
+            try {
+                ris = this.inputParser.getDataToProcess().popData();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        } while (!(Integer.parseInt(ris) >= 1 && Integer.parseInt(ris) <= 6));
+        try {
+            drawCard(Integer.parseInt(ris));
+        } catch (RemoteException | GameEndedException e) {
             throw new RuntimeException(e);
         }
     }
@@ -602,9 +659,28 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     @Override
+    public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
+        try {
+            clientActions.placeCard(where_to_place_x, where_to_place_y, orientation);
+        } catch (GameEndedException | NotBoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
     public void chooseCard(int which_card) throws RemoteException {
         try {
             clientActions.chooseCard(which_card);
+        } catch (GameEndedException | NotBoundException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void drawCard(int index) throws RemoteException, GameEndedException {
+        try {
+            clientActions.drawCard(index);
         } catch (GameEndedException | NotBoundException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -657,16 +733,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     @Override
-    public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
-
-    }
-
-    @Override
-    public void drawCard(int index) throws RemoteException, GameEndedException {
-
-    }
-
-    @Override
     public void heartbeat() {
 
     }
@@ -695,17 +761,35 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
     @Override
     public void cardChosen(GameModelImmutable model, int which_card) {
-
+        if (model.getCurrentPlayerNickname().equals(nickname)) {
+            events.add(model, ASK_WHICH_ORIENTATION);
+        }
     }
 
     @Override
     public void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
+        if (model.getCurrentPlayerNickname().equals(nickname)) {
+            ui.show_personalBoard(nickname, model);
+            ui.show_commonBoard(model);
+            events.add(model, CARD_PLACED);
+        }
+    }
 
+    @Override
+    public void illegalMove(GameModelImmutable model) {
+        if (model.getCurrentPlayerNickname().equals(nickname)) {
+            ui.show_illegalMove();
+            ui.show_genericMessage("Here we show you again your personal board:");
+            ui.show_personalBoard(nickname, model);
+            events.add(model, ILLEGAL_MOVE);
+        }
     }
 
     @Override
     public void cardDrawn(GameModelImmutable model, int index) {
+        if (model.getCurrentPlayerNickname().equals(nickname)) {
 
+        }
     }
 
     /**
@@ -730,24 +814,19 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void playerIsReadyToStart(GameModelImmutable gameModel, String nick) throws IOException {
         ui.show_playerJoined(gameModel, nickname);
-//        if (nick.equals(nickname)) {
-//            ui.show_youReadyToStart(gameModel, nickname);
-//        }
-        // if(nick.equals(nickname))
-        //    toldIAmReady=true;
         events.add(gameModel, PLAYER_IS_READY_TO_START);
     }
 
     /**
      * A player has left the game
-     * @param gamemodel game model {@link GameModelImmutable}
+     * @param gameModel game model {@link GameModelImmutable}
      * @param nick nickname of the player
      * @throws RemoteException if the reference could not be accessed
      */
     @Override
-    public void playerLeft(GameModelImmutable gamemodel, String nick) throws RemoteException {
-        if (gamemodel.getStatus().equals(GameStatus.WAIT)) {
-            ui.show_playerJoined(gamemodel, nickname);
+    public void playerLeft(GameModelImmutable gameModel, String nick) throws RemoteException {
+        if (gameModel.getStatus().equals(GameStatus.WAIT)) {
+            ui.show_playerJoined(gameModel, nickname);
         } else {
             ui.addImportantEvent("[EVENT]: Player " + nick + " decided to leave the game!");
         }

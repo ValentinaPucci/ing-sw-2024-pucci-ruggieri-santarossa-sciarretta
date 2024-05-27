@@ -81,14 +81,14 @@ public interface CommonClientActions {
      * @param where_to_place_y the y coordinate of the cell where the player wants to place the card
      * @throws RemoteException if there is a network error
      */
-    void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws IOException;
+    void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws IOException, NotBoundException, GameEndedException;
 
     /**
      * This method is called by the socket to draw a card.
      * @param index the index of the card the player wants to draw
      * @throws RemoteException if there is a network error
      */
-    void drawCard(int index) throws IOException, GameEndedException;
+    void drawCard(int index) throws IOException, GameEndedException, NotBoundException;
 
     /**
      * Sends a message in chat

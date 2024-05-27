@@ -251,7 +251,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         }
     }
 
-   //TODO: Maybe add message for placed card in wrong position.
+    @Override
+    public void illegalMove(GameModelImmutable model) throws RemoteException {
+
+    }
+
+    //TODO: Maybe add message for placed card in wrong position.
 
 
     /**

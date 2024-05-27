@@ -12,7 +12,7 @@ public class DefaultValues implements Serializable {
     public final static int[] NE_StarterCard_index = {500,501};
     public final static int[] NW_StarterCard_index = {500,500};
     public final static int[] SE_StarterCard_index = {501,501};
-    public final static int[] SW_StarterCard_index = {501,501};
+    public final static int[] SW_StarterCard_index = {501,500};
 
 
     public final static int longest_commonCardMessage = 81;

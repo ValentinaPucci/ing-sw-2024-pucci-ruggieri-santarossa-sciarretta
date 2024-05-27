@@ -157,6 +157,20 @@ public class MainController implements MainControllerInterface, Serializable {
         return games.get(gameId);
     }
 
+    @Override
+    public synchronized GameControllerInterface placeCard(GameListener listener, String nickname, int x, int y, Orientation o, int gameId)
+            throws RemoteException, GameEndedException {
+        games.get(gameId).placeCard(nickname, x, y, o);
+        return games.get(gameId);
+    }
+
+    @Override
+    public synchronized GameControllerInterface drawCard(GameListener listener, String nickname, int index, int gameId)
+            throws RemoteException, GameEndedException {
+        games.get(gameId).drawCard(nickname, index);
+        return games.get(gameId);
+    }
+
 //    /**
 //     * Allows a player to join the first available game.
 //     * If there are no available games (i.e., all games are either full or not in the waiting state),

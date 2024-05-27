@@ -13,8 +13,8 @@ public class TuiCommonBoardGraphics {
     public static void showCommonBoard(CommonBoard common_board) {
         int[][] grid = createGrid(common_board);
         printGridWithPlayers(grid, common_board);
-        printCommonCards(common_board);
-        printCommonDecks(common_board);
+//        printCommonCards(common_board);
+//        printCommonDecks(common_board);
     }
 
     public static void printCommonCards(CommonBoard common_board){

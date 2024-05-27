@@ -1,5 +1,7 @@
 package it.polimi.demo.view.text;
 
+import it.polimi.demo.model.cards.gameCards.GoldCard;
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import org.fusesource.jansi.Ansi;
@@ -227,15 +229,27 @@ public class TUI extends UI {
      */
     @Override
     public void show_playerHand(GameModelImmutable gameModel) {
-
+        List<ResourceCard> player_hand = gameModel.getPlayerEntity(nickname).getHand();
+        for (ResourceCard c : player_hand) {
+            if (c instanceof GoldCard) {
+                System.out.println("** GOLD CARD **" + " " + (player_hand.indexOf(c) + 1) + "\n");
+                TuiCardGraphics.showGoldCard((GoldCard) c);
+            }
+            else {
+                System.out.println("** RESOURCE CARD **" + " " + (player_hand.indexOf(c) + 1) + "\n");
+                TuiCardGraphics.showResourceCard(c);
+            }
+        }
     }
 
     @Override
     public void show_objectiveCards(GameModelImmutable gameModel) {
+        clearScreen();
         printAsync("First, we show you the two objective cards you can choose from: \n");
         List<ObjectiveCard> objectiveCards = gameModel.getObjectiveCards(nickname);
         TuiCardGraphics.showObjectiveCard(objectiveCards.get(0));
         TuiCardGraphics.showObjectiveCard(objectiveCards.get(1));
+        clearScreen();
     }
 
     @Override
@@ -251,15 +265,46 @@ public class TUI extends UI {
      */
     @Override
     public void show_cardChosen(String nickname, GameModelImmutable model) {
+        if (model.getPlayerEntity(nickname).getChosenGameCard() instanceof GoldCard) {
+            System.out.println("You have chosen the following Gold Card: \n");
+            TuiCardGraphics.showGoldCard((GoldCard) model.getPlayerEntity(nickname).getChosenGameCard());
+        }
+        else {
+            System.out.println("You have chosen the following Resource Card: \n");
+            TuiCardGraphics.showResourceCard(model.getPlayerEntity(nickname).getChosenGameCard());
+        }
+    }
 
+    @Override
+    public void show_illegalMove() {
+        clearScreen();
+        printAsync("Illegal move! Try again and choose different coordinates! \n");
+        clearScreen();
+    }
+
+    @Override
+    public void show_whereToDrawFrom() {
+        clearScreen();
+        printAsync("""                       
+                        Select the index of the card you want to draw:\s
+                         1: Resource Deck
+                         2: First Resource Card on the table
+                         3: Second Resource Card on the table
+                         4: Gold Deck
+                         5: First Gold Card on the table
+                         6: Second Gold Card on the table""");
+        clearScreen();
     }
 
     /**
      * show the common board
      * @param model the model that has the common board to show
      */
+    @Override
     public void show_commonBoard(GameModelImmutable model) {
-
+        clearScreen();
+        TuiCommonBoardGraphics.showCommonBoard(model.getCommonBoard());
+        clearScreen();
     }
 
     /**
@@ -269,7 +314,9 @@ public class TUI extends UI {
      */
     @Override
     public void show_personalBoard(String nickname, GameModelImmutable model) {
+        clearScreen();
         TuiPersonalBoardGraphics.showPersonalBoard(model.getPlayerEntity(nickname).getPersonalBoard());
+        clearScreen();
     }
 
     /**
@@ -280,12 +327,12 @@ public class TUI extends UI {
 
     }
 
-    /**
-     * Shows the player's goal card
-     * @param p the player whose goal card we want to show
-     */
-    public void show_personalObjectiveCard(PlayerIC p) {
-        printAsync(p.getChosenObjectiveCard().toString());
+    @Override
+    public void show_personalObjectiveCard(GameModelImmutable gameModel) {
+        clearScreen();
+        System.out.println("Your chosen objective card is: \n");
+        TuiCardGraphics.showObjectiveCard(gameModel.getPlayerEntity(nickname).getChosenObjectiveCard());
+        clearScreen();
     }
 
     /**
@@ -309,6 +356,7 @@ public class TUI extends UI {
             } else {
                 ris.append(ansi().cursor(12 + i, 0)).append("[EVENT]: ").append(p.getNickname()).append(" has joined!\n");
             }
+            clearScreen();
             i++;
         }
         printAsyncNoCursorReset(ris);
@@ -316,7 +364,7 @@ public class TUI extends UI {
         clearScreen();
         for (PlayerIC p : gameModel.getPlayersConnected())
             if (!p.getReadyToStart() && p.getNickname().equals(nick))
-                printAsyncNoCursorReset(ansi().cursor(17, 0).fg(WHITE).a("> When you are ready to start, enter (y): \n"));
+                printAsync(ansi().cursor(17, 0).fg(WHITE).a("> When you are ready to start, enter (y): \n"));
         clearScreen();
         System.out.flush();
     }
@@ -405,10 +453,6 @@ public class TUI extends UI {
      */
     public void show_alwaysShowForAll(GameModelImmutable model) {
         this.clearScreen();
-//        show_titleMyShelfie();
-//        show_gameId(model);
-//        show_commonBoard(model);
-//        show_commonObjectives(model);
         show_messages(model);
         show_important_events();
     }
@@ -555,7 +599,14 @@ public class TUI extends UI {
      */
     @Override
     protected void show_askCardCoordinatesMainMsg() {
+        clearScreen();
+        printAsync("> Choose the x, y coordinates where to place the card. Insert the two numbers in the format 'x y': ");
+    }
 
+    @Override
+    public void show_genericMessage(String msg) {
+        clearScreen();
+        printAsync(msg);
     }
 
     /**
@@ -618,6 +669,7 @@ public class TUI extends UI {
      */
     @Override
     public void show_inputGameIdMsg() {
+        clearScreen();
         printAsyncNoCursorReset("> Input the GameId ('.' to leave): ");
     }
 
@@ -634,7 +686,7 @@ public class TUI extends UI {
      */
     @Override
     public void show_whichCardToPlaceMsg() {
-        printAsync("> Select which card from your hand you want to place:");
+        printAsync("> Select which card from your hand you want to place (1 / 2 / 3):");
     }
 
     @Override
@@ -690,7 +742,7 @@ public class TUI extends UI {
      */
     public void show_alwaysShow(GameModelImmutable model, String nick) {
         show_alwaysShowForAll(model);
-        show_personalObjectiveCard(model.getPlayerEntity(nick));
+        //show_personalObjectiveCard(model.getPlayerEntity(nick));
         if (!model.getPlayerEntity(nick).getHand().isEmpty())
             show_playerHand(model);
         else {
