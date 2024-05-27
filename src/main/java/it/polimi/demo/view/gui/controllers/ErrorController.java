@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 
-public class ErrorController {
+public class ErrorController extends GenericController {
 
     @FXML
     private Button button;
@@ -14,9 +14,10 @@ public class ErrorController {
     @FXML
     private TextArea message;
 
-    @FXML //perchè compare???
+    //private boolean needToExitApp;
+
     public void GoToMenu(ActionEvent event) {
-       //prendo come input il fatto che vuole tornare al menu
+        getInputReaderGUI().addTxt("a");
     }
 
     public void setMessage(String message){
