@@ -21,8 +21,8 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     }
 
     @Override
-    public void starterCardPlaced(GameModelImmutable model, Orientation orientation) throws RemoteException {
-        flow.starterCardPlaced(model, orientation);
+    public void starterCardPlaced(GameModelImmutable model, Orientation orientation, String nick) throws RemoteException {
+        flow.starterCardPlaced(model, orientation, nick);
     }
 
     @Override
@@ -33,6 +33,11 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     @Override
     public void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
         flow.cardPlaced(model, where_to_place_x, where_to_place_y, orientation);
+    }
+
+    @Override
+    public void illegalMove(GameModelImmutable model) throws RemoteException {
+        flow.illegalMove(model);
     }
 
     @Override

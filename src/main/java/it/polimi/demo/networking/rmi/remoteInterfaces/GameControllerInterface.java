@@ -15,18 +15,18 @@ import java.util.LinkedList;
  * This interface contains all the action a player can do in a single game */
 public interface GameControllerInterface extends Remote {
 
-    void placeStarterCard(Player p, Orientation orientation) throws GameEndedException;
+    void placeStarterCard(String nickname, Orientation orientation) throws GameEndedException;
 
-    void chooseCardFromHand(Player p, int index) throws RemoteException;
+    void chooseCardFromHand(String nick, int index) throws RemoteException;
 
     /**
      * This method place a RESOURCECARD in the commonboard.
-     * @param p the player that place the card
+     * @param nickname the player that place the card
      * @param x the x coordinate of the card on his/her personal board
      * @param y the y coordinate of the card on his/her personal board
      * @throws RemoteException if the connection fails
      */
-    void placeCard(Player p, int x, int y, Orientation orientation) throws RemoteException;
+    void placeCard(String nickname, int x, int y, Orientation orientation) throws RemoteException;
 
 
     /**

@@ -3,6 +3,7 @@ package it.polimi.demo.controller;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.enumerations.GameStatus;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.exceptions.MaxPlayersLimitException;
 import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
@@ -114,9 +115,6 @@ public class MainController implements MainControllerInterface, Serializable {
         System.out.println("\t>Game " + games.get(gameId).getGameId() + " player:\"" + nickname + "\" entered player");
         printRunningGames();
 
-        printAsync("player in the game and their status (122 main controller): " + games.get(gameId).getConnectedPlayers().stream()
-                .map(p -> p.getNickname() + " " + p.getReadyToStart()).toList() + " at current timestamp " + System.currentTimeMillis());
-
         return games.get(gameId);
 
 //        return Optional.ofNullable(game)
@@ -138,9 +136,38 @@ public class MainController implements MainControllerInterface, Serializable {
 
     }
 
+    @Override
     public synchronized GameControllerInterface setAsReady(GameListener listener, String nickname, int gameId)
             throws RemoteException {
         games.get(gameId).playerIsReadyToStart(nickname);
+        return games.get(gameId);
+    }
+
+    @Override
+    public synchronized GameControllerInterface placeStarterCard(GameListener listener, String nickname, Orientation o, int gameId)
+            throws RemoteException, GameEndedException {
+        games.get(gameId).placeStarterCard(nickname, o);
+        return games.get(gameId);
+    }
+
+    @Override
+    public synchronized GameControllerInterface chooseCard(GameListener listener, String nickname, int cardIndex, int gameId)
+            throws RemoteException, GameEndedException {
+        games.get(gameId).chooseCardFromHand(nickname, cardIndex);
+        return games.get(gameId);
+    }
+
+    @Override
+    public synchronized GameControllerInterface placeCard(GameListener listener, String nickname, int x, int y, Orientation o, int gameId)
+            throws RemoteException, GameEndedException {
+        games.get(gameId).placeCard(nickname, x, y, o);
+        return games.get(gameId);
+    }
+
+    @Override
+    public synchronized GameControllerInterface drawCard(GameListener listener, String nickname, int index, int gameId)
+            throws RemoteException, GameEndedException {
+        games.get(gameId).drawCard(nickname, index);
         return games.get(gameId);
     }
 
@@ -312,6 +339,10 @@ public class MainController implements MainControllerInterface, Serializable {
             printAsync(n + " ");
         }
         printAsync("");
+    }
+
+    public synchronized GameControllerInterface getGameController(int gameId) {
+        return games.get(gameId);
     }
 
 }

@@ -170,12 +170,12 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_starterCardPlaced(GameModel model, Orientation o) {
+    public synchronized void notify_starterCardPlaced(GameModel model, Orientation o, String nick) {
         Iterator<GameListener> i = listeners.iterator();
         while (i.hasNext()) {
             GameListener l = i.next();
             try {
-                l.starterCardPlaced(new GameModelImmutable(model), o);
+                l.starterCardPlaced(new GameModelImmutable(model), o, nick);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_starterCardPlaced, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -204,6 +204,20 @@ public class ListenersHandler implements Serializable {
                 l.cardPlaced(new GameModelImmutable(model), where_to_place_x, where_to_place_y, o);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_cardPlaced, a disconnection has been detected before heartbeat");
+                i.remove();
+            }
+        }
+    }
+
+    public synchronized void notify_illegalMove(GameModel model) {
+        Iterator<GameListener> i = listeners.iterator();
+        while (i.hasNext()) {
+            GameListener l = i.next();
+            try {
+                printAsync("Illegal move detected");
+                l.illegalMove(new GameModelImmutable(model));
+            } catch (RemoteException e) {
+                printAsync("During notification of notify_illegalMove, a disconnection has been detected before heartbeat");
                 i.remove();
             }
         }

@@ -197,7 +197,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
     }
 
     @Override
-    public void setAsReady(String nickname, int game_id) throws RemoteException, NotBoundException {
+    public void setAsReady() throws RemoteException, NotBoundException {
 
     }
 

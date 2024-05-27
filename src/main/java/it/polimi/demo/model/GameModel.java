@@ -33,6 +33,8 @@ public class GameModel implements Serializable {
     // is connected (and actively playing).
     private final LinkedList<Player> players_connected;
 
+    private final Random random = new Random();
+
     private Player initial_player;
     private CommonBoard common_board;
     private int gameId;
@@ -137,20 +139,20 @@ public class GameModel implements Serializable {
      */
     public synchronized void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        printAsync("Player " + p.getNickname() + " is ready to start at time " + System.currentTimeMillis() + " "
-        + p.getReadyToStart());
-        printAsync("Player (from players_connected) "
-                + getPlayerEntity(p.getNickname()).getNickname()
-                + " is ready to start at time " + System.currentTimeMillis() + " "
-                + getPlayerEntity(p.getNickname()).getNickname()
-        + " " + getPlayerEntity(p.getNickname()).getReadyToStart());
-        printAsync("listeners_handler used for the second time at time " + System.currentTimeMillis());
-
         listeners_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
         if (arePlayersReadyToStartAndEnough()) {
-            printAsync("players are ready to start and enough, model line 149");
+            extractFirstPlayerToPlay();
+            initializeGame();
             setStatus(GameStatus.FIRST_ROUND);
         }
+    }
+
+    public synchronized void extractFirstPlayerToPlay() {
+        Player first_player = players_connected.get(random.nextInt(players_connected.size()));
+        aux_order_players.remove(first_player);
+        aux_order_players.addFirst(first_player);
+        players_connected.remove(first_player);
+        players_connected.addFirst(first_player);
     }
 
     /**
@@ -167,16 +169,6 @@ public class GameModel implements Serializable {
      * @return player with the given nickname, or null if not found
      */
     public Player getPlayerEntity(String nick) {
-//        return aux_order_players.stream()
-//                .filter(x -> x.getNickname().equals(nick))
-//                .findFirst()
-//                .orElse(null);
-//        for (Player p : players_connected) {
-//            if (p.getNickname().equals(nick)) {
-//                return p;
-//            }
-//        }
-//        return null;
         for (int i = 0; i < players_connected.size(); i++) {
             if (players_connected.get(i).getNickname().equals(nick)) {
                 return players_connected.get(i);
@@ -404,10 +396,12 @@ public class GameModel implements Serializable {
         switch (status) {
             case FIRST_ROUND -> {
                 listeners_handler.notify_GameStarted(this);
+                // Here we are not really calling the nextTurn() method
+                // inside the model!!
+                listeners_handler.notify_nextTurn(this);
             }
             case RUNNING -> {
-                listeners_handler.notify_GameStarted(this);
-                listeners_handler.notify_nextTurn(this);
+                // listeners_handler.notify_nextTurn(this);
             }
             case LAST_ROUND -> {
                 listeners_handler.notify_LastRound(this);
@@ -428,7 +422,15 @@ public class GameModel implements Serializable {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
         dealCards();
-        // notifyListeners(listeners, GameListener::modelChanged);
+    }
+
+    public void chooseCardFromHand(Player p, int which_card) {
+        if (getStatus() == GameStatus.FIRST_ROUND)
+            p.setChosenObjectiveCard(p.getSecretObjectiveCards().get(which_card));
+        else {
+            p.setChosenGameCard(p.getHand().get(which_card));
+            listeners_handler.notify_cardChosen(this, which_card);
+        }
     }
 
     /**
@@ -488,61 +490,100 @@ public class GameModel implements Serializable {
     }
 
     public void placeStarterCard(Player p, Orientation o) throws GameEndedException {
+
         PersonalBoard personal_board = p.getPersonalBoard();
-        if (o == Orientation.FRONT) {
-            p.setStarterCard(p.getStarterCardToChose().get(0));
+
+        if (o == Orientation.FRONT) {p.setStarterCard(p.getStarterCardToChose().get(0));
         }
         else {
             p.setStarterCard(p.getStarterCardToChose().get(1));
         }
+
         personal_board.placeStarterCard(p.getStarterCard());
-        listeners_handler.notify_starterCardPlaced(this, o);
+        if (players_connected.stream()
+                .filter(q -> q.getStarterCard() != null)
+                .toList()
+                .size() == players_connected.size())
+            setStatus(GameStatus.RUNNING);
+        listeners_handler.notify_starterCardPlaced(this, o, p.getNickname());
         nextTurn();
     }
 
     // for resource cards
     public void placeCard(ResourceCard card_chosen, Player p, int x, int y) {
+
         PersonalBoard personal_board = p.getPersonalBoard();
+        boolean admissible_move;
 
         if (!personal_board.board[x][y].is_full) {
-            throw new IllegalMoveException();
+            listeners_handler.notify_illegalMove(this);
         }
         else {
-            if (DefaultValues.NW_StarterCard_index[1] <= x && x <= DefaultValues.NE_StarterCard_index[1] &&
-                    DefaultValues.NW_StarterCard_index[0] <= y && y <= DefaultValues.SW_StarterCard_index[0]) {
+            if (500 <= x && x <= 501 && 500 <= y && y <= 501) {
                 StarterCard already_placed_card = p.getStarterCard();
                 Coordinate coord = already_placed_card.getCoordinateAt(x, y);
-                personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+                admissible_move = personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+                if (!admissible_move) {
+                    listeners_handler.notify_illegalMove(this);
+                }
+                else {
+                    // After the placement, we remove the card
+                    p.getHand().remove(card_chosen);
+                    listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
+                }
             }
             else {
                 ResourceCard already_placed_card = personal_board.board[x][y].getCornerFromCell().reference_card;
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
-                personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+                admissible_move = personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+                if (!admissible_move) {
+                    listeners_handler.notify_illegalMove(this);
+                }
+                else {
+                    // After the placement, we remove the card
+                    p.getHand().remove(card_chosen);
+                    listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
+                }
             }
-            listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
         }
     }
 
-    // for gold cards
+    // for gold card
     public void placeCard(GoldCard card_chosen, Player p, int x, int y)  {
+
         PersonalBoard personal_board = p.getPersonalBoard();
+        boolean admissible_move;
 
         if (!personal_board.board[x][y].is_full) {
-            throw new IllegalMoveException();
+            listeners_handler.notify_illegalMove(this);
         }
         else {
-            if (DefaultValues.NW_StarterCard_index[1] <= x && x <= DefaultValues.NE_StarterCard_index[1] &&
-                    DefaultValues.NW_StarterCard_index[0] <= y && y <= DefaultValues.SW_StarterCard_index[0]) {
+            if (500 <= x && x <= 501 && 500 <= y && y <= 501) {
                 StarterCard already_placed_card = p.getStarterCard();
                 Coordinate coord = already_placed_card.getCoordinateAt(x, y);
-                personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+                admissible_move = personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+                if (!admissible_move) {
+                    listeners_handler.notify_illegalMove(this);
+                }
+                else {
+                    // After the placement, we remove the card
+                    p.getHand().remove(card_chosen);
+                    listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
+                }
             }
             else {
                 ResourceCard already_placed_card = personal_board.board[x][y].getCornerFromCell().reference_card;
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
-                personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+                admissible_move = personal_board.placeCardAt(already_placed_card, card_chosen, coord);
+                if (!admissible_move) {
+                    listeners_handler.notify_illegalMove(this);
+                }
+                else {
+                    // After the placement, we remove the card
+                    p.getHand().remove(card_chosen);
+                    listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
+                }
             }
-            listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
         }
     }
 
@@ -559,10 +600,6 @@ public class GameModel implements Serializable {
      */
 
     public void drawCard(Player p, int index) throws GameEndedException {
-        if (index < 1 || index > 6) {
-            throw new IllegalArgumentException("It is not possible to draw a card from here");
-        }
-
         switch (index) {
             case 1:
                 // Draw from Resource Deck
@@ -609,10 +646,12 @@ public class GameModel implements Serializable {
             throw new GameNotStartedException();
         }
 
+        printAsync("current player pre next turn: " + players_connected.peek().getNickname());
         // Proceeding to the next turn means changing the current player,
         // namely the peek of the queue.
         Player q = players_connected.poll();
         players_connected.offer(q);
+        printAsync("current player post next turn: " + players_connected.peek().getNickname());
 
         listeners_handler.notify_nextTurn(this);
     }

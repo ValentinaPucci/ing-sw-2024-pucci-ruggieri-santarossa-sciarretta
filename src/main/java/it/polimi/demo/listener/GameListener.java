@@ -22,7 +22,7 @@ public interface GameListener extends Remote {
      * @param model the game model
      * @param orientation the orientation of the starter card
      */
-    void starterCardPlaced(GameModelImmutable model, Orientation orientation) throws RemoteException;
+    void starterCardPlaced(GameModelImmutable model, Orientation orientation, String nick) throws RemoteException;
 
     /**
      * This method is invoked by gameUI when the player wants to choose a card
@@ -40,6 +40,8 @@ public interface GameListener extends Remote {
      * @param orientation
      */
     void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException;
+
+    void illegalMove(GameModelImmutable model) throws RemoteException;
 
     /**
      * This method is invoked by gameUI when the player wants to draw a card.

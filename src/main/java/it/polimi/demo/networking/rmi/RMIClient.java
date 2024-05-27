@@ -47,6 +47,8 @@ public class RMIClient implements CommonClientActions {
      * The nickname associated to the socket (!=null only when connected in a game)
      */
     private String nickname;
+
+    private int game_id;
     /**
      * The remote object on which the server will invoke remote methods
      */
@@ -173,22 +175,8 @@ public class RMIClient implements CommonClientActions {
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
         gameController = requests.createGame(modelInvokedEvents, nick, num_of_players);
         nickname = nick;
+        game_id = gameController.getGameId();
     }
-
-//    /**
-//     * Request to join a server game (first game available)
-//     *
-//     * @param nick of the player who wants to join a game
-//     * @throws RemoteException
-//     * @throws NotBoundException
-//     */
-//    public void joinFirstAvailable(String nick) throws RemoteException, NotBoundException {
-//        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
-//        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-//        gameController = requests.joinFirstAvailableGame(modelInvokedEvents, nick);
-//        nickname = nick;
-//    }
-
 
     /**
      * Request to join a specific server game
@@ -202,10 +190,48 @@ public class RMIClient implements CommonClientActions {
         registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
         gameController = requests.joinGame(modelInvokedEvents, nick, idGame);
-        printAsync("player in the game and their status: " + gameController.getConnectedPlayers().stream()
-                .map(p -> p.getNickname() + " " + p.getReadyToStart()).toList());
-        printAsync("Proxy class: " + requests.getClass().getName());
         nickname = nick;
+        game_id = gameController.getGameId();
+    }
+
+    /**
+     * Notify the server that a socket is ready to start
+     *
+     * @throws RemoteException
+     */
+    @Override
+    public void setAsReady() throws RemoteException, NotBoundException {
+        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
+        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        requests.setAsReady(modelInvokedEvents, nickname, game_id);
+    }
+
+    @Override
+    public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
+        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
+        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        requests.placeStarterCard(modelInvokedEvents, nickname, orientation, game_id);
+    }
+
+    @Override
+    public void chooseCard(int which_card) throws RemoteException, NotBoundException, GameEndedException {
+        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
+        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        requests.chooseCard(modelInvokedEvents, nickname, which_card, game_id);
+    }
+
+    @Override
+    public void placeCard(int x, int y, Orientation orientation) throws RemoteException, NotBoundException, GameEndedException {
+        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
+        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        requests.placeCard(modelInvokedEvents, nickname, x, y, orientation, game_id);
+    }
+
+    @Override
+    public void drawCard(int index) throws RemoteException, GameEndedException, NotBoundException {
+        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
+        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        requests.drawCard(modelInvokedEvents, nickname, index, game_id);
     }
 
     /**
@@ -255,18 +281,6 @@ public class RMIClient implements CommonClientActions {
     }
 
     /**
-     * Notify the server that a socket is ready to start
-     *
-     * @throws RemoteException
-     */
-    @Override
-    public void setAsReady(String nickname, int game_id) throws RemoteException, NotBoundException {
-        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
-        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-        requests.setAsReady(modelInvokedEvents, nickname, game_id);
-    }
-
-    /**
      * Ask the server if it is currently my turn
      *
      * @return
@@ -275,44 +289,6 @@ public class RMIClient implements CommonClientActions {
     @Override
     public boolean isMyTurn() throws RemoteException {
         return gameController.isThisMyTurn(nickname);
-    }
-
-    @Override
-    public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
-        if (!this.nickname.equals(gameController.getCurrentPlayer().getNickname()))
-            this.gameController.setError("Player " + this.nickname + " tried to place a starter card while it was not his turn.");
-        else
-            gameController.placeStarterCard(gameController.getCurrentPlayer(), orientation);
-    }
-
-    @Override
-    public void chooseCard(int which_card) throws RemoteException {
-        if (!this.nickname.equals(gameController.getCurrentPlayer().getNickname()))
-            this.gameController.setError("Player " + this.nickname + " tried to select a card while it was not his turn.");
-        else {
-//            switch (gameController.getStatus()) {
-//                case FIRST_ROUND -> {
-//                    model.
-//                }
-//            }
-            gameController.chooseCardFromHand(gameController.getCurrentPlayer(), which_card);
-        }
-    }
-
-    @Override
-    public void placeCard(int x, int y, Orientation orientation) throws RemoteException {
-        if (!this.nickname.equals(gameController.getCurrentPlayer().getNickname()))
-            this.gameController.setError("Player " + this.nickname + " tried to place a card while it was not his turn.");
-        else
-            gameController.placeCard(gameController.getCurrentPlayer(), x, y, orientation);
-    }
-
-    @Override
-    public void drawCard(int index) throws RemoteException, GameEndedException {
-        if (!this.nickname.equals(gameController.getCurrentPlayer().getNickname()))
-            this.gameController.setError("Player " + this.nickname + " tried to draw a card while it was not his turn.");
-        else
-            gameController.drawCard(gameController.getCurrentPlayer().getNickname(), index);
     }
 
     /**
