@@ -41,6 +41,8 @@ public interface GameListener extends Remote {
      */
     void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException;
 
+    void illegalMove(GameModelImmutable model) throws RemoteException;
+
     /**
      * This method is invoked by gameUI when the player wants to draw a card.
      * @param model the game model

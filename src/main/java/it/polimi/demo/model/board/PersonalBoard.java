@@ -521,8 +521,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the NE corner
      * of the game_card
      */
-    public void placeCardAtNE(ResourceCard game_card, ResourceCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtNE(ResourceCard game_card, ResourceCard card_to_play) {
 
         /**
          * The following attributes are the starting point in the grid
@@ -536,7 +535,7 @@ public class PersonalBoard implements Serializable {
 
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
@@ -550,7 +549,7 @@ public class PersonalBoard implements Serializable {
          */
 
         if (!subMatrixCellChecker(i - 1, j))
-            throw new IllegalMoveException();
+            return false;
 
         /**
          * we can forget to take **directly** track of the items or
@@ -560,6 +559,9 @@ public class PersonalBoard implements Serializable {
          */
         generalUpdateRoutine(i - 1, j, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
+
     }
 
     /**
@@ -572,8 +574,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the NE corner
      * of the game_card
      */
-    public void placeCardAtNE(ResourceCard game_card, GoldCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtNE(ResourceCard game_card, GoldCard card_to_play) {
 
         int i;
         int j;
@@ -581,22 +582,24 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtNE();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
                 card_to_play.getLeafRequired() > this.num_leaves ||
                 card_to_play.getButterflyRequired() > this.num_butterflies ||
                 card_to_play.getWolfRequired() > this.num_wolves)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i - 1, j))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i - 1, j, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
     
     
@@ -612,8 +615,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the NE corner
      * of the game_card
      */
-    public void placeCardAtNE(StarterCard game_card, ResourceCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtNE(StarterCard game_card, ResourceCard card_to_play) {
 
         /**
          * The following attributes are the starting point in the grid
@@ -626,7 +628,7 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtNE();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
@@ -637,7 +639,7 @@ public class PersonalBoard implements Serializable {
          * analyzing.
          */
         if (!subMatrixCellChecker(i - 1, j))
-            throw new IllegalMoveException();
+            return false;
 
         /**
          * we can forget to take **directly** track of the items or
@@ -647,6 +649,8 @@ public class PersonalBoard implements Serializable {
          */
         generalUpdateRoutine(i - 1, j, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
     /**
@@ -661,8 +665,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the NE corner
      * of the game_card
      */
-    public void placeCardAtNE(StarterCard game_card, GoldCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtNE(StarterCard game_card, GoldCard card_to_play) {
 
         int i;
         int j;
@@ -670,22 +673,24 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtNE();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
                 card_to_play.getLeafRequired() > this.num_leaves ||
                 card_to_play.getButterflyRequired() > this.num_butterflies ||
                 card_to_play.getWolfRequired() > this.num_wolves)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i - 1, j))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i - 1, j, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
 
@@ -698,8 +703,7 @@ public class PersonalBoard implements Serializable {
      * of the game_card
      */
 
-    public void placeCardAtSE(ResourceCard game_card, ResourceCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtSE(ResourceCard game_card, ResourceCard card_to_play) {
 
         int i;
         int j;
@@ -707,16 +711,18 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtSE();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i, j))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i, j, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
 
@@ -728,8 +734,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the SE corner
      * of the game_card
      */
-    public void placeCardAtSE(ResourceCard game_card, GoldCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtSE(ResourceCard game_card, GoldCard card_to_play) {
 
         int i;
         int j;
@@ -737,22 +742,24 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtSE();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
                 card_to_play.getLeafRequired() > this.num_leaves ||
                 card_to_play.getButterflyRequired() > this.num_butterflies ||
                 card_to_play.getWolfRequired() > this.num_wolves)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i, j))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i, j, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
 
@@ -766,8 +773,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the SE corner
      * of the game_card
      */
-    public void placeCardAtSE(StarterCard game_card, ResourceCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtSE(StarterCard game_card, ResourceCard card_to_play) {
 
         int i;
         int j;
@@ -775,16 +781,18 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtSE();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i, j))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i, j, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
     /**
@@ -798,8 +806,7 @@ public class PersonalBoard implements Serializable {
      * of the game_card
      */
 
-    public void placeCardAtSE(StarterCard game_card, GoldCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtSE(StarterCard game_card, GoldCard card_to_play) {
 
         int i;
         int j;
@@ -807,22 +814,24 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtSE();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
                 card_to_play.getLeafRequired() > this.num_leaves ||
                 card_to_play.getButterflyRequired() > this.num_butterflies ||
                 card_to_play.getWolfRequired() > this.num_wolves)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i, j))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i, j, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
 
@@ -835,8 +844,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the SW corner
      * of the game_card
      */
-    public void placeCardAtSW(ResourceCard game_card, ResourceCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtSW(ResourceCard game_card, ResourceCard card_to_play) {
 
         int i;
         int j;
@@ -844,16 +852,18 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtSW();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i, j - 1))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i , j - 1, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
 
@@ -865,8 +875,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the SW corner
      * of the game_card
      */
-    public void placeCardAtSW(ResourceCard game_card, GoldCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtSW(ResourceCard game_card, GoldCard card_to_play) {
 
         int i;
         int j;
@@ -874,22 +883,24 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtSW();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
                 card_to_play.getLeafRequired() > this.num_leaves ||
                 card_to_play.getButterflyRequired() > this.num_butterflies ||
                 card_to_play.getWolfRequired() > this.num_wolves)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i, j - 1))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i, j - 1, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
 
@@ -905,8 +916,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the SW corner
      * of the game_card
      */
-    public void placeCardAtSW(StarterCard game_card, ResourceCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtSW(StarterCard game_card, ResourceCard card_to_play) {
 
         int i;
         int j;
@@ -914,16 +924,18 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtSW();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i, j - 1))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i , j - 1, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
 
@@ -939,8 +951,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the SW corner
      * of the game_card
      */
-    public void placeCardAtSW(StarterCard game_card, GoldCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtSW(StarterCard game_card, GoldCard card_to_play) {
 
         int i;
         int j;
@@ -948,22 +959,24 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtSW();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
                 card_to_play.getLeafRequired() > this.num_leaves ||
                 card_to_play.getButterflyRequired() > this.num_butterflies ||
                 card_to_play.getWolfRequired() > this.num_wolves)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i, j - 1))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i, j - 1, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
     /**
@@ -975,8 +988,7 @@ public class PersonalBoard implements Serializable {
      * of the game_card
      */
 
-    public void placeCardAtNW(ResourceCard game_card, ResourceCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtNW(ResourceCard game_card, ResourceCard card_to_play) {
 
         int i;
         int j;
@@ -984,16 +996,18 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtNW();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i - 1, j - 1))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i - 1, j - 1, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
     /**
@@ -1004,8 +1018,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the NW corner
      * of the game_card
      */
-    public void placeCardAtNW(ResourceCard game_card, GoldCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtNW(ResourceCard game_card, GoldCard card_to_play) {
 
         int i;
         int j;
@@ -1013,22 +1026,24 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtNW();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
                 card_to_play.getLeafRequired() > this.num_leaves ||
                 card_to_play.getButterflyRequired() > this.num_butterflies ||
                 card_to_play.getWolfRequired() > this.num_wolves)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i - 1, j - 1))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i - 1, j - 1, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
     /**
@@ -1043,8 +1058,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the NW corner
      * of the game_card
      */
-    public void placeCardAtNW(StarterCard game_card, ResourceCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtNW(StarterCard game_card, ResourceCard card_to_play) {
 
         int i;
         int j;
@@ -1052,16 +1066,18 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtNW();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i - 1, j - 1))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i - 1, j - 1, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
 
@@ -1077,8 +1093,7 @@ public class PersonalBoard implements Serializable {
      * @ensures card_to_play is attached to another card, specifically in the NW corner
      * of the game_card
      */
-    public void placeCardAtNW(StarterCard game_card, GoldCard card_to_play)
-            throws IllegalMoveException {
+    public boolean placeCardAtNW(StarterCard game_card, GoldCard card_to_play) {
 
         int i;
         int j;
@@ -1086,80 +1101,83 @@ public class PersonalBoard implements Serializable {
         Corner corner_aux = game_card.getCornerAtNW();
 
         if (!corner_aux.is_visible)
-            throw new IllegalMoveException();
+            return false;
 
         if (card_to_play.getMushroomRequired() > this.num_mushrooms ||
                 card_to_play.getLeafRequired() > this.num_leaves ||
                 card_to_play.getButterflyRequired() > this.num_butterflies ||
                 card_to_play.getWolfRequired() > this.num_wolves)
-            throw new IllegalMoveException();
+            return false;
 
         i = corner_aux.board_coordinate.getX();
         j = corner_aux.board_coordinate.getY();
 
         if (!subMatrixCellChecker(i - 1, j - 1))
-            throw new IllegalMoveException();
+            return false;
 
         generalUpdateRoutine(i - 1, j - 1, this.board, card_to_play);
         this.updatePoints(card_to_play);
+
+        return true;
     }
 
 
     
-    public void placeCardAt(ResourceCard game_card, ResourceCard card_to_play, Coordinate coord) {
+    public boolean placeCardAt(ResourceCard game_card, ResourceCard card_to_play, Coordinate coord) {
 
-        switch (coord) {
-            case NE: placeCardAtNE(game_card, card_to_play);
-                break;
-            case SE: placeCardAtSE(game_card, card_to_play);
-                break;
-            case SW: placeCardAtSW(game_card, card_to_play);
-                break;
-            case NW: placeCardAtNW(game_card, card_to_play);
-                break;
-        }
+        if (coord == Coordinate.NE)
+            return placeCardAtNE(game_card, card_to_play);
+        else if (coord == Coordinate.SE)
+            return placeCardAtSE(game_card, card_to_play);
+        else if (coord == Coordinate.SW)
+            return placeCardAtSW(game_card, card_to_play);
+        else if (coord == Coordinate.NW)
+            return placeCardAtNW(game_card, card_to_play);
+        else
+            return false;
+
     }
 
-    public void placeCardAt(ResourceCard game_card, GoldCard card_to_play, Coordinate coord) {
+    public boolean placeCardAt(ResourceCard game_card, GoldCard card_to_play, Coordinate coord) {
 
-        switch (coord) {
-            case NE: placeCardAtNE(game_card, card_to_play);
-                break;
-            case SE: placeCardAtSE(game_card, card_to_play);
-                break;
-            case SW: placeCardAtSW(game_card, card_to_play);
-                break;
-            case NW: placeCardAtNW(game_card, card_to_play);
-                break;
-        }
+        if (coord == Coordinate.NE)
+            return placeCardAtNE(game_card, card_to_play);
+        else if (coord == Coordinate.SE)
+            return placeCardAtSE(game_card, card_to_play);
+        else if (coord == Coordinate.SW)
+            return placeCardAtSW(game_card, card_to_play);
+        else if (coord == Coordinate.NW)
+            return placeCardAtNW(game_card, card_to_play);
+        else
+            return false;
     }
 
-    public void placeCardAt(StarterCard game_card, ResourceCard card_to_play, Coordinate coord) {
+    public boolean placeCardAt(StarterCard game_card, ResourceCard card_to_play, Coordinate coord) {
 
-        switch (coord) {
-            case NE: placeCardAtNE(game_card, card_to_play);
-                break;
-            case SE: placeCardAtSE(game_card, card_to_play);
-                break;
-            case SW: placeCardAtSW(game_card, card_to_play);
-                break;
-            case NW: placeCardAtNW(game_card, card_to_play);
-                break;
-        }
+        if (coord == Coordinate.NE)
+            return placeCardAtNE(game_card, card_to_play);
+        else if (coord == Coordinate.SE)
+            return placeCardAtSE(game_card, card_to_play);
+        else if (coord == Coordinate.SW)
+            return placeCardAtSW(game_card, card_to_play);
+        else if (coord == Coordinate.NW)
+            return placeCardAtNW(game_card, card_to_play);
+        else
+            return false;
     }
 
-    public void placeCardAt(StarterCard game_card, GoldCard card_to_play, Coordinate coord) {
+    public boolean placeCardAt(StarterCard game_card, GoldCard card_to_play, Coordinate coord) {
 
-        switch (coord) {
-            case NE: placeCardAtNE(game_card, card_to_play);
-                break;
-            case SE: placeCardAtSE(game_card, card_to_play);
-                break;
-            case SW: placeCardAtSW(game_card, card_to_play);
-                break;
-            case NW: placeCardAtNW(game_card, card_to_play);
-                break;
-        }
+        if (coord == Coordinate.NE)
+            return placeCardAtNE(game_card, card_to_play);
+        else if (coord == Coordinate.SE)
+            return placeCardAtSE(game_card, card_to_play);
+        else if (coord == Coordinate.SW)
+            return placeCardAtSW(game_card, card_to_play);
+        else if (coord == Coordinate.NW)
+            return placeCardAtNW(game_card, card_to_play);
+        else
+            return false;
     }
 
     /**

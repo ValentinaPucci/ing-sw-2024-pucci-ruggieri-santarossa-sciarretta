@@ -22,12 +22,12 @@ public interface GameControllerInterface extends Remote, Serializable {
 
     /**
      * This method place a RESOURCECARD in the commonboard.
-     * @param p the player that place the card
+     * @param nickname the player that place the card
      * @param x the x coordinate of the card on his/her personal board
      * @param y the y coordinate of the card on his/her personal board
      * @throws RemoteException if the connection fails
      */
-    void placeCard(Player p, int x, int y, Orientation orientation) throws RemoteException;
+    void placeCard(String nickname, int x, int y, Orientation orientation) throws RemoteException;
 
 
     /**

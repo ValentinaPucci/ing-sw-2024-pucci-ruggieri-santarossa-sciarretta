@@ -35,11 +35,17 @@ public interface MainControllerInterface extends Remote, Serializable {
      */
     GameControllerInterface joinGame(GameListener lis, String nick, int idGame) throws RemoteException;
 
+    GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException;
+
     GameControllerInterface setAsReady(GameListener modelInvokedEvents, String nick, int idGame) throws RemoteException;
 
     GameControllerInterface placeStarterCard(GameListener modelInvokedEvents, String nick, Orientation o, int idGame) throws RemoteException, GameEndedException;
 
     GameControllerInterface chooseCard(GameListener modelInvokedEvents, String nick, int cardIndex, int idGame) throws RemoteException, GameEndedException;
+
+    GameControllerInterface placeCard(GameListener modelInvokedEvents, String nick, int x, int y, Orientation o, int idGame) throws RemoteException, GameEndedException;
+
+    GameControllerInterface drawCard(GameListener modelInvokedEvents, String nick, int index, int idGame) throws RemoteException, GameEndedException;
 
     /**
      * This method reconnects a player to a specific game

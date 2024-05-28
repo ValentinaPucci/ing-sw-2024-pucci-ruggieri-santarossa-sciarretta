@@ -169,6 +169,20 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
+    public GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException {
+        GameControllerInterface ris = serverObject.mainController.joinFirstAvailableGame(lis, nick);
+        if (ris != null) {
+            try {
+                UnicastRemoteObject.exportObject(ris, 0);
+            } catch (RemoteException e){
+                // Already exported, due to another RMI Client running on the same machine
+            }
+            printAsync("[RMI] " + nick + " joined in first available game");
+        }
+        return ris;
+    }
+
+    @Override
     public GameControllerInterface setAsReady(GameListener lis, String nick, int idGame) throws RemoteException {
         GameControllerInterface ris = serverObject.mainController.setAsReady(lis, nick, idGame);
         if (ris != null) {
@@ -197,6 +211,32 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     @Override
     public GameControllerInterface chooseCard(GameListener lis, String nick, int cardIndex, int idGame) throws RemoteException, GameEndedException {
         GameControllerInterface ris = serverObject.mainController.chooseCard(lis, nick, cardIndex, idGame);
+        if (ris != null) {
+            try {
+                UnicastRemoteObject.exportObject(ris, 0);
+            } catch (RemoteException e){
+                // Already exported, due to another RMI Client running on the same machine
+            }
+        }
+        return ris;
+    }
+
+    @Override
+    public GameControllerInterface placeCard(GameListener lis, String nick, int where_to_place_x, int where_to_place_y, Orientation orientation, int idGame) throws RemoteException, GameEndedException {
+        GameControllerInterface ris = serverObject.mainController.placeCard(lis, nick, where_to_place_x, where_to_place_y, orientation, idGame);
+        if (ris != null) {
+            try {
+                UnicastRemoteObject.exportObject(ris, 0);
+            } catch (RemoteException e){
+                // Already exported, due to another RMI Client running on the same machine
+            }
+        }
+        return ris;
+    }
+
+    @Override
+    public GameControllerInterface drawCard(GameListener lis, String nick, int index, int idGame) throws RemoteException, GameEndedException {
+        GameControllerInterface ris = serverObject.mainController.drawCard(lis, nick, index, idGame);
         if (ris != null) {
             try {
                 UnicastRemoteObject.exportObject(ris, 0);

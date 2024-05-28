@@ -73,7 +73,7 @@ public class GameModelImmutable implements Serializable {
 //        return winners;
 //    }
 
-    public CommonBoardIC getCommonBoard() {
+    public CommonBoard getCommonBoard() {
         return common_board;
     }
 

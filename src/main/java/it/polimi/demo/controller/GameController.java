@@ -24,9 +24,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     private GameModel model;
 
-    private  Map<GameListener, Heartbeat>  heartbeats;
-    private Thread reconnectionTh;
-
+    private Map<GameListener, Heartbeat> listeners_to_heartbeats;
 
     /**
      * Timer started when only one player is playing
@@ -36,8 +34,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new GameModel(gameID, numberOfPlayers, player);
-        heartbeats = new HashMap<>();
-        new Thread(this).start();
+        listeners_to_heartbeats = new HashMap<>();
+        // new Thread(this).start();
     }
 
     //------------------------------------connection/reconnection management-----------------------------------------------
@@ -45,86 +43,45 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     /**
      * This method is called when the thread is started.
      */
-//    @Override
-//    public void run() {
-//        while (!Thread.currentThread().isInterrupted()) {
-//            if (model.getStatus().equals(GameStatus.RUNNING) ||
-//                    model.getStatus().equals(GameStatus.LAST_ROUND) ||
-//                    model.getStatus().equals(GameStatus.ENDED) ||
-//                    model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
-//                    model.getStatus().equals(GameStatus.WAIT)) {
-//                checkForDisconnections();
-//            }
-//            pauseThread();
-//        }
-//    }
-//
-//    /**
-//     * It pauses the thread for 500 milliseconds
-//     */
-//    private void pauseThread() {
-//        try {
-//            Thread.sleep(500);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//    // -------------------------------------------------------
-//
-//    /**
-//     * Check if a player is disconnected by checking the heartbeat freshness, if it is expired, the player is disconnected
-//     * and handleDisconnection will deal with it.
-//     */
-//    private void checkForDisconnections() {
-//        synchronized (heartbeats) {
-//            for (Map.Entry<GameListener, Heartbeat> entry : heartbeats.entrySet()) {
-//                GameListener listener = entry.getKey();
-//                Heartbeat heartbeat = entry.getValue();
-//
-//                if (isHeartbeatExpired(heartbeat)) {
-//                    handleDisconnection(heartbeat, listener);
-//                }
-//            }
-//        }
-//    }
-
+    @Override
     public void run() {
-        while (!Thread.interrupted()) {
-            //checks all the heartbeat to detect disconnection
-            if (model.getStatus().equals(GameStatus.RUNNING) || model.getStatus().equals(GameStatus.LAST_ROUND) || model.getStatus().equals(GameStatus.ENDED) || model.getStatus().equals(GameStatus.WAIT)) {
-                synchronized (heartbeats) {
-                    Iterator<Map.Entry<GameListener, Heartbeat>> heartIter = heartbeats.entrySet().iterator();
-
-                    while (heartIter.hasNext()) {
-                        Map.Entry<GameListener, Heartbeat> el = (Map.Entry<GameListener, Heartbeat>) heartIter.next();
-                        System.out.println("System time: " + System.currentTimeMillis() + " Ping value: " +  el.getValue().getPing());
-                        System.out.println("Default time: "+ DefaultValues.timeout_for_detecting_disconnection);
-                        System.out.println("Differenza== " + (System.currentTimeMillis() - el.getValue().getPing()));
-                        if (System.currentTimeMillis() - el.getValue().getPing() > DefaultValues.timeout_for_detecting_disconnection) {
-                            try {
-                                this.disconnectPlayer(el.getValue().getNick(),el.getKey());
-                                printAsync("Disconnection detected by heartbeat of player: "+el.getValue().getNick()+"");
-
-                                if (this.getNumConnectedPlayers() == 0) {
-                                    stopReconnectionTimer();
-                                    MainController.getControllerInstance().deleteGame(this.getGameId());
-                                    return;
-                                }
-
-                            } catch (RemoteException e) {
-                                throw new RuntimeException(e);
-                            }
-
-                            heartIter.remove();
-                        }
-                    }
-                }
+        while (!Thread.currentThread().isInterrupted()) {
+            if (model.getStatus().equals(GameStatus.RUNNING) ||
+                    model.getStatus().equals(GameStatus.LAST_ROUND) ||
+                    model.getStatus().equals(GameStatus.ENDED) ||
+                    model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
+                    model.getStatus().equals(GameStatus.WAIT)) {
+                checkForDisconnections();
             }
-            try {
+            pauseThread();
+        }
+    }
 
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+    /**
+     * It pauses the thread for 500 milliseconds
+     */
+    private void pauseThread() {
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    // -------------------------------------------------------
+
+    /**
+     * Check if a player is disconnected by checking the heartbeat freshness, if it is expired, the player is disconnected
+     * and handleDisconnection will deal with it.
+     */
+    private void checkForDisconnections() {
+        synchronized (listeners_to_heartbeats) {
+            for (Map.Entry<GameListener, Heartbeat> entry : listeners_to_heartbeats.entrySet()) {
+                GameListener listener = entry.getKey();
+                Heartbeat heartbeat = entry.getValue();
+
+                if (isHeartbeatExpired(heartbeat)) {
+                    handleDisconnection(heartbeat, listener);
+                }
             }
         }
     }
@@ -145,30 +102,29 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     /**
      * It handles the disconnection of a player.
      * This is the key method for the disconnection management, it calss the disconnectPlayer method and
-     * removes the listener from the list of heartbeats.
+     * removes the listener from the list of listeners_to_heartbeats.
      * @param heartbeat
      * @param listener
      */
     private void handleDisconnection(Heartbeat heartbeat, GameListener listener) {
         try {
-            disconnectPlayer(heartbeat.getNick(), listener);
-            //printAsync("Disconnection of player: " + heartbeat.getNick() + " detected ");
+            disconnectPlayer(getPlayerEntity(heartbeat.getNick()), listener);
+            printAsync("Disconnection of player: " + heartbeat.getNick() + " detected ");
 
             // Now check
             if (getNumConnectedPlayers() == 0) {
                 stopTimer();
-                System.out.println("Disconnection...........................");
                 MainController.getControllerInstance().deleteGame(getGameId());
             }
-        } catch (RemoteException e) {
+        } catch (RemoteException | GameEndedException e) {
             throw new RuntimeException(e);
         }
 
-        heartbeats.remove(listener);
+        listeners_to_heartbeats.remove(listener);
     }
 
     /**
-     * Add a Ping to the list of heartbeats.
+     * Add a Ping to the list of listeners_to_heartbeats.
      *
      * Remark: this method is quite fundamental for the right behavior of the game, since we expect
      * to call it frequently to check if the players are still connected. In fact, looking at the run method,
@@ -180,9 +136,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public synchronized void addPing(String nickname, GameListener me) {
-        synchronized (heartbeats) {
-            heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), nickname));
-            //System.out.println("heartbeat with ping: " + heartbeats.get(me).getPing());
+        synchronized (listeners_to_heartbeats) {
+            listeners_to_heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), nickname));
         }
     }
 
@@ -190,35 +145,42 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * Disconnect the player, if the game is in status, the player is removed from the game
      * If only one player is connected, a timer of  will be started
      *
+     * @param p        the player
+     * @param listOfClient the listener of the socket
      * @throws RemoteException if there is a connection error (RMI)
      */
     @Override
-    public void disconnectPlayer(String nick, GameListener lisOfClient) throws RemoteException {
+    public void disconnectPlayer(Player p, GameListener listOfClient) throws RemoteException, GameEndedException {
 
-        //Player has just disconnected, so I remove the notifications for him
-        Player p = model.getPlayerEntity(nick);
-        if(p!=null) {
-            removeListener(lisOfClient, p);
+        if (p != null && model.getPlayersConnected().contains(p)) {
 
-            if (model.getStatus().equals(GameStatus.WAIT)) {
-                //The game is in Wait (game not started yet), the player disconnected, so I remove him from the game)
-                model.removePlayer(getPlayerEntity(nick));
+            removeListener(listOfClient, p);
+
+            if (model.getStatus().equals(GameStatus.WAIT)){
+                    // The game is in Wait (game not started yet), the player disconnected, so I remove him from the game)
+                    model.removePlayer(p);
+            } else if (model.getStatus().equals(GameStatus.ENDED)) {
+                    throw new GameEndedException();
             } else {
-                //Tha game is running, so I set him as disconnected (He can reconnect soon)
-                model.setPlayerAsDisconnected(getPlayerEntity(nick));
+                    // The game is running, so I set him as disconnected (He can reconnect soon)
+                    model.setPlayerAsDisconnected(p);
             }
 
-            //Check if there is only one player playing
-            if ((model.getStatus().equals(GameStatus.RUNNING) || model.getStatus().equals(GameStatus.LAST_ROUND)) && model.getPlayersConnected().size() == 1) {
-                //Starting a th for waiting until reconnection at least of 1 client to keep playing
-                if (reconnectionTh == null) {
+            // Check if there is only one player playing
+            // If getPlayersConnected().size() == 1 and getPlayersConnected().contains(p), he is the only player! so the game end after a timer.
+
+            if ((model.getStatus().equals(GameStatus.RUNNING) ||
+                    model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
+                    model.getStatus().equals(GameStatus.LAST_ROUND)) &&
+                    model.getPlayersConnected().size() == 1) {
+                // Starting a th for waiting until reconnection at least of 1 socket to keep playing
+                if (reconnection_thread == null) {
                     startReconnectionTimer();
-                    printAsync("Starting timer for reconnection waiting: " + DefaultValues.secondsToWaitReconnection + " seconds");
+                    printAsync("Starting timer for reconnection waiting: "
+                            + DefaultValues.secondsToWaitReconnection + " seconds");
                 }
             }
         }
-
-
     }
 
     /**
@@ -243,7 +205,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
                     if (model.getPlayersConnected().isEmpty()) {
                         // No players online, I delete the games
-                        System.out.println("Reconnection timer... Call delete game");
                         MainController.getControllerInstance().deleteGame(model.getGameId());
                     } else if (model.getPlayersConnected().size() == 1) {
                         printAsync("\tNo player reconnected on time, just one person is playing, set game to ended!");
@@ -297,14 +258,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         this.model.setErrorMessage(error);
     }
 
-    private void stopReconnectionTimer() {
-        if (reconnectionTh != null) {
-            reconnectionTh.interrupt();
-            reconnectionTh = null;
-        }
-        //else It means that a player reconnected but the timer was not started (ex 3 players and 1 disconnects)
-    }
-
     //------------------------------------ management of players -----------------------------------------------
     /**
      * Add player @param p to the Game
@@ -313,9 +266,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @throws MaxPlayersLimitException    when the game has already reached its full capability
      */
     public void addPlayer(Player p) throws PlayerAlreadyConnectedException, MaxPlayersLimitException {
-        System.out.println("In GameController added player: " + p.getNickname());
         this.model.addPlayer(p);
-        System.out.println("In  GameController/AddPlayer the players are: " + model.getAllPlayers().get(0));
     }
 
     /**
@@ -427,10 +378,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     @Override
     public synchronized void playerIsReadyToStart(String nickname) {
-        // model is not updated and you don t have players....
-
-        // Nickname is here but get Player entity cannot find the player
-        System.out.println("Nick in get entity: " + this.model.getPlayerEntity(nickname));
         model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
     }
 
@@ -459,92 +406,41 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public void chooseCardFromHand(String nick, int which_card) throws RemoteException {
-        if (model.getStatus() == GameStatus.FIRST_ROUND) {
-            model.getPlayersConnected().stream()
-                    .filter(player -> player.getNickname().equals(nick))
-                    .findFirst()
-                    .ifPresent(player -> player.setChosenObjectiveCard(player.getSecretObjectiveCards().get(which_card)));
-        }
-        else
-            model.getPlayersConnected().stream()
-                    .filter(player -> player.getNickname().equals(nick))
-                    .findFirst()
-                    .ifPresent(player -> player.setChosenGameCard(player.getHand().get(which_card)));
-
+        model.chooseCardFromHand(getPlayerEntity(nick), which_card);
     }
 
     /**
      * Place a card in the common board
      *
-     * @param p           the player that places the card
+     * @param nick           the player that places the card
      * @param x           the x coordinate
      * @param y           the y coordinate
      * @throws RemoteException if there is an  error.
      */
     @Override
-    public void placeCard(Player p, int x, int y, Orientation orientation)
-            throws RemoteException {
+    public void placeCard(String nick, int x, int y, Orientation orientation) throws RemoteException {
 
-        if (!getConnectedPlayers().contains(p))
+        if (!getConnectedPlayers().contains(getPlayerEntity(nick)))
             throw new RemoteException("Player not connected");
-        else if (!isMyTurn(p.getNickname()))
+        else if (!isMyTurn(getPlayerEntity(nick).getNickname()))
             throw new RemoteException("It's not your turn");
 
-        try {
-            if (orientation == Orientation.FRONT) {
-                System.out.println("FRONT PLACING");
-                if (p.getChosenGameCard() instanceof GoldCard) {
-                    model.placeCard((GoldCard) p.getChosenGameCard(), p, x, y);
-//                    System.out.println("Gold Placing");
-//                    System.out.println("Personal board of: " + p.getNickname());
-                    p.getPersonalBoard().printBoardIDs();
-                } else {
-//                    System.out.println("Resource placing");
-//                    System.out.println("Personal board of: " + p.getNickname());
-                    model.placeCard(p.getChosenGameCard(), p, x, y);
-                }
-            } else {
-                System.out.println("BACK PLACING, doesn't matter the card type");
-                model.placeCard(p.getChosenGameCard().getBack(), p, x, y);
+        if (orientation == Orientation.FRONT) {
+            if (getPlayerEntity(nick).getChosenGameCard() instanceof GoldCard) {
+                model.placeCard((GoldCard) getPlayerEntity(nick).getChosenGameCard(), getPlayerEntity(nick), x, y);
             }
-        } catch (IllegalMoveException e) {
-            throw new RemoteException("Illegal move");
+            else {
+                model.placeCard(getPlayerEntity(nick).getChosenGameCard(), getPlayerEntity(nick), x, y);
+            }
+        } else {
+            // does not matter whether the card is gold or resource only, the back is always resource!
+            model.placeCard(getPlayerEntity(nick).getChosenGameCard().getBack(), getPlayerEntity(nick), x, y);
         }
 
-        if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
+        if (getPlayerEntity(nick).getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
             model.setStatus(GameStatus.SECOND_LAST_ROUND);
         }
     }
-
-//    /**
-//     * Place a card in the commonboard
-//     *
-//     * @param card_chosen the card to place
-//     * @param p           the player that places the card
-//     * @param x           the x coordinate
-//     * @param y           the y coordinate
-//     * @throws RemoteException if there is an  error.
-//     */
-//    @Override
-//    public void placeCard(GoldCard card_chosen, Player p, int x, int y)
-//            throws RemoteException {
-//
-//        if (!getConnectedPlayers().contains(p))
-//            throw new RemoteException("Player not connected");
-//        else if (!isMyTurn(p.getNickname()))
-//            throw new RemoteException("It's not your turn");
-//
-//        try {
-//            // Call the placeCard method in GameModel
-//            model.placeCard(card_chosen, p, x, y);
-//        } catch (IllegalMoveException e) {
-//            throw new RemoteException("Illegal move");
-//        }
-//
-//        if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
-//            model.setStatus(GameStatus.SECOND_LAST_ROUND);
-//        }
-//    }
 
     /**
      * Draw a card from the deck in commonBoard. It also incorporates the logic of the game
@@ -554,19 +450,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public void drawCard(String player_nickname, int index) throws GameEndedException {
-        if (!(1 <= index && index <= 6))
-            throw new IllegalArgumentException("invalid index");
         model.drawCard(getPlayerEntity(player_nickname), index);
-        // this.myTurnIsFinished();
     }
-
-//    // aux method for drawCard
-//    /**
-//     * this method must be called every time a player finishes his/her turn,
-//     * i.e. whenever he/she has placed a card on his/her personal board and has also
-//     * drawn a new game card from the deck/table
-//     * @throws RuntimeException if the connection fails
-//     */
 
 
     /**
@@ -577,14 +462,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         return model.getGameId();
     }
 
-
-
-//    private void showPlayerHand(List<ResourceCard> playerHand) {
-//        System.out.println("Player's Hand:");
-//        for (ResourceCard card : playerHand) {
-//            System.out.println(card); // Assuming ResourceCard has a meaningful toString() method
-//        }
-//    }
 
 
 //---------------------------------listeners management--------------------------------------

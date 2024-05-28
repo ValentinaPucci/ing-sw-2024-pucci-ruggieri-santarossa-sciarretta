@@ -53,6 +53,6 @@ public class SocketClientMessagePlaceCard extends SocketClientGenericMessage imp
      */
     @Override
     public void execute(GameControllerInterface gameController) throws RemoteException, GameEndedException {
-        gameController.placeCard(gameController.getCurrentPlayer(), x, y, orientation);
+        gameController.placeCard(gameController.getCurrentPlayer().getNickname(), x, y, orientation);
     }
 }

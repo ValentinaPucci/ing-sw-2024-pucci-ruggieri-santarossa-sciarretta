@@ -13,8 +13,8 @@ public class TuiCommonBoardGraphics {
     public static void showCommonBoard(CommonBoard common_board) {
         int[][] grid = createGrid(common_board);
         printGridWithPlayers(grid, common_board);
-        printCommonCards(common_board);
-        printCommonDecks(common_board);
+//        printCommonCards(common_board);
+//        printCommonDecks(common_board);
     }
 
     public static void printCommonCards(CommonBoard common_board){
@@ -41,7 +41,6 @@ public class TuiCommonBoardGraphics {
 
         char[][] players = new char[common_board.getPlayerCount() + 1][30];
 
-
         printHorizontalLine(grid[0].length);
         players[1][common_board.getPlayerPosition(0)] = 'R';
         players[2][common_board.getPlayerPosition(1)] = 'B';
@@ -49,8 +48,6 @@ public class TuiCommonBoardGraphics {
             players[3][common_board.getPlayerPosition(2)] = 'G';
         else if (common_board.getPlayerCount() == 4)
             players[4][common_board.getPlayerPosition(3)] = 'Y';
-
-
 
         for (int i = 0; i < grid.length; i++) {
             System.out.print("│");
@@ -82,9 +79,7 @@ public class TuiCommonBoardGraphics {
                     }
                 }
 
-                System.out.print("│");//"|"
-                //System.out.print("│");
-                //System.out.print(Arrays.toString(LINE_GRAPHICS));
+                System.out.print("│");
             }
             System.out.println();
             printHorizontalLine(grid[0].length);

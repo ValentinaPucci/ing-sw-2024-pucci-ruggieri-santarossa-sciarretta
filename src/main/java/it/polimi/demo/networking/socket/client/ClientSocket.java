@@ -180,6 +180,11 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     }
 
     @Override
+    public void joinFirstAvailableGame(String nick) throws IOException, InterruptedException, NotBoundException {
+
+    }
+
+    @Override
     public void reconnect(String nick, int idGame) throws IOException, InterruptedException, NotBoundException {
         nickname = nick;
         ob_out.writeObject(new SocketClientMessageReconnect(nick, idGame));
