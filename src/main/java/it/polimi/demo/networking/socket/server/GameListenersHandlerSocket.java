@@ -223,6 +223,11 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         }
     }
 
+    @Override
+    public void secondLastRound(GameModelImmutable gamemodel) throws RemoteException {
+
+    }
+
     /**
      * This method is used to write on the ObjectOutputStream that a message has been sent
      * @param gameModel is the game model {@link GameModelImmutable}
