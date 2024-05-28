@@ -3,7 +3,6 @@ package it.polimi.demo.controller;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
-import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.*;
 import it.polimi.demo.model.chat.Message;
@@ -157,13 +156,13 @@ public class GameController implements GameControllerInterface, Serializable, Ru
             removeListener(listOfClient, p);
 
             if (model.getStatus().equals(GameStatus.WAIT)){
-                    // The game is in Wait (game not started yet), the player disconnected, so I remove him from the game)
-                    model.removePlayer(p);
+                // The game is in Wait (game not started yet), the player disconnected, so I remove him from the game)
+                model.removePlayer(p);
             } else if (model.getStatus().equals(GameStatus.ENDED)) {
-                    throw new GameEndedException();
+                throw new GameEndedException();
             } else {
-                    // The game is running, so I set him as disconnected (He can reconnect soon)
-                    model.setPlayerAsDisconnected(p);
+                // The game is running, so I set him as disconnected (He can reconnect soon)
+                model.setPlayerAsDisconnected(p);
             }
 
             // Check if there is only one player playing
@@ -512,6 +511,5 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
 }
-
 
 

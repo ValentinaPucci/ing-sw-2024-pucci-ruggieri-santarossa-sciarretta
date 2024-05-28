@@ -75,7 +75,7 @@ public interface GameControllerInterface extends Remote, Serializable {
      * @param listOfClient the GameListener of the player {@link GameListener}
      * @throws RemoteException if the connection fails
      */
-    void disconnectPlayer(String nick, GameListener listOfClient) throws RemoteException, GameEndedException;
+    void disconnectPlayer(Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
 
     void reconnectPlayer(Player p) throws RemoteException;
 
