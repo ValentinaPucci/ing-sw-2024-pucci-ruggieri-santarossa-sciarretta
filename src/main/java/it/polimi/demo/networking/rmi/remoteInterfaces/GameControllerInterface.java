@@ -7,13 +7,14 @@ import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 
+import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 
 /**
  * This interface contains all the action a player can do in a single game */
-public interface GameControllerInterface extends Remote {
+public interface GameControllerInterface extends Remote, Serializable {
 
     void placeStarterCard(String nickname, Orientation orientation) throws GameEndedException;
 
@@ -71,11 +72,10 @@ public interface GameControllerInterface extends Remote {
 
     /**
      * This method disconnect a player and remove him from the GameListener list{@link GameListener}
-     * @param p the player to disconnect
      * @param listOfClient the GameListener of the player {@link GameListener}
      * @throws RemoteException if the connection fails
      */
-    void disconnectPlayer(Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
+    void disconnectPlayer(String nick, GameListener listOfClient) throws RemoteException, GameEndedException;
 
     void reconnectPlayer(Player p) throws RemoteException;
 

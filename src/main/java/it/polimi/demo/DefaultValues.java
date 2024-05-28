@@ -37,7 +37,7 @@ public class DefaultValues implements Serializable {
     public final static int secondsToWaitReconnection = 30;
     public final static int timeoutConnection_millis = 3000;
     public final static int secondToWaitToSend_heartbeat = 500;
-    public final static Long timeout_for_detecting_disconnection = 4000L;
+    public final static Long timeout_for_detecting_disconnection = 30000L;
 
     public final static int maxnum_of_last_event_tobe_showed = 6;
 

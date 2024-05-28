@@ -89,8 +89,6 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     }
 
 
-
-
     /**
      * Start the Connection to the Socket Server
      *
@@ -202,7 +200,7 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     }
 
     @Override
-    public void setAsReady(String nickname, int game_id) throws IOException, NotBoundException {
+    public void setAsReady() throws IOException, NotBoundException {
         ob_out.writeObject(new SocketClientMessageSetReady(nickname));
         finishSending();
     }
@@ -252,7 +250,6 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     @Override

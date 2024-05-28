@@ -52,7 +52,8 @@ public interface CommonClientActions {
     void leave(String nick, int idGame) throws IOException, NotBoundException;
 
 
-    void setAsReady() throws RemoteException, NotBoundException;
+    void setAsReady() throws IOException, NotBoundException;
+
 
     /**
      * Checks if it's the invoker's turn

@@ -4,6 +4,7 @@ package it.polimi.demo.networking.socket.server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.Socket;
 import java.rmi.RemoteException;
 import java.util.concurrent.BlockingQueue;
@@ -23,7 +24,7 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
  * Handle all the incoming network requests that clients can require to create,join,leave or reconnect to a game<br>
  * by the Socket Network protocol
  */
-public class ClientHandler extends Thread {
+public class ClientHandler extends Thread implements Serializable {
     /**
      * Socket associated with the Client
      */
@@ -42,7 +43,6 @@ public class ClientHandler extends Thread {
      * GameController associated with the game
      */
     private GameControllerInterface gameController;
-    private GameControllerInterface  gc;
 
     /**
      * The GameListener of the ClientSocket for notifications
@@ -91,7 +91,7 @@ public class ClientHandler extends Thread {
                         //it's a heartbeat message I handle it as a "special message"
                         if (temp.isHeartbeat() && !temp.isMessageForMainController()) {
                             if (gameController != null) {
-                                //System.out.println("in if, addPing "+temp.getNick());
+                               // System.out.println("in if, addPing "+temp.getNick());
                                 gameController.addPing(temp.getNick(), gameListenersHandlerSocket);
                             }
                         } else {
@@ -101,6 +101,7 @@ public class ClientHandler extends Thread {
                         throw new RuntimeException(e);
                     }
                 } catch (IOException | ClassNotFoundException e) {
+                    // Error here in socket, cannot comunicate with client anymore --> rmi connection lost
                     printAsync("ClientSocket dies because cannot communicate no more with the client");
                     return;
                 }
@@ -114,31 +115,21 @@ public class ClientHandler extends Thread {
     // setAsReady, which enter the seconod if, but has a totally deleted gameController
     
 
-    private  void runGameLogic() {
+    private void runGameLogic() {
         SocketClientGenericMessage temp;
 
         try {
             while (!this.isInterrupted()) {
                     temp = processingQueue.take();
-                    if(gameController !=null) {
-                        // Don t know why, afer the first call, it gets  deleted
-                        gc = gameController;
-                        System.out.println(" \n OUT: " + gc.getConnectedPlayers().size());
-                    }
-
                     if (temp.isMessageForMainController()) {
                         gameController = temp.execute(gameListenersHandlerSocket, MainController.getControllerInstance());
                         System.out.println(" \n Message for Main ");
-                        gc = gameController;
                         prova++;
+                        System.out.println("Prova 1: " + prova);
                         System.out.println("Entra ....");
                         nickname = gameController != null ? temp.getNick() : null;
 
                     } else if (!temp.isHeartbeat()) {
-                        System.out.println("Then, message for controller: " + gc.getConnectedPlayers().size());
-                            if(gameController == null){
-                                printAsync("Gamecontroller null");
-                            }
                             prova++;
                             System.out.println("Prova 2: " + prova);
                             temp.execute(gameController);
