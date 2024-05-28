@@ -3,14 +3,29 @@ package it.polimi.demo.view.gui;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.view.flow.UI;
+import it.polimi.demo.view.flow.utilities.inputReaderGUI;
 
 import java.io.IOException;
 
 public class GUI extends UI {
 
+    private ApplicationGUI guiApplication;
+    private inputReaderGUI inputReaderGUI;
+    private boolean alreadyShowedPublisher = false;
+    private boolean alreadyShowedLobby = false;
+
+    private String nickname;
+
     @Override
     public void init() {
 
+    }
+
+    public GUI(ApplicationGUI guiApplication, inputReaderGUI inputReaderGUI) {
+        this.guiApplication = guiApplication;
+        this.inputReaderGUI = inputReaderGUI;
+        nickname = null;
+        init();
     }
 
     @Override
