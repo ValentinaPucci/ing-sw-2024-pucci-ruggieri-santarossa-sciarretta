@@ -4,7 +4,6 @@ import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 
-import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -12,7 +11,7 @@ import java.rmi.RemoteException;
  * IT IS THE SKELETON --> VIRTUAL VIEW
  * This interface contains the events regarding the list of games
  */
-public interface MainControllerInterface extends Remote, Serializable {
+public interface MainControllerInterface extends Remote {
 
     /**
      * This method creates a new game and add it to the GameListener list
