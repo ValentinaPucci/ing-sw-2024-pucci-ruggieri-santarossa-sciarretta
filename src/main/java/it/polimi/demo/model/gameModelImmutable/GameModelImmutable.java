@@ -123,4 +123,10 @@ public class GameModelImmutable implements Serializable {
         else
             return null;
     }
+
+    public List<PlayerIC> getClassification(){
+        players_connected.sort(Comparator.comparing(PlayerIC::getFinalScore,Comparator.reverseOrder()));
+        return players_connected;
+    }
+
 }
