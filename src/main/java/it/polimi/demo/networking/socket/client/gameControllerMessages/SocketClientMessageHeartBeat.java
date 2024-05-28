@@ -6,9 +6,10 @@ import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class SocketClientMessageHeartBeat extends SocketClientGenericMessage {
+public class SocketClientMessageHeartBeat extends SocketClientGenericMessage implements Serializable {
 
     public SocketClientMessageHeartBeat(String nick) {
         this.nick = nick;

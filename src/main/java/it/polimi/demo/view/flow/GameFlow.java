@@ -640,6 +640,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         try {
             clientActions.joinGame(nick, game_id);
         } catch (IOException | InterruptedException | NotBoundException e) {
+            System.out.println("Here, JoinGame, Gameflow");
             noConnectionError();
         }
     }
