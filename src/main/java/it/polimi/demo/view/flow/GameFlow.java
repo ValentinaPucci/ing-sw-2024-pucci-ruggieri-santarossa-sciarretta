@@ -11,6 +11,8 @@ import it.polimi.demo.view.flow.utilities.*;
 import it.polimi.demo.view.flow.utilities.events.EventElement;
 import it.polimi.demo.view.flow.utilities.events.EventList;
 import it.polimi.demo.view.flow.utilities.events.EventType;
+import it.polimi.demo.view.gui.ApplicationGUI;
+import it.polimi.demo.view.gui.GUI;
 import it.polimi.demo.view.text.TUI;
 import it.polimi.demo.networking.socket.client.ClientSocket;
 import org.fusesource.jansi.Ansi;
@@ -108,28 +110,28 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         new Thread(this).start();
     }
 
-//    /**
-//     * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI} (GUI)
-//     *
-//     * @param guiApplication      the GUI application {@link GUIApplication}
-//     * @param connectionSelection the connection type {@link ConnectionSelection}
-//     */
-//    public GameFlow(GUIApplication guiApplication, ConnectionSelection connectionSelection) {
-//        //Invoked for starting with GUI
-//        switch (connectionSelection) {
-//            // case SOCKET -> clientActions = new ClientSocket(this);
-//            case RMI -> clientActions = new RMIClient(this);
-//        }
-//        this.inputReader = new inputReaderGUI();
-//
-//        ui = new GUI(guiApplication, (inputReaderGUI) inputReader);
-//        importantEvents = new ArrayList<>();
-//        nickname = "";
-//        fileDisconnection = new FileDisconnection();
-//
-//        this.inputParser = new InputParser(this.inputReader.getBuffer(), this);
-//        new Thread(this).start();
-//    }
+    /**
+     * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI} (GUI)
+     *
+     * @param guiApplication      the GUI application {@link ApplicationGUI}
+     * @param connectionSelection the connection type {@link ConnectionSelection}
+     */
+    public GameFlow(ApplicationGUI guiApplication, ConnectionSelection connectionSelection) {
+        //Invoked for starting with GUI
+        switch (connectionSelection) {
+            // case SOCKET -> clientActions = new ClientSocket(this);
+            case RMI -> clientActions = new RMIClient(this);
+        }
+        this.inputReader = new inputReaderGUI();
+
+        ui = new GUI(guiApplication, (inputReaderGUI) inputReader);
+        importantEvents = new ArrayList<>();
+        nickname = "";
+        fileDisconnection = new FileDisconnection();
+
+        this.inputParser = new InputParser(this.inputReader.getBuffer(), this);
+        new Thread(this).start();
+    }
 
     /**
      * The gameFlow works with a list of events<br>
@@ -640,6 +642,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         try {
             clientActions.joinGame(nick, game_id);
         } catch (IOException | InterruptedException | NotBoundException e) {
+            System.out.println("Here, JoinGame, Gameflow");
             noConnectionError();
         }
     }

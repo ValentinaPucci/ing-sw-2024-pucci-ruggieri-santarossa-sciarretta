@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 
 public abstract class SocketClientGenericMessage implements Serializable {
 
-    protected String nick;
+    public String nick;
     protected boolean isMessageForMainController;
     protected boolean isHeartbeat=false;
 

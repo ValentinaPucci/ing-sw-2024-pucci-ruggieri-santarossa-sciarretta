@@ -1,6 +1,6 @@
 package it.polimi.demo.view.gui.scene;
 
-public enum Scene {
+public enum SceneType {
 
     MENU("/Menu.fxml"),
     NICKNAME("/InsertNickname.fxml"),
@@ -10,7 +10,7 @@ public enum Scene {
     PLAYER_LOBBY_3("/PlayerLobby3.fxml"),
     PLAYER_LOBBY_4("/PlayerLobby4.fxml"),
     ID_GAME("/IDgame.fxml"),
-    //INGAME("/InGame.fxml"),
+    RUNNING("/Running.fxml"),
     GAME_OVER("/GameOver.fxml"),
     PLAYERS_NUMBER("PlayersNumber"),
     ERROR("/Error.fxml");
@@ -20,7 +20,7 @@ public enum Scene {
     private final String value;
 
 
-    Scene(final String value) {
+    SceneType(final String value) {
         this.value = value;
     }
 

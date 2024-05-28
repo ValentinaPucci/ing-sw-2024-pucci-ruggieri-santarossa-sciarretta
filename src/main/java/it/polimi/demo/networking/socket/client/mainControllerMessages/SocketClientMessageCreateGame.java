@@ -15,7 +15,6 @@ import java.rmi.RemoteException;
  */
 public class SocketClientMessageCreateGame extends SocketClientGenericMessage implements Serializable {
     int num_players;
-
     /**
      * Constructor of the class.
      * @param nick the player's nickname
@@ -36,7 +35,6 @@ public class SocketClientMessageCreateGame extends SocketClientGenericMessage im
     public GameControllerInterface execute(GameListener lis, MainControllerInterface mainController) throws RemoteException {
         return mainController.createGame(lis, nick, num_players);
     }
-
 
     /**
      * Method to execute the corresponding action for the message.
