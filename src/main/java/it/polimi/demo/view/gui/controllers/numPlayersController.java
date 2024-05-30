@@ -23,13 +23,13 @@ public class numPlayersController extends GenericController {
         int numberOfPlayers = 0;
 
         switch (buttonText) {
-            case "2 Giocatori":
+            case "2":
                 numberOfPlayers = 2;
                 break;
-            case "3 Giocatori":
+            case "3":
                 numberOfPlayers = 3;
                 break;
-            case "4 Giocatori":
+            case "4":
                 numberOfPlayers = 4;
                 break;
 
