@@ -236,7 +236,20 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_LastRound(GameModel model) {
+    public synchronized void notify_secondLastRound(GameModel model) {
+        Iterator<GameListener> i = listeners.iterator();
+        while (i.hasNext()) {
+            GameListener l = i.next();
+            try {
+                l.secondLastRound(new GameModelImmutable(model));
+            } catch (RemoteException e) {
+                printAsync("During notification of notify_SecondLastRound, a disconnection has been detected before heartbeat");
+                i.remove();
+            }
+        }
+    }
+
+    public synchronized void notify_lastRound(GameModel model) {
         Iterator<GameListener> i = listeners.iterator();
         while (i.hasNext()) {
             GameListener l = i.next();
@@ -250,16 +263,16 @@ public class ListenersHandler implements Serializable {
     }
 
     /**
-     * The notify_SentMessage method notifies that a message has been sent <br>
-     * @param gameModel is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable} <br>
-     * @param msg is the message that has been sent {@link Message}
+     * The notify_messageSent method notifies that a message has been sent <br>
+     * @param nick
+     * @param message
      */
-    public synchronized void notify_messageSent(GameModel gameModel, Message msg) {
+    public synchronized void notify_messageSent(GameModel gameModel, String nick, Message message) {
         Iterator<GameListener> i = listeners.iterator();
         while (i.hasNext()) {
             GameListener l = i.next();
             try {
-                l.messageSent(new GameModelImmutable(gameModel), msg);
+                l.messageSent(new GameModelImmutable(gameModel), nick, message);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_SentMessage, a disconnection has been detected before heartbeat");
                 i.remove();

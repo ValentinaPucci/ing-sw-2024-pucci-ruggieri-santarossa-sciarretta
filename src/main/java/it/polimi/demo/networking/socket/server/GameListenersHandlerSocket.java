@@ -223,23 +223,15 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         }
     }
 
-    /**
-     * This method is used to write on the ObjectOutputStream that a message has been sent
-     * @param gameModel is the game model {@link GameModelImmutable}
-     * @param msg is the message sent {@link Message}
-     * @throws RemoteException if the connection fails
-     */
     @Override
-    public void messageSent(GameModelImmutable gameModel, Message msg) throws RemoteException {
-        try {
-            out.writeObject(new msgSentMessage(gameModel, msg));
-            finishSending();
-        } catch (IOException e) {
+    public void secondLastRound(GameModelImmutable gamemodel) throws RemoteException {
 
-        }
     }
 
-
+    /**
+     * This method is used to write on the ObjectOutputStream that the player has finished his turn
+     * @throws RemoteException if the connection fails
+     */
     @Override
     public void cardPlaced(GameModelImmutable gamemodel, int x, int y, Orientation orientation) throws RemoteException {
         try {
@@ -322,6 +314,11 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         } catch (IOException e) {
 
         }
+    }
+
+    @Override
+    public void messageSent(GameModelImmutable gameModel, String nickname, Message message) throws RemoteException {
+
     }
 
     /**

@@ -3,6 +3,7 @@ package it.polimi.demo.view.flow;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -100,7 +101,7 @@ public interface CommonClientActions extends Serializable {
      * @param msg message
      * @throws RemoteException
      */
-    void sendMessage(Message msg) throws RemoteException;
+    void sendMessage(String receiver, Message msg) throws RemoteException, NotBoundException;
 
     /**
      * Pings the server

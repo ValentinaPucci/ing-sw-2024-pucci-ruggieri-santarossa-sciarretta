@@ -3,25 +3,52 @@ package it.polimi.demo.view.gui;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.view.flow.UI;
+import it.polimi.demo.view.flow.utilities.inputReaderGUI;
+import it.polimi.demo.view.gui.scene.SceneType;
+import javafx.application.Platform;
 
-import java.io.IOException;
+import java.util.ArrayList;
 
 public class GUI extends UI {
 
+    private ApplicationGUI guiApplication;
+    private inputReaderGUI inputReaderGUI;
+    private boolean alreadyShowedPublisher = false;
+    private boolean alreadyShowedLobby = false;
+
+    private String nickname;
+
+    public GUI(ApplicationGUI guiApplication, inputReaderGUI inputReaderGUI) {
+        this.guiApplication = guiApplication;
+        this.inputReaderGUI = inputReaderGUI;
+        nickname = null;
+        init();
+    }
+
+    /**
+     * The show method is used to show the GUI, and set the active scene to the publisher.
+     */
+    @Override
+    protected void show_publisher() {
+        alreadyShowedPublisher = true;
+    }
+
     @Override
     public void init() {
-
+        importantEvents = new ArrayList<>();
     }
 
-    @Override
-    protected void show_publisher() throws IOException, InterruptedException {
-
-    }
 
     @Override
     protected void show_menuOptions() {
-
+        if (alreadyShowedPublisher) {
+            callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.inputReaderGUI));//So the controllers can add text to the buffer for the gameflow
+            callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
+            callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
+        }
     }
+
+
 
     @Override
     protected void show_creatingNewGameMsg(String nickname) {
@@ -100,6 +127,11 @@ public class GUI extends UI {
 
     @Override
     protected void show_commonBoard(GameModelImmutable gameModel) {
+
+    }
+
+    @Override
+    protected void show_myTurnIsFinished() {
 
     }
 
@@ -194,8 +226,25 @@ public class GUI extends UI {
     }
 
     @Override
-    public void addImportantEvent(String input) {
+    protected void show_genericError(String s) {
 
+    }
+
+
+    public void callPlatformRunLater(Runnable r) {
+        //Need to use this method to call any methods inside the GuiApplication
+        //Doing so, the method requested will be executed on the JavaFX Thread (else exception)
+        Platform.runLater(r);
+    }
+
+    /**
+     * This method add an important event to the list of important events, and show it
+     * @param input the string of the important event to add
+     */
+    @Override
+    public void addImportantEvent(String input) {
+        importantEvents.add(input);
+        callPlatformRunLater(() -> this.guiApplication.showImportantEvents(this.importantEvents));
     }
 
     @Override
@@ -204,18 +253,40 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void addMessage(Message msg, GameModelImmutable model) {
+    protected void addMessage(String msg, GameModelImmutable model) {
 
     }
 
+    /**
+     * This method show the sent message
+     *
+     * @param model    the model where the message need to be shown
+     * @param nickname the sender's nickname
+     */
+    @Override
+    protected void show_sentMessage(GameModelImmutable model, String nickname) {
+        callPlatformRunLater(() -> this.guiApplication.showMessages(model, this.nickname));
+    }
+
+
+    /**
+     * This method reset the important events
+     */
     @Override
     protected void resetImportantEvents() {
-
+        this.importantEvents = new ArrayList<>();
+        this.nickname = null;
+        alreadyShowedPublisher = true;
+        alreadyShowedLobby = false;
     }
 
+    /**
+     * This method show a message about a no connection error
+     */
     @Override
     protected void show_noConnectionError() {
-
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ERROR));
+        callPlatformRunLater(() -> this.guiApplication.showError("Connection to server lost!", true));
     }
 
 }

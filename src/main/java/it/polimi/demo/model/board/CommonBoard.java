@@ -1,7 +1,5 @@
 package it.polimi.demo.model.board;
 
-import it.polimi.demo.model.cards.gameCards.GoldCard;
-import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.interfaces.CommonBoardIC;
 import it.polimi.demo.model.ConcreteDeck;
 import it.polimi.demo.model.cards.Card;
@@ -46,6 +44,9 @@ public class CommonBoard implements CommonBoardIC, Serializable {
      */
     public void initializeBoard() {
         setInitialPosition();
+        resource_concrete_deck.shuffle();
+        gold_concrete_deck.shuffle();
+        objective_concrete_deck.shuffle();
         // Populate the table with cards from the decks
         for (int i = 0; i < 2; i++) {
             // Populate the first array with two cards from the Resource ConcreteDeck
@@ -236,5 +237,18 @@ public class CommonBoard implements CommonBoardIC, Serializable {
         common_objectives.add(0, (ObjectiveCard) table_cards[2][0]);
         common_objectives.add(1, (ObjectiveCard) table_cards[2][1]);
         return common_objectives;
+    }
+
+    @Override
+    //necessary for the GUI
+    public Integer[] getCommonCardsId() {
+        Integer[] cards = new Integer[6];
+        cards[0] = table_cards[0][0].getId(); //deck risorsa
+        cards[1] = table_cards[0][1].getId(); //card risorsa
+        cards[2] = table_cards[1][0].getId(); //deck gold
+        cards[3] = table_cards[1][1].getId(); //card gold
+        cards[4] = getCommonObjectives().getFirst().getId();
+        cards[5] = getCommonObjectives().get(1).getId();
+        return cards;
     }
 }

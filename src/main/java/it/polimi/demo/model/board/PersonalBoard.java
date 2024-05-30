@@ -25,8 +25,8 @@ public class PersonalBoard implements Serializable {
     private int num_potions;
 
     public PersonalBoard() {
-        this.dim1 = 1000;
-        this.dim2 = 1000;
+        this.dim1 = 500;
+        this.dim2 = 500;
 
         this.board = new Cell[dim1][dim2];
         for (int i = 0; i < dim1; i++) {
@@ -198,6 +198,8 @@ public class PersonalBoard implements Serializable {
             }
             this.points += card.points * darken_corners;
         }
+        else
+            this.points += card.points;
     }
 
 

@@ -104,4 +104,6 @@ public interface CommonBoardIC {
      * @return the list of common objectives in the board
      */
     List<ObjectiveCard> getCommonObjectives();
+
+    Integer[] getCommonCardsId();
 }

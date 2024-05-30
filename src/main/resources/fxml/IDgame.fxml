@@ -13,7 +13,7 @@
    <children>
       <ImageView id="insertNickname" accessibleRole="BUTTON" cache="true" cacheHint="QUALITY" depthTest="ENABLE" fitHeight="400.0" fitWidth="600.0" focusTraversable="true" styleClass="insertNickname" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <image>
-            <Image url="@/images/background.jpg" />
+            <Image url="@/Background.jpg" />
          </image>
       </ImageView>
       <TextField fx:id="GameId" layoutX="150.0" layoutY="200.0" prefHeight="55.0" prefWidth="302.0">
@@ -35,7 +35,7 @@
       </Button>
       <ImageView fitHeight="109.0" fitWidth="109.0" layoutX="12.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="14.0">
          <image>
-            <Image url="@/images/logo.png" />
+            <Image url="@/logo.png" />
          </image>
       </ImageView>
    </children>

@@ -33,7 +33,11 @@
       </Text>
       <ImageView fitHeight="83.0" fitWidth="91.0" layoutX="14.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
          <image>
+<<<<<<< HEAD
             <Image url="@/images/logo.png" />
+=======
+            <Image url="@/logo.png" />
+>>>>>>> origin/main
          </image>
       </ImageView>
       <Button fx:id="buttonMenu" layoutX="465.0" layoutY="322.0" mnemonicParsing="false" onAction="#goToMenu" text="Button" textFill="#4d0202">

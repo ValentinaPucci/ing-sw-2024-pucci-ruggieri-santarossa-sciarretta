@@ -1,12 +1,12 @@
 package it.polimi.demo.model;
 
+import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
-import it.polimi.demo.listener.*;
 import it.polimi.demo.model.interfaces.ResourceCardIC;
 
 import java.io.Serializable;
@@ -74,6 +74,14 @@ public class Player implements PlayerIC, Serializable {
         this.chosen_card = chosen_card;
     }
 
+    public void setChosenGameCard(GoldCard chosen_card) {
+        this.chosen_card = chosen_card;
+    }
+
+    public void setChosenObjectiveCard(ObjectiveCard chosen_objective) {
+        this.chosen_objective = chosen_objective;
+    }
+
     @Override
     public StarterCard getStarterCard() {
         return starter_card;
@@ -92,9 +100,6 @@ public class Player implements PlayerIC, Serializable {
         return secret_objectives ;
     }
 
-    public void setChosenObjectiveCard(ObjectiveCard chosen_objective) {
-        this.chosen_objective = chosen_objective;
-    }
 
     /**
      * set the secret objective at the start of the game. Then, the player
@@ -133,21 +138,28 @@ public class Player implements PlayerIC, Serializable {
         this.final_score = final_score;
     }
 
-    public void addToHand(Card card) {
-        card_hand.add((ResourceCard) card);
+    @Override
+    public void addToHand(ResourceCard card) {
+        card_hand.add(card);
     }
 
     public List<ResourceCard> getCardHand(){ return card_hand; }
-
-    public void setHand(List<ResourceCard> card_hand) {
-        this.card_hand.clear();
-        this.card_hand.addAll(card_hand);
+    @Override
+    public ArrayList<Integer> getCardHandIds(){
+       ArrayList<Integer> cardHandIds = new ArrayList<>();
+        for (ResourceCard resourceCard : card_hand) {
+            cardHandIds.add(resourceCard.getId());
+        }
+       return cardHandIds;
     }
 
     @Override
-    public void removeFromHand(Card card) {
+    public void removeFromHand(ResourceCard card) {
         card_hand.remove(card);
     }
+
+    @Override
+    public void removeFromHand(GoldCard card) {card_hand.remove(card);}
 
     public List<ResourceCard> getHand() {
         return card_hand;
@@ -157,18 +169,6 @@ public class Player implements PlayerIC, Serializable {
     public List<ResourceCardIC> getHandIC() {
         return new ArrayList<>(card_hand);
     }
-//
-//    public void addListener(GameListener obj) {
-//        listeners.add(obj);
-//    }
-//
-//    public void removeListener(GameListener obj) {
-//        listeners.remove(obj);
-//    }
-//
-//    public List<GameListener> getListeners() {
-//        return listeners;
-//    }
 
     @Override
     public boolean getReadyToStart() {
@@ -230,6 +230,14 @@ public class Player implements PlayerIC, Serializable {
     public boolean isLast() {
         //TODO: IMPLEMENT!
         return false;
+    }
+
+    @Override
+    public Integer[] getSecretObjectiveCardsIds() {
+        Integer[] personalObjectiveIds = new Integer[2];
+        personalObjectiveIds[0] = getSecretObjectiveCards().getFirst().getId();
+        personalObjectiveIds[1] = getSecretObjectiveCards().get(1).getId();
+        return personalObjectiveIds;
     }
 }
 

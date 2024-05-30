@@ -12,7 +12,7 @@
     <children>
         <ImageView fitHeight="418.0" fitWidth="286.0" preserveRatio="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <image>
-                <Image url="@/images/players/red.png" />
+                <Image url="@/red.png" />
             </image>
         </ImageView>
 

@@ -1,7 +1,6 @@
 package it.polimi.demo.view.flow.utilities;
 
 import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.chat.MessagePrivate;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.flow.GameFlow;
 
@@ -59,19 +58,18 @@ public class InputParser extends Thread {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-
             // I popped an input from the buffer
             if (p != null && txt.startsWith("/cs")) {
                 txt = txt.charAt(3) == ' ' ? txt.substring(4) : txt.substring(3);
                 if (txt.contains(" ")){
                     String receiver = txt.substring(0, txt.indexOf(" "));
                     String msg = txt.substring(receiver.length() + 1);
-                    gameFlow.sendMessage(new MessagePrivate(msg, p, receiver));
+                    gameFlow.sendMessage(receiver, new Message(msg, p));
                 }
             } else if (p != null && txt.startsWith("/c")) {
                 // I send a message
                 txt = txt.charAt(2) == ' ' ? txt.substring(3) : txt.substring(2);
-                gameFlow.sendMessage(new Message(txt, p));
+                gameFlow.sendMessage("all", new Message(txt, p));
 
             } else if (txt.startsWith("/quit") || (txt.startsWith("/leave"))) {
                 assert p != null;
