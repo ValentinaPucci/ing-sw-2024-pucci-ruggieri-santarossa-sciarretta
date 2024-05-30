@@ -47,6 +47,7 @@ public class SceneInfo {
      * @param inputReaderGUI the input reader GUI {@link inputReaderGUI}
      */
     public void setInputReaderGUI(inputReaderGUI inputReaderGUI){
+        //System.out.println("setInputReaderGUI: "+ inputReaderGUI);
         if(genericController!=null) {
             genericController.setInputReaderGUI(inputReaderGUI);
         }

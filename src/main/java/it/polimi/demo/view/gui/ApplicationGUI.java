@@ -19,6 +19,7 @@ import javafx.stage.StageStyle;
 
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ public class ApplicationGUI extends Application {
      * @param inputReaderGUI the input reader GUI {@link inputReaderGUI}
      */
     public void setInputReaderGUItoAllControllers(inputReaderGUI inputReaderGUI) {
+        //System.out.println("setInputReaderGUItoAllControllers: "+ inputReaderGUI);
         loadScenes();
         for (SceneInfo s : scenes) {
             s.setInputReaderGUI(inputReaderGUI);
@@ -57,7 +59,7 @@ public class ApplicationGUI extends Application {
 
         for (int i = 0; i < SceneType.values().length; i++) {
             String fxmlPath = SceneType.values()[i].value();
-            System.out.println("Caricamento FXML: " + fxmlPath); // Debug
+            //System.out.println("Caricamento FXML: " + fxmlPath); // Debug
 
             if (fxmlPath == null || fxmlPath.isEmpty()) {
                 System.err.println("Percorso FXML non impostato per: " + SceneType.values()[i]);
@@ -68,7 +70,7 @@ public class ApplicationGUI extends Application {
 
             try {
                 root = loader.load();
-                System.out.println("Caricamento completato: " + root); // Debug
+                //System.out.println("Caricamento completato: " + root); // Debug
                 gc = loader.getController();
             } catch (IOException e) {
                 throw new RuntimeException("Errore nel caricamento di " + fxmlPath, e);
@@ -80,16 +82,13 @@ public class ApplicationGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-        primaryStage.setTitle("My JavaFX Application");
-
+        gameFlow = new GameFlow(this, ConnectionSelection.valueOf(getParameters().getUnnamed().get(0)));
         loadScenes();
 
-        // Imposta la scena iniziale
-        if (!scenes.isEmpty()) {
-            primaryStage.setScene(scenes.get(0).getScene());
-        }
-        primaryStage.show();
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Codex Naturalis");
+
+        root = new StackPane();
     }
 
     public static void main(String[] args) {
@@ -98,7 +97,7 @@ public class ApplicationGUI extends Application {
 
 
     public void setActiveScene(SceneType scene) {
-        this.primaryStage.setTitle("MyShelfie - "+scene.name());
+        this.primaryStage.setTitle("Codex Naturalis - "+scene.name());
         resizing=false;
         int index = getSceneIndex(scene);
         if (index != -1) {
@@ -118,8 +117,13 @@ public class ApplicationGUI extends Application {
         });
         resizing=true;
 
-        primaryStage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getClassLoader().getResourceAsStream("img/img/Publisher_material/Icon_50x50px.png"))));
-
+        InputStream logoStream = ApplicationGUI.class.getClassLoader().getResourceAsStream("logo.png");
+        System.out.println(logoStream); // Stampa per debug
+        if (logoStream != null) {
+            primaryStage.getIcons().add(new Image(logoStream));
+        } else {
+            System.err.println("Impossibile trovare logo.png");
+        }
     }
 
     public void rescale(double width, double heigh) {

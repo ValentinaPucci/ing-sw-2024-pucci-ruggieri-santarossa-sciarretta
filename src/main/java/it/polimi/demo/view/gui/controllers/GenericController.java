@@ -18,6 +18,7 @@ public abstract class GenericController {
      * @param inputReaderGUI the input reader GUI
      */
     public void setInputReaderGUI(inputReaderGUI inputReaderGUI) {
+        //System.out.println("setInputReaderGUIGeneric: "+ inputReaderGUI);
         this.inputReaderGUI = inputReaderGUI;
     }
 

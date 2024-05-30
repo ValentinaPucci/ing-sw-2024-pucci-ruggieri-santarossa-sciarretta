@@ -21,6 +21,7 @@ public class GUI extends UI {
     public GUI(ApplicationGUI guiApplication, inputReaderGUI inputReaderGUI) {
         this.guiApplication = guiApplication;
         this.inputReaderGUI = inputReaderGUI;
+        //System.out.println("GUI constructor: "+ this.inputReaderGUI);
         nickname = null;
         init();
     }
@@ -49,6 +50,7 @@ public class GUI extends UI {
     @Override
     protected void show_menuOptions() {
         if (alreadyShowedPublisher) {
+            //System.out.println("show_menuOptions: "+ this.inputReaderGUI);
             callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.inputReaderGUI));//So the controllers can add text to the buffer for the gameflow
             callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
             callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));

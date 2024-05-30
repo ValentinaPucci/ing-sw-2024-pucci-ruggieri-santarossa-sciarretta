@@ -8,6 +8,7 @@ public class MenuController extends GenericController{
 
     @FXML
     public void CreateGame(ActionEvent event) {
+        System.out.println("CreateGame: "+ event);
         inputReaderGUI reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("c");
