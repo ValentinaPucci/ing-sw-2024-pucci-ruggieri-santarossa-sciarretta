@@ -14,12 +14,12 @@
    <children>
       <ImageView fitHeight="403.0" fitWidth="639.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <image>
-            <Image url="@/images/background.jpg" />
+            <Image url="@/Background.jpg" />
          </image>
       </ImageView>
       <ImageView fitHeight="403.0" fitWidth="403.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="236.0" AnchorPane.topAnchor="0.0">
          <image>
-            <Image url="@/images/Codex.png" />
+            <Image url="@/Codex.png" />
          </image>
       </ImageView>
       <ButtonBar layoutX="422.0" layoutY="105.0" prefHeight="77.0" prefWidth="182.0">

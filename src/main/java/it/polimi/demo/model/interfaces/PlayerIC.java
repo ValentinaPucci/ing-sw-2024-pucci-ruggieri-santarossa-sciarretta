@@ -1,12 +1,12 @@
 package it.polimi.demo.model.interfaces;
 
-import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -71,6 +71,8 @@ public interface PlayerIC {
      */
     void addToHand(Card card);
 
+    ArrayList<Integer> getCardHandIds();
+
     /**
      * This method is used to remove a card to those held by the player.
      * This card is the one that will be placed on personal board
@@ -108,4 +110,6 @@ public interface PlayerIC {
     ResourceCard getLastChosenCard();
 
     boolean isLast();
+
+    Integer[] getSecretObjectiveCardsIds();
 }

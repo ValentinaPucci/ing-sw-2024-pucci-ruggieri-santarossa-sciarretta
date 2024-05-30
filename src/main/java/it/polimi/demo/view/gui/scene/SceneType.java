@@ -1,24 +1,20 @@
 package it.polimi.demo.view.gui.scene;
 
 public enum SceneType {
-
-    MENU("/Menu.fxml"),
-    NICKNAME("/InsertNickname.fxml"),
-    LOBBY("/Lobby.fxml"),
-    PLAYER_LOBBY_1("/PlayerLobby1.fxml"),
-    PLAYER_LOBBY_2("/PlayerLobby2.fxml"),
-    PLAYER_LOBBY_3("/PlayerLobby3.fxml"),
-    PLAYER_LOBBY_4("/PlayerLobby4.fxml"),
-    ID_GAME("/IDgame.fxml"),
-    RUNNING("/Running.fxml"),
-    GAME_OVER("/GameOver.fxml"),
-    PLAYERS_NUMBER("PlayersNumber"),
-    ERROR("/Error.fxml");
-
-
+    MENU("/fxml/Menu.fxml"),
+    NICKNAME("/fxml/InsertNickname.fxml"),
+    LOBBY("/fxml/Lobby.fxml"),
+    PLAYER_LOBBY_1("/fxml/PlayerLobby1.fxml"),
+    PLAYER_LOBBY_2("/fxml/PlayerLobby2.fxml"),
+    PLAYER_LOBBY_3("/fxml/PlayerLobby3.fxml"),
+    PLAYER_LOBBY_4("/fxml/PlayerLobby4.fxml"),
+    ID_GAME("/fxml/IDgame.fxml"),
+    RUNNING("/fxml/Running.fxml"),
+    GAME_OVER("/fxml/GameOver.fxml"),
+    PLAYERS_NUMBER("/fxml/PlayersNumber"),
+    ERROR("/fxml/Error.fxml");
 
     private final String value;
-
 
     SceneType(final String value) {
         this.value = value;
