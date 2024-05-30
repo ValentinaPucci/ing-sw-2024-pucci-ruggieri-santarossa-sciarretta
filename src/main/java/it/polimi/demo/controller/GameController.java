@@ -418,7 +418,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @throws RemoteException if there is an  error.
      */
     @Override
-    public void placeCard(String nick, int x, int y, Orientation orientation) throws RemoteException {
+    public void placeCard(String nick, int x, int y, Orientation orientation) throws RemoteException, GameEndedException {
 
         if (!getConnectedPlayers().contains(getPlayerEntity(nick)))
             throw new RemoteException("Player not connected");
@@ -435,10 +435,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         } else {
             // does not matter whether the card is gold or resource only, the back is always resource!
             model.placeCard(getPlayerEntity(nick).getChosenGameCard().getBack(), getPlayerEntity(nick), x, y);
-        }
-
-        if (getPlayerEntity(nick).getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
-            model.setStatus(GameStatus.SECOND_LAST_ROUND);
         }
     }
 

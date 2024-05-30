@@ -68,11 +68,7 @@ public class Cell implements Serializable {
      * @Override
      */
     public boolean equals(Cell cell) {
-        if (this.is_full && cell.is_full &&
-            this.corner.reference_card.color == cell.corner.reference_card.color)
-            return true;
-        else
-            return false;
+        return this.is_full && cell.is_full && this.corner.reference_card.color == cell.corner.reference_card.color;
     }
 
     public int getLevel() {

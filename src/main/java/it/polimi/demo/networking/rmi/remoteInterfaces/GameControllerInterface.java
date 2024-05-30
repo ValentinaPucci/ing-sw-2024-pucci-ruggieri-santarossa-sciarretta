@@ -26,7 +26,7 @@ public interface GameControllerInterface extends Remote {
      * @param y the y coordinate of the card on his/her personal board
      * @throws RemoteException if the connection fails
      */
-    void placeCard(String nickname, int x, int y, Orientation orientation) throws RemoteException;
+    void placeCard(String nickname, int x, int y, Orientation orientation) throws RemoteException, GameEndedException;
 
 
     /**

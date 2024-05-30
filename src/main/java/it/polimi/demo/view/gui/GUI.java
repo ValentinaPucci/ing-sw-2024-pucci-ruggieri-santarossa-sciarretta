@@ -131,6 +131,11 @@ public class GUI extends UI {
     }
 
     @Override
+    protected void show_myTurnIsFinished() {
+
+    }
+
+    @Override
     protected void show_playerHand(GameModelImmutable gameModel) {
 
     }
@@ -217,6 +222,11 @@ public class GUI extends UI {
 
     @Override
     protected void show_genericMessage(String s) {
+
+    }
+
+    @Override
+    protected void show_genericError(String s) {
 
     }
 

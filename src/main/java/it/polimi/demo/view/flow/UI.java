@@ -223,6 +223,8 @@ public abstract class UI {
 
     protected abstract void show_genericMessage(String s);
 
+    protected abstract void show_genericError(String s);
+
     //----------------------
     //ACTIONS
     //----------------------
