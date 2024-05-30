@@ -1,6 +1,8 @@
 package it.polimi.demo.view.gui;
 
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.view.flow.ConnectionSelection;
+import it.polimi.demo.view.flow.GameFlow;
 import it.polimi.demo.view.gui.controllers.*;
 import it.polimi.demo.view.gui.scene.SceneType;
 import it.polimi.demo.view.flow.utilities.inputReaderGUI;
@@ -9,14 +11,18 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static it.polimi.demo.view.gui.scene.SceneType.*;
 
@@ -25,40 +31,11 @@ import static it.polimi.demo.view.gui.scene.SceneType.*;
 public class ApplicationGUI extends Application {
     private Stage primaryStage;
     private StackPane root;
+    private GameFlow gameFlow;
     private ArrayList<SceneInfo> scenes;
     private double widthOld, heightOld;
     private boolean resizing = true;
 
-
-    @Override
-    public void start(Stage primaryStage) {
-        try {
-            loadScenes(primaryStage);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to start application.", e);
-        }
-    }
-
-    private void loadScenes(Stage stage) throws IOException {
-        // Adjust the path according to your FXML file location
-        URL fxmlLocation = getClass().getResource("/fxml/Menu.fxml");
-        System.out.println("FXML Location: " + fxmlLocation);
-
-        if (fxmlLocation == null) {
-            throw new IllegalStateException("Location is not set.");
-        }
-
-        FXMLLoader loader = new FXMLLoader(fxmlLocation);
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     /**
      * This method set the input reader GUI to all the controllers.
@@ -71,37 +48,94 @@ public class ApplicationGUI extends Application {
         }
     }
 
-    /**
-     * This method use the FXMLLoader to load the scene and the controller of the scene.
-     */
     private void loadScenes() {
-        //Loads all the scenes available to be showed during the game
+        // Carica tutte le scene disponibili da mostrare durante il gioco
         scenes = new ArrayList<>();
         FXMLLoader loader;
         Parent root;
         GenericController gc;
+
         for (int i = 0; i < SceneType.values().length; i++) {
-            loader = new FXMLLoader(getClass().getResource(SceneType.values()[i].value()));
+            String fxmlPath = SceneType.values()[i].value();
+            System.out.println("Caricamento FXML: " + fxmlPath); // Debug
+
+            if (fxmlPath == null || fxmlPath.isEmpty()) {
+                System.err.println("Percorso FXML non impostato per: " + SceneType.values()[i]);
+                continue;
+            }
+
+            loader = new FXMLLoader(getClass().getResource(fxmlPath));
+
             try {
                 root = loader.load();
+                System.out.println("Caricamento completato: " + root); // Debug
                 gc = loader.getController();
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Errore nel caricamento di " + fxmlPath, e);
             }
+
             scenes.add(new SceneInfo(new Scene(root), SceneType.values()[i], gc));
         }
     }
 
-    public void setActiveScene(SceneType sceneType) {
-        SceneInfo sceneInfo = scenes.get(getSceneIndex(sceneType));
-        if (sceneInfo != null) {
-            primaryStage.setScene(sceneInfo.getScene());
-            primaryStage.setTitle("CodexNaturalis - " + sceneType.name());
-            primaryStage.centerOnScreen();
-            primaryStage.setAlwaysOnTop(false);
-            primaryStage.show();
-        } else {
-            throw new RuntimeException("Scene not found: " + sceneType.name());
+    @Override
+    public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+        primaryStage.setTitle("My JavaFX Application");
+
+        loadScenes();
+
+        // Imposta la scena iniziale
+        if (!scenes.isEmpty()) {
+            primaryStage.setScene(scenes.get(0).getScene());
+        }
+        primaryStage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+
+
+    public void setActiveScene(SceneType scene) {
+        this.primaryStage.setTitle("MyShelfie - "+scene.name());
+        resizing=false;
+        int index = getSceneIndex(scene);
+        if (index != -1) {
+            SceneInfo s = scenes.get(getSceneIndex(scene));
+            this.primaryStage.setScene(s.getScene());
+            this.primaryStage.show();
+        }
+
+        widthOld=primaryStage.getScene().getWidth();
+        heightOld=primaryStage.getScene().getHeight();
+        this.primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
+            rescale((double)newVal-16,heightOld);
+        });
+
+        this.primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
+            rescale(widthOld,(double)newVal-39);
+        });
+        resizing=true;
+
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(ApplicationGUI.class.getClassLoader().getResourceAsStream("img/img/Publisher_material/Icon_50x50px.png"))));
+
+    }
+
+    public void rescale(double width, double heigh) {
+        if(resizing) {
+            double widthWindow = width;
+            double heightWindow = heigh;
+
+
+            double w = widthWindow / widthOld;  // your window width
+            double h = heightWindow / heightOld;  // your window height
+
+            widthOld = widthWindow;
+            heightOld = heightWindow;
+            Scale scale = new Scale(w, h, 0, 0);
+            //primaryStage.getScene().getRoot().getTransforms().add(scale);
+            primaryStage.getScene().lookup("#content").getTransforms().add(scale);
         }
     }
 
