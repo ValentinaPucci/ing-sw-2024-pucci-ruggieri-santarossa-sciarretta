@@ -35,8 +35,7 @@ public class GameOverController extends GenericController{
         int i=0;
         Label tmp = null;
 
-        /* //da cambiare: Il nostro GameModelImmutabile non ha i punteggi finali dei giocatori
-        for(PlayerIC p:model.getFinalScore()){
+        for(PlayerIC p:model.getClassification()){
             switch (i){
                 case 0-> tmp=player0;
                 case 1-> tmp=player1;
@@ -47,7 +46,7 @@ public class GameOverController extends GenericController{
             tmp.setText(p.getNickname()+": "+p.getFinalScore()+" points");
             tmp.setVisible(true);
             i++;
-        }*/
+        }
 
     }
 
