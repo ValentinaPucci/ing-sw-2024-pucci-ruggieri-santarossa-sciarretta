@@ -1,26 +1,16 @@
 package it.polimi.demo.view.gui;
 
-import it.polimi.demo.model.Player;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
-import it.polimi.demo.model.interfaces.PlayerIC;
-import it.polimi.demo.view.flow.ConnectionSelection;
 import it.polimi.demo.view.gui.controllers.*;
 import it.polimi.demo.view.gui.scene.SceneType;
 import it.polimi.demo.view.flow.utilities.inputReaderGUI;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 
 import java.io.IOException;
@@ -116,7 +106,7 @@ public class ApplicationGUI extends Application {
     }
 
     /**
-     * This method is use to get a controller of a specific scene.
+     * This method is used to get a controller of a specific scene.
      *
      * @param scene the scene {@link SceneType}
      * @return the controller of the scene {@link GenericController}
@@ -390,7 +380,7 @@ public class ApplicationGUI extends Application {
      * @param myNickname the nickname of the player
      */
     public void showMessages(GameModelImmutable model, String myNickname) {
-        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+        RunningControllerOLD controller = (RunningControllerOLD) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setMessage(model.getChat().getMsgs(), myNickname);
     }
 
@@ -399,7 +389,7 @@ public class ApplicationGUI extends Application {
      * @param importantEvents the list of the important events
      */
     public void showImportantEvents(List<String> importantEvents) {
-        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+        RunningControllerOLD controller = (RunningControllerOLD) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setImportantEvents(importantEvents);
     }
 

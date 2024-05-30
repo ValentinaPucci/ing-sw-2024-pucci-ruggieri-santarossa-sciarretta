@@ -8,49 +8,49 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="polimi.ingsw.view.gui.controllers.InGameController">
+<AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.demo.view.gui.controllers.gridPaneController">
     <children>
       <Pane fx:id="content" prefHeight="850.0" prefWidth="1500.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Pane layoutX="10.0" layoutY="703.0" opacity="0.6" prefHeight="131.0" prefWidth="531.0" styleClass="backgroundWall" />
             <ListView fx:id="importantEventsList" layoutX="15.0" layoutY="698.0" prefHeight="136.0" prefWidth="522.0" styleClass="backgroundTransparent" />
-            <Pane layoutX="24.0" layoutY="22.0" prefHeight="452.0" prefWidth="222.0">
+            <Pane fx:id="scoreBoardPane" layoutX="24.0" layoutY="22.0" prefHeight="452.0" prefWidth="222.0">
                <children>
-                  <ImageView fitHeight="460.0" fitWidth="242.0" layoutX="-2.0" layoutY="-12.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="scoreBoardImage" fitHeight="460.0" fitWidth="242.0" layoutX="-2.0" layoutY="-12.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@/plateau.png" />
                      </image>
                   </ImageView>
                   <Pane fx:id="bn0" layoutX="47.0" layoutY="397.0" prefHeight="37.0" prefWidth="42.0" />
                   <Pane fx:id="bn1" layoutX="97.0" layoutY="397.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn2" layoutX="152.0" layoutY="397.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn3" layoutX="175.0" layoutY="350.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn10" layoutX="173.0" layoutY="303.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn4" layoutX="126.0" layoutY="349.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn5" layoutX="69.0" layoutY="348.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn6" layoutX="16.0" layoutY="349.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn7" layoutX="17.0" layoutY="302.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn8" layoutX="68.0" layoutY="302.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn9" layoutX="118.0" layoutY="302.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn11" layoutX="173.0" layoutY="252.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn12" layoutX="119.0" layoutY="253.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn2" layoutX="149.0" layoutY="397.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn3" layoutX="173.0" layoutY="350.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn4" layoutX="120.0" layoutY="349.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn5" layoutX="64.0" layoutY="348.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn6" layoutX="12.0" layoutY="349.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn7" layoutX="17.0" layoutY="300.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn8" layoutX="68.0" layoutY="300.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn9" layoutX="118.0" layoutY="300.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn10" layoutX="173.0" layoutY="300.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn11" layoutX="173.0" layoutY="250.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn12" layoutX="119.0" layoutY="251.0" prefHeight="37.0" prefWidth="42.0" />
                   <Pane fx:id="bn13" layoutX="69.0" layoutY="253.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn14" layoutX="18.0" layoutY="253.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn18" layoutX="182.0" layoutY="208.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn17" layoutX="120.0" layoutY="208.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn16" layoutX="72.0" layoutY="208.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn15" layoutX="19.0" layoutY="207.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn19" layoutX="173.0" layoutY="160.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn20" layoutX="96.0" layoutY="133.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn21" layoutX="19.0" layoutY="160.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn22" layoutX="26.0" layoutY="115.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn23" layoutX="26.0" layoutY="66.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn24" layoutX="48.0" layoutY="27.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn25" layoutX="96.0" layoutY="16.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn26" layoutX="142.0" layoutY="27.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn27" layoutX="173.0" layoutY="66.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn28" layoutX="175.0" layoutY="114.0" prefHeight="37.0" prefWidth="42.0" />
-                  <Pane fx:id="bn29" layoutX="98.0" layoutY="76.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn14" layoutX="16.0" layoutY="250.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn15" layoutX="10.0" layoutY="200.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn16" layoutX="66.0" layoutY="201.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn17" layoutX="120.0" layoutY="198.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn18" layoutX="175.0" layoutY="199.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn19" layoutX="173.0" layoutY="149.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn20" layoutX="90.0" layoutY="126.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn21" layoutX="11.0" layoutY="151.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn22" layoutX="11.0" layoutY="99.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn23" layoutX="10.0" layoutY="52.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn24" layoutX="43.0" layoutY="11.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn25" layoutX="92.0" layoutY="1.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn26" layoutX="142.0" layoutY="9.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn27" layoutX="173.0" layoutY="51.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn28" layoutX="175.0" layoutY="99.0" prefHeight="37.0" prefWidth="42.0" />
+                  <Pane fx:id="bn29" layoutX="93.0" layoutY="60.0" prefHeight="37.0" prefWidth="42.0" />
                </children>
             </Pane>
             <Label layoutX="322.0" layoutY="23.0" text="Common Cards:" textFill="#4d0202">
@@ -101,11 +101,7 @@
                   <Font name="Luminari" size="30.0" />
                </font>
             </Label>
-            <Pane fx:id="pb1" layoutX="594.0" layoutY="697.0" onMouseClicked="#actionMouseEnteredCommonCard" onMouseExited="#actionMouseExitedCommonCard" prefHeight="109.0" prefWidth="238.0" style="-fx-background-color: white;">
-               <styleClass>
-                  <String fx:value="tileHover" />
-                  <String fx:value="roundBorder" />
-               </styleClass>
+            <Pane fx:id="pb1" layoutX="594.0" layoutY="697.0" prefHeight="109.0" prefWidth="238.0" style="-fx-background-color: white;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -125,11 +121,7 @@
                   <Font name="Luminari" size="30.0" />
                </font>
             </Label>
-            <Pane fx:id="pb2" layoutX="904.0" layoutY="697.0" onMouseClicked="#actionMouseEnteredCommonCard" onMouseExited="#actionMouseExitedCommonCard" prefHeight="109.0" prefWidth="241.0" style="-fx-background-color: white;">
-               <styleClass>
-                  <String fx:value="tileHover" />
-                  <String fx:value="roundBorder" />
-               </styleClass>
+            <Pane fx:id="pb2" layoutX="904.0" layoutY="697.0" prefHeight="109.0" prefWidth="241.0" style="-fx-background-color: white;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -144,11 +136,7 @@
                   <Font name="Luminari" size="30.0" />
                </font>
             </Label>
-            <Pane fx:id="pb3" layoutX="1214.0" layoutY="697.0" onMouseClicked="#actionMouseEnteredCommonCard" onMouseExited="#actionMouseExitedCommonCard" prefHeight="105.0" prefWidth="241.0" style="-fx-background-color: white;">
-               <styleClass>
-                  <String fx:value="tileHover" />
-                  <String fx:value="roundBorder" />
-               </styleClass>
+            <Pane fx:id="pb3" layoutX="1214.0" layoutY="697.0" prefHeight="105.0" prefWidth="241.0" style="-fx-background-color: white;">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
@@ -172,7 +160,7 @@
                   </ScrollPane>
                </children>
             </Pane>
-            <GridPane hgap="10.0" layoutX="313.0" layoutY="108.0" prefHeight="138.0" prefWidth="200.0" vgap="10.0">
+            <GridPane fx:id="commonCardsPane" hgap="10.0" layoutX="313.0" layoutY="108.0" prefHeight="138.0" prefWidth="200.0" vgap="10.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -188,7 +176,7 @@
                   <ImageView fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                </children>
             </GridPane>
-            <GridPane hgap="10.0" layoutX="308.0" layoutY="344.0" prefHeight="66.0" prefWidth="199.0" vgap="10.0">
+            <GridPane fx:id="personalObjectivesPane" hgap="10.0" layoutX="308.0" layoutY="344.0" prefHeight="66.0" prefWidth="199.0" vgap="10.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -201,7 +189,7 @@
                   <ImageView fitHeight="72.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
                </children>
             </GridPane>
-            <GridPane hgap="10.0" layoutX="67.0" layoutY="571.0" prefHeight="65.0" prefWidth="318.0" vgap="10.0">
+            <GridPane fx:id="cardHandPane" hgap="10.0" layoutX="67.0" layoutY="571.0" prefHeight="65.0" prefWidth="318.0" vgap="10.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="114.10699462890625" minWidth="10.0" prefWidth="111.75582885742188" />

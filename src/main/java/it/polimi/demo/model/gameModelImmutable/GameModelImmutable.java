@@ -16,6 +16,7 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 public class GameModelImmutable implements Serializable {
 
+    private final ArrayList<PlayerIC> aux_order_players;
     private final LinkedList<PlayerIC> players_connected;
     private final Integer gameId;
     private final String initial_player_nickname;
@@ -31,6 +32,7 @@ public class GameModelImmutable implements Serializable {
 
     public GameModelImmutable(GameModel model) {
         this.gameId = model.getGameId();
+        this.aux_order_players = new ArrayList<>(model.getAllPlayers());
         this.players_connected = new LinkedList<>(model.getPlayersConnected());
         this.initial_player_nickname = model.getAllPlayers().getFirst().getNickname();
         this.common_board = model.getCommonBoard();
@@ -42,6 +44,10 @@ public class GameModelImmutable implements Serializable {
         //this.leaderboard = model.getLeaderBoard();
         this.starter_cards = new ArrayList<>(model.getStarterCardsToChoose(current_player_nickname));
         this.objective_cards = new ArrayList<>(model.getPersonalObjectiveCardsToChoose(current_player_nickname));
+    }
+
+    public ArrayList<PlayerIC> getAllPlayers(){
+        return aux_order_players;
     }
 
     public GameStatus getStatus() {
@@ -123,4 +129,5 @@ public class GameModelImmutable implements Serializable {
         else
             return null;
     }
+
 }
