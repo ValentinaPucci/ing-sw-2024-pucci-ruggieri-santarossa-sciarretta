@@ -24,7 +24,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     private GameModel model;
 
-    private Map<GameListener, Heartbeat> listeners_to_heartbeats;
+    private final Map<GameListener, Heartbeat> listeners_to_heartbeats;
 
     /**
      * Timer started when only one player is playing

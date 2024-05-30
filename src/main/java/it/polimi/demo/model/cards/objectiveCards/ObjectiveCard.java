@@ -5,7 +5,9 @@ import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.enumerations.Orientation;
 
-public abstract class ObjectiveCard extends Card implements ObjectiveCardIC {
+import java.io.Serializable;
+
+public abstract class ObjectiveCard extends Card implements ObjectiveCardIC, Serializable {
     private int points;
 
     /**

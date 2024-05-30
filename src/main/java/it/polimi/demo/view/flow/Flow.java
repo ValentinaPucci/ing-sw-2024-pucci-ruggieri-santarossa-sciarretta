@@ -5,7 +5,9 @@ import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.flow.utilities.FileDisconnection;
 
-public abstract class Flow implements GameListener {
+import java.io.Serializable;
+
+public abstract class Flow implements GameListener, Serializable {
 
     /**
      * Resets the game id

@@ -1,6 +1,5 @@
 package it.polimi.demo.networking.socket.client;
 
-
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
@@ -27,21 +26,23 @@ import java.rmi.RemoteException;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
 
-public class ClientSocket extends Thread implements CommonClientActions, Serializable {
+//TODO:Check transient fields
+
+public class ClientSocket extends Thread implements CommonClientActions {
 
     /**
      * This is the socket that represents the client
      */
-    private Socket clientSoc;
+    private transient Socket clientSoc;
 
     /**
      * This is the output stream
      */
-    private ObjectOutputStream ob_out;
+    private transient ObjectOutputStream ob_out;
     /**
      * This is the input stream
      */
-    private ObjectInputStream ob_in;
+    private transient ObjectInputStream ob_in;
     /**
      * This is the nickname associated with the client
      */
@@ -53,7 +54,7 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     /**
      *
      */
-    private final HeartbeatSender socketHeartbeat;
+    private final transient HeartbeatSender socketHeartbeat;
     /**
      *
      */

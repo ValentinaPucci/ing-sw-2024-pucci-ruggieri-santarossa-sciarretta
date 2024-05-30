@@ -24,20 +24,20 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
  * Handle all the incoming network requests that clients can require to create,join,leave or reconnect to a game<br>
  * by the Socket Network protocol
  */
-public class ClientHandler extends Thread implements Serializable {
+public class ClientHandler extends Thread implements Serializable{
     /**
      * Socket associated with the Client
      */
-    private final Socket clientSocket;
+    private final transient Socket clientSocket;
     /**
      * ObjectInputStream in
      */
-    private ObjectInputStream in;
+    private transient ObjectInputStream in;
     int prova = 0;
     /**
      * ObjectOutputStream out
      */
-    private ObjectOutputStream out;
+    private transient ObjectOutputStream out;
 
     /**
      * GameController associated with the game

@@ -146,7 +146,9 @@ public class GameModel implements Serializable {
     }
 
     public synchronized void extractFirstPlayerToPlay() {
-        Player first_player = players_connected.get(random.nextInt(players_connected.size()));
+        //Player first_player = players_connected.get(random.nextInt(players_connected.size()));
+        Player first_player = players_connected.get(0);
+
         aux_order_players.remove(first_player);
         aux_order_players.addFirst(first_player);
         players_connected.remove(first_player);
