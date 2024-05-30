@@ -48,8 +48,6 @@ import static it.polimi.demo.view.flow.utilities.events.EventType.*;
  */
 public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
-    // todo: solve the issue of second_last_turn ----> last_turn transition
-
     /**
      * Nickname of the player {@link Player}
      */

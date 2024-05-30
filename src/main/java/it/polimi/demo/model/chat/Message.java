@@ -1,6 +1,5 @@
 package it.polimi.demo.model.chat;
 
-import it.polimi.demo.model.Player;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import java.io.Serializable;
 
