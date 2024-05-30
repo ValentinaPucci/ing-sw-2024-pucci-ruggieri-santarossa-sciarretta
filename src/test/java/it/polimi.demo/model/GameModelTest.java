@@ -633,7 +633,7 @@ public class GameModelTest {
     public void testObjectiveCard(){
         addPlayersToGameModel(3);
         gameModel.getCommonBoard().setPlayerCount(gameModel.getAllPlayers().size());
-        gameModel.getCommonBoard().initializeBoardTEST();
+        gameModel.getCommonBoard().initializeBoard();
         gameModel.dealCards();
 
 
