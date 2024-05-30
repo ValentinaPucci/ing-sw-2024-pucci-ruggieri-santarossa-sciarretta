@@ -1,5 +1,6 @@
 package it.polimi.demo.main;
 
+import it.polimi.demo.view.gui.ApplicationGUI;
 import javafx.application.Application;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.view.flow.ConnectionSelection;
@@ -95,7 +96,7 @@ public class MainClient {
         } else {
             // Starts the game with GUI
             // For doing so, I need to start the Main of GUI (GameFlow needs to be started inside the thread of GUI)
-            //Application.launch(GUIApplication.class, con_sel.toString());
+            Application.launch(ApplicationGUI.class, con_sel.toString());
         }
 
     }

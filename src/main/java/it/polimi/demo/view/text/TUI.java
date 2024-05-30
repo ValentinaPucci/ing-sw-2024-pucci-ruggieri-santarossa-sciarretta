@@ -440,6 +440,11 @@ public class TUI extends UI {
         show_messages(model);
     }
 
+    @Override
+    protected void show_sentMessage(GameModelImmutable model, String nickname) {
+
+    }
+
     /**
      * Error message when there are no games to join
      *

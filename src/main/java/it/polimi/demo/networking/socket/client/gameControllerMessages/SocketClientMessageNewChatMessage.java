@@ -7,13 +7,14 @@ import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 /**
  * SocketClientMessageNewChatMessage class.
  * Extends SocketClientGenericMessage and is used to send a new chat message from the client to the server.
  */
-public class SocketClientMessageNewChatMessage extends SocketClientGenericMessage {
+public class SocketClientMessageNewChatMessage extends SocketClientGenericMessage implements Serializable {
     private Message msg;
 
     /**

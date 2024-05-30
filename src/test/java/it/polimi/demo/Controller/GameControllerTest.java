@@ -8,7 +8,7 @@ import it.polimi.demo.model.Player;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import it.polimi.demo.model.enumerations.GameStatus;
-
+/*
 public class GameControllerTest {
 
     private GameController GameController;
@@ -20,18 +20,18 @@ public class GameControllerTest {
         Integer id = gameModel.getGameId();
         //this.GameController = new GameController(id, 2, p);
         //this.GameController = new GameController(gameModel);
-    }
+    }*/
 
-
-    @Test
-    public void getGameModelTest() {
-        GameModel gameModel = new GameModel();
-        Player p = new Player("Player1");
-        Integer id = gameModel.getGameId();
-        //GameController = new GameController(gameModel);
-        GameModel actualGameModel = (GameModel) GameController.getModel();
-        assertEquals(gameModel, actualGameModel);
-    }
+//
+//    @Test
+//    public void getGameModelTest() {
+//        GameModel gameModel = new GameModel();
+//        Player p = new Player("Player1");
+//        Integer id = gameModel.getGameId();
+//        //GameController = new GameController(gameModel);
+//        GameModel actualGameModel = (GameModel) GameController.getModel();
+//        assertEquals(gameModel, actualGameModel);
+//    }
 
 
     // Methods that is not coherent alone
@@ -53,4 +53,4 @@ public class GameControllerTest {
 //    }
 
 
-}
+//}

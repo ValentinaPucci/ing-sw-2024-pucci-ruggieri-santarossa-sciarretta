@@ -13,7 +13,7 @@
    <children>
       <ImageView fitHeight="400.0" fitWidth="600.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <image>
-            <Image url="@/images/background.jpg" />
+            <Image url="@/Background.jpg" />
          </image>
       </ImageView>
       <Label layoutX="48.0" layoutY="120.0" text="Choose the number of players" textFill="#4d0202">
@@ -23,7 +23,7 @@
       </Label>
       <ImageView fitHeight="109.0" fitWidth="109.0" layoutX="14.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@/images/logo.png" />
+            <Image url="@/logo.png" />
          </image>
       </ImageView>
       <TextField fx:id="numPlayers" layoutX="206.0" layoutY="206.0" prefHeight="50.0" prefWidth="218.0">

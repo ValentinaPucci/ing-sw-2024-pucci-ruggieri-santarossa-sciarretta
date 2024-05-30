@@ -18,6 +18,7 @@ public class Server extends Thread {
      * The Socket that represents the Server
      */
     private ServerSocket serverSocket;
+    private int i=0;
     /**
      * List of {@link ClientHandler} created associated with connections
      */
@@ -47,8 +48,11 @@ public class Server extends Thread {
     public void run() {
         try {
             while (!Thread.interrupted()) {
+                i++;
+                System.out.println(i);
                 handler.add(new ClientHandler(serverSocket.accept()));
                 handler.get(handler.size() - 1).start();
+
                 printAsync("[SOCKET] new connection accepted");
             }
         } catch (IOException e) {

@@ -5,6 +5,7 @@ import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 
 /**
@@ -12,7 +13,7 @@ import java.rmi.RemoteException;
  * Extends SocketClientGenericMessage and is used to send a message to the server
  * indicating that a player is ready to start the game.
  */
-public class SocketClientMessageSetReady extends SocketClientGenericMessage {
+public class SocketClientMessageSetReady extends SocketClientGenericMessage implements Serializable {
 
     /**
      * Constructor of the class.
@@ -42,6 +43,7 @@ public class SocketClientMessageSetReady extends SocketClientGenericMessage {
      */
     @Override
     public void execute(GameControllerInterface gameController) throws RemoteException {
+        System.out.println("GameController sent says: " + gameController.getPlayerEntity(nick));
         gameController.playerIsReadyToStart(this.nick);
     }
 }

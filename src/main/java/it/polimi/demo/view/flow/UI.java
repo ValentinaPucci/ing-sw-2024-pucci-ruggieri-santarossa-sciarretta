@@ -245,6 +245,8 @@ public abstract class UI {
      */
     protected abstract void addMessage(Message msg, GameModelImmutable model);
 
+    protected abstract void show_sentMessage(GameModelImmutable model, String nickname);
+
     /**
      * Resets the important events
      */
