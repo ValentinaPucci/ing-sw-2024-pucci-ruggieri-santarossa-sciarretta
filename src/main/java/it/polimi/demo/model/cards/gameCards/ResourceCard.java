@@ -149,4 +149,16 @@ public class ResourceCard extends Card implements ResourceCardIC {
             '}';
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof ResourceCard)) {
+            return false;
+        }
+        ResourceCard card = (ResourceCard) obj;
+        return super.id == card.id;
+    }
+
 }

@@ -4,6 +4,7 @@ import it.polimi.demo.controller.GameController;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
@@ -237,6 +238,19 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     @Override
     public GameControllerInterface drawCard(GameListener lis, String nick, int index, int idGame) throws RemoteException, GameEndedException {
         GameControllerInterface ris = serverObject.mainController.drawCard(lis, nick, index, idGame);
+        if (ris != null) {
+            try {
+                UnicastRemoteObject.exportObject(ris, 0);
+            } catch (RemoteException e){
+                // Already exported, due to another RMI Client running on the same machine
+            }
+        }
+        return ris;
+    }
+
+    @Override
+    public GameControllerInterface sendMessage(GameListener lis, String nick, Message message, int idGame) throws RemoteException {
+        GameControllerInterface ris = serverObject.mainController.sendMessage(lis, nick, message, idGame);
         if (ris != null) {
             try {
                 UnicastRemoteObject.exportObject(ris, 0);

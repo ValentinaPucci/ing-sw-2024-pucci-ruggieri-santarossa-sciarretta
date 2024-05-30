@@ -66,7 +66,7 @@ public class LetterPatternObjectiveCard extends it.polimi.demo.model.cards.objec
         aux_personal_board.placeCardAtNE(card3, card2);
     }
 
-    public void init_obj_p() {
+    public void init_obj_P() {
 
         ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, Color.RED);
         ResourceCard card2 = new ResourceCard(-1, Orientation.FRONT, Color.BLUE);
@@ -77,7 +77,7 @@ public class LetterPatternObjectiveCard extends it.polimi.demo.model.cards.objec
         aux_personal_board.placeCardAtSW(card1, card2);
     }
 
-    public void init_obj_q() {
+    public void init_obj_Q() {
 
         ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, Color.BLUE);
         ResourceCard card2 = new ResourceCard(-1, Orientation.FRONT, Color.PURPLE);

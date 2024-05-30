@@ -20,12 +20,12 @@ public class TuiPersonalBoardGraphics {
         showObjectsCount(personal_board);
         Cell[][] matrix = personal_board.getBoard();
 
-        int first_row = 490;
-        int last_row = 510;
-        int first_column = 490;
-        int last_column = 510;
+        int first_row = 240;
+        int last_row = 260;
+        int first_column = 240;
+        int last_column = 260;
 
-        printHorizontalLine(20);
+        printHorizontalLine(10);
         for (int i = first_row; i <= last_row; i++) {
             System.out.print("|");
             for (int j = first_column; j <= last_column; j++) {
@@ -50,20 +50,21 @@ public class TuiPersonalBoardGraphics {
                 } System.out.print("│");//System.out.print("|");
             }
             System.out.println();
-            printHorizontalLine(20);
+            printHorizontalLine(10);
         }
     }
 
     public static void printHorizontalLine(int columns) {
         //System.out.print("+");
-        for (int i = 490 ; i < 507; i++) {
+        for (int i = 240 ; i < 257; i++) {
             System.out.print("─────");
         }
         System.out.println();
     }
 
 
-    public static void showObjectsCount(PersonalBoard personal_board){
+    public static void showObjectsCount(PersonalBoard personal_board) {
+        System.out.println("Your currents point counter is: *** [" + personal_board.getPoints() + "] *** points.");
         System.out.println("These are the objects on your Personal Board:");
         System.out.println("Mushrooms: " + personal_board.getNum_mushrooms());
         System.out.println("Butterflies: " + personal_board.getNum_butterflies());

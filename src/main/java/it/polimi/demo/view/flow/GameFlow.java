@@ -1,6 +1,7 @@
 package it.polimi.demo.view.flow;
 
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
@@ -119,7 +120,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     public GameFlow(ApplicationGUI guiApplication, ConnectionSelection connectionSelection) {
         //Invoked for starting with GUI
         switch (connectionSelection) {
-            // case SOCKET -> clientActions = new ClientSocket(this);
+            case SOCKET -> clientActions = new ClientSocket(this);
             case RMI -> clientActions = new RMIClient(this);
         }
         this.inputReader = new inputReaderGUI();
@@ -141,7 +142,12 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void run() {
         EventElement event;
-        events.add(null, APP_MENU);
+        try {
+            ui.show_publisher();
+            events.add(null, APP_MENU);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         while (!Thread.interrupted()) {
             if (events.isJoined()) {
                 // Get one event
@@ -170,7 +176,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                                 throw new RuntimeException(e);
                             }
                         }
-
                         case LAST_ROUND -> {
                             try {
                                 statusLastRound(event);
@@ -262,11 +267,17 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     private void statusFirstRound(EventElement event) throws IOException, InterruptedException {
         // We opted for async starter card placement for simplicity
         switch (event.getType()) {
+
+//            case MESSAGE_SENT -> {
+//                ui.show_messageSent(event.getModel(), nickname);
+//            }
+
             case GAME_STARTED -> {
                 ui.show_gameStarted(event.getModel());
                 this.inputParser.setPlayer(event.getModel().getPlayerEntity(nickname));
                 this.inputParser.setIdGame(event.getModel().getGameId());
             }
+
             case NEXT_TURN -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
                     ui.show_objectiveCards(event.getModel());
@@ -290,9 +301,9 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         
         switch (event.getType()) {
             
-            case MESSAGE_SENT -> {
-                ui.show_messageSent(event.getModel(), nickname);
-            }
+//            case MESSAGE_SENT -> {
+//                ui.show_messageSent(event.getModel(), nickname);
+//            }
 
             case NEXT_TURN -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
@@ -317,14 +328,13 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
     }
 
-
     private void statusLastRound(EventElement event) throws IOException, InterruptedException {
 
         switch (event.getType()) {
 
-            case MESSAGE_SENT -> {
-                ui.show_messageSent(event.getModel(), nickname);
-            }
+//            case MESSAGE_SENT -> {
+//                ui.show_messageSent(event.getModel(), nickname);
+//            }
 
             case NEXT_TURN -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
@@ -564,6 +574,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
     public void askStarterCardOrientationAndPlace() {
         String ris;
+        String aux;
         do {
             ui.show_orientation("Choose the orientation of the starter card");
             try {
@@ -571,9 +582,13 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        } while (!(ris.equals("FRONT") || ris.equals("BACK")));
+        } while (!(ris.equals("f") || ris.equals("b")));
         try {
-            placeStarterCard(Orientation.valueOf(ris));
+            if (ris.equals("f"))
+                aux = "FRONT";
+            else
+                aux = "BACK";
+            placeStarterCard(Orientation.valueOf(aux));
         } catch (RemoteException | GameEndedException | NotBoundException e) {
             throw new RuntimeException(e);
         }
@@ -583,6 +598,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         String ris;
         String ris1;
         String ris2;
+        String aux;
         do {
             ui.show_orientation("Choose the orientation of the card to place");
             try {
@@ -590,25 +606,40 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        } while (!(ris.equals("FRONT") || ris.equals("BACK")));
+        } while (!(ris.equals("f") || ris.equals("b")));
         do {
-            ui.show_genericMessage("Choose the ** x ** coordinates where to place the card (insert a number between 0 and 1000)");
+            ui.show_genericMessage("Choose the ** x ** coordinates where to place the card (insert a number between -250 and 250)");
             try {
                 ris1 = this.inputParser.getDataToProcess().popData();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            ui.show_genericMessage("Choose the ** y ** coordinates where to place the card (insert a number between 0 and 1000)");
+
+            ui.show_genericMessage("Choose the ** y ** coordinates where to place the card (insert a number between -250 and 250)");
             try {
                 ris2 = this.inputParser.getDataToProcess().popData();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        } while (false);
+        } while (!isValidCoordinate(ris1) || !isValidCoordinate(ris2));
         try {
-            placeCard(Integer.parseInt(ris1), Integer.parseInt(ris2), Orientation.valueOf(ris));
+            if (ris.equals("f"))
+                aux = "FRONT";
+            else
+                aux = "BACK";
+            placeCard(Integer.parseInt(ris1) + 250, Integer.parseInt(ris2) + 250, Orientation.valueOf(aux));
         } catch (RemoteException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private boolean isValidCoordinate(String input) {
+        try {
+            int value = Integer.parseInt(input.trim());
+            return value >= -250 && value <= 250;
+        } catch (NumberFormatException e) {
+            ui.show_genericError("Invalid input. Please enter a valid number between -250 and 250.");
+            return false;
         }
     }
 
@@ -671,7 +702,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         try {
             clientActions.joinGame(nick, game_id);
         } catch (IOException | InterruptedException | NotBoundException e) {
-            System.out.println("Here, JoinGame, Gameflow");
             noConnectionError();
         }
     }
@@ -729,6 +759,22 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
+     * The client asks the server to send a message
+     *
+     * @param msg message to send {@link Message}
+     */
+    @Override
+    public void sendMessage(String receiver, Message msg) {
+        try {
+            clientActions.sendMessage(receiver, msg);
+        } catch (RemoteException e) {
+            noConnectionError();
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * The client asks the server to reconnect to a specific game
      *
      * @param nick   nickname of the player
@@ -769,7 +815,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
     }
 
-    //TODO: check if it is correct
     @Override
     public boolean isMyTurn() {
         return false;
@@ -778,20 +823,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void heartbeat() {
 
-    }
-
-    /**
-     * The client asks the server to send a message
-     *
-     * @param msg message to send {@link Message}
-     */
-    @Override
-    public void sendMessage(Message msg) {
-        try {
-            clientActions.sendMessage(msg);
-        } catch (RemoteException e) {
-            noConnectionError();
-        }
     }
 
     /*============ Server event received ============*/
@@ -833,6 +864,21 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
 
         }
+    }
+
+    /**
+     * It adds the NextTurn event to the event list
+     * @param gameModel game model {@link GameModelImmutable}
+     */
+    @Override
+    public void nextTurn(GameModelImmutable gameModel) {
+        if (!gameModel.getCurrentPlayerNickname().equals(nickname) &&
+                (gameModel.getStatus() == GameStatus.RUNNING ||
+                gameModel.getStatus() == GameStatus.SECOND_LAST_ROUND))
+            ui.show_myTurnIsFinished();
+        events.add(gameModel, EventType.NEXT_TURN);
+        //I remove all the input that the user sends when It is not his turn
+        this.inputParser.getDataToProcess().popAllData();
     }
 
     /**
@@ -906,12 +952,15 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      * @param msg message sent {@link Message}
      */
     @Override
-    public void messageSent(GameModelImmutable gameModel, Message msg) {
-        //Show the message only if is for everyone or is for me (or I sent it)
-        if (msg.whoIsReceiver().equals("*") || msg.whoIsReceiver().equalsIgnoreCase(nickname) || msg.getSender().getNickname().equalsIgnoreCase(nickname)) {
-            // ui.addMessage(msg, gameModel);
-            events.add(gameModel, MESSAGE_SENT);
-            //msg.setText("[PRIVATE]: " + msg.getText());
+    public void messageSent(GameModelImmutable gameModel, String nick, Message msg) {
+        if (!msg.getSender().getNickname().equals(nickname)) {
+            if (nickname.equals(nick)) {
+                // async
+                ui.show_messageSent(gameModel, nick);
+            } else if (nick.equals("all")) {
+                // async
+                ui.show_messageSent(gameModel, nick);
+            }
         }
     }
 
@@ -973,17 +1022,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * It adds the NextTurn event to the event list
-     * @param gameModel game model {@link GameModelImmutable}
-     */
-    @Override
-    public void nextTurn(GameModelImmutable gameModel) {
-        events.add(gameModel, EventType.NEXT_TURN);
-        //I remove all the input that the user sends when It is not his turn
-        this.inputParser.getDataToProcess().popAllData();
-    }
-
-    /**
      * A player has been disconnected
      * @param gameModel game model {@link GameModelImmutable}
      * @param nick nickname of the player
@@ -1009,6 +1047,11 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         ui.addImportantEvent("Only one player is connected, waiting " + secondsToWaitUntilGameEnded + " seconds before calling Game Ended!");
     }
 
+    @Override
+    public void secondLastRound(GameModelImmutable gameModel) {
+        ui.show_genericMessage("*** Second last round begins! ***");
+    }
+
     /**
      * Last circle begins
      * @param gameModel game model {@link GameModelImmutable}
@@ -1016,9 +1059,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      */
     @Override
     public void lastRound(GameModelImmutable gameModel) throws RemoteException {
-        ui.addImportantEvent("Last round begins!");
+        ui.show_genericMessage("*** Last round begins! Now you will not be able to draw any additional card! ***");
     }
-
 
     /*==Testing purpose==*/
     

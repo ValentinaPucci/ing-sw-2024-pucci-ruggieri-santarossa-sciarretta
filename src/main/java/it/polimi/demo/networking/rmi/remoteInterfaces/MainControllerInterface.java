@@ -1,6 +1,7 @@
 package it.polimi.demo.networking.rmi.remoteInterfaces;
 
 import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 
@@ -45,6 +46,8 @@ public interface MainControllerInterface extends Remote {
     GameControllerInterface placeCard(GameListener modelInvokedEvents, String nick, int x, int y, Orientation o, int idGame) throws RemoteException, GameEndedException;
 
     GameControllerInterface drawCard(GameListener modelInvokedEvents, String nick, int index, int idGame) throws RemoteException, GameEndedException;
+
+    GameControllerInterface sendMessage(GameListener modelInvokedEvents, String nick, Message message, int idGame) throws RemoteException;
 
     /**
      * This method reconnects a player to a specific game

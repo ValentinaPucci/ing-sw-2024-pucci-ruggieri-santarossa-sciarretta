@@ -18,6 +18,9 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
                                             PersonalBoard personal_board, int l, int m) {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 3; j++) {
+                if (l + i >= 250  && m + j >= 250 && l + i <= 251 && m + j <= 251) {
+                    return false;
+                }
                 if (objectiveCard.aux_personal_board.board[i][j].is_full) {
                     if (personal_board.board[l + i][m + j].cell_of_a_found_pattern)
                         return false;
@@ -48,8 +51,8 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
                                                  PersonalBoard personal_board) {
 
         int count = 0;
-        for (int i = 0; i <= personal_board.getDim1() - 5; i++) {
-            for (int j = 0; j <= personal_board.getDim2() - 3; j++) {
+        for (int i = 0; i < personal_board.getDim1() - 5; i++) {
+            for (int j = 0; j < personal_board.getDim2() - 3; j++) {
                 if (isSubMatrixLetterPattern(objectiveCard, personal_board, i, j)) {
                     count++;
                 }

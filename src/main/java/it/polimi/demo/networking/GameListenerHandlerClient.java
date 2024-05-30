@@ -97,8 +97,8 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     }
 
     @Override
-    public void messageSent(GameModelImmutable gameModel, Message msg) throws RemoteException {
-        flow.messageSent(gameModel, msg);
+    public void secondLastRound(GameModelImmutable gamemodel) throws RemoteException {
+        flow.secondLastRound(gamemodel);
     }
 
     @Override
@@ -119,6 +119,11 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     @Override
     public void lastRound(GameModelImmutable gamemodel) throws RemoteException {
         flow.lastRound(gamemodel);
+    }
+
+    @Override
+    public void messageSent(GameModelImmutable gameModel, String nickname, Message message) throws RemoteException {
+        flow.messageSent(gameModel, nickname, message);
     }
 
 }

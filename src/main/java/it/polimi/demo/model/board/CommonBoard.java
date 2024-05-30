@@ -44,6 +44,9 @@ public class CommonBoard implements CommonBoardIC, Serializable {
      */
     public void initializeBoard() {
         setInitialPosition();
+        resource_concrete_deck.shuffle();
+        gold_concrete_deck.shuffle();
+        objective_concrete_deck.shuffle();
         // Populate the table with cards from the decks
         for (int i = 0; i < 2; i++) {
             // Populate the first array with two cards from the Resource ConcreteDeck

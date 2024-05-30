@@ -14,7 +14,7 @@
     <children>
         <ImageView fitHeight="755.0" fitWidth="1322.0" preserveRatio="false">
             <image>
-                <Image url="@/Background.jpg" />
+                <Image url="@/images/background.jpg" />
             </image>
         </ImageView>
 

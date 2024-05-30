@@ -380,8 +380,8 @@ public class ApplicationGUI extends Application {
      * @param myNickname the nickname of the player
      */
     public void showMessages(GameModelImmutable model, String myNickname) {
-        RunningControllerOLD controller = (RunningControllerOLD) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-        controller.setMessage(model.getChat().getMsgs(), myNickname);
+//        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+//        controller.setMessage(model.getChat().getMsgs(), myNickname);
     }
 
     /**
@@ -389,7 +389,7 @@ public class ApplicationGUI extends Application {
      * @param importantEvents the list of the important events
      */
     public void showImportantEvents(List<String> importantEvents) {
-        RunningControllerOLD controller = (RunningControllerOLD) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setImportantEvents(importantEvents);
     }
 

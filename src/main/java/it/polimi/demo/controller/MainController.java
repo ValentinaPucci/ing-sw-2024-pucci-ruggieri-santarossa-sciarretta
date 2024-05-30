@@ -2,6 +2,7 @@ package it.polimi.demo.controller;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
@@ -13,7 +14,6 @@ import it.polimi.demo.networking.rmi.remoteInterfaces.*;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
@@ -125,6 +125,13 @@ public class MainController implements MainControllerInterface, Serializable {
         return games.get(gameId);
     }
 
+    /**
+     * Allows a player to join the first available game.
+     * @param listener The GameListener representing the player attempting to join the game.
+     * @param nickname The nickname of the player attempting to join the game.
+     * @return The GameControllerInterface associated with the game if the player successfully joins,
+     * @throws RemoteException If there is a communication-related issue during the method execution.
+     */
     @Override
     public synchronized GameControllerInterface joinFirstAvailableGame(GameListener listener, String nickname)
             throws RemoteException {
@@ -181,80 +188,12 @@ public class MainController implements MainControllerInterface, Serializable {
         return games.get(gameId);
     }
 
-//    /**
-//     * Allows a player to join the first available game.
-//     * If there are no available games (i.e., all games are either full or not in the waiting state),
-//     * an error message is sent to the provided GameListener.
-//     *
-//     * @param listener The GameListener representing the player attempting to join the game.
-//     * @param nickname The nickname of the player attempting to join the game.
-//     * @return The GameControllerInterface associated with the game if the player successfully joins,
-//     *         or null if no available games are found.
-//     * @throws RemoteException If there is a communication-related issue during the method execution.
-//     */
-//    @Override
-//    public GameControllerInterface joinFirstAvailableGame(GameListener listener, String nickname)
-//            throws RemoteException {
-//
-//        Player player = new Player(nickname);
-//
-//        synchronized (games) {
-//            Optional<GameController> firstAvailableGame = games.values().stream()
-//                    .filter(game -> game.getStatus() == GameStatus.WAIT && game.getNumPlayers() < DefaultValues.MaxNumOfPlayer)
-//                    .findFirst();
-//
-//            if (firstAvailableGame.isPresent()) {
-//                GameController game = firstAvailableGame.get();
-//                try {
-//                    //game.addListener(listener, player);
-//                    game.addPlayer(player.getNickname());
-//                    // When a player joins a game, he/she is set also as connected!!
-//                    game.setPlayerAsConnected(player);
-//
-//                    System.out.println("Player \"" + nickname + "\" joined Game " + game.getGameId());
-//                    printRunningGames();
-//
-//                    return (GameControllerInterface) game;
-//                } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-//                    //game.removeListener(listener, player);
-//                }
-//            }
-//        }
-//
-//        return null;
-//    }
-
-//    public synchronized GameControllerInterface joinGame(GameListener listener, String nickname, int gameId)
-//            throws RemoteException {
-//
-//        Player player = new Player(nickname);
-//        GameController game = games.get(gameId);
-//
-//        // todo: check if this code makes sense! In fact, it is 99% incorrect
-//        if (game != null &&
-//                (game.getStatus() == GameStatus.WAIT ||
-//                        game.getStatus() == GameStatus.FIRST_ROUND ||
-//                        game.getStatus() == GameStatus.RUNNING ||
-//                        game.getStatus() == GameStatus.SECOND_LAST_ROUND ||
-//                        game.getStatus() == GameStatus.LAST_ROUND) &&
-//                game.getNumPlayers() < DefaultValues.MaxNumOfPlayer &&
-//                game.getPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname))) {
-//
-//            try {
-//                // Here we add the player to the 'statical' list of players
-//                game.addPlayer(player.getNickname());
-//                // Here we add the player to the 'dynamic' list of players connected (the queue!)
-//                game.setPlayerAsConnected(player);
-//                notifyListeners(games.get(gameId).getModel().getListeners(), GameListener::playerJoinedGame);
-//                System.out.println("\t>Game " + game.getGameId() + " player:\"" + nickname + "\" entered player");
-//                printRunningGames();
-//            } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException e) {
-//                // Handle exceptions if needed
-//            }
-//        }
-//        return null;
-//    }
-
+    @Override
+    public synchronized GameControllerInterface sendMessage(GameListener listener, String nickname, Message message, int gameId)
+            throws RemoteException {
+        games.get(gameId).sendMessage(nickname, message);
+        return games.get(gameId);
+    }
 
     /**
      * Reconnects a player to a game specified by its ID.

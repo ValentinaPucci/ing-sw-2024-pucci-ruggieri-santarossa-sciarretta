@@ -5,6 +5,7 @@ import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
+import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.networking.GameListenerHandlerClient;
 import it.polimi.demo.networking.HeartbeatSender;
 import it.polimi.demo.networking.socket.client.gameControllerMessages.*;
@@ -248,14 +249,10 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     }
 
     @Override
-    public void sendMessage(Message msg) throws RemoteException {
-        try {
-            ob_out.writeObject(new SocketClientMessageNewChatMessage(msg));
-            finishSending();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+    public void sendMessage(String receiver, Message msg) throws RemoteException, NotBoundException {
+
     }
+
 
     @Override
     public void heartbeat() throws RemoteException {
