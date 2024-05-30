@@ -1,11 +1,11 @@
 package it.polimi.demo.model.gameModelImmutable;
 
-import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
+import it.polimi.demo.model.chat.Chat;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.interfaces.*;
 
@@ -24,9 +24,9 @@ public class GameModelImmutable implements Serializable {
     private final int num_required_players_to_start;
     private final GameStatus actual_status;
     private final String current_player_nickname;
-    //private final List<Player> winners;
+    // private final List<Player> winners;
     private final Map<Player, Integer> leaderboard;
-    private final ChatIC chat;
+    private final Chat chat;
     private final List<StarterCard> starter_cards;
     private final List<ObjectiveCard> objective_cards;
 
@@ -74,7 +74,7 @@ public class GameModelImmutable implements Serializable {
         return players_connected;
     }
 
-//    public List<PlayerIC> getWinners() {
+//    public List<Player> getWinners() {
 //        return winners;
 //    }
 
@@ -100,7 +100,7 @@ public class GameModelImmutable implements Serializable {
         return players_connected.peek();
     }
 
-    public ChatIC getChat() {
+    public Chat getChat() {
         return chat;
     }
 

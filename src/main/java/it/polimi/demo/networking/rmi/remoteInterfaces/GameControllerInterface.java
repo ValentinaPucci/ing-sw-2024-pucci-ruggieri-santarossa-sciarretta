@@ -84,7 +84,7 @@ public interface GameControllerInterface extends Remote {
      * @param mess the message to send {@link Message}
      * @throws RemoteException if the connection fails
      */
-    void sendMessage(Message mess) throws RemoteException;
+    void sendMessage(String nick, Message mess) throws RemoteException;
 
     /**
      * This method return the number of the online players

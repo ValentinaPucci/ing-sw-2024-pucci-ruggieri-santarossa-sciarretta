@@ -503,8 +503,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @throws RemoteException if there is an error
      */
     @Override
-    public synchronized void sendMessage(Message mess) throws RemoteException {
-        model.sendMessage(mess);
+    public synchronized void sendMessage(String nick, Message mess) throws RemoteException {
+        model.sendMessage(nick, mess);
     }
 
 }

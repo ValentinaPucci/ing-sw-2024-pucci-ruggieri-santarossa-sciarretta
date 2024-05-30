@@ -2,6 +2,7 @@ package it.polimi.demo.controller;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
@@ -184,6 +185,13 @@ public class MainController implements MainControllerInterface, Serializable {
     public synchronized GameControllerInterface drawCard(GameListener listener, String nickname, int index, int gameId)
             throws RemoteException, GameEndedException {
         games.get(gameId).drawCard(nickname, index);
+        return games.get(gameId);
+    }
+
+    @Override
+    public synchronized GameControllerInterface sendMessage(GameListener listener, String nickname, Message message, int gameId)
+            throws RemoteException {
+        games.get(gameId).sendMessage(nickname, message);
         return games.get(gameId);
     }
 

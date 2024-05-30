@@ -245,7 +245,7 @@ public abstract class UI {
      * @param msg   the message to add
      * @param model the model to which add the message
      */
-    protected abstract void addMessage(Message msg, GameModelImmutable model);
+    protected abstract void addMessage(String msg, GameModelImmutable model);
 
     protected abstract void show_sentMessage(GameModelImmutable model, String nickname);
 
