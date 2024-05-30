@@ -141,12 +141,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void run() {
         EventElement event;
-        try {
-            ui.show_publisher();
-            events.add(null, APP_MENU);
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        events.add(null, APP_MENU);
         while (!Thread.interrupted()) {
             if (events.isJoined()) {
                 // Get one event
@@ -168,9 +163,17 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                                 throw new RuntimeException(e);
                             }
                         }
-                        case RUNNING, LAST_ROUND -> {
+                        case RUNNING, SECOND_LAST_ROUND -> {
                             try {
                                 statusRunning(event);
+                            } catch (IOException | InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+
+                        case LAST_ROUND -> {
+                            try {
+                                statusLastRound(event);
                             } catch (IOException | InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
@@ -309,6 +312,32 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             case CARD_PLACED -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
                     askWhereToDrawFrom();
+                }
+            }
+        }
+    }
+
+
+    private void statusLastRound(EventElement event) throws IOException, InterruptedException {
+
+        switch (event.getType()) {
+
+            case MESSAGE_SENT -> {
+                ui.show_messageSent(event.getModel(), nickname);
+            }
+
+            case NEXT_TURN -> {
+                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                    ui.show_personalObjectiveCard(event.getModel());
+                    ui.show_playerHand(event.getModel());
+                    askWhichCard();
+                }
+            }
+
+            case ASK_WHICH_ORIENTATION, ILLEGAL_MOVE -> {
+                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                    ui.show_cardChosen(nickname, event.getModel());
+                    askGameCardOrientationAndPlace();
                 }
             }
         }
@@ -740,6 +769,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
     }
 
+    //TODO: check if it is correct
     @Override
     public boolean isMyTurn() {
         return false;

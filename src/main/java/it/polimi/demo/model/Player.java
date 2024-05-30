@@ -6,7 +6,6 @@ import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
-import it.polimi.demo.listener.*;
 import it.polimi.demo.model.interfaces.ResourceCardIC;
 
 import java.io.Serializable;
@@ -138,10 +137,13 @@ public class Player implements PlayerIC, Serializable {
     }
 
     public List<ResourceCard> getCardHand(){ return card_hand; }
-
-    public void setHand(List<ResourceCard> card_hand) {
-        this.card_hand.clear();
-        this.card_hand.addAll(card_hand);
+    @Override
+    public ArrayList<Integer> getCardHandIds(){
+       ArrayList<Integer> cardHandIds = new ArrayList<>();
+        for (ResourceCard resourceCard : card_hand) {
+            cardHandIds.add(resourceCard.getId());
+        }
+       return cardHandIds;
     }
 
     @Override
@@ -230,6 +232,14 @@ public class Player implements PlayerIC, Serializable {
     public boolean isLast() {
         //TODO: IMPLEMENT!
         return false;
+    }
+
+    @Override
+    public Integer[] getSecretObjectiveCardsIds() {
+        Integer[] personalObjectiveIds = new Integer[2];
+        personalObjectiveIds[0] = getSecretObjectiveCards().getFirst().getId();
+        personalObjectiveIds[1] = getSecretObjectiveCards().get(1).getId();
+        return personalObjectiveIds;
     }
 }
 

@@ -25,11 +25,7 @@ public class GameOverController extends GenericController{
     @FXML
     private Label player3;
 
-    @FXML
-    void goToMenu(ActionEvent event) {
-        getInputReaderGUI().addTxt("a");
-    }
-    public void show(GameModelImmutable model) {
+     public void show(GameModelImmutable model) {
         player0.setVisible(false);
         player1.setVisible(false);
         player2.setVisible(false);
@@ -52,6 +48,18 @@ public class GameOverController extends GenericController{
             i++;
         }
 
+    }
+
+    /**
+     * Show the button to return to the menu.
+     */
+    public void showBtnReturnToMenu() {
+        buttonMenu.setVisible(true);//not necessary
+    }
+
+    @FXML
+    void goToMenu(ActionEvent event) {
+        getInputReaderGUI().addTxt("a");
     }
 
 }

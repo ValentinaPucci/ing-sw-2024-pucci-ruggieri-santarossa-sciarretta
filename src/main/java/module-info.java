@@ -1,6 +1,7 @@
 module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.graphics;
 
     requires org.controlsfx.controls;
     requires com.fasterxml.jackson.databind;
@@ -20,4 +21,8 @@ module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
     opens it.polimi.demo to javafx.fxml;
     exports it.polimi.demo.listener to java.rmi;
     exports it.polimi.demo.main to java.rmi;
+
+    exports it.polimi.demo.view.gui to javafx.graphics;
+    exports it.polimi.demo.view.gui.controllers to javafx.fxml;
+    opens it.polimi.demo.view.gui.controllers to javafx.fxml;
 }
