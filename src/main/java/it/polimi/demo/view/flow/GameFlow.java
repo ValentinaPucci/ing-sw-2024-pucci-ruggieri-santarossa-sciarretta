@@ -12,6 +12,8 @@ import it.polimi.demo.view.flow.utilities.*;
 import it.polimi.demo.view.flow.utilities.events.EventElement;
 import it.polimi.demo.view.flow.utilities.events.EventList;
 import it.polimi.demo.view.flow.utilities.events.EventType;
+import it.polimi.demo.view.gui.ApplicationGUI;
+import it.polimi.demo.view.gui.GUI;
 import it.polimi.demo.view.text.TUI;
 import it.polimi.demo.networking.socket.client.ClientSocket;
 import org.fusesource.jansi.Ansi;
@@ -45,8 +47,6 @@ import static it.polimi.demo.view.flow.utilities.events.EventType.*;
  * if not, the data is sent to the gameFlow, which will then perform an action accordingly (pick up tiles, place tiles, ecc)<br>
  */
 public class GameFlow extends Flow implements Runnable, CommonClientActions {
-
-    // todo: solve the issue of second_last_turn ----> last_turn transition
 
     /**
      * Nickname of the player {@link Player}
@@ -111,28 +111,28 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         new Thread(this).start();
     }
 
-//    /**
-//     * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI} (GUI)
-//     *
-//     * @param guiApplication      the GUI application {@link GUIApplication}
-//     * @param connectionSelection the connection type {@link ConnectionSelection}
-//     */
-//    public GameFlow(GUIApplication guiApplication, ConnectionSelection connectionSelection) {
-//        //Invoked for starting with GUI
-//        switch (connectionSelection) {
-//            // case SOCKET -> clientActions = new ClientSocket(this);
-//            case RMI -> clientActions = new RMIClient(this);
-//        }
-//        this.inputReader = new inputReaderGUI();
-//
-//        ui = new GUI(guiApplication, (inputReaderGUI) inputReader);
-//        importantEvents = new ArrayList<>();
-//        nickname = "";
-//        fileDisconnection = new FileDisconnection();
-//
-//        this.inputParser = new InputParser(this.inputReader.getBuffer(), this);
-//        new Thread(this).start();
-//    }
+    /**
+     * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI} (GUI)
+     *
+     * @param guiApplication      the GUI application {@link ApplicationGUI}
+     * @param connectionSelection the connection type {@link ConnectionSelection}
+     */
+    public GameFlow(ApplicationGUI guiApplication, ConnectionSelection connectionSelection) {
+        //Invoked for starting with GUI
+        switch (connectionSelection) {
+            case SOCKET -> clientActions = new ClientSocket(this);
+            case RMI -> clientActions = new RMIClient(this);
+        }
+        this.inputReader = new inputReaderGUI();
+
+        ui = new GUI(guiApplication, (inputReaderGUI) inputReader);
+        importantEvents = new ArrayList<>();
+        nickname = "";
+        fileDisconnection = new FileDisconnection();
+
+        this.inputParser = new InputParser(this.inputReader.getBuffer(), this);
+        new Thread(this).start();
+    }
 
     /**
      * The gameFlow works with a list of events<br>
@@ -267,11 +267,17 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     private void statusFirstRound(EventElement event) throws IOException, InterruptedException {
         // We opted for async starter card placement for simplicity
         switch (event.getType()) {
+
+//            case MESSAGE_SENT -> {
+//                ui.show_messageSent(event.getModel(), nickname);
+//            }
+
             case GAME_STARTED -> {
                 ui.show_gameStarted(event.getModel());
                 this.inputParser.setPlayer(event.getModel().getPlayerEntity(nickname));
                 this.inputParser.setIdGame(event.getModel().getGameId());
             }
+
             case NEXT_TURN -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
                     ui.show_objectiveCards(event.getModel());
@@ -295,9 +301,9 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         
         switch (event.getType()) {
             
-            case MESSAGE_SENT -> {
-                ui.show_messageSent(event.getModel(), nickname);
-            }
+//            case MESSAGE_SENT -> {
+//                ui.show_messageSent(event.getModel(), nickname);
+//            }
 
             case NEXT_TURN -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
@@ -326,9 +332,9 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
         switch (event.getType()) {
 
-            case MESSAGE_SENT -> {
-                ui.show_messageSent(event.getModel(), nickname);
-            }
+//            case MESSAGE_SENT -> {
+//                ui.show_messageSent(event.getModel(), nickname);
+//            }
 
             case NEXT_TURN -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
@@ -753,6 +759,22 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
+     * The client asks the server to send a message
+     *
+     * @param msg message to send {@link Message}
+     */
+    @Override
+    public void sendMessage(String receiver, Message msg) {
+        try {
+            clientActions.sendMessage(receiver, msg);
+        } catch (RemoteException e) {
+            noConnectionError();
+        } catch (NotBoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * The client asks the server to reconnect to a specific game
      *
      * @param nick   nickname of the player
@@ -801,20 +823,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void heartbeat() {
 
-    }
-
-    /**
-     * The client asks the server to send a message
-     *
-     * @param msg message to send {@link Message}
-     */
-    @Override
-    public void sendMessage(Message msg) {
-        try {
-            clientActions.sendMessage(msg);
-        } catch (RemoteException e) {
-            noConnectionError();
-        }
     }
 
     /*============ Server event received ============*/
@@ -944,12 +952,15 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      * @param msg message sent {@link Message}
      */
     @Override
-    public void messageSent(GameModelImmutable gameModel, Message msg) {
-        //Show the message only if is for everyone or is for me (or I sent it)
-        if (msg.whoIsReceiver().equals("*") || msg.whoIsReceiver().equalsIgnoreCase(nickname) || msg.getSender().getNickname().equalsIgnoreCase(nickname)) {
-            // ui.addMessage(msg, gameModel);
-            events.add(gameModel, MESSAGE_SENT);
-            //msg.setText("[PRIVATE]: " + msg.getText());
+    public void messageSent(GameModelImmutable gameModel, String nick, Message msg) {
+        if (!msg.getSender().getNickname().equals(nickname)) {
+            if (nickname.equals(nick)) {
+                // async
+                ui.show_messageSent(gameModel, nick);
+            } else if (nick.equals("all")) {
+                // async
+                ui.show_messageSent(gameModel, nick);
+            }
         }
     }
 

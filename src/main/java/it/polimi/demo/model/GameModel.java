@@ -5,7 +5,6 @@ import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.PersonalBoard;
-import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
@@ -16,8 +15,6 @@ import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.model.interfaces.PlayerIC;
-import org.fusesource.jansi.Ansi;
 
 import java.io.Serializable;
 import java.util.*;
@@ -76,7 +73,7 @@ public class GameModel implements Serializable {
         gameId = gameID;
         status = GameStatus.WAIT;
         chat = new Chat();
-        // winners = new ArrayList<>();
+        winners = new ArrayList<>();
         leaderboard = new HashMap<>();
         listeners_handler = new ListenersHandler();
     }
@@ -262,21 +259,15 @@ public class GameModel implements Serializable {
         return this.chat;
     }
 
-     /**
-     * Sends a message to the game's chat.
-     * If the sender of the message is not a player in the game, an exception is thrown.
-     *
-     * @param m The message to be sent.
-     * @throws ActionPerformedByAPlayerNotPlayingException If the sender of the message is not a player in the game.
+    /**
+     * Sends a message to the chat.
+     * @param nick
+     * @param message
+     * @throws ActionPerformedByAPlayerNotPlayingException
      */
-    public void sendMessage(Message m) throws ActionPerformedByAPlayerNotPlayingException {
-        if (players_connected.contains(m.getSender())) {
-            // Add the message to the chat
-            chat.addMsg(m);
-        } else {
-            // Throw an exception if the sender is not a player in the game
-            throw new ActionPerformedByAPlayerNotPlayingException();
-        }
+    public void sendMessage(String nick, Message message) throws ActionPerformedByAPlayerNotPlayingException {
+        chat.addMessage(message);
+        listeners_handler.notify_messageSent(this, nick, message);
     }
 
     //-------------------------connection/disconnection management---------------------------------------------
@@ -742,30 +733,25 @@ public class GameModel implements Serializable {
      * It is called by getWinners() method.
      */
     public void declareWinners() {
-
-        int maxScore;
-        List<Player> ordered_players = new ArrayList<>(aux_order_players);
-
         calculateFinalScores();
-        ordered_players.sort(Comparator.comparingInt(Player::getFinalScore).reversed());
 
-        maxScore = aux_order_players.stream()
-                .mapToInt(Player::getFinalScore)
-                .max()
-                .getAsInt();
+        // Sort players by final score in descending order
+        List<Player> orderedPlayers = new ArrayList<>(aux_order_players);
+        orderedPlayers.sort(Comparator.comparingInt(Player::getFinalScore).reversed());
 
+        // Get the maximum score
+        int maxScore = orderedPlayers.getFirst().getFinalScore();
+
+        // Collect players with the maximum score as winners
+        winners.clear();
         aux_order_players.stream()
-                .filter(player -> player.getFinalScore() >= maxScore)
+                .filter(player -> player.getFinalScore() == maxScore)
                 .forEach(winners::add);
 
-        Set<Player> uniqueWinners = new HashSet<>(winners);
-        winners.clear();
-        winners.addAll(uniqueWinners);
-
-        for (Player orderedPlayer : ordered_players) {
-            leaderboard.put(orderedPlayer, orderedPlayer.getFinalScore());
-        }
+        // Populate the leaderboard
+        orderedPlayers.forEach(player -> leaderboard.put(player, player.getFinalScore()));
     }
+
 
     public Map<Player, Integer> getLeaderboard() {
         return leaderboard;

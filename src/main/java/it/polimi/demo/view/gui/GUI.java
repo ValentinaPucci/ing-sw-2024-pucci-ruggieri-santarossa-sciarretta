@@ -252,14 +252,9 @@ public class GUI extends UI {
         return 0;
     }
 
-    /**
-     * This method send a message
-     * @param msg   the message to add
-     * @param model the model to which add the message
-     */
     @Override
-    protected void addMessage(Message msg, GameModelImmutable model) {
-        show_sentMessage(model, model.getChat().getLastMessage().getSender().getNickname());
+    protected void addMessage(String msg, GameModelImmutable model) {
+
     }
 
     /**

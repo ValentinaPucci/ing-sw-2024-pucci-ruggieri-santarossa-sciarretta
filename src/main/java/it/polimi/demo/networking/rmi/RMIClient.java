@@ -246,6 +246,20 @@ public class RMIClient implements CommonClientActions {
     }
 
     /**
+     * Send a message to the server
+     *
+     * @param msg message to send
+     * @throws RemoteException
+     */
+    @Override
+    public void sendMessage(String nick, Message msg) throws RemoteException, NotBoundException {
+        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
+        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+        requests.sendMessage(modelInvokedEvents, nick, msg, game_id);
+    }
+
+
+    /**
      * Request the reconnection of a player @param nick to a game @param idGame
      *
      * @param nick of the player who wants to be reconnected
@@ -277,18 +291,6 @@ public class RMIClient implements CommonClientActions {
         requests.leaveGame(modelInvokedEvents, nick, idGame);
         gameController = null;
         nickname = null;
-    }
-
-
-    /**
-     * Send a message to the server
-     *
-     * @param msg message to send
-     * @throws RemoteException
-     */
-    @Override
-    public void sendMessage(Message msg) throws RemoteException {
-        gameController.sendMessage(msg);
     }
 
     /**

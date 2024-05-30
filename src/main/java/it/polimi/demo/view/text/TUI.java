@@ -60,6 +60,21 @@ public class TUI extends UI {
         show_important_events();
     }
 
+    @Override
+    protected int getLengthLongestMessage(GameModelImmutable model) {
+        return 0;
+    }
+
+    @Override
+    protected void addMessage(String msg, GameModelImmutable model) {
+
+    }
+
+    @Override
+    protected void show_sentMessage(GameModelImmutable model, String nickname) {
+
+    }
+
     // ********************* aux ********************* //
 
     /**
@@ -202,12 +217,11 @@ public class TUI extends UI {
             ris.append(ansi().fg(WHITE).cursor(DefaultValues.row_leaderboard + i, DefaultValues.col_leaderboard)
                     .a("#" + classif + " "
                             + entry.getKey().getNickname() + ": "
-                            + entry.getValue() + " points").fg(DEFAULT));
+                            + entry.getValue() + " points\n").fg(GREEN));
             i += 2;
             classif++;
         }
         printAsync(ris);
-
     }
 
     // *********************** SHOW METHODS  *********************** //
@@ -374,6 +388,7 @@ public class TUI extends UI {
         System.out.flush();
     }
 
+
     /**
      * @param gameModel     model where events happen
      * @param nicknameofyou player's nickname
@@ -403,45 +418,6 @@ public class TUI extends UI {
         printAsync(ansi().cursor(DefaultValues.row_input, 0));
     }
 
-    /**
-     * Shows the chat messages
-     *
-     * @param model
-     */
-    public void show_messages(GameModelImmutable model) {
-        String ris = String.valueOf(ansi().fg(GREEN).cursor(DefaultValues.row_chat, DefaultValues.col_chat - 1).bold().a("Latest Messages:").fg(DEFAULT).boldOff()) +
-                ansi().fg(WHITE).cursor(DefaultValues.row_chat + 1, DefaultValues.col_chat).a(model.getChat().toString(this.nickname)).fg(DEFAULT);
-        printAsync(ris);
-        if (!model.getChat().getMsgs().isEmpty()) {
-            printAsync(ansi().cursor(DefaultValues.row_input, 0));
-        }
-    }
-
-    /**
-     * @param model the model in which search for the longest message
-     * @return the length of the longest message
-     */
-    @Override
-    public int getLengthLongestMessage(GameModelImmutable model) {
-        return model.getChat().getMsgs().stream()
-                .map(Message::getText)
-                .reduce((a, b) -> a.length() > b.length() ? a : b)
-                .toString().length();
-    }
-
-    /**
-     * @param msg   the message to add
-     * @param model the model to which add the message
-     */
-    @Override
-    public void addMessage(Message msg, GameModelImmutable model) {
-        show_messages(model);
-    }
-
-    @Override
-    protected void show_sentMessage(GameModelImmutable model, String nickname) {
-
-    }
 
     /**
      * Error message when there are no games to join
@@ -463,7 +439,7 @@ public class TUI extends UI {
      */
     public void show_alwaysShowForAll(GameModelImmutable model) {
         this.clearScreen();
-        show_messages(model);
+        //show_messages(model);
         show_important_events();
     }
 
@@ -556,9 +532,9 @@ public class TUI extends UI {
      */
     @Override
     public void show_messageSent(GameModelImmutable model, String nickname) {
-        this.show_alwaysShow(model, nickname);
+        Message mess = model.getChat().getLastMessage();
+        printAsync(ansi().cursor(DefaultValues.row_chat, DefaultValues.col_chat).a(mess.getSender().getNickname() + ": " + mess.getText()));
     }
-
 
     /**
      * Shows the updated shelves
@@ -769,7 +745,6 @@ public class TUI extends UI {
         show_personalBoard(nick, model);
         show_nextTurn(model);
         show_welcome(nick);
-
         printAsync(ansi().cursor(DefaultValues.row_input, 0));
     }
 

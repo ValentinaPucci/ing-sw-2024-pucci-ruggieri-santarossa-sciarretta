@@ -135,12 +135,13 @@ public interface GameListener extends Remote {
     void lastRound(GameModelImmutable gamemodel) throws RemoteException;
 
     /**
-     * This method is used to notify that a message has been sent {@link Message}
-     * @param gameModel is the game model {@link GameModelImmutable}
-     * @param msg is the message that has been sent
-     * @throws RemoteException if the reference could not be accessed
+     * This method is used to notify the client that the game has ended
+     * @param gameModel
+     * @param nickname
+     * @param message
+     * @throws RemoteException
      */
-    void messageSent(GameModelImmutable gameModel, Message msg) throws RemoteException;
+    void messageSent(GameModelImmutable gameModel, String nickname, Message message) throws RemoteException;
 
     /**
      * This method is used to notify that the next turn triggered

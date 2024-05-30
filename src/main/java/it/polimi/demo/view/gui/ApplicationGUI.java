@@ -390,8 +390,8 @@ public class ApplicationGUI extends Application {
      * @param myNickname the nickname of the player
      */
     public void showMessages(GameModelImmutable model, String myNickname) {
-        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-        controller.setMessage(model.getChat().getMsgs(), myNickname);
+//        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+//        controller.setMessage(model.getChat().getMsgs(), myNickname);
     }
 
     /**
