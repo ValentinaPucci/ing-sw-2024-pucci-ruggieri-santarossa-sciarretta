@@ -37,17 +37,19 @@ public class ApplicationGUI extends Application {
     private double widthOld, heightOld;
     private boolean resizing = true;
 
+    public static void main(String[] args) {
+        launch(args);
+    }
 
-    /**
-     * This method set the input reader GUI to all the controllers.
-     * @param inputReaderGUI the input reader GUI {@link inputReaderGUI}
-     */
-    public void setInputReaderGUItoAllControllers(inputReaderGUI inputReaderGUI) {
-        //System.out.println("setInputReaderGUItoAllControllers: "+ inputReaderGUI);
+    @Override
+    public void start(Stage primaryStage) {
+        gameFlow = new GameFlow(this, ConnectionSelection.valueOf(getParameters().getUnnamed().get(0)));
         loadScenes();
-        for (SceneInfo s : scenes) {
-            s.setInputReaderGUI(inputReaderGUI);
-        }
+
+        this.primaryStage = primaryStage;
+        this.primaryStage.setTitle("Codex Naturalis");
+
+        root = new StackPane();
     }
 
     private void loadScenes() {
@@ -80,22 +82,6 @@ public class ApplicationGUI extends Application {
         }
     }
 
-    @Override
-    public void start(Stage primaryStage) {
-        gameFlow = new GameFlow(this, ConnectionSelection.valueOf(getParameters().getUnnamed().get(0)));
-        loadScenes();
-
-        this.primaryStage = primaryStage;
-        this.primaryStage.setTitle("Codex Naturalis");
-
-        root = new StackPane();
-    }
-
-    public static void main(String[] args) {
-        launch(args);
-    }
-
-
     public void setActiveScene(SceneType scene) {
         this.primaryStage.setTitle("Codex Naturalis - "+scene.name());
         resizing=false;
@@ -123,6 +109,18 @@ public class ApplicationGUI extends Application {
             primaryStage.getIcons().add(new Image(logoStream));
         } else {
             System.err.println("Impossibile trovare logo.png");
+        }
+    }
+
+    /**
+     * This method set the input reader GUI to all the controllers.
+     * @param inputReaderGUI the input reader GUI {@link inputReaderGUI}
+     */
+    public void setInputReaderGUItoAllControllers(inputReaderGUI inputReaderGUI) {
+        //System.out.println("setInputReaderGUItoAllControllers: "+ inputReaderGUI);
+        loadScenes();
+        for (SceneInfo s : scenes) {
+            s.setInputReaderGUI(inputReaderGUI);
         }
     }
 
@@ -172,104 +170,6 @@ public class ApplicationGUI extends Application {
     }
 
 
-//
-//
-////    /**
-////     * This method is used to set the active scene.
-////     * @param scene the scene {@link SceneType}
-////     */
-//
-////    //TODO: capire se devo inserire anche le scene di impostazione  del gioco (nickname/numPlayers/IDGame)
-////    //TODO:capire se mi servono i popup
-////    public void setActiveScene(SceneType scene) {
-////        // Imposta il titolo della finestra principale includendo il nome della scena
-////        this.primaryStage.setTitle("MyShelfie - " + scene.name());
-////
-////        // Indica che la finestra non è attualmente in fase di ridimensionamento
-////        resizing = false;
-////
-////        // Ottiene l'indice della scena desiderata nella lista delle scene
-////        int index = getSceneIndex(scene);
-////
-////        if (index != -1) {
-////            SceneInfo s = scenes.get(getSceneIndex(scene));
-////            switch (scene) {
-////                case MENU -> {
-////                    this.primaryStage.centerOnScreen();
-////                    this.primaryStage.setAlwaysOnTop(false);
-////                }
-////                case NICKNAME -> {
-////                    this.primaryStage.centerOnScreen();
-////                    this.primaryStage.setAlwaysOnTop(false);
-////                }
-////                case ID_GAME -> {
-////                    this.primaryStage.centerOnScreen();
-////                    this.primaryStage.setAlwaysOnTop(false);
-////                }
-////                case PLAYERS_NUMBER -> {
-////                    this.primaryStage.centerOnScreen();
-////                    this.primaryStage.setAlwaysOnTop(false);
-////                }
-////                case LOBBY -> {
-////                    this.primaryStage.centerOnScreen();
-////                    this.primaryStage.setAlwaysOnTop(false);
-////                }
-////                case RUNNING -> {
-////                    this.primaryStage.centerOnScreen();
-////                    this.primaryStage.setAlwaysOnTop(false);
-////                }
-////                case GAME_OVER -> {
-////                    this.primaryStage.centerOnScreen();
-////                    this.primaryStage.setAlwaysOnTop(false);
-////                }
-////                default -> {
-////                    // Imposta la finestra principale come non sempre in primo piano per i casi non specificati
-////                    this.primaryStage.setAlwaysOnTop(false);
-////                }
-////            }
-////
-////            // Imposta la scena corrente sulla finestra principale e la mostra
-////            this.primaryStage.setScene(s.getScene());
-////            this.primaryStage.show();
-////        }
-////
-////        // Memorizza le dimensioni attuali della scena
-////        widthOld = primaryStage.getScene().getWidth();
-////        heightOld = primaryStage.getScene().getHeight();
-////
-////        // Aggiunge un listener per il cambiamento della larghezza della finestra principale
-////        this.primaryStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-////            rescale((double) newVal - 16, heightOld);
-////        });
-////
-////        // Aggiunge un listener per il cambiamento dell'altezza della finestra principale
-////        this.primaryStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-////            rescale(widthOld, (double) newVal - 39);
-////        });
-////
-////        // Indica che la finestra può ora essere ridimensionata
-////        resizing = true;
-////    }
-//
-//    /**
-//     * This method is used to rescale the scene.
-//     */
-//    public void rescale(double width, double heigh) {
-//        if(resizing) {
-//            double widthWindow = width;
-//            double heightWindow = heigh;
-//
-//
-//            double w = widthWindow / widthOld;  // your window width
-//            double h = heightWindow / heightOld;  // your window height
-//
-//            widthOld = widthWindow;
-//            heightOld = heightWindow;
-//            Scale scale = new Scale(w, h, 0, 0);
-//            //primaryStage.getScene().getRoot().getTransforms().add(scale);
-//            primaryStage.getScene().lookup("#content").getTransforms().add(scale);
-//        }
-//    }
 //
 //    //----------metodo x marghe------------------------------------------------------------------------
 //    /**
@@ -353,6 +253,7 @@ public class ApplicationGUI extends Application {
 //        }
 //    }
 //
+    //----------metodo x marghe-------------------------------------------------------------------------
 //
 //    /**
 //     * This method hide the btn "Ready to start".
@@ -363,55 +264,52 @@ public class ApplicationGUI extends Application {
 //    }
 //
 //
-//    //chiamato da GUI
-//    /**
-//     * This method is used to set the controller value equal to the model value.
-//     * @param model the model {@link GameModelImmutable}
-//     * @param nickname the nickname of the player
-//     */
-//    public void showRunningModel(GameModelImmutable model, String nickname) {
-//        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-//        controller.setNicknamesAndPoints(model, nickname);
-//        controller.setScoreBoard(model);
-//        controller.setCommonCards(model);
-//        controller.setPersonalObjective(model, nickname);
-//        controller.setCardHand(model, nickname);
-//        //TODO: controller.setPersonalBoard(model, nickname);
-//        //TODO: controller.setOthersPersonalBoard(model, nickname);
-//    }
-//
-//    /**
-//     * This method is used to show the player grabbed tiles.
-//     * @param model the model {@link GameModelImmutable}
-//     * @param nickname the nickname of the player
-//     */
-//    public void showPlayerDrawnCard(GameModelImmutable model, String nickname) {
-//        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
-//        controller.setPlayerDrawnCard(model, nickname);
-//    }
-//
-//    /**
-//     * This method is used to show the player positioned tiles.
-//     * @param model the model {@link GameModelImmutable}
-//     * @param nickname the nickname of the player
-//     */
-//    public void showPlayerPlacedCard(GameModelImmutable model, String nickname) {
-//        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
-//        controller.setCardHand(model, nickname);
-//        //TODO: controller.setPersonalBoard(model, nickname);
-//    }
-//
-////    /**
-////     * This method is used to change the turn.
-////     * @param model the model {@link GameModelImmutable}
-////     * @param nickname the nickname of the player
-////     */
-////    public void changeTurn(GameModelImmutable model, String nickname) {
-////        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-////        controller.setNicknamesAndPoints(model, nickname);
-////        controller.changeTurn(model, nickname);
-////    }
-//
+    //chiamato da GUI
+    // AGGIORNA IL RUNNING CONTROLLER CON I NUOVI DATI DEL MODEL
+    public void showRunningModel(GameModelImmutable model, String nickname) {
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+        controller.setCardHand(model, nickname);
+        controller.setScoreBoardPosition(model);
+        controller.setPlayersPointsAndNicknames(model, nickname);
+        controller.setCommonCards(model);
+        controller.setPersonalObjectives(model, nickname);
+        controller.setCardHand(model, nickname);
+        //TODO: controller.setPersonalBoard(model, nickname);
+        //TODO: controller.setOthersPersonalBoard(model, nickname);
+    }
+
+    /**
+     * This method is used to show the player grabbed tiles.
+     * @param model the model {@link GameModelImmutable}
+     * @param nickname the nickname of the player
+     */
+    public void showPlayerDrawnCard(GameModelImmutable model, String nickname) {
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
+        controller.setPlayerDrawnCard(model, nickname);
+    }
+
+    /**
+     * This method is used to show the player positioned tiles.
+     * @param model the model {@link GameModelImmutable}
+     * @param nickname the nickname of the player
+     */
+    public void showPlayerPlacedCard(GameModelImmutable model, String nickname) {
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
+        controller.setCardHand(model, nickname);
+        //TODO: controller.setPersonalBoard(model, nickname);
+    }
+
+    /**
+     * This method is used to change the turn.
+     * @param model the model {@link GameModelImmutable}
+     * @param nickname the nickname of the player
+     */
+    public void changeTurn(GameModelImmutable model, String nickname) {
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+        controller.setPlayersPointsAndNicknames(model, nickname);
+        //TODO: controller.changeTurn(model, nickname);
+    }
+
     /**
      * This method is used to show the message in the game.
      * @param model the model {@link GameModelImmutable}
@@ -459,35 +357,7 @@ public class ApplicationGUI extends Application {
         });
     }
 
-//
-//
-//
-//    /**
-//     * This method show the leader board.
-//     * @param model the model {@link GameModelImmutable}
-//     */
-//    public void showLeaderBoard(GameModelImmutable model) {
-//        GameOverController controller = (GameOverController) scenes.get(getSceneIndex(GAME_OVER)).getGenericController();
-//        controller.show(model);
-//    }
-//
-//    /**
-//     * This method make visible the button return to menu.
-//     */
-//    public void showBtnReturnToMenu() {
-//        GameOverController controller = (GameOverController) scenes.get(getSceneIndex(GAME_OVER)).getGenericController();
-//        controller.showBtnReturnToMenu();
-//    }
-//
-////    /**
-////     * This method is used to show a generic error.
-////     * @param msg the message
-////     */
-////    public void showErrorGeneric(String msg) {
-////        ErrorController controller = (ErrorController) scenes.get(getSceneIndex(ERROR)).getGenericController();
-////        controller.setMessage(msg,false);
-////    }
-//
+
     /**
      * This method is used to show a generic error.
      * @param msg the message
@@ -496,16 +366,5 @@ public class ApplicationGUI extends Application {
     public void showError(String msg, boolean needToExitApp) {
         ErrorController controller = (ErrorController) scenes.get(getSceneIndex(ERROR)).getGenericController();
     }
-//
-//    //    /**
-////     * This method is used to show the points updated.
-////     * @param model the model {@link GameModelImmutable}
-////     * @param playerPointChanged the player that has changed the points
-////     * @param myNickname the nickname of the player
-////     * @param points the points
-////     */
-////    public void showPointsUpdated(GameModelImmutable model, Player playerPointChanged, String myNickname, int points) {
-////        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-////        controller.setPointsUpdated(model, playerPointChanged, myNickname, points);
-////    }
+
 }

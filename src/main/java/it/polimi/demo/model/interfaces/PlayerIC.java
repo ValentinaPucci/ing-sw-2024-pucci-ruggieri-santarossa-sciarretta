@@ -1,11 +1,11 @@
 package it.polimi.demo.model.interfaces;
 
 import it.polimi.demo.model.board.PersonalBoard;
-import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +56,10 @@ public interface PlayerIC {
 
     /**
      * This method is used to get the player's position on common board
+     *
      * @return score_board_position
      */
-    int getScoreBoardPosition();
+    Text getScoreBoardPosition();
 
     /**
      * This method is used to get the player's score at the end of the game

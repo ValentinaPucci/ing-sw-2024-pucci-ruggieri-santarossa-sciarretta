@@ -4,12 +4,15 @@ import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +20,16 @@ import java.util.Objects;
 
 public class RunningController extends GenericController{
 
+
+    @FXML public Label myPoints;
+    @FXML public Text p2Points;
+    @FXML public Text p1Points;
+    @FXML public Text p3Points;
+    @FXML public Label playerLabel1;
+    @FXML public Label playerLabel2;
+    @FXML public Label playerLabel3;
+    public ArrayList<Text> othersPoints;
+    public ArrayList<Label> othersNicknames;
 
     @FXML private AnchorPane mainAnchor;
     @FXML public ImageView personalObjective0;
@@ -30,6 +43,8 @@ public class RunningController extends GenericController{
     private Orientation starterCardOrientation;
     private ArrayList<Integer> cardHand;
     @FXML private ListView<String> eventsListView;  //TODO: DA CAPIRE X RIUSCIRE A COLLEGARLA AL MODEL -> I METODI NON LI HO ANCORA CREATI QUA
+    private ImageView pieceBlackImageView;
+    private ArrayList<ImageView> pieces;
     private Pane[] bnPanes;
     @FXML private Pane bn0;
     @FXML private Pane bn1;
@@ -61,8 +76,7 @@ public class RunningController extends GenericController{
     @FXML private Pane bn27;
     @FXML private Pane bn28;
     @FXML private Pane bn29;
-    private ImageView pieceBlackImageView;
-    private ArrayList<ImageView> pieces;
+
 
 
     public void initialize() {
@@ -155,6 +169,21 @@ public class RunningController extends GenericController{
         cardHand.set(1, 0);
         cardHand.set(2, 0);
 
+        othersPoints.add(p1Points);
+        othersPoints.add(p2Points);
+        othersPoints.add(p3Points);
+
+        othersNicknames.add(playerLabel1);
+        othersNicknames.add(playerLabel2);
+        othersNicknames.add(playerLabel3);
+
+    }
+
+    public void setScoreBoardPosition(GameModelImmutable model){
+        for(int i = 0; i < model.getAllPlayers().size(); i++){
+            int player_position = model.getCommonBoard().getPlayerPosition(i);
+            movePieceToPosition(model, i, player_position);
+        }
     }
 
     // Method to move a piece to a new Pane
@@ -167,16 +196,7 @@ public class RunningController extends GenericController{
     }
 
     // Method to move a piece to a new Pane
-    private void movePieceToPosition(GameModelImmutable model, String nickname, int indexToGo) {
-        int player_index = -1 ;
-        ArrayList<PlayerIC> players_list = model.getAllPlayers();
-        for (int i = 0; i < players_list.size(); i++) {
-            if (players_list.get(i).getNickname().equals(nickname)) {
-                player_index = i;
-            }
-        }
-        if(player_index == -1)
-            System.out.println("Errore riga 181 gridPaneController");
+    private void movePieceToPosition(GameModelImmutable model, int player_index, int indexToGo) {
 
         Pane targetPane = bnPanes[indexToGo];
         ImageView piece = pieces.get(player_index);
@@ -185,7 +205,20 @@ public class RunningController extends GenericController{
             parent.getChildren().remove(piece);
         }
         targetPane.getChildren().add(piece);
+    }
 
+    public void setPlayersPointsAndNicknames(GameModelImmutable model, String nickname) {
+        ArrayList<PlayerIC> allPlayers = model.getAllPlayers();
+        int j = 0;
+        for(int i = 0; i < allPlayers.size(); i++){
+            if(allPlayers.get(i).getNickname().equals(nickname)){
+                myPoints.setText(String.valueOf(model.getAllPlayers().get(i).getScoreBoardPosition()));
+            }else{
+                othersPoints.set(j, allPlayers.get(i).getScoreBoardPosition());
+                othersNicknames.get(j).setText(allPlayers.get(i).getNickname());
+                j++;
+            }
+        }
     }
 
     // Method to set an image to one of the common card ImageViews
@@ -332,6 +365,9 @@ public class RunningController extends GenericController{
         }
         eventsListView.scrollTo(eventsListView.getItems().size());
     }
+
+
+
 }
 
 
