@@ -125,8 +125,10 @@ public interface GameListener extends Remote {
      */
     void gameEnded(GameModelImmutable gamemodel) throws RemoteException;
 
+    void secondLastRound(GameModelImmutable gamemodel) throws RemoteException;
+
     /**
-     * This method is used to notify the client entered in the last round
+     * This method is used to notify the client entered the last round
      * @param gamemodel is the game model {@link GameModelImmutable}
      * @throws RemoteException if the reference could not be accessed
      */

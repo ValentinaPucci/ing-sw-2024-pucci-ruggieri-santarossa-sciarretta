@@ -1,6 +1,7 @@
 package it.polimi.demo.view.flow;
 
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
@@ -11,8 +12,6 @@ import it.polimi.demo.view.flow.utilities.*;
 import it.polimi.demo.view.flow.utilities.events.EventElement;
 import it.polimi.demo.view.flow.utilities.events.EventList;
 import it.polimi.demo.view.flow.utilities.events.EventType;
-import it.polimi.demo.view.gui.ApplicationGUI;
-import it.polimi.demo.view.gui.GUI;
 import it.polimi.demo.view.text.TUI;
 import it.polimi.demo.networking.socket.client.ClientSocket;
 import org.fusesource.jansi.Ansi;
@@ -46,6 +45,8 @@ import static it.polimi.demo.view.flow.utilities.events.EventType.*;
  * if not, the data is sent to the gameFlow, which will then perform an action accordingly (pick up tiles, place tiles, ecc)<br>
  */
 public class GameFlow extends Flow implements Runnable, CommonClientActions {
+
+    // todo: solve the issue of second_last_turn ----> last_turn transition
 
     /**
      * Nickname of the player {@link Player}
@@ -110,28 +111,28 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         new Thread(this).start();
     }
 
-    /**
-     * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI} (GUI)
-     *
-     * @param guiApplication      the GUI application {@link ApplicationGUI}
-     * @param connectionSelection the connection type {@link ConnectionSelection}
-     */
-    public GameFlow(ApplicationGUI guiApplication, ConnectionSelection connectionSelection) {
-        //Invoked for starting with GUI
-        switch (connectionSelection) {
-            // case SOCKET -> clientActions = new ClientSocket(this);
-            case RMI -> clientActions = new RMIClient(this);
-        }
-        this.inputReader = new inputReaderGUI();
-
-        ui = new GUI(guiApplication, (inputReaderGUI) inputReader);
-        importantEvents = new ArrayList<>();
-        nickname = "";
-        fileDisconnection = new FileDisconnection();
-
-        this.inputParser = new InputParser(this.inputReader.getBuffer(), this);
-        new Thread(this).start();
-    }
+//    /**
+//     * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI} (GUI)
+//     *
+//     * @param guiApplication      the GUI application {@link GUIApplication}
+//     * @param connectionSelection the connection type {@link ConnectionSelection}
+//     */
+//    public GameFlow(GUIApplication guiApplication, ConnectionSelection connectionSelection) {
+//        //Invoked for starting with GUI
+//        switch (connectionSelection) {
+//            // case SOCKET -> clientActions = new ClientSocket(this);
+//            case RMI -> clientActions = new RMIClient(this);
+//        }
+//        this.inputReader = new inputReaderGUI();
+//
+//        ui = new GUI(guiApplication, (inputReaderGUI) inputReader);
+//        importantEvents = new ArrayList<>();
+//        nickname = "";
+//        fileDisconnection = new FileDisconnection();
+//
+//        this.inputParser = new InputParser(this.inputReader.getBuffer(), this);
+//        new Thread(this).start();
+//    }
 
     /**
      * The gameFlow works with a list of events<br>
@@ -141,7 +142,12 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void run() {
         EventElement event;
-        events.add(null, APP_MENU);
+        try {
+            ui.show_publisher();
+            events.add(null, APP_MENU);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         while (!Thread.interrupted()) {
             if (events.isJoined()) {
                 // Get one event
@@ -170,7 +176,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                                 throw new RuntimeException(e);
                             }
                         }
-
                         case LAST_ROUND -> {
                             try {
                                 statusLastRound(event);
@@ -316,7 +321,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             }
         }
     }
-
 
     private void statusLastRound(EventElement event) throws IOException, InterruptedException {
 
@@ -564,6 +568,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
     public void askStarterCardOrientationAndPlace() {
         String ris;
+        String aux;
         do {
             ui.show_orientation("Choose the orientation of the starter card");
             try {
@@ -571,9 +576,13 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        } while (!(ris.equals("FRONT") || ris.equals("BACK")));
+        } while (!(ris.equals("f") || ris.equals("b")));
         try {
-            placeStarterCard(Orientation.valueOf(ris));
+            if (ris.equals("f"))
+                aux = "FRONT";
+            else
+                aux = "BACK";
+            placeStarterCard(Orientation.valueOf(aux));
         } catch (RemoteException | GameEndedException | NotBoundException e) {
             throw new RuntimeException(e);
         }
@@ -583,6 +592,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         String ris;
         String ris1;
         String ris2;
+        String aux;
         do {
             ui.show_orientation("Choose the orientation of the card to place");
             try {
@@ -590,25 +600,40 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        } while (!(ris.equals("FRONT") || ris.equals("BACK")));
+        } while (!(ris.equals("f") || ris.equals("b")));
         do {
-            ui.show_genericMessage("Choose the ** x ** coordinates where to place the card (insert a number between 0 and 1000)");
+            ui.show_genericMessage("Choose the ** x ** coordinates where to place the card (insert a number between -250 and 250)");
             try {
                 ris1 = this.inputParser.getDataToProcess().popData();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-            ui.show_genericMessage("Choose the ** y ** coordinates where to place the card (insert a number between 0 and 1000)");
+
+            ui.show_genericMessage("Choose the ** y ** coordinates where to place the card (insert a number between -250 and 250)");
             try {
                 ris2 = this.inputParser.getDataToProcess().popData();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
-        } while (false);
+        } while (!isValidCoordinate(ris1) || !isValidCoordinate(ris2));
         try {
-            placeCard(Integer.parseInt(ris1), Integer.parseInt(ris2), Orientation.valueOf(ris));
+            if (ris.equals("f"))
+                aux = "FRONT";
+            else
+                aux = "BACK";
+            placeCard(Integer.parseInt(ris1) + 250, Integer.parseInt(ris2) + 250, Orientation.valueOf(aux));
         } catch (RemoteException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private boolean isValidCoordinate(String input) {
+        try {
+            int value = Integer.parseInt(input.trim());
+            return value >= -250 && value <= 250;
+        } catch (NumberFormatException e) {
+            ui.show_genericError("Invalid input. Please enter a valid number between -250 and 250.");
+            return false;
         }
     }
 
@@ -671,7 +696,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         try {
             clientActions.joinGame(nick, game_id);
         } catch (IOException | InterruptedException | NotBoundException e) {
-            System.out.println("Here, JoinGame, Gameflow");
             noConnectionError();
         }
     }
@@ -769,7 +793,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
     }
 
-    //TODO: check if it is correct
     @Override
     public boolean isMyTurn() {
         return false;
@@ -833,6 +856,21 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
 
         }
+    }
+
+    /**
+     * It adds the NextTurn event to the event list
+     * @param gameModel game model {@link GameModelImmutable}
+     */
+    @Override
+    public void nextTurn(GameModelImmutable gameModel) {
+        if (!gameModel.getCurrentPlayerNickname().equals(nickname) &&
+                (gameModel.getStatus() == GameStatus.RUNNING ||
+                gameModel.getStatus() == GameStatus.SECOND_LAST_ROUND))
+            ui.show_myTurnIsFinished();
+        events.add(gameModel, EventType.NEXT_TURN);
+        //I remove all the input that the user sends when It is not his turn
+        this.inputParser.getDataToProcess().popAllData();
     }
 
     /**
@@ -973,17 +1011,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * It adds the NextTurn event to the event list
-     * @param gameModel game model {@link GameModelImmutable}
-     */
-    @Override
-    public void nextTurn(GameModelImmutable gameModel) {
-        events.add(gameModel, EventType.NEXT_TURN);
-        //I remove all the input that the user sends when It is not his turn
-        this.inputParser.getDataToProcess().popAllData();
-    }
-
-    /**
      * A player has been disconnected
      * @param gameModel game model {@link GameModelImmutable}
      * @param nick nickname of the player
@@ -1009,6 +1036,11 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         ui.addImportantEvent("Only one player is connected, waiting " + secondsToWaitUntilGameEnded + " seconds before calling Game Ended!");
     }
 
+    @Override
+    public void secondLastRound(GameModelImmutable gameModel) {
+        ui.show_genericMessage("*** Second last round begins! ***");
+    }
+
     /**
      * Last circle begins
      * @param gameModel game model {@link GameModelImmutable}
@@ -1016,9 +1048,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      */
     @Override
     public void lastRound(GameModelImmutable gameModel) throws RemoteException {
-        ui.addImportantEvent("Last round begins!");
+        ui.show_genericMessage("*** Last round begins! Now you will not be able to draw any additional card! ***");
     }
-
 
     /*==Testing purpose==*/
     

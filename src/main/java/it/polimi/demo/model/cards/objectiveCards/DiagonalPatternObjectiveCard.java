@@ -9,7 +9,7 @@ import it.polimi.demo.model.enumerations.Orientation;
 
 /**
  * The following class describe those objective cards that deal
- * with ** diagonal ** patter recognition of cards with respect to the board configuration:
+ * with ** diagonal ** pattern recognition of cards with respect to the board configuration:
  * There are 2 possible (geometric) patterns of three cards each. In order to distinguish
  * the cards in the patter to recognise, we only need to know the color of each. It is useful
  * to implements some methods that can achieve our goals in terms of sub-matrices encoding.
@@ -47,7 +47,7 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
      *      color == RED || color == BLUE
      * @param color
      */
-    public void init_objIncreasingDiagonal(Color color) {
+    public void init_objDecreasingDiagonal(Color color) {
 
         ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, color);
         ResourceCard card2 = new ResourceCard(-1, Orientation.FRONT, color);
@@ -67,7 +67,7 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
      *
      * @param color
      */
-    public void init_objDecreasingDiagonal(Color color) {
+    public void init_objIncreasingDiagonal(Color color) {
         ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, color);
         ResourceCard card2 = new ResourceCard(-1, Orientation.FRONT, color);
         ResourceCard card3 = new ResourceCard(-1, Orientation.FRONT, color);

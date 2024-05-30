@@ -9,10 +9,10 @@ public class DefaultValues implements Serializable {
 
     public final static boolean DEBUG = false;
 
-    public final static int[] NE_StarterCard_index = {500,501};
-    public final static int[] NW_StarterCard_index = {500,500};
-    public final static int[] SE_StarterCard_index = {501,501};
-    public final static int[] SW_StarterCard_index = {501,500};
+    public final static int[] NE_StarterCard_index = {250,251};
+    public final static int[] NW_StarterCard_index = {250,250};
+    public final static int[] SE_StarterCard_index = {251,251};
+    public final static int[] SW_StarterCard_index = {251,250};
 
 
     public final static int longest_commonCardMessage = 81;
@@ -88,7 +88,7 @@ public class DefaultValues implements Serializable {
     public final static int row_nextTurn = 10;
 
 
-    public final static int num_points_for_second_last_round = 20;
+    public final static int num_points_for_second_last_round = 1;
     public final static int num_of_attempt_to_connect_toServer_before_giveup = 5;
     public final static int seconds_between_reconnection = 5;
 

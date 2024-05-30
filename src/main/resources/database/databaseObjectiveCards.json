@@ -12,9 +12,9 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "pattern": "increasing_diagonal",
-      "color1": "red",
-      "color2": "Red",
-      "color3": "Red"
+      "color1": "RED",
+      "color2": "RED",
+      "color3": "RED"
     },
 
     {
@@ -29,9 +29,9 @@
       "numButterflies": 0,
       "numWolves": 0,
       "pattern": "decreasing_diagonal",
-      "color1": "Green",
-      "color2": "Green",
-      "color3": "Green"
+      "color1": "GREEN",
+      "color2": "GREEN",
+      "color3": "GREEN"
     },
 
     {
@@ -45,9 +45,9 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "pattern": "increasing_diagonal",
-      "color1": "Blue",
-      "color2": "Blue",
-      "color3": "Blue"
+      "color1": "BLUE",
+      "color2": "BLUE",
+      "color3": "BLUE"
     },
 
 
@@ -63,9 +63,9 @@
       "numLeaves": 0,
       "numButterflies": 0,
       "pattern": "decreasing_diagonal",
-      "color1": "Purple",
-      "color2": "Purple",
-      "color3": "Purple"
+      "color1": "PURPLE",
+      "color2": "PURPLE",
+      "color3": "PURPLE"
     },
 
 

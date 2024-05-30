@@ -53,7 +53,6 @@ public class TUI extends UI {
      */
     @Override
     public void addImportantEvent(String input) {
-        //Want to show only the first maxnum_of_last_event_tobe_showed important event happened
         if (importantEvents.size() + 1 >= DefaultValues.maxnum_of_last_event_tobe_showed) {
             importantEvents.remove(0);
         }
@@ -172,7 +171,7 @@ public class TUI extends UI {
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()
-        ).println(ansi().cursor(DefaultValues.row_nextTurn, 0).fg(GREEN).a("""
+        ).println(ansi().cursor(DefaultValues.row_nextTurn, 0).fg(YELLOW).a("""
 
                 ░██████╗░░█████╗░███╗░░░███╗███████╗        ███████╗███╗░░██╗██████╗░███████╗██████╗░
                 ██╔════╝░██╔══██╗████╗░████║██╔════╝        ██╔════╝████╗░██║██╔══██╗██╔════╝██╔══██╗
@@ -198,16 +197,15 @@ public class TUI extends UI {
         int i = 1;
         int classif = 1;
         StringBuilder ris = new StringBuilder();
-//        for (Map.Entry<PlayerIC, Integer> entry : model.getLeaderBoard().entrySet()) {
-//            printAsync("");
-//            ris.append(ansi().fg(WHITE).cursor(DefaultValues.row_leaderboard + i, DefaultValues.col_leaderboard)
-//                    .a("#" + classif + " "
-//                            + entry.getKey().getNickname() + ": "
-//                            + entry.getValue() + " points").fg(DEFAULT));
-//            i += 2;
-//            classif++;
-//        }
-
+        for (Map.Entry<Player, Integer> entry : model.getLeaderBoard().entrySet()) {
+            printAsync("");
+            ris.append(ansi().fg(WHITE).cursor(DefaultValues.row_leaderboard + i, DefaultValues.col_leaderboard)
+                    .a("#" + classif + " "
+                            + entry.getKey().getNickname() + ": "
+                            + entry.getValue() + " points").fg(DEFAULT));
+            i += 2;
+            classif++;
+        }
         printAsync(ris);
 
     }
@@ -304,6 +302,13 @@ public class TUI extends UI {
     public void show_commonBoard(GameModelImmutable model) {
         clearScreen();
         TuiCommonBoardGraphics.showCommonBoard(model.getCommonBoard());
+        clearScreen();
+    }
+
+    @Override
+    public void show_myTurnIsFinished() {
+        clearScreen();
+        printAsync("Your turn is finished. Now, wait until it is again your turn! \n");
         clearScreen();
     }
 
@@ -520,7 +525,7 @@ public class TUI extends UI {
      */
     @Override
     public void show_orientation(String message) {
-        printAsync(message + "\n" + "\t> Choose card orientation (FRONT / BACK): ");
+        printAsync(message + "\n" + "\t> Choose card orientation (f:FRONT / b:BACK): ");
         printAsyncNoCursorReset(ansi().cursorDownLine().a(""));
     }
 
@@ -596,7 +601,7 @@ public class TUI extends UI {
      */
     @Override
     public void show_returnToMenuMsg() {
-        printAsyncNoCursorReset("\nPress any key to return to the menu");
+        printAsync("\nPress any key to return to the menu");
     }
 
     /**
@@ -611,7 +616,13 @@ public class TUI extends UI {
     @Override
     public void show_genericMessage(String msg) {
         clearScreen();
-        printAsync(msg);
+        printAsync(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(msg).reset());
+    }
+
+    @Override
+    public void show_genericError(String msg) {
+        clearScreen();
+        printAsync(Ansi.ansi().bold().fg(Ansi.Color.RED).a("\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
     }
 
     /**
@@ -691,7 +702,8 @@ public class TUI extends UI {
      */
     @Override
     public void show_whichCardToPlaceMsg() {
-        printAsync("> Select which card from your hand you want to place (1 / 2 / 3):");
+        clearScreen();
+        printAsync(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a("\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
     }
 
     @Override

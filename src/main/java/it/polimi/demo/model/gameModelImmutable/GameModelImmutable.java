@@ -16,6 +16,7 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 public class GameModelImmutable implements Serializable {
 
+    private final List<PlayerIC> aux_order_players;
     private final LinkedList<PlayerIC> players_connected;
     private final Integer gameId;
     private final String initial_player_nickname;
@@ -24,13 +25,14 @@ public class GameModelImmutable implements Serializable {
     private final GameStatus actual_status;
     private final String current_player_nickname;
     //private final List<Player> winners;
-    //private final Map<PlayerIC, Integer> leaderboard;
+    private final Map<Player, Integer> leaderboard;
     private final ChatIC chat;
     private final List<StarterCard> starter_cards;
     private final List<ObjectiveCard> objective_cards;
 
     public GameModelImmutable(GameModel model) {
         this.gameId = model.getGameId();
+        this.aux_order_players = new ArrayList<>(model.getAllPlayers());
         this.players_connected = new LinkedList<>(model.getPlayersConnected());
         this.initial_player_nickname = model.getAllPlayers().getFirst().getNickname();
         this.common_board = model.getCommonBoard();
@@ -39,7 +41,7 @@ public class GameModelImmutable implements Serializable {
         this.current_player_nickname = model.getPlayersConnected().peek().getNickname();
         // this.winners = model.getWinners();
         this.chat = model.getChat();
-        //this.leaderboard = model.getLeaderBoard();
+        this.leaderboard = model.getLeaderboard();
         this.starter_cards = new ArrayList<>(model.getStarterCardsToChoose(current_player_nickname));
         this.objective_cards = new ArrayList<>(model.getPersonalObjectiveCardsToChoose(current_player_nickname));
     }
@@ -64,6 +66,9 @@ public class GameModelImmutable implements Serializable {
         return gameId;
     }
 
+    public List<PlayerIC> getAllPlayers() {
+        return aux_order_players;
+    }
 
     public LinkedList<PlayerIC> getPlayersConnected() {
         return players_connected;
@@ -99,9 +104,9 @@ public class GameModelImmutable implements Serializable {
         return chat;
     }
 
-//    public Map<PlayerIC, Integer> getLeaderBoard() {
-//        return leaderboard;
-//    }
+    public Map<Player, Integer> getLeaderBoard() {
+        return leaderboard;
+    }
 
     public Integer getNumRequiredPlayersToStart() {
         return num_required_players_to_start;

@@ -231,26 +231,27 @@ public  class CardsCollection implements Serializable {
                 if (pattern.equals("P")) {
                     //System.out.println("P pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
+                    card.init_obj_P();
                     this.addCard(card);
                 }
                 if (pattern.equals("Q")) {
                     //System.out.println("Q pattern");
                     LetterPatternObjectiveCard card = new LetterPatternObjectiveCard(id, orientation, points);
-                    card.init_obj_q();
+                    card.init_obj_Q();
                     this.addCard(card);
                 }
                 if (pattern.equals("increasing_diagonal")) {
                     DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation, points);
                     String color = cardNode.path("color1").asText();
                     //System.out.println(card.toString());  // Print the color string
-                    card.init_objIncreasingDiagonal(Color.valueOf(color.toUpperCase()));
+                    card.init_objIncreasingDiagonal(Color.valueOf(color));
                     this.addCard(card);
                 }
                 if (pattern.equals("decreasing_diagonal")) {
                     DiagonalPatternObjectiveCard card = new DiagonalPatternObjectiveCard(id, orientation, points);
                     String color = cardNode.path("color1").asText();
                     //System.out.println(card.toString());
-                    card.init_objDecreasingDiagonal(Color.valueOf(color.toUpperCase()));
+                    card.init_objDecreasingDiagonal(Color.valueOf(color));
                     this.addCard(card);
                 }
                 if (pattern.equals("None")) {
@@ -262,7 +263,7 @@ public  class CardsCollection implements Serializable {
                     int num_butterflies = cardNode.path("numButterflies").asInt();
                     int num_wolves = cardNode.path("numWolves").asInt();
 
-                    if(num_feathers != 0 || num_potions != 0 || num_parchments != 0) {
+                    if (num_feathers != 0 || num_potions != 0 || num_parchments != 0) {
                         ItemObjectiveCard card = new ItemObjectiveCard(id, orientation, points, num_feathers, num_potions, num_parchments);
                         //System.out.println("item objective card");
                         this.addCard(card);
