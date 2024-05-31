@@ -25,7 +25,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     private GameModel model;
 
     private  Map<GameListener, Heartbeat>  heartbeats;
-    private Thread reconnectionTh;
 
 
     /**
@@ -107,6 +106,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
                                 if (this.getNumConnectedPlayers() == 0) {
                                     stopReconnectionTimer();
+                                    printAsync("XXXXXXXXXX Si cancella il gioco XXXXXXXXXX");
                                     MainController.getControllerInstance().deleteGame(this.getGameId());
                                     return;
                                 }
@@ -129,18 +129,18 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         }
     }
 
-    /**
-     * It checks if the heartbeat is expired.
-     * It returns true if the difference between the current time and the last ping time is greater than the timeout.
-     * @param heartbeat
-     * @return
-     */
-    private boolean isHeartbeatExpired(Heartbeat heartbeat) {
-        long currentTime = System.currentTimeMillis();
-        long lastBeatTime = heartbeat.getPing();
-        // Timeout =
-        return currentTime - lastBeatTime > DefaultValues.secondsToWaitReconnection;
-    }
+//    /**
+//     * It checks if the heartbeat is expired.
+//     * It returns true if the difference between the current time and the last ping time is greater than the timeout.
+//     * @param heartbeat
+//     * @return
+//     */
+//    private boolean isHeartbeatExpired(Heartbeat heartbeat) {
+//        long currentTime = System.currentTimeMillis();
+//        long lastBeatTime = heartbeat.getPing();
+//        // Timeout =
+//        return currentTime - lastBeatTime > DefaultValues.secondsToWaitReconnection;
+//    }
 
     /**
      * Add a Ping to the list of heartbeats.
@@ -186,7 +186,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
             //Check if there is only one player playing
             if ((model.getStatus().equals(GameStatus.RUNNING) || model.getStatus().equals(GameStatus.LAST_ROUND)) && model.getPlayersConnected().size() == 1) {
                 //Starting a th for waiting until reconnection at least of 1 client to keep playing
-                if (reconnectionTh == null) {
+                if (reconnection_thread == null) {
                     startReconnectionTimer();
                     printAsync("Starting timer for reconnection waiting: " + DefaultValues.secondsToWaitReconnection + " seconds");
                 }
@@ -273,9 +273,9 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     private void stopReconnectionTimer() {
-        if (reconnectionTh != null) {
-            reconnectionTh.interrupt();
-            reconnectionTh = null;
+        if (reconnection_thread != null) {
+            reconnection_thread.interrupt();
+            reconnection_thread = null;
         }
         //else It means that a player reconnected but the timer was not started (ex 3 players and 1 disconnects)
     }
