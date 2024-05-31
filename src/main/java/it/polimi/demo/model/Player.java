@@ -100,7 +100,6 @@ public class Player implements PlayerIC, Serializable {
         return secret_objectives ;
     }
 
-
     /**
      * set the secret objective at the start of the game. Then, the player
      * decides which one to keep (only one secret objective is admissible)
@@ -113,6 +112,11 @@ public class Player implements PlayerIC, Serializable {
         secret_objectives.add(objective2);
     }
 
+    @Override
+    public Text getScoreBoardPosition() {
+        return null;
+    }
+
     public void setStarterCardToChose(StarterCard starterCard1, StarterCard starterCard2) {
         starter_card_to_chose.add(starterCard1);
         starter_card_to_chose.add(starterCard2);
@@ -120,10 +124,10 @@ public class Player implements PlayerIC, Serializable {
 
     public List<StarterCard> getStarterCardToChose() { return this.starter_card_to_chose;}
 
-    @Override
-    public Text getScoreBoardPosition() {
-        return score_board_position;
-    }
+//    @Override
+//    public Text getScoreBoardPosition() {
+//        return score_board_position;
+//    }
 
     public void setScoreBoardPosition(int score_board_position) {
         this.score_board_position = score_board_position;

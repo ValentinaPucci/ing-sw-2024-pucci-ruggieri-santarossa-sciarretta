@@ -133,8 +133,6 @@ public class ClientHandler extends Thread implements Serializable{
                             System.out.println("Prova 2: " + prova);
                             temp.execute(gameController);
                     }
-
-
                 }
         } catch (RemoteException | GameEndedException e) {
             throw new RuntimeException(e);
