@@ -1,6 +1,5 @@
 package it.polimi.demo.networking.socket.server;
 
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;

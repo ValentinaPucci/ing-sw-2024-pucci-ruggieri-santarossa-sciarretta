@@ -1,6 +1,5 @@
 package it.polimi.demo.networking.socket.server;
 
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
