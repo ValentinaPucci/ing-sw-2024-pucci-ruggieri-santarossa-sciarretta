@@ -1,6 +1,5 @@
 package it.polimi.demo.networking.socket.server;
 
-
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.ArrayList;
@@ -17,12 +16,12 @@ public class Server extends Thread {
     /**
      * The Socket that represents the Server
      */
-    private ServerSocket serverSocket;
+    private  ServerSocket serverSocket;
     private int i=0;
     /**
      * List of {@link ClientHandler} created associated with connections
      */
-    private List<ClientHandler> handler;
+    private transient List<ClientHandler> handler;
 
     /**
      * Starts the Server that is the first Socket that each Client connects on the first connection

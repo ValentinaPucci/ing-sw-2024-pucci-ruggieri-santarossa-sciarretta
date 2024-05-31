@@ -6,10 +6,11 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-public interface CommonClientActions {
+public interface CommonClientActions extends Serializable {
     /**
      * Creates a new game
      *

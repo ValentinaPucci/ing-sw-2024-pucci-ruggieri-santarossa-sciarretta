@@ -69,13 +69,7 @@ public interface GameControllerInterface extends Remote {
     Player getCurrentPlayer() throws RemoteException;
 
 
-    /**
-     * This method disconnect a player and remove him from the GameListener list{@link GameListener}
-     * @param p the player to disconnect
-     * @param listOfClient the GameListener of the player {@link GameListener}
-     * @throws RemoteException if the connection fails
-     */
-    void disconnectPlayer(Player p, GameListener listOfClient) throws RemoteException, GameEndedException;
+     void disconnectPlayer(String nick, GameListener lisOfClient) throws RemoteException;
 
     void reconnectPlayer(Player p) throws RemoteException;
 

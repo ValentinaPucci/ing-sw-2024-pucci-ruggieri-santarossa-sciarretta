@@ -4,10 +4,11 @@ package it.polimi.demo.view.flow.utilities.events;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class EventList {
+public class EventList implements Serializable {
 
     private Queue<EventElement> list;
     private boolean joined = false;
