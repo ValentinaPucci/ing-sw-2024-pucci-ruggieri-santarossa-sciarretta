@@ -20,7 +20,7 @@ public class MainServer {
         String input;
 
         do {
-            clearCMD();
+            //clearCMD();
             printAsync(ansi().cursor(1, 0).a("""
                     Insert remote IP (leave empty for localhost)
                     """));

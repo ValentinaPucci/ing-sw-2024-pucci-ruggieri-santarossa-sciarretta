@@ -118,6 +118,7 @@ public class GameModel implements Serializable {
         return aux_order_players;
     }
 
+
     public List<String> getAllNicknames() {
 //        for(Player p2 : aux_order_players){
 //            System.out.println(p2.getNickname() + "\n");

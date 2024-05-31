@@ -18,7 +18,7 @@ public class MainClient {
 
     public static void main(String[] args) {
 
-        clearCMD();
+        //clearCMD();
         int selection;
 
         // Disable javaFX logger
@@ -32,14 +32,14 @@ public class MainClient {
                         """));
                 input = new Scanner(System.in).nextLine();
                 if(!input.equals("") && !isValidIP(input)){
-                    clearCMD();
+                    //clearCMD();
                     printAsync("Not valid");
                 }
             } while (!input.equals("") && !isValidIP(input));
             if (!input.equals(""))
                 DefaultValues.serverIp = input;
 
-            clearCMD();
+            //clearCMD();
 
             do {
                 printAsync(ansi().cursor(1, 0).a("""
@@ -47,7 +47,7 @@ public class MainClient {
                         """));
                 input = new Scanner(System.in).nextLine();
                 if (!input.equals("") && !isValidIP(input)) {
-                    clearCMD();
+                    //clearCMD();
                     printAsync("Not valid");
                 }
             } while (!input.equals("") && !isValidIP(input));
@@ -55,7 +55,7 @@ public class MainClient {
                 System.setProperty("java.rmi.server.hostname", input);
 
 
-            clearCMD();
+            //clearCMD();
             do {
                 printAsync(ansi().cursor(1, 0).a("""
                         Select option:

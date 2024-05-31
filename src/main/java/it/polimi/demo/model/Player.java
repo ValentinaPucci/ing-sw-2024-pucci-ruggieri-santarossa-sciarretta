@@ -3,11 +3,11 @@ package it.polimi.demo.model;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.model.board.PersonalBoard;
-import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.interfaces.ResourceCardIC;
+import javafx.scene.text.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -121,7 +121,7 @@ public class Player implements PlayerIC, Serializable {
     public List<StarterCard> getStarterCardToChose() { return this.starter_card_to_chose;}
 
     @Override
-    public int getScoreBoardPosition() {
+    public Text getScoreBoardPosition() {
         return score_board_position;
     }
 

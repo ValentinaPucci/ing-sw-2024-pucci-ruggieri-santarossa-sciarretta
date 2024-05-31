@@ -146,7 +146,6 @@ public class CommonBoard implements CommonBoardIC, Serializable {
     }
 
 
-
     // Method to get the position of a player
     public int getPlayerPosition(int player_index) {
         for (CommonBoardNode node : board_nodes) {

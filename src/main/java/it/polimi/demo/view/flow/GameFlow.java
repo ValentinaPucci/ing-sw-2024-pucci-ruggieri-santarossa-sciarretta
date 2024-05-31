@@ -122,14 +122,15 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             case SOCKET -> clientActions = new ClientSocket(this);
             case RMI -> clientActions = new RMIClient(this);
         }
-        this.inputReader = new inputReaderGUI();
 
-        ui = new GUI(guiApplication, (inputReaderGUI) inputReader);
+        this.inputReader = new inputReaderGUI(); //inputReaderGUI@5184ffd2
+
+        ui = new GUI(guiApplication, (inputReaderGUI) inputReader); //inputReaderGUI@5184ffd2
         importantEvents = new ArrayList<>();
         nickname = "";
         fileDisconnection = new FileDisconnection();
 
-        this.inputParser = new InputParser(this.inputReader.getBuffer(), this);
+        this.inputParser = new InputParser(this.inputReader.getBuffer(), this); //inputReaderGUI@5184ffd2
         new Thread(this).start();
     }
 

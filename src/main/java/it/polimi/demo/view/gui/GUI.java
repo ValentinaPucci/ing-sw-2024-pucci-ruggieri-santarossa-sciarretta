@@ -13,7 +13,7 @@ public class GUI extends UI {
 
     private ApplicationGUI guiApplication;
     private inputReaderGUI inputReaderGUI;
-    private boolean alreadyShowedPublisher = false;
+    private boolean alreadyShowedPublisher = false; //to delete in tui
     private boolean alreadyShowedLobby = false;
 
     private String nickname;
@@ -21,8 +21,20 @@ public class GUI extends UI {
     public GUI(ApplicationGUI guiApplication, inputReaderGUI inputReaderGUI) {
         this.guiApplication = guiApplication;
         this.inputReaderGUI = inputReaderGUI;
+        //System.out.println("GUI constructor: "+ this.inputReaderGUI);
         nickname = null;
         init();
+    }
+
+    @Override
+    public void init() {
+        importantEvents = new ArrayList<>();
+    }
+
+    public void callPlatformRunLater(Runnable r) {
+        //Need to use this method to call any methods inside the GuiApplication
+        //Doing so, the method requested will be executed on the JavaFX Thread (else exception)
+        Platform.runLater(r);
     }
 
     /**
@@ -33,15 +45,12 @@ public class GUI extends UI {
         alreadyShowedPublisher = true;
     }
 
-    @Override
-    public void init() {
-        importantEvents = new ArrayList<>();
-    }
 
 
     @Override
     protected void show_menuOptions() {
         if (alreadyShowedPublisher) {
+            //System.out.println("show_menuOptions: "+ this.inputReaderGUI);
             callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.inputReaderGUI));//So the controllers can add text to the buffer for the gameflow
             callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
             callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
@@ -231,11 +240,6 @@ public class GUI extends UI {
     }
 
 
-    public void callPlatformRunLater(Runnable r) {
-        //Need to use this method to call any methods inside the GuiApplication
-        //Doing so, the method requested will be executed on the JavaFX Thread (else exception)
-        Platform.runLater(r);
-    }
 
     /**
      * This method add an important event to the list of important events, and show it
