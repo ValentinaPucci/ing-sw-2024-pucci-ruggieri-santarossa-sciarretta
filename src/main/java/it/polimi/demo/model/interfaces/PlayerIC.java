@@ -5,7 +5,6 @@ import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,7 @@ public interface PlayerIC {
      *
      * @return score_board_position
      */
-    Text getScoreBoardPosition();
+    int getScoreBoardPosition();
 
     /**
      * This method is used to get the player's score at the end of the game

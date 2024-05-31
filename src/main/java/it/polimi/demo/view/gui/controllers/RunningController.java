@@ -214,7 +214,7 @@ public class RunningController extends GenericController{
             if(allPlayers.get(i).getNickname().equals(nickname)){
                 myPoints.setText(String.valueOf(model.getAllPlayers().get(i).getScoreBoardPosition()));
             }else{
-                othersPoints.set(j, allPlayers.get(i).getScoreBoardPosition());
+                othersNicknames.get(j).setText(String.valueOf(allPlayers.get(i).getScoreBoardPosition()));
                 othersNicknames.get(j).setText(allPlayers.get(i).getNickname());
                 j++;
             }
