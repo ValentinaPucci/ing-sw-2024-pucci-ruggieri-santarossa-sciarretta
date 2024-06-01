@@ -5,7 +5,6 @@ import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.networking.GameListenerHandlerClient;
 import it.polimi.demo.networking.HeartbeatSender;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
@@ -36,11 +35,11 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     /**
      * This is the output stream
      */
-    private ObjectOutputStream ob_out;
+    private transient ObjectOutputStream ob_out;
     /**
      * This is the input stream
      */
-    private ObjectInputStream ob_in;
+    private transient ObjectInputStream ob_in;
     /**
      * This is the nickname associated with the client
      */
@@ -227,7 +226,6 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     public void placeStarterCard(Orientation orientation) throws IOException, GameEndedException, NotBoundException {
         ob_out.writeObject(new SocketClientMessagePlaceStarterCard(orientation));
         finishSending();
-
     }
 
     @Override
@@ -250,22 +248,21 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
 
     @Override
     public void sendMessage(String receiver, Message msg) throws IOException, NotBoundException {
-        ob_out.writeObject(new SocketClientMessageNewChatMessage(msg));
+        ob_out.writeObject(new SocketClientMessageSendMessage(msg));
         finishSending();
     }
 
 
     @Override
     public void heartbeat() throws RemoteException {
-        if (ob_out != null) {
-            try {
-                //System.out.println("Heartbeat message with nick: " + nickname);
-                ob_out.writeObject(new SocketClientMessageHeartBeat(nickname));
-                finishSending();
-            } catch (IOException e) {
-                printAsync("Connection lost to the server!! Impossible to send heartbeat...");
-            }
-        }
+//        if (ob_out != null) {
+//            try {
+//                ob_out.writeObject(new SocketClientMessageHeartBeat(nickname));
+//                finishSending();
+//            } catch (IOException e) {
+//                printAsync("Connection lost to the server!! Impossible to send heartbeat...");
+//            }
+//        }
     }
 
     /**

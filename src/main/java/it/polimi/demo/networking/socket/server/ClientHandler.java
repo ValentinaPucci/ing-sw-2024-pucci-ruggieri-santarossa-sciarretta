@@ -32,12 +32,12 @@ public class ClientHandler extends Thread implements Serializable {
     /**
      * ObjectInputStream in
      */
-    private ObjectInputStream in;
+    private transient ObjectInputStream in;
     int prova = 0;
     /**
      * ObjectOutputStream out
      */
-    private ObjectOutputStream out;
+    private transient ObjectOutputStream out;
 
     /**
      * GameController associated with the game
@@ -54,7 +54,7 @@ public class ClientHandler extends Thread implements Serializable {
      */
     private String nickname = null;
 
-    private final BlockingQueue<SocketClientGenericMessage> processingQueue = new LinkedBlockingQueue<>();
+    private final transient BlockingQueue<SocketClientGenericMessage> processingQueue = new LinkedBlockingQueue<>();
 
     /**
      * Handle all the network requests performed by a specific ClientSocket

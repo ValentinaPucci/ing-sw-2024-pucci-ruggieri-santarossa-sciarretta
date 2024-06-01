@@ -17,8 +17,8 @@ public class Server extends Thread {
     /**
      * The Socket that represents the Server
      */
-    private ServerSocket serverSocket;
-    private int i=0;
+    private transient ServerSocket serverSocket;
+    private int i = 0;
     /**
      * List of {@link ClientHandler} created associated with connections
      */

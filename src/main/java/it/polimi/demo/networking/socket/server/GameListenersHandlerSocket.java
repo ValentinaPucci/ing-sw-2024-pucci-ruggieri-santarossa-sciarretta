@@ -20,7 +20,7 @@ import java.rmi.RemoteException;
  **/
 public class GameListenersHandlerSocket implements GameListener, Serializable {
 
-    private final ObjectOutputStream out;
+    private final transient ObjectOutputStream out;
 
     /**
      * This constructor creates a GameListenersHandlerSocket
@@ -259,9 +259,6 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         }
     }
 
-    //TODO: Maybe add message for placed card in wrong position.
-
-
     /**
      * This method is used to write on the ObjectOutputStream that the next turn is started
      * @param gamemodel is the game model {@link GameModelImmutable}
@@ -276,8 +273,6 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
         }
     }
-
-
 
     /**
      * This method is used to write on the ObjectOutputStream that a player has disconnected
