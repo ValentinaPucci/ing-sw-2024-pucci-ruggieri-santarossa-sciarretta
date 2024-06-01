@@ -12,8 +12,6 @@ import it.polimi.demo.model.interfaces.*;
 import java.io.Serializable;
 import java.util.*;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
-
 public class GameModelImmutable implements Serializable {
 
     private final ArrayList<PlayerIC> aux_order_players;
@@ -39,7 +37,6 @@ public class GameModelImmutable implements Serializable {
         this.num_required_players_to_start = model.getNumPlayersToPlay();
         this.actual_status = model.getStatus();
         this.current_player_nickname = model.getPlayersConnected().peek().getNickname();
-        // this.winners = model.getWinners();
         this.chat = model.getChat();
         this.leaderboard = model.getLeaderboard();
         this.starter_cards = new ArrayList<>(model.getStarterCardsToChoose(current_player_nickname));
@@ -58,14 +55,6 @@ public class GameModelImmutable implements Serializable {
         return current_player_nickname;
     }
 
-    public String getFirstPlayerNickname() {
-        return initial_player_nickname;
-    }
-
-//    public Map<PlayerIC, Integer> getLeaderBoard() {
-//        return leaderBoard;
-//    }
-
     public Integer getGameId() {
         return gameId;
     }
@@ -75,30 +64,12 @@ public class GameModelImmutable implements Serializable {
         return players_connected;
     }
 
-//    public List<Player> getWinners() {
-//        return winners;
-//    }
-
     public CommonBoard getCommonBoard() {
         return common_board;
     }
 
-    public List<ResourceCardIC> getHandCurrentPlayer() {
-        assert players_connected.peek() != null;
-        return players_connected.peek().getHandIC();
-    }
-
-    public String getNicknameCurrentPlayer() {
-        assert players_connected.peek() != null;
-        return players_connected.peek().getNickname();
-    }
-
     public PlayerIC getPlayerEntity(String nickname) {
         return players_connected.stream().filter(x -> x.getNickname().equals(nickname)).toList().get(0);
-    }
-
-    public PlayerIC getCurrentPlayerEntity() {
-        return players_connected.peek();
     }
 
     public Chat getChat() {
@@ -107,10 +78,6 @@ public class GameModelImmutable implements Serializable {
 
     public Map<Player, Integer> getLeaderBoard() {
         return leaderboard;
-    }
-
-    public Integer getNumRequiredPlayersToStart() {
-        return num_required_players_to_start;
     }
 
     public List<StarterCard> getStarterCards(String nick) {
@@ -130,10 +97,8 @@ public class GameModelImmutable implements Serializable {
             return null;
     }
 
-    public List<PlayerIC> getClassification(){
+    public List<PlayerIC> getClassification() {
         players_connected.sort(Comparator.comparing(PlayerIC::getFinalScore,Comparator.reverseOrder()));
         return players_connected;
     }
-
-
 }

@@ -38,10 +38,8 @@ public class GameModel implements Serializable {
     private CommonBoard common_board;
     private int gameId;
     private int num_required_players_to_start;
-    private int current_player_index;
     private GameStatus status;
     private Chat chat;
-    private Player first_finishing_player = null;
     private List<Player> winners;
     private Map<Player, Integer> leaderboard;
 
@@ -78,27 +76,7 @@ public class GameModel implements Serializable {
         listeners_handler = new ListenersHandler();
     }
 
-
-
     //------------------------------------methods for players-----------------------
-
-    /**
-     * Checks if there are enough players online to start the game.
-     *
-     * @return True if there are enough players online, otherwise false.
-     */
-    public boolean areConnectedPlayersEnough() {
-        return players_connected.size() >= 2;
-    }
-
-    /**
-     * Checks if the player in turn is online.
-     *
-     * @return True if the player in turn is online, otherwise false.
-     */
-    public boolean isTheCurrentPlayerConnected() {
-        return players_connected.peek() != null;
-    }
 
     /**
      * Retrieves the beginner player of the game.
@@ -120,9 +98,6 @@ public class GameModel implements Serializable {
 
 
     public List<String> getAllNicknames() {
-//        for(Player p2 : aux_order_players){
-//            System.out.println(p2.getNickname() + "\n");
-//        }
         return aux_order_players.stream()
                 .map(Player::getNickname)
                 .collect(Collectors.toList());
@@ -146,8 +121,7 @@ public class GameModel implements Serializable {
     }
 
     public synchronized void extractFirstPlayerToPlay() {
-        //Player first_player = players_connected.get(random.nextInt(players_connected.size()));
-        Player first_player = players_connected.get(0);
+        Player first_player = players_connected.get(random.nextInt(players_connected.size()));
 
         aux_order_players.remove(first_player);
         aux_order_players.addFirst(first_player);
@@ -176,21 +150,6 @@ public class GameModel implements Serializable {
         }
         return null;
     }
-
-    /**
-     * Retrieves the index of the first player who finished the game.
-     *
-     * @return The index of the first player who finished the game, or -1 if no player has finished yet.
-     */
-    public Player getFirstFinishingPlayer() {
-        return this.first_finishing_player;
-    }
-
-    /**
-     * It sets the first player that finishes.
-     * @param p
-     */
-    public void setFirst_finished_player(Player p) { this.first_finishing_player = p;}
 
     public void setNumPlayersToPlay(int n) {
         num_required_players_to_start = n;
@@ -222,7 +181,6 @@ public class GameModel implements Serializable {
         }
         else {
             aux_order_players.add(p);
-            // todo: check if adding a player to players_connected (here) is correct
             players_connected.offer(p);
             listeners_handler.notify_playerJoined(this);
             printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
@@ -244,6 +202,7 @@ public class GameModel implements Serializable {
 
         if (this.status.equals(GameStatus.RUNNING)) {
             if (players_connected.size() < 2) {
+                // todo: check this
                 // Not enough players to keep playing
                 // this.setStatus(GameStatus.ENDED);
             }
@@ -390,8 +349,6 @@ public class GameModel implements Serializable {
         switch (status) {
             case FIRST_ROUND -> {
                 listeners_handler.notify_GameStarted(this);
-                // Here we are not really calling the nextTurn() method
-                // inside the model!!
                 listeners_handler.notify_nextTurn(this);
             }
 
@@ -682,12 +639,8 @@ public class GameModel implements Serializable {
             else if (getStatus() == GameStatus.RUNNING)
                 setStatus(GameStatus.SECOND_LAST_ROUND);
         }
-//        if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
-//            setStatus(GameStatus.LAST_ROUND);
-//        }
-        // todo: check if nextTurn() must be called before
-        nextTurn();
 
+        nextTurn();
     }
 
     /**
@@ -816,28 +769,6 @@ public class GameModel implements Serializable {
     }
 
 
-//    public void setCurrentPlayerIndex(int currentPlayerIndex) {
-//        if(currentPlayerIndex < 0 || currentPlayerIndex >= this.getNumPlayersToPlay())
-//            throw new IllegalArgumentException("Illegal player index");
-//
-//        this.current_player_index = currentPlayerIndex;
-//    }
-
-
-//    //TODO: implement for the GameView
-//    public int getCurrentPlayerIndex() {
-//        return current_player_index;
-//    }
-
-    public int getFinalPlayerIndex() {
-        return aux_order_players.indexOf(first_finishing_player);
-    }
-
-//    public PlayerIC getCurrentPlayer() {
-//        return aux_order_players.get(current_player_index);
-//    }
-
-
     public void setErrorMessage(String error) {
 
     }
@@ -861,33 +792,14 @@ public class GameModel implements Serializable {
         listeners_handler.removeListener(lis);
     }
 
-    /**
-     * @return the list of listeners
-     */
-    public List<GameListener> getListeners() {
-        return listeners_handler.getListeners();
-    }
-
     // aux
 
     public List<StarterCard> getStarterCardsToChoose(String nickname) {
         return getPlayerEntity(nickname).getStarterCardToChose();
     }
 
-    public StarterCard getStarterCard(String nickname) {
-        return getPlayerEntity(nickname).getStarterCard();
-    }
-
     public List<ObjectiveCard> getPersonalObjectiveCardsToChoose(String nickname) {
         return getPlayerEntity(nickname).getSecretObjectiveCards();
-    }
-
-    public ObjectiveCard getObjectiveCard(String nickname) {
-        return getPlayerEntity(nickname).getChosenObjectiveCard();
-    }
-
-    public List<ResourceCard> getPlayerHand(String nickname) {
-        return getPlayerEntity(nickname).getHand();
     }
 }
 

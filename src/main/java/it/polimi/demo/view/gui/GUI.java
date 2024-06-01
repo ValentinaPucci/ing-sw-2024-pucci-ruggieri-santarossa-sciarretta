@@ -95,11 +95,6 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_chosenNickname(String nickname) {
-
-    }
-
-    @Override
     protected void show_gameStarted(GameModelImmutable model) {
 
     }
@@ -170,16 +165,6 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_youReadyToStart(GameModelImmutable gameModel, String nicknameofyou) {
-
-    }
-
-    @Override
-    protected void show_nextTurnOrPlayerReconnected(GameModelImmutable model, String nickname) {
-
-    }
-
-    @Override
     protected void show_commonObjectives(GameModelImmutable gameModel) {
 
     }
@@ -200,11 +185,6 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_cardPlaced(GameModelImmutable model, String nickname) {
-
-    }
-
-    @Override
     protected void show_NaNMsg() {
 
     }
@@ -215,17 +195,7 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_askCardCoordinatesMainMsg() {
-
-    }
-
-    @Override
     protected void show_orientation(String message) {
-
-    }
-
-    @Override
-    protected void show_askChooseCardMainMsg() {
 
     }
 
@@ -250,28 +220,6 @@ public class GUI extends UI {
         importantEvents.add(input);
         callPlatformRunLater(() -> this.guiApplication.showImportantEvents(this.importantEvents));
     }
-
-    @Override
-    protected int getLengthLongestMessage(GameModelImmutable model) {
-        return 0;
-    }
-
-    @Override
-    protected void addMessage(String msg, GameModelImmutable model) {
-
-    }
-
-    /**
-     * This method show the sent message
-     *
-     * @param model    the model where the message need to be shown
-     * @param nickname the sender's nickname
-     */
-    @Override
-    protected void show_sentMessage(GameModelImmutable model, String nickname) {
-        callPlatformRunLater(() -> this.guiApplication.showMessages(model, this.nickname));
-    }
-
 
     /**
      * This method reset the important events

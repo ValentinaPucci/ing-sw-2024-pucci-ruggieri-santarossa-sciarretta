@@ -35,7 +35,7 @@ public class GameOverController extends GenericController{
         int i=0;
         Label tmp = null;
 
-        for(PlayerIC p:model.getClassification()){
+        for (PlayerIC p:model.getClassification()){
             switch (i){
                 case 0-> tmp=player0;
                 case 1-> tmp=player1;

@@ -129,37 +129,6 @@ public class RMIClient implements CommonClientActions {
     }
 
     /**
-     * Send heartbeats to the RMI server
-     * If sending a message takes more than {@link DefaultValue#timeoutConnection_millis} millis, the socket
-     * will be considered no longer connected to the server
-     */
-    /*
-    @SuppressWarnings("BusyWait")
-    @Override
-    public void run() {
-        //For the heartbeat
-        while (!Thread.interrupted()) {
-            try {
-                Timer timer = new Timer();
-                TimerTask task = new TaskOnNetworkDisconnection(flow);
-                timer.schedule( task, DefaultValue.timeoutConnection_millis);
-
-                //send heartbeat so the server knows I am still online
-                heartbeat();
-
-                timer.cancel();
-            } catch (RemoteException e) {
-                return;
-            }
-            try {
-                Thread.sleep(DefaultValue.secondToWaitToSend_heartbeat);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }*/
-
-    /**
      * Request the creation of a Game to the server
      *
      * @param nick of the player who wants to create a game
