@@ -417,7 +417,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        // ui.show_chosenNickname(nickname);
+        System.out.println("Nickname Selected:"+ nickname);
+        ui.show_chosenNickname(nickname);
     }
 
     /**
@@ -445,7 +446,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             }
 
         } while (num_of_players == null);
-        ui.show_chosenNumOfPLayers(num_of_players);
         return num_of_players;
     }
 
@@ -461,30 +461,40 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
         try {
             optionChoose = this.inputParser.getDataToProcess().popData();
+            System.out.println("optionChoose: " + optionChoose);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
         if (optionChoose.equals("."))
             System.exit(1);
-        askNickname();
+        //askNickname();
 
         switch (optionChoose) {
             case "c" -> {
                 Integer num_players = askNumOfPlayers();
                 if (num_players < 2 || num_players > 4)
                     return false;
-                else
+                else{
+                    System.out.println("Chosen num of players: " + num_players);
+                    askNickname();
                     createGame(nickname, num_players);
+                }
             }
             case "j" -> {
+                askNickname();
                 joinFirstAvailableGame(nickname);
             }
             case "js" -> {
                 Integer gameId = askGameId();
                 if (gameId == -1)
                     return false;
-                else
+                else{
+                    this.game_id = gameId;
+                    System.out.println("Chosen id: " + gameId);
+                    askNickname();
                     joinGame(nickname, gameId);
+                }
+
             }
             case "x" -> reconnect(nickname, fileDisconnection.getLastGameId(nickname));
 
@@ -675,6 +685,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         ui.show_creatingNewGameMsg(nickname);
         try {
             clientActions.createGame(nickname, num_of_players);
+            System.out.println("Created game");
         } catch (IOException | InterruptedException | NotBoundException e) {
             printAsync("Error in here, createGame gameFlow!");
             noConnectionError();
@@ -721,6 +732,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
     }
 
+
+    //-----------------------------RUNNING METHODS-----------------------------------------
 
     @Override
     public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {

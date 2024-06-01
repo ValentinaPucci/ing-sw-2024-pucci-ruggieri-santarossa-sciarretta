@@ -3,9 +3,12 @@ package it.polimi.demo.view.gui.controllers;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 public class LobbyController extends GenericController {
+
+    public Text gameidLabel;
 
     @FXML
     private Button buttonReady;
@@ -16,6 +19,10 @@ public class LobbyController extends GenericController {
     @FXML
     void actionIamReady(ActionEvent event) {
         getInputReaderGUI().addTxt("y");
+    }
+
+    public void setGameId(int id) {
+        gameidLabel.setText("GameID: "+id);
     }
 
     public void setNicknameLabel(String nickname){

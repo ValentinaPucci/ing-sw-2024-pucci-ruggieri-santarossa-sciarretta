@@ -77,17 +77,13 @@ public abstract class UI {
     protected abstract void show_insertNumOfPlayersMsg();
 
     /**
-     * Shows the player's chosen number of players
-     * @param n number of players chosen
-     */
-    protected abstract void show_chosenNumOfPLayers(int n);
-
-    /**
      * Shows game started message
      *
      * @param model model where the game has started
      */
     protected abstract void show_gameStarted(GameModelImmutable model);
+
+    protected abstract void show_ReadyToStart(GameModelImmutable gameModel, String nicknameofyou);
 
     /**
      * Shows error message when there are no games available for joining
@@ -205,4 +201,5 @@ public abstract class UI {
     protected abstract void show_noConnectionError();
 
 
+    protected abstract void show_chosenNickname(String nickname);
 }

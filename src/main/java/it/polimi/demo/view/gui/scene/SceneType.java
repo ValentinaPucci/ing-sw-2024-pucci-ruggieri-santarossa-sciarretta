@@ -11,7 +11,8 @@ public enum SceneType {
     ID_GAME("/fxml/IDgame.fxml"),
     RUNNING("/fxml/RunningOLD.fxml"),
     GAME_OVER("/fxml/GameOver.fxml"),
-    ERROR("/fxml/Error.fxml");
+    ERROR("/fxml/Error.fxml"),
+    NUM_PLAYERS("/fxml/NumPlayers.fxml");
 
     private final String value;
 

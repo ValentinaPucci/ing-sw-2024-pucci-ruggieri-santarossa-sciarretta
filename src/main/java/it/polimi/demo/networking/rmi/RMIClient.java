@@ -156,8 +156,8 @@ public class RMIClient implements CommonClientActions {
         registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
         gameController = requests.joinGame(modelInvokedEvents, nick, idGame);
-        nickname = nick;
-        game_id = gameController.getGameId();
+        this.nickname = nick;
+        this.game_id = gameController.getGameId();
     }
 
     @Override

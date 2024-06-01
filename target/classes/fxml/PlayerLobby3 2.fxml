@@ -10,10 +10,9 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="418.0" prefWidth="286.0" style="-fx-background-color: #263340;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.demo.view.gui.controllers.PlayerLobbyController">
     <children>
-
-        <ImageView fitHeight="418.0" fitWidth="286.0" pickOnBounds="true" preserveRatio="false">
+        <ImageView fitHeight="850.0" fitWidth="1500.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <image>
-                <Image url="@/red.png" />
+                <Image url="@/Background.jpg" />
             </image>
         </ImageView>
 

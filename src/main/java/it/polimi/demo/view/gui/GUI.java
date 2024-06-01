@@ -1,11 +1,13 @@
 package it.polimi.demo.view.gui;
 
-import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.view.flow.UI;
 import it.polimi.demo.view.flow.utilities.inputReaderGUI;
+import it.polimi.demo.view.gui.controllers.LobbyController;
 import it.polimi.demo.view.gui.scene.SceneType;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -50,10 +52,10 @@ public class GUI extends UI {
     @Override
     protected void show_menuOptions() {
         if (alreadyShowedPublisher) {
-            //System.out.println("show_menuOptions: "+ this.inputReaderGUI);
             callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.inputReaderGUI));//So the controllers can add text to the buffer for the gameflow
             callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
             callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
+            System.out.println("show_menuOptions");
         }
     }
 
@@ -61,37 +63,30 @@ public class GUI extends UI {
 
     @Override
     protected void show_creatingNewGameMsg(String nickname) {
-
     }
 
     @Override
     protected void show_joiningFirstAvailableMsg(String nickname) {
-
     }
 
     @Override
     protected void show_joiningToGameIdMsg(int idGame, String nickname) {
-
+        show_inputGameIdMsg();
     }
 
     @Override
     protected void show_inputGameIdMsg() {
-
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ID_GAME));
     }
 
     @Override
     protected void show_insertNicknameMsg() {
-
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.NICKNAME));
     }
 
     @Override
     protected void show_insertNumOfPlayersMsg() {
-
-    }
-
-    @Override
-    protected void show_chosenNumOfPLayers(int n) {
-
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.NUM_PLAYERS));
     }
 
     @Override
@@ -100,8 +95,31 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_noAvailableGamesToJoin(String msgToVisualize) {
+    protected void show_chosenNickname(String nickname) {
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.LOBBY));
+    }
 
+
+    /**
+     * this method show that the player is ready to start
+     *
+     * @param gameModel     model where events happen
+     * @param nicknameofyou player's nickname
+     */
+    @Override
+    protected void show_ReadyToStart(GameModelImmutable gameModel, String nicknameofyou) {
+        callPlatformRunLater(() -> this.guiApplication.disableBtnReadyToStart());
+    }
+
+    /**
+     * This method show that there are no available games to join
+     *
+     * @param msgToVisualize message that needs visualisation
+     */
+    @Override
+    protected void show_noAvailableGamesToJoin(String msgToVisualize) {
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ERROR));
+        callPlatformRunLater(() -> this.guiApplication.showError(msgToVisualize));
     }
 
     @Override
@@ -111,7 +129,22 @@ public class GUI extends UI {
 
     @Override
     protected void show_playerJoined(GameModelImmutable gameModel, String nick) {
+        if (!alreadyShowedLobby) {
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            pause.setOnFinished(event -> {
+                callPlatformRunLater(() -> ((LobbyController) this.guiApplication.getController(SceneType.LOBBY)).setNicknameLabel(nick));
+                callPlatformRunLater(() -> ((LobbyController) this.guiApplication.getController(SceneType.LOBBY)).setGameId(gameModel.getGameId()));
 
+                callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.LOBBY));
+                callPlatformRunLater(() -> this.guiApplication.showPlayerToLobby(gameModel));
+                alreadyShowedLobby = true;
+            });
+            pause.play();
+
+        } else {
+            //The player is in lobby and another player has joined
+            callPlatformRunLater(() -> this.guiApplication.showPlayerToLobby(gameModel));
+        }
     }
 
     @Override
@@ -238,7 +271,9 @@ public class GUI extends UI {
     @Override
     protected void show_noConnectionError() {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ERROR));
-        callPlatformRunLater(() -> this.guiApplication.showError("Connection to server lost!", true));
+        callPlatformRunLater(() -> this.guiApplication.showError("Connection to server lost!"));
     }
+
+
 
 }
