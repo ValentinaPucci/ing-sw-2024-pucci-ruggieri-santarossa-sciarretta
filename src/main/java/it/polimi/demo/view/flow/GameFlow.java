@@ -14,8 +14,8 @@ import it.polimi.demo.view.flow.utilities.events.EventList;
 import it.polimi.demo.view.flow.utilities.events.EventType;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import it.polimi.demo.view.gui.GUI;
-import it.polimi.demo.view.text.TUI;
 import it.polimi.demo.networking.socket.client.ClientSocket;
+import it.polimi.demo.view.text.TUI;
 import org.fusesource.jansi.Ansi;
 
 import java.io.IOException;
