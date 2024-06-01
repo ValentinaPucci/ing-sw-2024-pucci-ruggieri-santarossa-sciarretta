@@ -83,13 +83,6 @@ public abstract class UI {
     protected abstract void show_chosenNumOfPLayers(int n);
 
     /**
-     * Shows the player's chosen nickname
-     *
-     * @param nickname nickname just chosen by the player
-     */
-    protected abstract void show_chosenNickname(String nickname);
-
-    /**
      * Shows game started message
      *
      * @param model model where the game has started
@@ -150,22 +143,6 @@ public abstract class UI {
     protected abstract void show_whereToDrawFrom();
 
     /**
-     * Shows that the playing player is ready to start
-     *
-     * @param gameModel     model where events happen
-     * @param nicknameofyou player's nickname
-     */
-    protected abstract void show_youReadyToStart(GameModelImmutable gameModel, String nicknameofyou);
-
-    /**
-     * Show the message for next turn or reconnected player
-     *
-     * @param model    model where events happen
-     * @param nickname nick of reconnected player (or of the player that is now in turn)
-     */
-    protected abstract void show_nextTurnOrPlayerReconnected(GameModelImmutable model, String nickname);
-
-    /**
      * Shows common cards extracted
      *
      * @param gameModel the model that has the common cards to show
@@ -189,14 +166,6 @@ public abstract class UI {
     public abstract void show_whichCardToPlaceMsg();
 
     /**
-     * Shows the updated player's shelf
-     *
-     * @param model    the model in which the player is found
-     * @param nickname the player who positioned the tile
-     */
-    protected abstract void show_cardPlaced(GameModelImmutable model, String nickname);
-
-    /**
      * Shows generic error message
      */
     protected abstract void show_NaNMsg();
@@ -207,19 +176,9 @@ public abstract class UI {
     protected abstract void show_returnToMenuMsg();
 
     /**
-     * Shows the message that asks for column to be chosen
-     */
-    protected abstract void show_askCardCoordinatesMainMsg();
-
-    /**
      * Shows the message that asks for direction to be chosen
      */
     protected abstract void show_orientation(String message);
-
-    /**
-     * Shows the message that asks for tiles to be picked
-     */
-    protected abstract void show_askChooseCardMainMsg();
 
     protected abstract void show_genericMessage(String s);
 
@@ -234,20 +193,6 @@ public abstract class UI {
      * @param input the string of the important event to add
      */
     public abstract void addImportantEvent(String input);
-
-    /**
-     * @param model the model in which search for the longest message
-     * @return the length of the longest message registered in chat
-     */
-    protected abstract int getLengthLongestMessage(GameModelImmutable model);
-
-    /**
-     * @param msg   the message to add
-     * @param model the model to which add the message
-     */
-    protected abstract void addMessage(String msg, GameModelImmutable model);
-
-    protected abstract void show_sentMessage(GameModelImmutable model, String nickname);
 
     /**
      * Resets the important events

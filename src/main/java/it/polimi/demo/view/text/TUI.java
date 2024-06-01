@@ -60,33 +60,7 @@ public class TUI extends UI {
         show_important_events();
     }
 
-    @Override
-    protected int getLengthLongestMessage(GameModelImmutable model) {
-        return 0;
-    }
-
-    @Override
-    protected void addMessage(String msg, GameModelImmutable model) {
-
-    }
-
-    @Override
-    protected void show_sentMessage(GameModelImmutable model, String nickname) {
-
-    }
-
     // ********************* aux ********************* //
-
-    /**
-     * Resizes the console
-     */
-    public void resize() {
-        try {
-            new ProcessBuilder("cmd", "/c", "mode con:cols=160 lines=50").inheritIO().start().waitFor();
-        } catch (IOException | InterruptedException e) {
-            //couldn't resize the terminal window
-        }
-    }
 
     /**
      * Clears the console
@@ -225,16 +199,6 @@ public class TUI extends UI {
     }
 
     // *********************** SHOW METHODS  *********************** //
-
-    /**
-     * Shows all players' nicknames
-     *
-     * @param model
-     */
-    // todo: implement the right toString method in PlayerIC
-    public void show_allPlayers(GameModelImmutable model) {
-        printAsync("Current Players: \n" + model.getPlayersConnected().toString());
-    }
 
     /**
      * @param gameModel the model that has the player hand that needs to be shown
@@ -388,16 +352,6 @@ public class TUI extends UI {
         System.out.flush();
     }
 
-
-    /**
-     * @param gameModel     model where events happen
-     * @param nicknameofyou player's nickname
-     */
-    @Override
-    protected void show_youReadyToStart(GameModelImmutable gameModel, String nicknameofyou) {
-
-    }
-
     /**
      * Shows the important events
      */
@@ -441,15 +395,6 @@ public class TUI extends UI {
         this.clearScreen();
         //show_messages(model);
         show_important_events();
-    }
-
-    /**
-     * Shows the game id
-     *
-     * @param gameModel
-     */
-    public void show_gameId(GameModelImmutable gameModel) {
-        printAsync(ansi().cursor(DefaultValues.row_gameID, 0).bold().a("Game with id: [" + gameModel.getGameId() + "]").boldOff());
     }
 
     /**
@@ -506,25 +451,6 @@ public class TUI extends UI {
     }
 
     /**
-     * Asks the player to pick up tiles
-     */
-    @Override
-    protected void show_askChooseCardMainMsg() {
-
-    }
-
-    /**
-     * clears console
-     *
-     * @param msg
-     * @param model
-     */
-    public void removeInput(String msg, GameModelImmutable model) {
-        printAsync(ansi().cursor(DefaultValues.row_input, 0).a(msg).a(" ".repeat(getLengthLongestMessage(model))));
-        printAsyncNoLine(ansi().cursorDownLine());
-    }
-
-    /**
      * Shows the messages sent
      *
      * @param model    the model where the message need to be shown
@@ -534,17 +460,6 @@ public class TUI extends UI {
     public void show_messageSent(GameModelImmutable model, String nickname) {
         Message mess = model.getChat().getLastMessage();
         printAsync(ansi().cursor(DefaultValues.row_chat, DefaultValues.col_chat).a(mess.getSender().getNickname() + ": " + mess.getText()));
-    }
-
-    /**
-     * Shows the updated shelves
-     *
-     * @param model    the model in which the player is found
-     * @param nickname the player who positioned the tile
-     */
-    @Override
-    public void show_cardPlaced(GameModelImmutable model, String nickname) {
-        this.show_alwaysShow(model, nickname);
     }
 
     /**
@@ -562,31 +477,11 @@ public class TUI extends UI {
     }
 
     /**
-     * Shows a message for the next turn or when a player reconnects
-     *
-     * @param model    model where events happen
-     * @param nickname nick of reconnected player (or of the player that is now in turn)
-     */
-    @Override
-    public void show_nextTurnOrPlayerReconnected(GameModelImmutable model, String nickname) {
-        this.show_alwaysShow(model, nickname);
-    }
-
-    /**
      * Tells the player to return to the main menu
      */
     @Override
     public void show_returnToMenuMsg() {
         printAsync("\nPress any key to return to the menu");
-    }
-
-    /**
-     * Asks the player to choose a column
-     */
-    @Override
-    protected void show_askCardCoordinatesMainMsg() {
-        clearScreen();
-        printAsync("> Choose the x, y coordinates where to place the card. Insert the two numbers in the format 'x y': ");
     }
 
     @Override
@@ -608,16 +503,6 @@ public class TUI extends UI {
     public void show_insertNicknameMsg() {
         clearScreen();
         printAsyncNoCursorReset(ansi().cursor(DefaultValues.row_gameID, 0).a("> Insert your nickname: "));
-    }
-
-    /**
-     * Shows chosen nickname
-     *
-     * @param nickname nickname just chosen by the player
-     */
-    @Override
-    public void show_chosenNickname(String nickname) {
-        printAsync(ansi().cursor(DefaultValues.row_gameID + 2, 0).a("> Your nickname is: " + nickname));
     }
 
     /**
