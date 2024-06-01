@@ -17,12 +17,14 @@ import java.rmi.RemoteException;
 public class SocketClientMessageSendMessage extends SocketClientGenericMessage implements Serializable {
 
     private Message msg;
+    private String nick;
 
     /**
      * Constructor of the class.
      * @param msg the chat message to be sent
      */
-    public SocketClientMessageSendMessage(Message msg) {
+    public SocketClientMessageSendMessage(String nick, Message msg) {
+        this.nick = nick;
         this.msg = msg;
         this.isMessageForMainController = false;
     }
