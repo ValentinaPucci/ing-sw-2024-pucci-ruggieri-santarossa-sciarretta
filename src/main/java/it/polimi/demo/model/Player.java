@@ -143,7 +143,8 @@ public class Player implements PlayerIC, Serializable {
         card_hand.add(card);
     }
 
-    public List<ResourceCard> getCardHand(){ return card_hand; }
+    public List<ResourceCard> getCardHand() { return card_hand; }
+
     @Override
     public ArrayList<Integer> getCardHandIds(){
        ArrayList<Integer> cardHandIds = new ArrayList<>();

@@ -249,7 +249,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
 
     @Override
     public void sendMessage(String receiver, Message msg) throws IOException, NotBoundException {
-        ob_out.writeObject(new SocketClientMessageSendMessage(msg));
+        ob_out.writeObject(new SocketClientMessageSendMessage(receiver,msg));
         finishSending();
     }
 
