@@ -121,9 +121,8 @@ public class Player implements PlayerIC, Serializable {
     public List<StarterCard> getStarterCardToChose() { return this.starter_card_to_chose;}
 
     @Override
-    public Text getScoreBoardPosition() {
-        // todo: check
-        return null;
+    public int getScoreBoardPosition() {
+        return score_board_position;
     }
 
     public void setScoreBoardPosition(int score_board_position) {
