@@ -8,6 +8,7 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.networking.GameListenerHandlerClient;
 import it.polimi.demo.networking.HeartbeatSender;
+import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.socket.client.gameControllerMessages.*;
 import it.polimi.demo.networking.socket.client.mainControllerMessages.*;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage;
@@ -44,6 +45,10 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
      * This is the nickname associated with the client
      */
     private String nickname;
+
+    private GameControllerInterface gameController = null;
+
+    private int game_id;
     /**
      * This is the gameListner we use to perform every action requested by the server
      */
@@ -162,7 +167,7 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
         System.out.println("Nickname in Client socket [out]: " + nickname);
         ob_out.writeObject(new SocketClientMessageCreateGame(nickname, num_of_players));
         finishSending();
-        if(!socketHeartbeat.isAlive()) {
+        if (!socketHeartbeat.isAlive()) {
             socketHeartbeat.start();
         }
     }

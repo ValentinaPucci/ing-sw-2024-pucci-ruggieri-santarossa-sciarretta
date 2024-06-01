@@ -14,9 +14,8 @@ public class SocketClientMessageHeartBeat extends SocketClientGenericMessage imp
     public SocketClientMessageHeartBeat(String nick) {
         this.nick = nick;
         this.isMessageForMainController = false;
-        this.isHeartbeat=true;
+        this.isHeartbeat = true;
     }
-
 
     @Override
     public GameControllerInterface execute(GameListener lis, MainControllerInterface mainController) throws RemoteException {
@@ -25,6 +24,6 @@ public class SocketClientMessageHeartBeat extends SocketClientGenericMessage imp
 
     @Override
     public void execute(GameControllerInterface gameController) throws RemoteException, GameEndedException {
-        return;
+
     }
 }

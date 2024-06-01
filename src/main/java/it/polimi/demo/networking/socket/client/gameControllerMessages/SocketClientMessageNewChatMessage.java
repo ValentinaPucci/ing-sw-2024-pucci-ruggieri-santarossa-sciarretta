@@ -47,6 +47,6 @@ public class SocketClientMessageNewChatMessage extends SocketClientGenericMessag
      */
     @Override
     public void execute(GameControllerInterface gameController) throws RemoteException, GameEndedException {
-        //gameController.sentMessage(msg);
+        gameController.sendMessage(nick, msg);
     }
 }
