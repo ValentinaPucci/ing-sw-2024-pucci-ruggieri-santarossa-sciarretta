@@ -30,7 +30,6 @@ import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
  * by the RMI Network Protocol
  */
 public class RMIClient implements CommonClientActions {
-
     /**
      * The remote object returned by the registry that represents the main controller
      */
@@ -47,7 +46,6 @@ public class RMIClient implements CommonClientActions {
      * The nickname associated to the socket (!=null only when connected in a game)
      */
     private String nickname;
-
     private int game_id;
     /**
      * The remote object on which the server will invoke remote methods
@@ -57,7 +55,6 @@ public class RMIClient implements CommonClientActions {
      * Registry of the RMI
      */
     private Registry registry;
-
     /**
      * Flow to notify network error messages
      */
@@ -257,7 +254,6 @@ public class RMIClient implements CommonClientActions {
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
         requests.sendMessage(modelInvokedEvents, nick, msg, game_id);
     }
-
 
     /**
      * Request the reconnection of a player @param nick to a game @param idGame

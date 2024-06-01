@@ -1,6 +1,5 @@
 package it.polimi.demo.networking.socket.server;
 
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -24,11 +23,11 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
  * Handle all the incoming network requests that clients can require to create,join,leave or reconnect to a game<br>
  * by the Socket Network protocol
  */
-public class ClientHandler extends Thread implements Serializable {
+public class ClientHandler extends Thread implements Serializable{
     /**
      * Socket associated with the Client
      */
-    private final Socket clientSocket;
+    private final transient Socket clientSocket;
     /**
      * ObjectInputStream in
      */
@@ -134,8 +133,6 @@ public class ClientHandler extends Thread implements Serializable {
                             System.out.println("Prova 2: " + prova);
                             temp.execute(gameController);
                     }
-
-
                 }
         } catch (RemoteException | GameEndedException e) {
             throw new RuntimeException(e);

@@ -16,7 +16,7 @@ import java.util.Objects;
  * FileDisconnection is the class that manages the disconnection of the player
  * It reads and writes the game id from and to a file using json (JSONParser)
  */
-public class FileDisconnection {
+public class FileDisconnection implements Serializable {
     private final String path;
 
     /**

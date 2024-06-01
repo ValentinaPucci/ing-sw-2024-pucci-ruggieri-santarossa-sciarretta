@@ -240,7 +240,7 @@
                         <Font name="Luminari" size="19.0" />
                      </font>
                   </Text>
-                  <Text fill="#4d0202" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="161.5224609375" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                  <Text fx:id="p3Points" fill="#4d0202" strokeType="OUTSIDE" strokeWidth="0.0" text="0" textAlignment="CENTER" wrappingWidth="161.5224609375" GridPane.columnIndex="1" GridPane.rowIndex="3">
                      <font>
                         <Font name="Luminari" size="19.0" />
                      </font>

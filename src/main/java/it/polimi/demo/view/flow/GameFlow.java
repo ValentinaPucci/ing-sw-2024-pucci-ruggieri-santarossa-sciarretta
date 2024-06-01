@@ -14,8 +14,8 @@ import it.polimi.demo.view.flow.utilities.events.EventList;
 import it.polimi.demo.view.flow.utilities.events.EventType;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import it.polimi.demo.view.gui.GUI;
-import it.polimi.demo.view.text.TUI;
 import it.polimi.demo.networking.socket.client.ClientSocket;
+import it.polimi.demo.view.text.TUI;
 import org.fusesource.jansi.Ansi;
 
 import java.io.IOException;
@@ -47,7 +47,6 @@ import static it.polimi.demo.view.flow.utilities.events.EventType.*;
  * if not, the data is sent to the gameFlow, which will then perform an action accordingly (pick up tiles, place tiles, ecc)<br>
  */
 public class GameFlow extends Flow implements Runnable, CommonClientActions {
-
     /**
      * Nickname of the player {@link Player}
      */
@@ -677,6 +676,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         try {
             clientActions.createGame(nickname, num_of_players);
         } catch (IOException | InterruptedException | NotBoundException e) {
+            printAsync("Error in here, createGame gameFlow!");
             noConnectionError();
         }
     }
