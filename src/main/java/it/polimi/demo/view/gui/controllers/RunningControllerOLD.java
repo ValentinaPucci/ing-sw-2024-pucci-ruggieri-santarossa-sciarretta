@@ -285,7 +285,7 @@ public class RunningControllerOLD extends GenericController{
     public void setScoreBoard(GameModelImmutable model) {
         for(int i = 0; i < model.getPlayersConnected().size(); i++){
             ImageView piece = pieces.get(i);
-            movePieceToPosition(piece, (model.getPlayersConnected().get(i).getScoreBoardPosition()));
+            //movePieceToPosition(piece, (model.getPlayersConnected().get(i).getScoreBoardPosition()));
         }
     }
 

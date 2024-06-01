@@ -100,7 +100,7 @@ public interface CommonClientActions {
      * @param msg message
      * @throws RemoteException
      */
-    void sendMessage(String receiver, Message msg) throws RemoteException, NotBoundException;
+    void sendMessage(String receiver, Message msg) throws IOException, NotBoundException;
 
     /**
      * Pings the server

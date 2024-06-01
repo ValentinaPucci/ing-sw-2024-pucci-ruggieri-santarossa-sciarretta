@@ -122,7 +122,8 @@ public class Player implements PlayerIC, Serializable {
 
     @Override
     public Text getScoreBoardPosition() {
-        return score_board_position;
+        // todo: check
+        return null;
     }
 
     public void setScoreBoardPosition(int score_board_position) {

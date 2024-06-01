@@ -225,7 +225,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     @Override
     public void secondLastRound(GameModelImmutable gamemodel) throws RemoteException {
+        try {
+            out.writeObject(new msgSecondLastRound(gamemodel));
+            finishSending();
+        } catch (IOException e) {
 
+        }
     }
 
     /**
@@ -245,7 +250,13 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     @Override
     public void illegalMove(GameModelImmutable model) throws RemoteException {
+        try {
+            //Else the object is not updated!!
+            out.writeObject(new msgIllegalMove(model));
+            finishSending();
+        } catch (IOException e) {
 
+        }
     }
 
     //TODO: Maybe add message for placed card in wrong position.
@@ -318,7 +329,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     @Override
     public void messageSent(GameModelImmutable gameModel, String nickname, Message message) throws RemoteException {
+        try {
+            out.writeObject(new msgSentMessage(gameModel, message));
+            finishSending();
+        } catch (IOException e) {
 
+        }
     }
 
     /**

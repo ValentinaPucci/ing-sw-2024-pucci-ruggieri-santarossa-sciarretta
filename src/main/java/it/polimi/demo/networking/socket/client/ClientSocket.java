@@ -9,10 +9,7 @@ import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.networking.GameListenerHandlerClient;
 import it.polimi.demo.networking.HeartbeatSender;
 import it.polimi.demo.networking.socket.client.gameControllerMessages.*;
-import it.polimi.demo.networking.socket.client.mainControllerMessages.SocketClientMessageCreateGame;
-import it.polimi.demo.networking.socket.client.mainControllerMessages.SocketClientMessageJoinGame;
-import it.polimi.demo.networking.socket.client.mainControllerMessages.SocketClientMessageLeave;
-import it.polimi.demo.networking.socket.client.mainControllerMessages.SocketClientMessageReconnect;
+import it.polimi.demo.networking.socket.client.mainControllerMessages.*;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage;
 import it.polimi.demo.view.flow.CommonClientActions;
 import it.polimi.demo.view.flow.Flow;
@@ -182,7 +179,12 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
 
     @Override
     public void joinFirstAvailableGame(String nick) throws IOException, InterruptedException, NotBoundException {
-
+        nickname = nick;
+        ob_out.writeObject(new SocketClientMessageJoinFirstAvailableGame(nick));
+        finishSending();
+        if(!socketHeartbeat.isAlive()) {
+            socketHeartbeat.start();
+        }
     }
 
     @Override
@@ -211,12 +213,6 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
         finishSending();
     }
 
-//    @Override
-//    public void setAsReady() throws IOException {
-//        ob_out.writeObject(new SocketClientMessageSetReady(nickname));
-//        finishSending();
-//    }
-
     @Override
     public boolean isMyTurn() throws RemoteException {
         return false;
@@ -233,7 +229,6 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     public void chooseCard(int which_card) throws IOException {
         ob_out.writeObject(new SocketClientMessageChooseCard(which_card));
         finishSending();
-
     }
 
     @Override
@@ -249,8 +244,9 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     }
 
     @Override
-    public void sendMessage(String receiver, Message msg) throws RemoteException, NotBoundException {
-
+    public void sendMessage(String receiver, Message msg) throws IOException, NotBoundException {
+        ob_out.writeObject(new SocketClientMessageNewChatMessage(msg));
+        finishSending();
     }
 
 
