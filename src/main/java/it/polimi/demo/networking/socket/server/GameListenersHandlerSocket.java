@@ -20,7 +20,7 @@ import java.rmi.RemoteException;
  **/
 public class GameListenersHandlerSocket implements GameListener, Serializable {
 
-    private final ObjectOutputStream out;
+    private final transient ObjectOutputStream out;
 
     /**
      * This constructor creates a GameListenersHandlerSocket
@@ -225,7 +225,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     @Override
     public void secondLastRound(GameModelImmutable gamemodel) throws RemoteException {
+        try {
+            out.writeObject(new msgSecondLastRound(gamemodel));
+            finishSending();
+        } catch (IOException e) {
 
+        }
     }
 
     /**
@@ -245,11 +250,14 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     @Override
     public void illegalMove(GameModelImmutable model) throws RemoteException {
+        try {
+            //Else the object is not updated!!
+            out.writeObject(new msgIllegalMove(model));
+            finishSending();
+        } catch (IOException e) {
 
+        }
     }
-
-    //TODO: Maybe add message for placed card in wrong position.
-
 
     /**
      * This method is used to write on the ObjectOutputStream that the next turn is started
@@ -265,8 +273,6 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
         }
     }
-
-
 
     /**
      * This method is used to write on the ObjectOutputStream that a player has disconnected
@@ -318,7 +324,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     @Override
     public void messageSent(GameModelImmutable gameModel, String nickname, Message message) throws RemoteException {
+        try {
+            out.writeObject(new msgMessageSent(gameModel, nickname, message));
+            finishSending();
+        } catch (IOException e) {
 
+        }
     }
 
     /**

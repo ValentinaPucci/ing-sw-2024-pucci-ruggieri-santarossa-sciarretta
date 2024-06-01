@@ -5,13 +5,14 @@ import it.polimi.demo.networking.rmi.TaskOnNetworkDisconnection;
 import it.polimi.demo.view.flow.CommonClientActions;
 import it.polimi.demo.view.flow.Flow;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
-public class HeartbeatSender extends Thread {
+public class HeartbeatSender extends Thread implements Serializable {
 
     private Flow flow;
     private CommonClientActions server;

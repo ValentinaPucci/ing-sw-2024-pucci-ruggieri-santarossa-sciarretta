@@ -53,7 +53,7 @@ public class ClientHandler extends Thread implements Serializable{
      */
     private String nickname = null;
 
-    private final BlockingQueue<SocketClientGenericMessage> processingQueue = new LinkedBlockingQueue<>();
+    private final transient BlockingQueue<SocketClientGenericMessage> processingQueue = new LinkedBlockingQueue<>();
 
     /**
      * Handle all the network requests performed by a specific ClientSocket

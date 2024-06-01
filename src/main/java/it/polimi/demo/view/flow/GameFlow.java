@@ -772,6 +772,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             noConnectionError();
         } catch (NotBoundException e) {
             throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

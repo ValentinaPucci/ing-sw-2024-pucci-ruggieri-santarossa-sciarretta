@@ -11,19 +11,19 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 /**
- * SocketClientMessageNewChatMessage class.
+ * SocketClientMessageSendMessage class.
  * Extends SocketClientGenericMessage and is used to send a new chat message from the client to the server.
  */
-public class SocketClientMessageNewChatMessage extends SocketClientGenericMessage implements Serializable {
+public class SocketClientMessageSendMessage extends SocketClientGenericMessage implements Serializable {
+
     private Message msg;
 
     /**
      * Constructor of the class.
      * @param msg the chat message to be sent
      */
-    public SocketClientMessageNewChatMessage(Message msg) {
+    public SocketClientMessageSendMessage(Message msg) {
         this.msg = msg;
-        this.nick = msg.getSender().getNickname();
         this.isMessageForMainController = false;
     }
 
@@ -47,6 +47,6 @@ public class SocketClientMessageNewChatMessage extends SocketClientGenericMessag
      */
     @Override
     public void execute(GameControllerInterface gameController) throws RemoteException, GameEndedException {
-        //gameController.sentMessage(msg);
+        gameController.sendMessage(nick, msg);
     }
 }

@@ -11,7 +11,8 @@ import java.rmi.RemoteException;
  * Extends SocketServerGenericMessage and is used to send a message to the client
  * indicating that a chat message has been sent.
  */
-public class msgSentMessage extends SocketServerGenericMessage {
+public class msgMessageSent extends SocketServerGenericMessage {
+    private String nick;
     private Message msg;
     private GameModelImmutable gameModel;
 
@@ -20,7 +21,8 @@ public class msgSentMessage extends SocketServerGenericMessage {
      * @param gameModel the immutable game model
      * @param msg the sent chat message
      */
-    public msgSentMessage(GameModelImmutable gameModel, Message msg) {
+    public msgMessageSent(GameModelImmutable gameModel, String nickname, Message msg) {
+        this.nick = nickname;
         this.gameModel = gameModel;
         this.msg = msg;
     }
@@ -32,6 +34,6 @@ public class msgSentMessage extends SocketServerGenericMessage {
      */
     @Override
     public void execute(GameListener lis) throws RemoteException {
-        //lis.sentMessage(gameModel, msg);
+        lis.messageSent(gameModel, nick, msg);
     }
 }

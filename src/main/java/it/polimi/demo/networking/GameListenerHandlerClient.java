@@ -88,7 +88,6 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     @Override
     public void gameStarted(GameModelImmutable gamemodel) throws RemoteException {
         flow.gameStarted(gamemodel);
-        //setModel(gamemodel);
     }
 
     @Override

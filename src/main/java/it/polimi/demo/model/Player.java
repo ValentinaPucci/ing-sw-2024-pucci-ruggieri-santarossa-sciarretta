@@ -7,6 +7,7 @@ import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.interfaces.ResourceCardIC;
+import javafx.scene.text.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
