@@ -56,9 +56,12 @@ public class CardsCollectionTest {
         // Call the method under test
         cardsCollection.populateDeckObjective(jsonFilePath);
 
+        for (Card card : cardsCollection.cards) {
+            System.out.println(card.toString());
+        }
+
         // Check that cards have been added to the collection
         assertTrue(cardsCollection.size()  ==  16);
-
     }
 
     @Test

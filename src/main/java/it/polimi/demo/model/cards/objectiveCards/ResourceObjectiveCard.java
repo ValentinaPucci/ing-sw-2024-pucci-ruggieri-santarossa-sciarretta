@@ -55,4 +55,14 @@ public class ResourceObjectiveCard extends ObjectiveCard {
                 * this.getPoints();
     }
 
+    @Override
+    public String toString() {
+        return "ResourceObjectiveCard{" +
+                "num_mushrooms=" + num_mushrooms +
+                ", num_leaves=" + num_leaves +
+                ", num_butterflies=" + num_butterflies +
+                ", num_wolves=" + num_wolves +
+                '}';
+    }
+
 }
