@@ -21,7 +21,7 @@ public class numPlayersController extends GenericController {
         System.out.println("PlayerSelection: twoPLayers "+ actionEvent);
         inputReaderGUI reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("3");
+            reader.addTxt("2");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -42,7 +42,7 @@ public class numPlayersController extends GenericController {
         System.out.println("PlayerSelection: fourPLayers "+ actionEvent);
         inputReaderGUI reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("3");
+            reader.addTxt("4");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }

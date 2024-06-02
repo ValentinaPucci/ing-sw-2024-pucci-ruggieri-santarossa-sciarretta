@@ -112,11 +112,16 @@ public class GameModel implements Serializable {
      */
     public synchronized void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
+        System.out.println("p.setAsReadyToStart() in gameModel");
         listeners_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
+        System.out.println("arePlayersReadyToStartAndEnough: " + arePlayersReadyToStartAndEnough());
         if (arePlayersReadyToStartAndEnough()) {
             extractFirstPlayerToPlay();
+            System.out.println("first player to play extracted");
             initializeGame();
+            System.out.println("game initialized");
             setStatus(GameStatus.FIRST_ROUND);
+            System.out.println("FIRST_ROUND SET");
         }
     }
 
@@ -134,7 +139,6 @@ public class GameModel implements Serializable {
      */
     public boolean arePlayersReadyToStartAndEnough() {
         List<Player> p = players_connected.stream().filter(Player::getReadyToStart).toList();
-        // If every player is ready, the game starts
         return p.containsAll(players_connected) && p.size() == num_required_players_to_start;
     }
 
@@ -291,10 +295,8 @@ public class GameModel implements Serializable {
     // todo: check if it is correct
     public void connectPlayerInOrder(Player p) {
         // index of previous player in aux_order_players
-
         Player q;
         int index_to_add = -1;
-
         if (!aux_order_players.contains(p)) {
             throw new IllegalArgumentException("Trying to connect a player which is not in the game!");
         }

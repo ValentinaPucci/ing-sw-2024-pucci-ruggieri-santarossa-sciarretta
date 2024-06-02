@@ -202,4 +202,6 @@ public abstract class UI {
 
 
     protected abstract void show_chosenNickname(String nickname);
+
+    protected abstract void show_nextTurn(GameModelImmutable model, String nickname);
 }

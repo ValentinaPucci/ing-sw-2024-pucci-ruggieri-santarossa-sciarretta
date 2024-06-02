@@ -446,6 +446,11 @@ public class TUI extends UI {
 
     }
 
+    @Override
+    protected void show_nextTurn(GameModelImmutable model, String nickname) {
+
+    }
+
     /**
      * Asks the player to pick a direction
      */

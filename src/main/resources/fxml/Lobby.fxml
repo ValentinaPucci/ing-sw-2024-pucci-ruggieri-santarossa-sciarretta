@@ -64,7 +64,7 @@
                 <Pane fx:id="pane2" layoutX="670.0" layoutY="200.0" prefHeight="418.0" prefWidth="286.0" style="-fx-background-color: white;" />
                 <Pane fx:id="pane3" layoutX="980.0" layoutY="200.0" prefHeight="418.0" prefWidth="286.0" style="-fx-background-color: white;" />
                 <!-- Testo nascosto all'inizio  (SOSTITUISCE I PANE READY)-->
-                <Text fill="#4d0202" layoutX="500.0" layoutY="710.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Waiting for the other players..." textAlignment="CENTER" visible="false" wrappingWidth="400.0">
+                <Text fill="#4d0202" layoutX="500.0" layoutY="710.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Waiting for the other players to be ready..." textAlignment="CENTER" visible="false" wrappingWidth="400.0">
                     <font>
                         <Font name="Luminari" size="30.0" />
                     </font>

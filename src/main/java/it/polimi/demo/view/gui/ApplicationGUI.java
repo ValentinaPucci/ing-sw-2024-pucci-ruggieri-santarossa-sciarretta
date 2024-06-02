@@ -56,7 +56,6 @@ public class ApplicationGUI extends Application {
     }
 
     private void loadScenes() {
-        // Carica tutte le scene disponibili da mostrare durante il gioco
         scenes = new ArrayList<>();
         FXMLLoader loader;
         Parent root;
@@ -64,22 +63,17 @@ public class ApplicationGUI extends Application {
 
         for (int i = 0; i < SceneType.values().length; i++) {
             String fxmlPath = SceneType.values()[i].value();
-
             if (fxmlPath == null || fxmlPath.isEmpty()) {
                 System.err.println("Percorso FXML non impostato per: " + SceneType.values()[i]);
                 continue;
             }
-
             loader = new FXMLLoader(getClass().getResource(fxmlPath));
-
             try {
                 root = loader.load();
-
                 gc = loader.getController();
             } catch (IOException e) {
                 throw new RuntimeException("Errore nel caricamento di " + fxmlPath, e);
             }
-
             scenes.add(new SceneInfo(new Scene(root), SceneType.values()[i], gc));
         }
     }
@@ -173,7 +167,7 @@ public class ApplicationGUI extends Application {
 
 
 
-    //----------LOBBY------------------------------------------------------------------------
+    //-----------------------------LOBBY------------------------------------------------------------------------
     /**
      * This method is used to hide the panes in the lobby.
      */
@@ -234,24 +228,32 @@ public class ApplicationGUI extends Application {
      * This method hide the btn "Ready to start".
      */
     public void disableBtnReadyToStart() {
-        //I set not visible the btn "Ready to start"
         ((LobbyController) scenes.get(getSceneIndex(SceneType.LOBBY)).getGenericController()).setVisibleBtnReady(false);
     }
 
-//
-//    //chiamato da GUI
-//    // AGGIORNA IL RUNNING CONTROLLER CON I NUOVI DATI DEL MODEL
-//    public void showRunningModel(GameModelImmutable model, String nickname) {
-//        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-//        controller.setCardHand(model, nickname);
-//        controller.setScoreBoardPosition(model);
-//        controller.setPlayersPointsAndNicknames(model, nickname);
-//        controller.setCommonCards(model);
-//        controller.setPersonalObjectives(model, nickname);
-//        controller.setCardHand(model, nickname);
-//        //TODO: controller.setPersonalBoard(model, nickname);
-//        //TODO: controller.setOthersPersonalBoard(model, nickname);
-//    }
+    /**
+     * This method is used to show a generic error.
+     * @param msg the message
+     */
+    public void showErrorGeneric(String msg) {
+//        ErrorController controller = (ErrorController) scenes.get(getSceneIndex(SceneType.ERROR)).getGenericController();
+//        controller.setMsg(msg,false);
+    }
+
+
+    //chiamato da GUI
+    // AGGIORNA IL RUNNING CONTROLLER CON I NUOVI DATI DEL MODEL
+    public void showRunningModel(GameModelImmutable model, String nickname) {
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+        controller.setCardHand(model, nickname);
+        //controller.setStarterCardFront(model, nickname);
+        controller.setScoreBoardPosition(model);
+        controller.setPlayersPointsAndNicknames(model, nickname);
+        controller.setCommonCards(model);
+        controller.setPersonalObjectives(model, nickname);
+        //TODO: controller.setPersonalBoard(model, nickname);
+        //TODO: controller.setOthersPersonalBoard(model, nickname);
+    }
 //
 //    /**
 //     * This method is used to show the player grabbed tiles.
@@ -285,15 +287,15 @@ public class ApplicationGUI extends Application {
 //        //TODO: controller.changeTurn(model, nickname);
 //    }
 //
-//    /**
-//     * This method is used to show the message in the game.
-//     * @param model the model {@link GameModelImmutable}
-//     * @param myNickname the nickname of the player
-//     */
-//    public void showMessages(GameModelImmutable model, String myNickname) {
-////        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-////        controller.setMessage(model.getChat().getMsgs(), myNickname);
-//    }
+    /**
+     * This method is used to show the message in the game.
+     * @param model the model {@link GameModelImmutable}
+     * @param myNickname the nickname of the player
+     */
+    public void showMessages(GameModelImmutable model, String myNickname) {
+        //RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+        //controller.setMessage(model.getChat().getMsgs(), myNickname);
+    }
 
     /**
      * This method is used to show all the important events.
@@ -308,19 +310,10 @@ public class ApplicationGUI extends Application {
      * This method is used to create a window with a specific style.
      */
     public void createNewWindowWithStyle() {
-        // Crea una nuova finestra con lo stile desiderato
         Stage newStage = new Stage();
-
-        // Copia la scena dalla finestra precedente
         newStage.setScene(this.primaryStage.getScene());
-
-        // Mostra la nuova finestra
         newStage.show();
-
-        // Chiudi la finestra precedente
         this.primaryStage.close();
-
-        // Imposta la nuova finestra come primaryStage
         this.primaryStage = newStage;
         this.primaryStage.centerOnScreen();
         this.primaryStage.setAlwaysOnTop(true);
@@ -341,4 +334,9 @@ public class ApplicationGUI extends Application {
         ErrorController controller = (ErrorController) scenes.get(getSceneIndex(ERROR)).getGenericController();
     }
 
+    public void changeTurn(GameModelImmutable model, String nickname) {
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+        controller.setPlayersPointsAndNicknames(model, nickname);
+        controller.changeTurn(model, nickname);
+    }
 }

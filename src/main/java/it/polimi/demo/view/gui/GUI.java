@@ -47,15 +47,12 @@ public class GUI extends UI {
         alreadyShowedPublisher = true;
     }
 
-
-
     @Override
     protected void show_menuOptions() {
         if (alreadyShowedPublisher) {
             callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.inputReaderGUI));//So the controllers can add text to the buffer for the gameflow
             callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
             callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
-            System.out.println("show_menuOptions");
         }
     }
 
@@ -89,14 +86,30 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.NUM_PLAYERS));
     }
 
+    /**
+     * This method show that the game has started
+     *
+     * @param model model where the game has started
+     */
     @Override
     protected void show_gameStarted(GameModelImmutable model) {
-
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.RUNNING));
+        callPlatformRunLater(() -> this.guiApplication.showRunningModel(model, nickname));
     }
 
     @Override
     protected void show_chosenNickname(String nickname) {
+        this.nickname = nickname;
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.LOBBY));
+    }
+
+    @Override
+    protected void show_nextTurn(GameModelImmutable model, String nickname) {
+        if (!alreadyShowedLobby) {
+            show_gameStarted(model);
+            alreadyShowedLobby = true;
+        }
+        callPlatformRunLater(() -> this.guiApplication.changeTurn(model, nickname));
     }
 
 
@@ -104,10 +117,10 @@ public class GUI extends UI {
      * this method show that the player is ready to start
      *
      * @param gameModel     model where events happen
-     * @param nicknameofyou player's nickname
+     * @param nickname player's nickname
      */
     @Override
-    protected void show_ReadyToStart(GameModelImmutable gameModel, String nicknameofyou) {
+    protected void show_ReadyToStart(GameModelImmutable gameModel, String nickname) {
         callPlatformRunLater(() -> this.guiApplication.disableBtnReadyToStart());
     }
 
@@ -130,17 +143,13 @@ public class GUI extends UI {
     @Override
     protected void show_playerJoined(GameModelImmutable gameModel, String nick) {
         if (!alreadyShowedLobby) {
-            PauseTransition pause = new PauseTransition(Duration.seconds(1));
-            pause.setOnFinished(event -> {
-                callPlatformRunLater(() -> ((LobbyController) this.guiApplication.getController(SceneType.LOBBY)).setNicknameLabel(nick));
-                callPlatformRunLater(() -> ((LobbyController) this.guiApplication.getController(SceneType.LOBBY)).setGameId(gameModel.getGameId()));
+            this.nickname = nick;
+            callPlatformRunLater(() -> ((LobbyController) this.guiApplication.getController(SceneType.LOBBY)).setNicknameLabel(nick));
+            callPlatformRunLater(() -> ((LobbyController) this.guiApplication.getController(SceneType.LOBBY)).setGameId(gameModel.getGameId()));
 
-                callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.LOBBY));
-                callPlatformRunLater(() -> this.guiApplication.showPlayerToLobby(gameModel));
-                alreadyShowedLobby = true;
-            });
-            pause.play();
-
+            callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.LOBBY));
+            callPlatformRunLater(() -> this.guiApplication.showPlayerToLobby(gameModel));
+            alreadyShowedLobby = true;
         } else {
             //The player is in lobby and another player has joined
             callPlatformRunLater(() -> this.guiApplication.showPlayerToLobby(gameModel));

@@ -9,7 +9,7 @@ public enum SceneType {
     PLAYER_LOBBY_3("/fxml/PlayerLobby3.fxml"),
     PLAYER_LOBBY_4("/fxml/PlayerLobby4.fxml"),
     ID_GAME("/fxml/IDgame.fxml"),
-    RUNNING("/fxml/RunningOLD.fxml"),
+    RUNNING("/fxml/Running.fxml"),
     GAME_OVER("/fxml/GameOver.fxml"),
     ERROR("/fxml/Error.fxml"),
     NUM_PLAYERS("/fxml/NumPlayers.fxml");

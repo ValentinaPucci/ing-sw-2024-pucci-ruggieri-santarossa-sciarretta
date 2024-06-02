@@ -207,9 +207,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      *              it says if he's just joined or if he's been kicked and why
      */
     private void statusNotInAGame(EventElement event) {
-
         switch (event.getType()) {
-
             case APP_MENU -> {
                 boolean selectionok;
                 do {
@@ -273,12 +271,14 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 //            }
 
             case GAME_STARTED -> {
+                System.out.println("status: GAME_STARTED");
                 ui.show_gameStarted(event.getModel());
                 this.inputParser.setPlayer(event.getModel().getPlayerEntity(nickname));
                 this.inputParser.setIdGame(event.getModel().getGameId());
             }
 
             case NEXT_TURN -> {
+                ui.show_nextTurn(event.getModel(), nickname);
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
                     ui.show_objectiveCards(event.getModel());
                     askWhichObjectiveCard();
@@ -417,7 +417,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        System.out.println("Nickname Selected:"+ nickname);
         ui.show_chosenNickname(nickname);
     }
 
@@ -461,7 +460,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
         try {
             optionChoose = this.inputParser.getDataToProcess().popData();
-            System.out.println("optionChoose: " + optionChoose);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -490,7 +488,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                     return false;
                 else{
                     this.game_id = gameId;
-                    System.out.println("Chosen id: " + gameId);
                     askNickname();
                     joinGame(nickname, gameId);
                 }
@@ -919,6 +916,9 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void playerIsReadyToStart(GameModelImmutable gameModel, String nick) throws IOException {
         ui.show_playerJoined(gameModel, nickname);
+        if (nick.equals(nickname)) {
+            ui.show_ReadyToStart(gameModel, nickname);
+        }
         events.add(gameModel, PLAYER_IS_READY_TO_START);
     }
 

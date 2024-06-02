@@ -1,10 +1,10 @@
 package it.polimi.demo.view.gui.controllers;
 
+import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
@@ -12,6 +12,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -19,8 +20,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class RunningController extends GenericController{
-
-
     @FXML public Label myPoints;
     @FXML public Text p2Points;
     @FXML public Text p1Points;
@@ -28,8 +27,10 @@ public class RunningController extends GenericController{
     @FXML public Label playerLabel1;
     @FXML public Label playerLabel2;
     @FXML public Label playerLabel3;
-    public ArrayList<Text> othersPoints;
-    public ArrayList<Label> othersNicknames;
+    public ArrayList<Text> othersPoints = new ArrayList<>();
+    public ArrayList<Label> othersNicknames = new ArrayList<>();
+
+    @FXML public ImageView StarterCardImage;
 
     @FXML private AnchorPane mainAnchor;
     @FXML public ImageView personalObjective0;
@@ -41,97 +42,97 @@ public class RunningController extends GenericController{
     @FXML private Pane scoreBoardPane;
     private Orientation cardHandOrientation;
     private Orientation starterCardOrientation;
-    private ArrayList<Integer> cardHand;
-    @FXML private ListView<String> eventsListView;  //TODO: DA CAPIRE X RIUSCIRE A COLLEGARLA AL MODEL -> I METODI NON LI HO ANCORA CREATI QUA
+    private ArrayList<Integer> cardHand = new ArrayList<>();
+     @FXML
+     private ListView<String> eventsListView;
     private ImageView pieceBlackImageView;
     private ArrayList<ImageView> pieces;
-    private Pane[] bnPanes;
-    @FXML private Pane bn0;
-    @FXML private Pane bn1;
-    @FXML private Pane bn2;
-    @FXML private Pane bn3;
-    @FXML private Pane bn4;
-    @FXML private Pane bn5;
-    @FXML private Pane bn6;
-    @FXML private Pane bn7;
-    @FXML private Pane bn8;
-    @FXML private Pane bn9;
-    @FXML private Pane bn10;
-    @FXML private Pane bn11;
-    @FXML private Pane bn12;
-    @FXML private Pane bn13;
-    @FXML private Pane bn14;
-    @FXML private Pane bn15;
-    @FXML private Pane bn16;
-    @FXML private Pane bn17;
-    @FXML private Pane bn18;
-    @FXML private Pane bn19;
-    @FXML private Pane bn20;
-    @FXML private Pane bn21;
-    @FXML private Pane bn22;
-    @FXML private Pane bn23;
-    @FXML private Pane bn24;
-    @FXML private Pane bn25;
-    @FXML private Pane bn26;
-    @FXML private Pane bn27;
-    @FXML private Pane bn28;
-    @FXML private Pane bn29;
-
+    @FXML
+    private Label labelMessage;
+    private final ImageView[] bnImageViews = new ImageView[30];
+    @FXML private ImageView bn0;
+    @FXML private ImageView bn1;
+    @FXML private ImageView bn2;
+    @FXML private ImageView bn3;
+    @FXML private ImageView bn4;
+    @FXML private ImageView bn5;
+    @FXML private ImageView bn6;
+    @FXML private ImageView bn7;
+    @FXML private ImageView bn8;
+    @FXML private ImageView bn9;
+    @FXML private ImageView bn10;
+    @FXML private ImageView bn11;
+    @FXML private ImageView bn12;
+    @FXML private ImageView bn13;
+    @FXML private ImageView bn14;
+    @FXML private ImageView bn15;
+    @FXML private ImageView bn16;
+    @FXML private ImageView bn17;
+    @FXML private ImageView bn18;
+    @FXML private ImageView bn19;
+    @FXML private ImageView bn20;
+    @FXML private ImageView bn21;
+    @FXML private ImageView bn22;
+    @FXML private ImageView bn23;
+    @FXML private ImageView bn24;
+    @FXML private ImageView bn25;
+    @FXML private ImageView bn26;
+    @FXML private ImageView bn27;
+    @FXML private ImageView bn28;
+    @FXML private ImageView bn29;
+    private int starterCard;
 
 
     public void initialize() {
         pieces = new ArrayList<>();
-        ImageView piece1ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/pieces/piece1.png"))));
-        ImageView piece2ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/pieces/piece2.png"))));
-        ImageView piece3ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/pieces/piece3.png"))));
-        ImageView piece4ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/pieces/piece4.png"))));
+        ImageView piece1ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece1.png"))));
+        ImageView piece2ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece2.png"))));
+        ImageView piece3ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece3.png"))));
+        ImageView piece4ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece4.png"))));
 
         pieces.add(0, piece1ImageView);
         pieces.add(1, piece2ImageView);
         pieces.add(2, piece3ImageView);
         pieces.add(3, piece4ImageView);
 
-        pieceBlackImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/pieces/piece0.png"))));
+        pieceBlackImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece0.png"))));
 
-        bnPanes[0] = bn0;
-        bnPanes[1] = bn1;
-        bnPanes[2] = bn2;
-        bnPanes[3] = bn3;
-        bnPanes[4] = bn4;
-        bnPanes[5] = bn5;
-        bnPanes[6] = bn6;
-        bnPanes[7] = bn7;
-        bnPanes[8] = bn8;
-        bnPanes[9] = bn9;
-        bnPanes[10] = bn10;
-        bnPanes[11] = bn11;
-        bnPanes[12] = bn12;
-        bnPanes[13] = bn13;
-        bnPanes[14] = bn14;
-        bnPanes[15] = bn15;
-        bnPanes[16] = bn16;
-        bnPanes[17] = bn17;
-        bnPanes[18] = bn18;
-        bnPanes[19] = bn19;
-        bnPanes[20] = bn20;
-        bnPanes[21] = bn21;
-        bnPanes[22] = bn22;
-        bnPanes[23] = bn23;
-        bnPanes[24] = bn24;
-        bnPanes[25] = bn25;
-        bnPanes[26] = bn26;
-        bnPanes[27] = bn27;
-        bnPanes[28] = bn28;
-        bnPanes[29] = bn29;
+        bnImageViews[0] = bn0;
+        bnImageViews[1] = bn1;
+        bnImageViews[2] = bn2;
+        bnImageViews[3] = bn3;
+        bnImageViews[4] = bn4;
+        bnImageViews[5] = bn5;
+        bnImageViews[6] = bn6;
+        bnImageViews[7] = bn7;
+        bnImageViews[8] = bn8;
+        bnImageViews[9] = bn9;
+        bnImageViews[10] = bn10;
+        bnImageViews[11] = bn11;
+        bnImageViews[12] = bn12;
+        bnImageViews[13] = bn13;
+        bnImageViews[14] = bn14;
+        bnImageViews[15] = bn15;
+        bnImageViews[16] = bn16;
+        bnImageViews[17] = bn17;
+        bnImageViews[18] = bn18;
+        bnImageViews[19] = bn19;
+        bnImageViews[20] = bn20;
+        bnImageViews[21] = bn21;
+        bnImageViews[22] = bn22;
+        bnImageViews[23] = bn23;
+        bnImageViews[24] = bn24;
+        bnImageViews[25] = bn25;
+        bnImageViews[26] = bn26;
+        bnImageViews[27] = bn27;
+        bnImageViews[28] = bn28;
+        bnImageViews[29] = bn29;
 
-        scoreBoardPane.getChildren().add(piece1ImageView);
-        movePieceToPositionZero(piece1ImageView, bnPanes[0]);
-        scoreBoardPane.getChildren().add(piece2ImageView);
-        movePieceToPositionZero(piece2ImageView, bnPanes[0]);
-        scoreBoardPane.getChildren().add(piece3ImageView);
-        movePieceToPositionZero(piece3ImageView, bnPanes[0]);
-        scoreBoardPane.getChildren().add(piece4ImageView);
-        movePieceToPositionZero(piece4ImageView, bnPanes[0]);
+        bnImageViews[0].setImage(pieces.get(0).getImage());
+        bn0.setImage(pieces.get(0).getImage());
+        bn0.setImage(pieces.get(1).getImage());
+        bn0.setImage(pieces.get(2).getImage());
+        bn0.setImage(pieces.get(3).getImage());
 
         for (int i = 0; i < 6; i++) {
             ImageView imageView = new ImageView();
@@ -165,9 +166,9 @@ public class RunningController extends GenericController{
         starterCardView.setImage(null);
         starterCardPane.getChildren().add(starterCardView);
 
-        cardHand.set(0, 0);
-        cardHand.set(1, 0);
-        cardHand.set(2, 0);
+        cardHand.add(0);
+        cardHand.add(0);
+        cardHand.add(0);
 
         othersPoints.add(p1Points);
         othersPoints.add(p2Points);
@@ -198,13 +199,13 @@ public class RunningController extends GenericController{
     // Method to move a piece to a new Pane
     private void movePieceToPosition(GameModelImmutable model, int player_index, int indexToGo) {
 
-        Pane targetPane = bnPanes[indexToGo];
+        ImageView targetPane = bnImageViews[indexToGo];
         ImageView piece = pieces.get(player_index);
         Pane parent = (Pane) piece.getParent();
         if (parent != null) {
             parent.getChildren().remove(piece);
         }
-        targetPane.getChildren().add(piece);
+        targetPane.setImage(piece.getImage());
     }
 
     public void setPlayersPointsAndNicknames(GameModelImmutable model, String nickname) {
@@ -226,19 +227,15 @@ public class RunningController extends GenericController{
         Integer[] cardIds = model.getCommonBoard().getCommonCardsId();
         for (int i = 0; i < cardIds.length; i++) {
             int cardId = cardIds[i];
-            ImageView imageView;
-            Image image;
-            imageView = new ImageView();
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(70);
-
-            if (i == 0 || i == 2 || i == 4 || i == 5) { //(sono in un deck -> voglio il BACK)
-                image = new Image("cards_back/" + cardId + ".png"); // Assicurati di includere l'estensione del file (es. ".png")
-            } else { //(sono in una carta -> voglio il FRONT)
-                image = new Image("cards_front/" + cardId + ".png"); // Assicurati di includere l'estensione del file (es. ".png")
+            String imagePath;
+            if (i == 0 || i == 2) { // sono in un deck -> voglio il BACK
+                imagePath = "/images/cards/cards_back/" + String.format("%03d", cardId) + ".png";
+            } else { // sono in una carta -> voglio il FRONT
+                imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
             }
-
-            imageView.setImage(image);
+            ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+            imageView.setFitWidth(90); // Imposta la larghezza desiderata
+            imageView.setFitHeight(65); // Imposta l'altezza desiderata
             int column = i % 2;
             int row = i / 2;
             commonCardsPane.add(imageView, column, row);
@@ -251,22 +248,49 @@ public class RunningController extends GenericController{
         Integer[] cardIds = model.getPlayerEntity(nickname).getSecretObjectiveCardsIds();
         for (int i = 0; i < cardIds.length; i++) {
             int cardId = cardIds[i];
-            Image image = new Image("cards_front/"+ cardId); // Aggiungi l'id della carta al percorso
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(50); // Imposta la larghezza desiderata
-            imageView.setFitHeight(70); // Imposta l'altezza desiderata
-            if (i == 0)
+            String imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
+            ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+            imageView.setFitWidth(90); // Imposta la larghezza desiderata
+            imageView.setFitHeight(65); // Imposta l'altezza desiderata
+            if (i == 0) {
                 personalObjectivesPane.add(imageView, 0, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
-            else
-                personalObjectivesPane.add(imageView, 0, 1); // Aggiungi l'immagine alla griglia nella posizione corretta
+            } else {
+                personalObjectivesPane.add(imageView, 1, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
+            }
         }
     }
 
+//    public void setStarterCardFront(GameModelImmutable model, String nickname) {
+//        this.starterCard = model.getPlayerEntity(nickname).getStarterCard().getId();
+//        int cardId = model.getPlayerEntity(nickname).getStarterCard().getId();
+//        String imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
+//        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+//        imageView.setFitWidth(90); // Imposta la larghezza desiderata
+//        imageView.setFitHeight(65); // Imposta l'altezza desiderata
+//        StarterCardImage.setImage(imageView.getImage());
+//    }
+
+//    public void setStarterCardBack(GameModelImmutable model, String nickname) {
+//        int cardId = model.getPlayerEntity(nickname).getStarterCard().getId();
+//        String imagePath = "/images/cards/cards_back/" + String.format("%03d", cardId) + ".png";
+//        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+//        imageView.setFitWidth(90); // Imposta la larghezza desiderata
+//        imageView.setFitHeight(65); // Imposta l'altezza desiderata
+//        StarterCardImage.setImage(imageView.getImage());
+//    }
+
+//    public void flipStarterCard() {
+//        if (starterCardOrientation == Orientation.BACK)
+//            setStarterCardFront(starterCard);
+//        else
+//            setStarterCardBack(starterCard);
+//    }
+
     public void flipPersonalObjective(int cardId, int i) {
-        Image image = new Image("cards_back/"+ cardId); // Aggiungi l'id della carta al percorso
+        Image image = new Image("/images/cards/cards_back/"+String.format("%03d", cardId) + ".png"); // Aggiungi l'id della carta al percorso
         ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(50); // Imposta la larghezza desiderata
-        imageView.setFitHeight(70); // Imposta l'altezza desiderata
+        imageView.setFitWidth(90); // Imposta la larghezza desiderata
+        imageView.setFitHeight(65); // Imposta l'altezza desiderata
         if (i == 0)
             personalObjectivesPane.add(imageView, 0, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
         else
@@ -280,11 +304,12 @@ public class RunningController extends GenericController{
     public void setCardHandFront(ArrayList<Integer> cardIds) {
         for (int i = 0; i < cardIds.size(); i++) {
             cardHand.set(i, cardIds.get(i));
-            Image image = new Image("cards_front/"+ cardIds.get(i)); // Aggiungi l'id della carta al percorso
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(50); // Imposta la larghezza desiderata
-            imageView.setFitHeight(70); // Imposta l'altezza desiderata
-            cardHandPane.add(imageView, 0, i); // Aggiungi l'immagine alla griglia nella posizione corretta
+            String formattedCardId = String.format("%03d", cardIds.get(i));
+            String imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
+            ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+            imageView.setFitWidth(90); // Imposta la larghezza desiderata
+            imageView.setFitHeight(65); // Imposta l'altezza desiderata
+            cardHandPane.add(imageView, i, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
         }
         cardHandOrientation = Orientation.FRONT;
     }
@@ -292,17 +317,18 @@ public class RunningController extends GenericController{
     public void setCardHandBack(ArrayList<Integer> cardIds) {
         for (int i = 0; i < cardIds.size(); i++) {
             cardHand.set(i, cardIds.get(i));
-            Image image = new Image("cards_back/"+ cardIds.get(i)); // Aggiungi l'id della carta al percorso
-            ImageView imageView = new ImageView(image);
-            imageView.setFitWidth(50); // Imposta la larghezza desiderata
-            imageView.setFitHeight(70); // Imposta l'altezza desiderata
-            cardHandPane.add(imageView, 0, i); // Aggiungi l'immagine alla griglia nella posizione corretta
+            String formattedCardId = String.format("%03d", cardIds.get(i));
+            String imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
+            ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+            imageView.setFitWidth(90); // Imposta la larghezza desiderata
+            imageView.setFitHeight(65); // Imposta l'altezza desiderata
+            cardHandPane.add(imageView, i, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
         }
         cardHandOrientation = Orientation.BACK;
     }
 
     public void setStarterCardFront(int cardId) {
-        Image starterCardView = new Image("cards_front/"+ cardId); // Aggiungi l'id della carta al percorso
+        Image starterCardView = new Image("/images/cards/cards_front/"+ String.format("%03d", cardId) + ".png"); // Aggiungi l'id della carta al percorso
         ImageView imageView = new ImageView(starterCardView);
         imageView.setFitWidth(50); // Imposta la larghezza desiderata
         imageView.setFitHeight(70); // Imposta l'altezza desiderata
@@ -311,7 +337,7 @@ public class RunningController extends GenericController{
     }
 
     public void setStarterCardBack(int cardId) {
-        Image starterCardView = new Image("cards_back/"+ cardId); // Aggiungi l'id della carta al percorso
+        Image starterCardView = new Image("/images/cards/cards_back/"+ String.format("%03d", cardId) + ".png"); // Aggiungi l'id della carta al percorso
         ImageView imageView = new ImageView(starterCardView);
         imageView.setFitWidth(50); // Imposta la larghezza desiderata
         imageView.setFitHeight(70); // Imposta l'altezza desiderata
@@ -339,7 +365,7 @@ public class RunningController extends GenericController{
     //quando inserisco una carta in mano la inserisco in posizione 0
     public void modifyCardHandFront(int cardId) {
         cardHand.set(0, cardId);
-        Image image = new Image("cards_front/"+ cardId); // Aggiungi l'id della carta al percorso
+        Image image = new Image("/images/cards/cards_front/"+ String.format("%03d", cardId) + ".png"); // Aggiungi l'id della carta al percorso
         ImageView imageView = new ImageView(image);
         imageView.setFitWidth(50); // Imposta la larghezza desiderata
         imageView.setFitHeight(70); // Imposta l'altezza desiderata
@@ -366,8 +392,25 @@ public class RunningController extends GenericController{
         eventsListView.scrollTo(eventsListView.getItems().size());
     }
 
+    /**
+     * This method manage the change of turn
+     * @param model
+     * @param nickname
+     */
+    public void changeTurn(GameModelImmutable model, String nickname) {
+        setMsgToShow("Next turn is up to: " + model.getCurrentPlayerNickname(), true);
+    }
 
-
+    public void setMsgToShow(String msg, Boolean success) {
+        labelMessage.setText(msg);
+        if (success == null) {
+            labelMessage.setTextFill(Color.WHITE);
+        } else if (success) {
+            labelMessage.setTextFill(Color.GREEN);
+        } else {
+            labelMessage.setTextFill(Color.RED);
+        }
+    }
 }
 
 

@@ -156,6 +156,7 @@ public class MainController implements MainControllerInterface, Serializable {
     @Override
     public synchronized GameControllerInterface setAsReady(GameListener listener, String nickname, int gameId)
             throws RemoteException {
+        System.out.println("Sono in MainController");
         games.get(gameId).playerIsReadyToStart(nickname);
         return games.get(gameId);
     }

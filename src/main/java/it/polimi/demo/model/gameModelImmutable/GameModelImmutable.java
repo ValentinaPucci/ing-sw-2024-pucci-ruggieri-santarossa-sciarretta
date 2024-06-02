@@ -69,7 +69,14 @@ public class GameModelImmutable implements Serializable {
     }
 
     public PlayerIC getPlayerEntity(String nickname) {
-        return players_connected.stream().filter(x -> x.getNickname().equals(nickname)).toList().get(0);
+        for (PlayerIC player : players_connected) {
+            if (player.getNickname().equals(nickname)) {
+                return player;
+            }
+
+        }
+        // Handle case where player is not found
+        throw new IllegalArgumentException("Player not found: " + nickname);
     }
 
     public Chat getChat() {

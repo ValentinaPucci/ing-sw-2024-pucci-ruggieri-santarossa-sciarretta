@@ -19,6 +19,7 @@ public class LobbyController extends GenericController {
     @FXML
     void actionIamReady(ActionEvent event) {
         getInputReaderGUI().addTxt("y");
+        System.out.println("READY!");
     }
 
     public void setGameId(int id) {
