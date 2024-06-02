@@ -118,10 +118,10 @@ public class TuiCardGraphics {
         for (int i = 1; i < CARD_GRAPHICS.length - 1; i++) {
             if (i == 1) {
                 String row = String.format(CARD_GRAPHICS[i], corner1, corner2);
-                System.out.println(ANSI_RESET + row.substring(0, 4) + Color + row.substring(4, 12) + ANSI_RESET + row.substring(13, 17) + ANSI_RESET);
+                System.out.println(ANSI_RESET + row.substring(0, 4) + Color + row.substring(4, 12) + ANSI_RESET + row.substring(14, 18) + ANSI_RESET);
             } else if (i == 3) {
                 String row3 = String.format(CARD_GRAPHICS[i], corner3, corner4);
-                System.out.println(ANSI_RESET + row3.substring(0, 4) + Color + row3.substring(4, 12) + ANSI_RESET + row3.substring(13, 17) + ANSI_RESET);
+                System.out.println(ANSI_RESET + row3.substring(0, 4) + Color + row3.substring(4, 12) + ANSI_RESET + row3.substring(14, 18) + ANSI_RESET);
             } else {
                 String row4 = String.format(CARD_GRAPHICS[i]);
                 System.out.println(ANSI_RESET + row4.substring(0, 2) + Color + row4.substring(2, 14) + ANSI_RESET + row4.substring(14, 16) + ANSI_RESET);
@@ -576,28 +576,26 @@ public class TuiCardGraphics {
             showStarterCardBack(starterCard);
         }
     }
+
 }
 
-//    public static void main(String[] args) {
+//
+//public static void main(String[] args) {
 ////        ResourceCard resource_card = new ResourceCard(11, Orientation.FRONT, Color.GREEN);
 ////        resource_card.getCornerAtNW().setEmpty();
 ////        resource_card.getCornerAtNW().is_visible = false;
 ////        resource_card.getCornerAtSW().setCornerResource(Resource.LEAF);
 ////        resource_card.getCornerAtSE().setCornerResource(Resource.LEAF);
-////        showResourceCard(resource_card);    <------------------------------------------method to use in TUI
-////
-////        GoldCard gold_card = new GoldCard(67, Orientation.FRONT, Color.BLUE);
-////        gold_card.getCornerAtNW().setEmpty();
-////        gold_card.getCornerAtNW().is_visible = false;
-////        gold_card.getCornerAtSW().setCornerItem(Item.PARCHMENT);
-////        gold_card.getCornerAtSE().is_visible = false;
-////        gold_card.setCornerCoverageRequired();
-////        showGoldCard(gold_card);        <-----------------------------------------------method to use in TUI
-////
-////
-////        TuiCardGraphics starter_card = new TuiCardGraphics("FE", "PA", "LE", "BU", "FE", "BU", "MU");
-////        starter_card.printStarterCard(ANSI_BEIGE_BACKGROUND);
-////
+//    //showResourceCard(resource_card);    <------------------------------------------method to use in TUI
+//
+//    //  <-----------------------------------------------method to use in TUI
+//     String ANSI_GREEN_BACKGROUND = "\u001B[42m";
+//
+//    TuiCardGraphics card = new TuiCardGraphics("FE", "PA", "LE", "BU");
+//    card.printCard(ANSI_GREEN_BACKGROUND);
+//
+//
+//
 ////
 ////        ConcreteDeck deck_starter = new ConcreteDeck("Starter");
 ////        for (int i = 0; i < 12; i++) {
@@ -606,5 +604,5 @@ public class TuiCardGraphics {
 ////            System.out.println("Starter card orientation: " + starterCard.getOrientation());
 ////            System.out.println(starterCard.toString());
 ////            showStarterCard(starterCard); <-----------------------------------------------method to use in TUI
-//        }
-
+//}
+//
