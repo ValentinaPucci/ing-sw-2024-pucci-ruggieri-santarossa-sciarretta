@@ -24,14 +24,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     private GameModel model;
 
-    private  Map<GameListener, Heartbeat>  heartbeats;
-
-
-    /**
-     * Timer started when only one player is playing
-     * it ends the game if no one reconnects within seconds
-     */
-    private Thread reconnection_thread;
+    private final Map<GameListener, Heartbeat>  heartbeats;
 
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new GameModel(gameID, numberOfPlayers, player);
@@ -39,112 +32,63 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         new Thread(this).start();
     }
 
-    //------------------------------------connection/reconnection management-----------------------------------------------
-    // Threads management ---------------------------------------
+    //------------------------------------ disconnection handling-----------------------------------------------
+
     /**
      * This method is called when the thread is started.
      */
-//    @Override
-//    public void run() {
-//        while (!Thread.currentThread().isInterrupted()) {
-//            if (model.getStatus().equals(GameStatus.RUNNING) ||
-//                    model.getStatus().equals(GameStatus.LAST_ROUND) ||
-//                    model.getStatus().equals(GameStatus.ENDED) ||
-//                    model.getStatus().equals(GameStatus.SECOND_LAST_ROUND) ||
-//                    model.getStatus().equals(GameStatus.WAIT)) {
-//                checkForDisconnections();
-//            }
-//            pauseThread();
-//        }
-//    }
-//
-//    /**
-//     * It pauses the thread for 500 milliseconds
-//     */
-//    private void pauseThread() {
-//        try {
-//            Thread.sleep(500);
-//        } catch (InterruptedException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//    // -------------------------------------------------------
-//
-//    /**
-//     * Check if a player is disconnected by checking the heartbeat freshness, if it is expired, the player is disconnected
-//     * and handleDisconnection will deal with it.
-//     */
-//    private void checkForDisconnections() {
-//        synchronized (heartbeats) {
-//            for (Map.Entry<GameListener, Heartbeat> entry : heartbeats.entrySet()) {
-//                GameListener listener = entry.getKey();
-//                Heartbeat heartbeat = entry.getValue();
-//
-//                if (isHeartbeatExpired(heartbeat)) {
-//                    handleDisconnection(heartbeat, listener);
-//                }
-//            }
-//        }
-//    }
-
+    @Override
     public void run() {
-        while (!Thread.interrupted()) {
-            //checks all the heartbeat to detect disconnection
-            if (model.getStatus().equals(GameStatus.RUNNING) || model.getStatus().equals(GameStatus.LAST_ROUND) || model.getStatus().equals(GameStatus.ENDED) || model.getStatus().equals(GameStatus.WAIT)) {
-                synchronized (heartbeats) {
-                    Iterator<Map.Entry<GameListener, Heartbeat>> heartIter = heartbeats.entrySet().iterator();
-
-                    while (heartIter.hasNext()) {
-                        Map.Entry<GameListener, Heartbeat> el = (Map.Entry<GameListener, Heartbeat>) heartIter.next();
-                        System.out.println("System time: " + System.currentTimeMillis() + " Ping value: " +  el.getValue().getPing());
-                        System.out.println("Default time: "+ DefaultValues.timeout_for_detecting_disconnection);
-                        System.out.println("Differenza== " + (System.currentTimeMillis() - el.getValue().getPing()));
-                        if (System.currentTimeMillis() - el.getValue().getPing() > DefaultValues.timeout_for_detecting_disconnection) {
-                            try {
-                                this.disconnectPlayer(el.getValue().getNick(),el.getKey());
-                                printAsync("Disconnection detected by heartbeat of player: "+el.getValue().getNick()+"");
-
-                                if (this.getNumConnectedPlayers() == 0) {
-                                    stopReconnectionTimer();
-                                    printAsync("XXXXXXXXXX Si cancella il gioco XXXXXXXXXX");
-                                    MainController.getControllerInstance().deleteGame(this.getGameId());
-                                    return;
-                                }
-
-                            } catch (RemoteException e) {
-                                throw new RuntimeException(e);
-                            }
-
-                            heartIter.remove();
-                        }
-                    }
-                }
+        while (!Thread.currentThread().isInterrupted()) {
+            if (model.getStatus() != GameStatus.WAIT
+                    && model.getPlayersConnected().size() == model.getNumPlayersToPlay()) {
+                checkForDisconnections();
             }
-            try {
-
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
+        }
+    }
+    /**
+     * Check if a player is disconnected by checking the heartbeat freshness, if it is expired, the player is disconnected
+     * and handleDisconnection will deal with it.
+     */
+    public void checkForDisconnections() {
+        synchronized (heartbeats) {
+            for (Map.Entry<GameListener, Heartbeat> entry : heartbeats.entrySet()) {
+                GameListener listener = entry.getKey();
+                Heartbeat heartbeat = entry.getValue();
+                if (isHeartbeatExpired(heartbeat)) {
+                    handleDisconnection(heartbeat, listener);
+                }
             }
         }
     }
 
-//    /**
-//     * It checks if the heartbeat is expired.
-//     * It returns true if the difference between the current time and the last ping time is greater than the timeout.
-//     * @param heartbeat
-//     * @return
-//     */
-//    private boolean isHeartbeatExpired(Heartbeat heartbeat) {
-//        long currentTime = System.currentTimeMillis();
-//        long lastBeatTime = heartbeat.getPing();
-//        // Timeout =
-//        return currentTime - lastBeatTime > DefaultValues.secondsToWaitReconnection;
-//    }
+    /**
+     * It checks if the heartbeat is expired.
+     * It returns true if the difference between the current time and the last ping time is greater than the timeout.
+     * @param heartbeat the heartbeat to check
+     * @return true if the heartbeat is expired, false else
+     */
+    private boolean isHeartbeatExpired(Heartbeat heartbeat) {
+        long currentTime = System.currentTimeMillis();
+        long lastBeatTime = heartbeat.getPing();
+        return currentTime - lastBeatTime > DefaultValues.secondsToWaitReconnection;
+    }
+
+    public void handleDisconnection(Heartbeat heartbeat, GameListener listener) {
+        try {
+            disconnectPlayer(heartbeat.getNick(), listener);
+            printAsync("Disconnection detected by heartbeat of player: " + heartbeat.getNick() + " ");
+            if (this.getNumConnectedPlayers() < 2) {
+                printAsync("Game ended because only one player is connected");
+                MainController.getControllerInstance().deleteGame(this.getGameId());
+            }
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     /**
      * Add a Ping to the list of heartbeats.
-     *
      * Remark: this method is quite fundamental for the right behavior of the game, since we expect
      * to call it frequently to check if the players are still connected. In fact, looking at the run method,
      * it is clear that if the heartbeat related to a certain player is not 'fresh' in some sense, then indeed
@@ -157,7 +101,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     public synchronized void addPing(String nickname, GameListener me) {
         synchronized (heartbeats) {
             heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), nickname));
-            //System.out.println("heartbeat with ping: " + heartbeats.get(me).getPing());
         }
     }
 
@@ -169,89 +112,16 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public void disconnectPlayer(String nick, GameListener lisOfClient) throws RemoteException {
-
-        //Player has just disconnected, so I remove the notifications for him
         Player p = model.getPlayerEntity(nick);
-        if(p!=null) {
+        if (p != null) {
             removeListener(lisOfClient, p);
-
-            if (model.getStatus().equals(GameStatus.WAIT)) {
-                //The game is in Wait (game not started yet), the player disconnected, so I remove him from the game)
-                model.removePlayer(getPlayerEntity(nick));
-            } else {
-                //Tha game is running, so I set him as disconnected (He can reconnect soon)
-                model.setPlayerAsDisconnected(getPlayerEntity(nick));
-            }
-
-            //Check if there is only one player playing
-            if ((model.getStatus().equals(GameStatus.RUNNING) || model.getStatus().equals(GameStatus.LAST_ROUND)) && model.getPlayersConnected().size() == 1) {
-                //Starting a th for waiting until reconnection at least of 1 client to keep playing
-                if (reconnection_thread == null) {
-                    startReconnectionTimer();
-                    printAsync("Starting timer for reconnection waiting: " + DefaultValues.secondsToWaitReconnection + " seconds");
-                }
-            }
+            model.removePlayer(p);
         }
-
-
     }
 
-    /**
-     * Starts a timer for detecting the reconnection of a player, if no one reconnects in time, the game is over
-     */
-    @SuppressWarnings("BusyWait")
-    private void startReconnectionTimer() {
-        reconnection_thread = new Thread(
-                () -> {
-                    long starting_timer = System.currentTimeMillis();
-
-                    while (reconnection_thread != null &&
-                            !reconnection_thread.isInterrupted() &&
-                            System.currentTimeMillis() - starting_timer < DefaultValues.secondsToWaitReconnection * 1000) {
-                        try {
-                            Thread.sleep(100);
-                        } catch (InterruptedException e) {
-                            //Someone called interrupt on this th (no need to keep waiting)
-                        }
-                    }
-                    printAsync("Timer for reconnection ended");
-
-                    if (model.getPlayersConnected().isEmpty()) {
-                        // No players online, I delete the games
-                        System.out.println("Reconnection timer... Call delete game");
-                        MainController.getControllerInstance().deleteGame(model.getGameId());
-                    } else if (model.getPlayersConnected().size() == 1) {
-                        printAsync("\tNo player reconnected on time, just one person is playing, set game to ended!");
-                        model.setStatus(GameStatus.ENDED);
-                    } else {
-                        printAsync("\tA player reconnected on time");
-                        this.reconnection_thread = null;
-                    }
-                }
-
-        );
-        reconnection_thread.start();
-    }
-
-    /**
-     * It stops the timer (if started) that checks for reconnections of players
-     */
-    private void stopTimer() {
-        if (reconnection_thread != null) {
-            reconnection_thread.interrupt();
-            reconnection_thread = null;
-        }
-        //else It means that a player reconnected but the timer was not started (ex 3 players and 1 disconnects)
-    }
-
-    /**
-     * Reconnect the player with the nickname @param to the game
-     *
-     * @throws PlayerAlreadyConnectedException if a player tries to rejoin the same game
-     * @throws MaxPlayersLimitException    if there are already 4 players in game
-     */
+    @Override
     public void reconnectPlayer(Player p) throws RemoteException {
-        this.model.reconnectPlayer(p);
+
     }
 
     /**
@@ -270,14 +140,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     @Override
     public void setError(String error){
         this.model.setErrorMessage(error);
-    }
-
-    private void stopReconnectionTimer() {
-        if (reconnection_thread != null) {
-            reconnection_thread.interrupt();
-            reconnection_thread = null;
-        }
-        //else It means that a player reconnected but the timer was not started (ex 3 players and 1 disconnects)
     }
 
     //------------------------------------ management of players -----------------------------------------------

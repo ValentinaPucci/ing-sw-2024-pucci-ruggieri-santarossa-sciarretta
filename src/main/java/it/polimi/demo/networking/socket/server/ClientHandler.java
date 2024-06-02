@@ -32,7 +32,7 @@ public class ClientHandler extends Thread implements Serializable{
      * ObjectInputStream in
      */
     private transient ObjectInputStream in;
-    int prova = 0;
+
     /**
      * ObjectOutputStream out
      */
@@ -90,7 +90,6 @@ public class ClientHandler extends Thread implements Serializable{
                         //it's a heartbeat message I handle it as a "special message"
                         if (temp.isHeartbeat() && !temp.isMessageForMainController()) {
                             if (gameController != null) {
-                               // System.out.println("in if, addPing "+temp.getNick());
                                 gameController.addPing(temp.getNick(), gameListenersHandlerSocket);
                             }
                         } else {
@@ -100,7 +99,7 @@ public class ClientHandler extends Thread implements Serializable{
                         throw new RuntimeException(e);
                     }
                 } catch (IOException | ClassNotFoundException e) {
-                    // Error here in socket, cannot comunicate with client anymore --> rmi connection lost
+                    // Error here in socket, cannot communicate with client anymore --> rmi connection lost
                     printAsync("ClientSocket dies because cannot communicate no more with the client");
                     return;
                 }
@@ -110,27 +109,15 @@ public class ClientHandler extends Thread implements Serializable{
         }
     }
 
-    // Problem: aftere the first call the gameController deletes its attributes. I do not know how to call the methpds that follows, such as
-    // setAsReady, which enter the seconod if, but has a totally deleted gameController
-    
-
     private void runGameLogic() {
         SocketClientGenericMessage temp;
-
         try {
             while (!this.isInterrupted()) {
                     temp = processingQueue.take();
                     if (temp.isMessageForMainController()) {
                         gameController = temp.execute(gameListenersHandlerSocket, MainController.getControllerInstance());
-                        System.out.println(" \n Message for Main ");
-                        prova++;
-                        System.out.println("Prova 1: " + prova);
-                        System.out.println("Entra ....");
                         nickname = gameController != null ? temp.getNick() : null;
-
                     } else if (!temp.isHeartbeat()) {
-                            prova++;
-                            System.out.println("Prova 2: " + prova);
                             temp.execute(gameController);
                     }
                 }

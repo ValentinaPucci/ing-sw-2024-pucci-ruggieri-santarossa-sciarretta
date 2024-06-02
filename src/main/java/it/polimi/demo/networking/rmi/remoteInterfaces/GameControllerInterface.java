@@ -104,4 +104,6 @@ public interface GameControllerInterface extends Remote {
     boolean isThisMyTurn(String nickname) throws RemoteException;
 
     void addPing(String nickname, GameListener gameListener) throws RemoteException;
+
+    int getNumPlayersToPlay() throws RemoteException;
 }

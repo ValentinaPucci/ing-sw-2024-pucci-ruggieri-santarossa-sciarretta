@@ -49,6 +49,8 @@ public interface MainControllerInterface extends Remote {
 
     GameControllerInterface sendMessage(GameListener modelInvokedEvents, String nick, Message message, int idGame) throws RemoteException;
 
+    void addPing(GameListener modelInvokedEvents, String nick, int idGame) throws RemoteException;
+
     /**
      * This method reconnects a player to a specific game
      *

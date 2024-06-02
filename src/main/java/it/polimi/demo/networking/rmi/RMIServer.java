@@ -236,6 +236,11 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
         return ris;
     }
 
+    @Override
+    public void addPing(GameListener lis, String nick, int idGame) throws RemoteException {
+        serverObject.mainController.addPing(lis, nick, idGame);
+    }
+
     /**
      * A player requested, through the network, to reconnect to a game
      *

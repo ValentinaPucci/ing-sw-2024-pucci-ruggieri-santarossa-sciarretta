@@ -917,12 +917,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      */
     @Override
     public void playerLeft(GameModelImmutable gameModel, String nick) throws RemoteException {
-        if (gameModel.getStatus().equals(GameStatus.WAIT)) {
-            ui.show_playerJoined(gameModel, nickname);
-        } else {
-            ui.addImportantEvent("[EVENT]: Player " + nick + " decided to leave the game!");
-        }
-
+        ui.addImportantEvent("[EVENT]: Player " + nick + " decided to leave the game!");
     }
 
     /**
@@ -1021,7 +1016,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         events.add(gameModel, EventType.GAME_ENDED);
         ui.show_gameEnded(gameModel);
         resetGameId(fileDisconnection, gameModel);
-
     }
 
     /**

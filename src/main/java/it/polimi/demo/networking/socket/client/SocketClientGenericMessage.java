@@ -59,7 +59,7 @@ public abstract class SocketClientGenericMessage implements Serializable {
     /**
      * @return if it's a heartbeat message
      */
-    public boolean isHeartbeat(){
+    public boolean isHeartbeat() {
         return isHeartbeat;
     }
 

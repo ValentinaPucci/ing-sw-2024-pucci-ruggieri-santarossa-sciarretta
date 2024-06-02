@@ -195,6 +195,13 @@ public class MainController implements MainControllerInterface, Serializable {
         return games.get(gameId);
     }
 
+    @Override
+    public synchronized void addPing(GameListener listener, String nickname, int gameId)
+            throws RemoteException {
+        if (games.containsKey(gameId))
+            games.get(gameId).addPing(nickname, listener);
+    }
+
     /**
      * Reconnects a player to a game specified by its ID.
      *
@@ -259,8 +266,6 @@ public class MainController implements MainControllerInterface, Serializable {
                 })
                 .orElse(null);
     }
-
-
 
     /**
      * Removes the game with the specified ID from the MainController's games.

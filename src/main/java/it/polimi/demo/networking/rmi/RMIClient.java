@@ -47,6 +47,7 @@ public class RMIClient implements CommonClientActions {
      */
     private String nickname;
     private int game_id;
+    private boolean initiliazed = false;
     /**
      * The remote object on which the server will invoke remote methods
      */
@@ -142,6 +143,7 @@ public class RMIClient implements CommonClientActions {
         gameController = requests.createGame(modelInvokedEvents, nick, num_of_players);
         nickname = nick;
         game_id = gameController.getGameId();
+        initiliazed = true;
     }
 
     /**
@@ -156,8 +158,13 @@ public class RMIClient implements CommonClientActions {
         registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
         requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
         gameController = requests.joinGame(modelInvokedEvents, nick, idGame);
-        nickname = nick;
-        game_id = gameController.getGameId();
+        if (gameController != null) {
+            nickname = nick;
+            game_id = gameController.getGameId();
+            if (gameController.getNumConnectedPlayers() == gameController.getNumPlayersToPlay()) {
+                initiliazed = true;
+            }
+        }
     }
 
     @Override
@@ -168,6 +175,9 @@ public class RMIClient implements CommonClientActions {
         if (gameController != null) {
             nickname = nick;
             game_id = gameController.getGameId();
+            if (gameController.getNumConnectedPlayers() == gameController.getNumPlayersToPlay()) {
+                initiliazed = true;
+            }
         }
     }
 
@@ -225,6 +235,20 @@ public class RMIClient implements CommonClientActions {
     }
 
     /**
+     * Send a heartbeat to the server
+     *
+     * @throws RemoteException
+     */
+    @Override
+    public void heartbeat() throws RemoteException, NotBoundException {
+        if (initiliazed) {
+            registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
+            requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
+            requests.addPing(modelInvokedEvents, nickname, game_id);
+        }
+    }
+
+    /**
      * Request the reconnection of a player @param nick to a game @param idGame
      *
      * @param nick of the player who wants to be reconnected
@@ -267,19 +291,6 @@ public class RMIClient implements CommonClientActions {
     @Override
     public boolean isMyTurn() throws RemoteException {
         return gameController.isThisMyTurn(nickname);
-    }
-
-    /**
-     * Send a heartbeat to the server
-     *
-     * @throws RemoteException
-     */
-    @Override
-    public void heartbeat() throws RemoteException {
-        if (gameController != null) {
-           // System.out.println("Nick in heartbeat: " + nickname);
-            gameController.addPing(nickname, modelInvokedEvents);
-        }
     }
 
 }

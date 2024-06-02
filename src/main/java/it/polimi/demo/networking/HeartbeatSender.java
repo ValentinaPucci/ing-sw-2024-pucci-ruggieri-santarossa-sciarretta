@@ -6,6 +6,7 @@ import it.polimi.demo.view.flow.CommonClientActions;
 import it.polimi.demo.view.flow.Flow;
 
 import java.io.Serializable;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,22 +26,16 @@ public class HeartbeatSender extends Thread implements Serializable {
 
     @Override
     public void run() {
-        //For the heartbeat
         while (!Thread.interrupted()) {
             Timer timer = new Timer();
             TimerTask task = new TaskOnNetworkDisconnection(flow);
             timer.schedule(task, DefaultValues.timeoutConnection_millis);
-            //send heartbeat so the server knows I am still online
             try {
                 server.heartbeat();
-            } catch (RemoteException e) {
+            } catch (RemoteException | NotBoundException e) {
                 printAsync("Connection to server lost! Impossible to send heartbeat...");
             }
             timer.cancel();
-
-            try {
-                Thread.sleep(DefaultValues.secondToWaitToSend_heartbeat);
-            } catch (InterruptedException ignored) {}
         }
 
     }
