@@ -30,7 +30,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         model = new GameModel(gameID, numberOfPlayers, player);
         heartbeats = new HashMap<>();
         // todo: make this call to work
-        // new Thread(this).start();
+        new Thread(this).start();
     }
 
     //------------------------------------ disconnection handling-----------------------------------------------
@@ -44,8 +44,14 @@ public class GameController implements GameControllerInterface, Serializable, Ru
             if (model.getStatus() != GameStatus.WAIT) {
                 checkForDisconnections();
             }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
+
     /**
      * Check if a player is disconnected by checking the heartbeat freshness, if it is expired, the player is disconnected
      * and handleDisconnection will deal with it.

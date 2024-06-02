@@ -9,12 +9,13 @@ import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class SocketClientMessageHeartBeat extends SocketClientGenericMessage implements Serializable {
+public class SocketClientMessageHeartbeat extends SocketClientGenericMessage implements Serializable {
 
-    public SocketClientMessageHeartBeat(String nick) {
-        this.nick = nick;
+    private GameListener lis;
+
+    public SocketClientMessageHeartbeat(GameListener lis) {
         this.isMessageForMainController = false;
-        this.isHeartbeat = true;
+        this.lis = lis;
     }
 
     @Override
@@ -24,6 +25,6 @@ public class SocketClientMessageHeartBeat extends SocketClientGenericMessage imp
 
     @Override
     public void execute(GameControllerInterface gameController) throws RemoteException, GameEndedException {
-
+        gameController.addPing(nick, lis);
     }
 }

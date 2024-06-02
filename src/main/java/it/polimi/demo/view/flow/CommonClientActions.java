@@ -108,6 +108,6 @@ public interface CommonClientActions extends Serializable {
      *
      * @throws RemoteException
      */
-    void heartbeat() throws RemoteException, NotBoundException;
+    void heartbeat() throws IOException, NotBoundException;
 
 }

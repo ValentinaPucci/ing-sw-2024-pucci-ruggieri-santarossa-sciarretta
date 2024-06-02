@@ -5,6 +5,7 @@ import it.polimi.demo.networking.rmi.TaskOnNetworkDisconnection;
 import it.polimi.demo.view.flow.CommonClientActions;
 import it.polimi.demo.view.flow.Flow;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -29,7 +30,7 @@ public class HeartbeatSender extends Thread implements Serializable {
         while (!Thread.interrupted()) {
             try {
                 server.heartbeat();
-            } catch (RemoteException | NotBoundException e) {
+            } catch (NotBoundException | IOException e) {
                 printAsync("Connection to server lost! Impossible to send heartbeat...");
             }
         }

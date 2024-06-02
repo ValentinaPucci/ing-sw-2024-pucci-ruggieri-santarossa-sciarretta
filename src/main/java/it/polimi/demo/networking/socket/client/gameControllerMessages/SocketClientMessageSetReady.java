@@ -43,7 +43,6 @@ public class SocketClientMessageSetReady extends SocketClientGenericMessage impl
      */
     @Override
     public void execute(GameControllerInterface gameController) throws RemoteException {
-        System.out.println("GameController sent says: " + gameController.getPlayerEntity(nick));
         gameController.playerIsReadyToStart(this.nick);
     }
 }

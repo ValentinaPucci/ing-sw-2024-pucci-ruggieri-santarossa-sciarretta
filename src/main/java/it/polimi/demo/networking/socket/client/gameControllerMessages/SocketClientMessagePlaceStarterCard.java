@@ -19,7 +19,6 @@ public class SocketClientMessagePlaceStarterCard extends SocketClientGenericMess
     private Orientation orientation;
 
     public SocketClientMessagePlaceStarterCard(Orientation orientation) {
-
         this.orientation = orientation;
         this.isMessageForMainController = false;
     }

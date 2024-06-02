@@ -18,7 +18,6 @@ public class SocketClientMessageDrawCard extends SocketClientGenericMessage impl
      * @param index the index of the card to draw
      */
     public SocketClientMessageDrawCard( int index) {
-
          this.index = index;
          this.isMessageForMainController = false;
     }

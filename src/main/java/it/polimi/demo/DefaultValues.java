@@ -34,7 +34,7 @@ public class DefaultValues implements Serializable {
     public final static String Default_servername_RMI = "CodexNaturalis";
     public static String serverIp = "127.0.0.1";
     public final static String Remote_ip = "127.0.0.1";
-    public final static int secondsToWaitReconnection = 5;
+    public final static int secondsToWaitReconnection = 5000;
     public final static int timeoutConnection_millis = 3000;
     public final static int secondToWaitToSend_heartbeat = 500;
     public final static Long timeout_for_detecting_disconnection = 30000L;

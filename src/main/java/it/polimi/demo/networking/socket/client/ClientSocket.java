@@ -1,6 +1,7 @@
 package it.polimi.demo.networking.socket.client;
 
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
@@ -46,9 +47,6 @@ public class ClientSocket extends Thread implements CommonClientActions {
      */
     private String nickname;
 
-    private GameControllerInterface gameController = null;
-
-    private int game_id;
     /**
      * This is the gameListner we use to perform every action requested by the server
      */
@@ -57,6 +55,8 @@ public class ClientSocket extends Thread implements CommonClientActions {
      *
      */
     private final transient HeartbeatSender socketHeartbeat;
+
+    private boolean initialized = false;
     /**
      *
      */
@@ -177,7 +177,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
         nickname = nick;
         ob_out.writeObject(new SocketClientMessageJoinGame(nick, idGame));
         finishSending();
-        if(!socketHeartbeat.isAlive()) {
+        if (!socketHeartbeat.isAlive()) {
             socketHeartbeat.start();
         }
     }
@@ -187,7 +187,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
         nickname = nick;
         ob_out.writeObject(new SocketClientMessageJoinFirstAvailableGame(nick));
         finishSending();
-        if(!socketHeartbeat.isAlive()) {
+        if (!socketHeartbeat.isAlive()) {
             socketHeartbeat.start();
         }
     }
@@ -197,7 +197,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
         nickname = nick;
         ob_out.writeObject(new SocketClientMessageReconnect(nick, idGame));
         finishSending();
-        if(!socketHeartbeat.isAlive()) {
+        if (!socketHeartbeat.isAlive()) {
             socketHeartbeat.start();
         }
     }
@@ -206,8 +206,8 @@ public class ClientSocket extends Thread implements CommonClientActions {
     public void leave(String nick, int idGame) throws IOException, NotBoundException {
         ob_out.writeObject(new SocketClientMessageLeave(nick, idGame));
         finishSending();
-        nickname=null;
-        if(socketHeartbeat.isAlive()) {
+        nickname = null;
+        if (socketHeartbeat.isAlive()) {
             socketHeartbeat.interrupt();
         }
     }
@@ -255,15 +255,12 @@ public class ClientSocket extends Thread implements CommonClientActions {
 
 
     @Override
-    public void heartbeat() throws RemoteException {
-//        if (ob_out != null) {
-//            try {
-//                ob_out.writeObject(new SocketClientMessageHeartBeat(nickname));
-//                finishSending();
-//            } catch (IOException e) {
-//                printAsync("Connection lost to the server!! Impossible to send heartbeat...");
-//            }
-//        }
+    public void heartbeat() throws IOException {
+        // todo: check how I can ensure this condition (symmetric to RMI)
+        if (initialized) {
+            ob_out.writeObject(new SocketClientMessageHeartbeat(modelInvokedEvents));
+            finishSending();
+        }
     }
 
     /**
