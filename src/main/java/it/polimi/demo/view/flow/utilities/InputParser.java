@@ -73,9 +73,10 @@ public class InputParser extends Thread {
 
             } else if (txt.startsWith("/quit") || (txt.startsWith("/leave"))) {
                 assert p != null;
+                // todo: if you want to implement disconnections resilience, you should not exit the program here
+                gameFlow.leave(p.getNickname(), gameId);
+                gameFlow.youLeft();
                 System.exit(1);
-                // gameFlow.leave(p.getNickname(), gameId);
-                // gameFlow.youLeft();
 
             } else {
                 //I didn't pop a message

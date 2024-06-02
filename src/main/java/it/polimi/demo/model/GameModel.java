@@ -200,12 +200,8 @@ public class GameModel implements Serializable {
 
         listeners_handler.notify_playerLeft(this, p.getNickname());
 
-        if (this.status.equals(GameStatus.RUNNING)) {
-            if (players_connected.size() < 2) {
-                // todo: check this
-                // Not enough players to keep playing
-                // this.setStatus(GameStatus.ENDED);
-            }
+        if (players_connected.size() < 2) {
+            listeners_handler.notify_GameEnded(this);
         }
     }
 
