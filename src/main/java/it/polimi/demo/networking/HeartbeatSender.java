@@ -27,15 +27,11 @@ public class HeartbeatSender extends Thread implements Serializable {
     @Override
     public void run() {
         while (!Thread.interrupted()) {
-            Timer timer = new Timer();
-            TimerTask task = new TaskOnNetworkDisconnection(flow);
-            timer.schedule(task, DefaultValues.timeoutConnection_millis);
             try {
                 server.heartbeat();
             } catch (RemoteException | NotBoundException e) {
                 printAsync("Connection to server lost! Impossible to send heartbeat...");
             }
-            timer.cancel();
         }
 
     }

@@ -29,7 +29,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new GameModel(gameID, numberOfPlayers, player);
         heartbeats = new HashMap<>();
-        new Thread(this).start();
+        // todo: make this call to work
+        // new Thread(this).start();
     }
 
     //------------------------------------ disconnection handling-----------------------------------------------
@@ -40,8 +41,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
-            if (model.getStatus() != GameStatus.WAIT
-                    && model.getPlayersConnected().size() == model.getNumPlayersToPlay()) {
+            if (model.getStatus() != GameStatus.WAIT) {
                 checkForDisconnections();
             }
         }
