@@ -167,8 +167,8 @@ da chat gpt 4:
 
 
 Spiegazione del Codice:
-Definizione dell'Interfaccia Grafica:
 
+Definizione dell'Interfaccia Grafica:
 Creiamo un AnchorPane e un ScrollPane.
 Configuriamo il ScrollPane per adattarsi alle dimensioni dell'AnchorPane.
 
