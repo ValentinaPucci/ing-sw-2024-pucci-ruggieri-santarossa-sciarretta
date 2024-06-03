@@ -96,7 +96,7 @@ public class RMIClient implements CommonClientActions {
 
             } catch (Exception e) {
                 if (!retry) {
-                    printAsync("[ERROR] CONNECTING TO RMI SERVER: \n\tClient RMI exception: " + e + "\n");
+                    printAsync("  [ERROR] CONNECTING TO RMI SERVER: \n\tClient RMI exception: " + e + "\n");
                 }
                 printAsyncNoLine("[#" + attempt + "]Waiting to reconnect to RMI Server on port: '" + DefaultValues.Default_port_RMI + "' with name: '" + DefaultValues.Default_servername_RMI + "'");
 

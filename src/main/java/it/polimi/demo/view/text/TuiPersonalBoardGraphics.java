@@ -79,5 +79,6 @@ public class TuiPersonalBoardGraphics {
 //    public static void main(String[] args) {
 ////        PersonalBoard personal_board = new PersonalBoard();
 ////        showPersonalBoard(personal_board);
+//
 //    }
 }
