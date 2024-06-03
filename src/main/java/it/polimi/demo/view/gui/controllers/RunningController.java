@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
@@ -265,7 +266,7 @@ public class RunningController extends GenericController {
         for (int i = 0; i < cardIds.length; i++) {
             int cardId = cardIds[i];
             String imagePath;
-            if (i == 0 || i == 2) { // sono in un deck -> voglio il BACK
+            if (i == 0 || i == 3 || i == 6) { // sono in un deck -> voglio il BACK
                 imagePath = "/images/cards/cards_back/" + String.format("%03d", cardId) + ".png";
             } else { // sono in una carta -> voglio il FRONT
                 imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
@@ -273,8 +274,8 @@ public class RunningController extends GenericController {
             ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
             imageView.setFitWidth(90); // Imposta la larghezza desiderata
             imageView.setFitHeight(65); // Imposta l'altezza desiderata
-            int column = i % 2;
-            int row = i / 2;
+            int column = i % 3;
+            int row = i / 3;
             commonCardsPane.add(imageView, column, row);
         }
     }
@@ -381,7 +382,7 @@ public class RunningController extends GenericController {
     }
 
 
-    //--------------------DYNAMIC GAME---------------------------------------
+    //--------------------------------------DYNAMIC GAME-------------------------------------------
 
 
     //TODO: quando faccio place devo togliere la carta dalla mano di carte
@@ -443,6 +444,23 @@ public class RunningController extends GenericController {
             chatInput.clear();
         }
     }
+
+//    public void actionSendMessage(MouseEvent e) {
+//        if (!messageText.getText().isEmpty()) {
+//            Sound.playSound("sendmsg.wav");
+//
+//            if (comboBoxMessage.getValue().toString().isEmpty()) {
+//                getInputReaderGUI().addTxt("/c " + messageText.getText());
+//            } else {
+//                //Player wants to send a private message
+//                getInputReaderGUI().addTxt("/cs " + comboBoxMessage.getValue().toString() + " " + messageText.getText());
+//                comboBoxMessage.getSelectionModel().selectFirst();
+//            }
+//            messageText.setText("");
+//
+//
+//        }
+//    }
 
     private void sendPrivateMessage(PlayerIC player, String message) {
         // Logica per inviare un messaggio privato al giocatore

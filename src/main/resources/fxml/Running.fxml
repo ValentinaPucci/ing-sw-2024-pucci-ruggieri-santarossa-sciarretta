@@ -95,24 +95,25 @@
             </Pane>
             <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
                <children>
-                  <ScrollPane layoutX="-3.0" layoutY="-2.0" prefHeight="589.0" prefWidth="868.0">
+                  <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="626.0" prefWidth="867.0" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="593.0" prefWidth="816.0" />
                     </content>
                   </ScrollPane>
                </children>
             </Pane>
 
 
-            <Label layoutX="322.0" layoutY="13.0" text="Common Cards:" textFill="#4d0202">
+            <Label layoutX="358.0" layoutY="13.0" text="Common Cards:" textFill="#4d0202">
                <font>
                   <Font name="Luminari" size="25.0" />
                </font>
             </Label>
-            <GridPane fx:id="commonCardsPane" hgap="10.0" layoutX="313.0" layoutY="59.0" prefHeight="210.0" prefWidth="199.0" vgap="10.0">
+            <GridPane fx:id="commonCardsPane" hgap="10.0" layoutX="305.0" layoutY="59.0" prefHeight="210.0" prefWidth="300.0" vgap="10.0">
                <columnConstraints>
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                </columnConstraints>
                <rowConstraints>
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -126,16 +127,19 @@
                   <ImageView fx:id="commonCard3" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <ImageView fx:id="commonCard4" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
                   <ImageView fx:id="commonCard5" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <ImageView fx:id="commonCard6" fitHeight="65.0" fitWidth="88.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
+                  <ImageView fx:id="commonCard7" fitHeight="67.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                  <ImageView fx:id="commonCard8" fitHeight="64.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                </children>
             </GridPane>
 
 
-            <Label layoutX="330.0" layoutY="286.0" text="Your objective:" textFill="#4d0202">
+            <Label layoutX="365.0" layoutY="286.0" text="Your objective:" textFill="#4d0202">
                <font>
                   <Font name="Luminari" size="25.0" />
                </font>
             </Label>
-            <GridPane fx:id="personalObjectivesPane" hgap="10.0" layoutX="308.0" layoutY="357.0" prefHeight="53.0" prefWidth="199.0" vgap="10.0">
+            <GridPane fx:id="personalObjectivesPane" hgap="10.0" layoutX="347.0" layoutY="351.0" prefHeight="59.0" prefWidth="211.0" vgap="10.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -206,12 +210,12 @@
              </font>
           </Label>
 
-        <Label layoutX="326.0" layoutY="420.0" text="Your points:" textFill="#4d0202">
+        <Label layoutX="361.0" layoutY="420.0" text="Your points:" textFill="#4d0202">
                <font>
                   <Font name="Luminari" size="25.0" />
                </font>
             </Label>
-            <Label fx:id="myPoints" layoutX="478.0" layoutY="422.0" prefHeight="38.0" prefWidth="58.0" text="0" textFill="#4d0202">
+            <Label fx:id="myPoints" layoutX="510.0" layoutY="422.0" prefHeight="38.0" prefWidth="58.0" text="0" textFill="#4d0202">
                <font>
                   <Font name="Luminari" size="25.0" />
                </font>

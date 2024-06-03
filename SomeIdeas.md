@@ -66,3 +66,120 @@ We would like to implement this advanced functionality on our program. Namely, w
 
 # ToDo (17 may 2024)
 - we don't provide a list of possible placeable positions in the PersonalBoard, so we need a method that continuously asks the client a different set of coordinate on the PersonalBoard if the previous couple entered was an invalid position
+
+
+# IDEAS FOR PERSONAL BOARD IN GUI (03 june 2024)
+- AnchorPane + ScrollPane (AnchorPane utilizzato per contenere le ImageView, AnchorPane all'interno dello ScrollPane per gestire lo scorrimento.)
+- Posizionamento delle carte (ImageView): evento di clic sull'AnchorPane -> Verifica se la posizione del clic è valida -> Se è valida, aggiungi una nuova ImageView alle coordinate specifiche.
+
+
+
+da chat gpt 4:
+    
+    import javafx.application.Application;
+    import javafx.scene.Scene;
+    import javafx.scene.image.Image;
+    import javafx.scene.image.ImageView;
+    import javafx.scene.layout.AnchorPane;
+    import javafx.scene.layout.Pane;
+    import javafx.scene.control.ScrollPane;
+    import javafx.stage.Stage;
+    import java.util.ArrayList;
+    import java.util.List;
+    
+    public class CardPlacementApp extends Application {
+    private List<Coordinate> validCoordinates;
+    
+        @Override
+        public void start(Stage primaryStage) {
+            AnchorPane anchorPane = new AnchorPane();
+            ScrollPane scrollPane = new ScrollPane(anchorPane);
+            scrollPane.setFitToWidth(true);
+            scrollPane.setFitToHeight(true);
+    
+            // Definire le coordinate valide
+            validCoordinates = new ArrayList<>();
+            validCoordinates.add(new Coordinate(100, 100));
+            validCoordinates.add(new Coordinate(200, 200));
+            validCoordinates.add(new Coordinate(300, 300));
+            // Aggiungi altre coordinate valide se necessario
+    
+            // Aggiungi evento di clic all'AnchorPane
+            anchorPane.setOnMouseClicked(event -> {
+                double x = event.getX();
+                double y = event.getY();
+    
+                Coordinate clickedCoordinate = new Coordinate(x, y);
+                if (isValidCoordinate(clickedCoordinate)) {
+                    addImageView(anchorPane, clickedCoordinate);
+                }
+            });
+    
+            Scene scene = new Scene(scrollPane, 800, 600);
+            primaryStage.setTitle("Card Placement App");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+        }
+    
+        private boolean isValidCoordinate(Coordinate coordinate) {
+            for (Coordinate validCoordinate : validCoordinates) {
+                if (coordinate.isCloseTo(validCoordinate)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    
+        private void addImageView(Pane pane, Coordinate coordinate) {
+            Image image = new Image("path/to/your/image.png");
+            ImageView imageView = new ImageView(image);
+            imageView.setX(coordinate.getX());
+            imageView.setY(coordinate.getY());
+            pane.getChildren().add(imageView);
+        }
+    
+        public static void main(String[] args) {
+            launch(args);
+        }
+    
+        class Coordinate {
+            private double x, y;
+    
+            public Coordinate(double x, double y) {
+                this.x = x;
+                this.y = y;
+            }
+    
+            public double getX() {
+                return x;
+            }
+    
+            public double getY() {
+                return y;
+            }
+    
+            public boolean isCloseTo(Coordinate other) {
+                double threshold = 10; // distanza massima per essere considerata "vicina"
+                return Math.abs(this.x - other.x) < threshold && Math.abs(this.y - other.y) < threshold;
+            }
+        }
+    }
+
+
+Spiegazione del Codice:
+Definizione dell'Interfaccia Grafica:
+
+Creiamo un AnchorPane e un ScrollPane.
+Configuriamo il ScrollPane per adattarsi alle dimensioni dell'AnchorPane.
+
+Coordinate Valide:
+Definiamo una lista di coordinate valide (validCoordinates).
+Implementiamo un metodo isValidCoordinate per verificare se una coordinata cliccata è valida.
+
+Aggiunta di ImageView:
+Aggiungiamo un evento di clic all'AnchorPane.
+Se la coordinata cliccata è valida, aggiungiamo una nuova ImageView alle coordinate specifiche.
+
+Prossimi Passi:
+a. Aggiungere test per verificare se le coordinate sono corrette.
+b. Implementare la gestione delle immagini in modo più flessibile.
