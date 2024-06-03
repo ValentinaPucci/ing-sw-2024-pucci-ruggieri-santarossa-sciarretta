@@ -67,11 +67,14 @@ We would like to implement this advanced functionality on our program. Namely, w
 # ToDo (17 may 2024)
 - we don't provide a list of possible placeable positions in the PersonalBoard, so we need a method that continuously asks the client a different set of coordinate on the PersonalBoard if the previous couple entered was an invalid position
 
+# ToDo (03 june 2024) x GUI based on TUI flow
+1. objective card to choose (1 / 2)
+2. starter card orientation (f / b)
+3. place starter card 
 
 # IDEAS FOR PERSONAL BOARD IN GUI (03 june 2024)
 - AnchorPane + ScrollPane (AnchorPane utilizzato per contenere le ImageView, AnchorPane all'interno dello ScrollPane per gestire lo scorrimento.)
 - Posizionamento delle carte (ImageView): evento di clic sull'AnchorPane -> Verifica se la posizione del clic è valida -> Se è valida, aggiungi una nuova ImageView alle coordinate specifiche.
-
 
 
 da chat gpt 4:
