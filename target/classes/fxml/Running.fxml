@@ -97,7 +97,7 @@
                <children>
                   <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
                     <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="593.0" prefWidth="760.0" />
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="593.0" prefWidth="816.0" />
                     </content>
                   </ScrollPane>
                </children>
