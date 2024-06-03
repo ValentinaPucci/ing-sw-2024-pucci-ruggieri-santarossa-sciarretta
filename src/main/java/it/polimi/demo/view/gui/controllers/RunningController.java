@@ -1,17 +1,20 @@
 package it.polimi.demo.view.gui.controllers;
 
+import it.polimi.demo.model.Player;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
+import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.interfaces.PlayerIC;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.RowConstraints;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -19,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class RunningController extends GenericController{
+public class RunningController extends GenericController {
     @FXML public Label myPoints;
     @FXML public Text p2Points;
     @FXML public Text p1Points;
@@ -29,9 +32,8 @@ public class RunningController extends GenericController{
     @FXML public Label playerLabel3;
     public ArrayList<Text> othersPoints = new ArrayList<>();
     public ArrayList<Label> othersNicknames = new ArrayList<>();
-
+    @FXML public GridPane otherPlayers;
     @FXML public ImageView StarterCardImage;
-
     @FXML private AnchorPane mainAnchor;
     @FXML public ImageView personalObjective0;
     @FXML public ImageView personalObjective1;
@@ -43,12 +45,10 @@ public class RunningController extends GenericController{
     private Orientation cardHandOrientation;
     private Orientation starterCardOrientation;
     private ArrayList<Integer> cardHand = new ArrayList<>();
-     @FXML
-     private ListView<String> eventsListView;
+    @FXML private ListView<String> eventsListView;
     private ImageView pieceBlackImageView;
     private ArrayList<ImageView> pieces;
-    @FXML
-    private Label labelMessage;
+    @FXML private Label labelMessage;
     private final ImageView[] bnImageViews = new ImageView[30];
     @FXML private ImageView bn0;
     @FXML private ImageView bn1;
@@ -80,15 +80,19 @@ public class RunningController extends GenericController{
     @FXML private ImageView bn27;
     @FXML private ImageView bn28;
     @FXML private ImageView bn29;
-    private int starterCard;
-
+    @FXML private TextArea chatArea;
+    @FXML private TextField chatInput;
+    @FXML
+    private ComboBox<String> recipientComboBox;
+    private int starterCard = 0;
+    private ArrayList<PlayerIC> players_list;
 
     public void initialize() {
         pieces = new ArrayList<>();
-        ImageView piece1ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece1.png"))));
-        ImageView piece2ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece2.png"))));
-        ImageView piece3ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece3.png"))));
-        ImageView piece4ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece4.png"))));
+        ImageView piece1ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece1.png")))); //blue
+        ImageView piece2ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece2.png")))); //green
+        ImageView piece3ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece3.png")))); //red
+        ImageView piece4ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece4.png")))); //yellow
 
         pieces.add(0, piece1ImageView);
         pieces.add(1, piece2ImageView);
@@ -128,16 +132,10 @@ public class RunningController extends GenericController{
         bnImageViews[28] = bn28;
         bnImageViews[29] = bn29;
 
-        bnImageViews[0].setImage(pieces.get(0).getImage());
-        bn0.setImage(pieces.get(0).getImage());
-        bn0.setImage(pieces.get(1).getImage());
-        bn0.setImage(pieces.get(2).getImage());
-        bn0.setImage(pieces.get(3).getImage());
-
         for (int i = 0; i < 6; i++) {
             ImageView imageView = new ImageView();
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(70);
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(65);
             imageView.setImage(null);
             int column = i % 2;
             int row = i / 2;
@@ -146,23 +144,23 @@ public class RunningController extends GenericController{
 
         for (int i = 0; i < 2; i++) {
             ImageView imageView = new ImageView();
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(70);
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(65);
             imageView.setImage(null);
             personalObjectivesPane.add(imageView, i, 0);
         }
 
         for (int i = 0; i < 3; i++) {
             ImageView imageView = new ImageView();
-            imageView.setFitWidth(50);
-            imageView.setFitHeight(70);
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(65);
             imageView.setImage(null);
             cardHandPane.add(imageView, i, 0);
         }
 
         ImageView starterCardView = new ImageView();
-        starterCardView.setFitWidth(50);
-        starterCardView.setFitHeight(70);
+        starterCardView.setFitWidth(90);
+        starterCardView.setFitHeight(65);
         starterCardView.setImage(null);
         starterCardPane.getChildren().add(starterCardView);
 
@@ -180,25 +178,15 @@ public class RunningController extends GenericController{
 
     }
 
-    public void setScoreBoardPosition(GameModelImmutable model){
-        for(int i = 0; i < model.getAllPlayers().size(); i++){
+    public void setScoreBoardPosition(GameModelImmutable model) {
+        for (int i = 0; i < model.getAllPlayers().size(); i++) {
             int player_position = model.getCommonBoard().getPlayerPosition(i);
-            movePieceToPosition(model, i, player_position);
+            movePieceToPosition(i, player_position);
         }
     }
 
     // Method to move a piece to a new Pane
-    private void movePieceToPositionZero(ImageView piece, Pane targetPane) {
-        Pane parent = (Pane) piece.getParent();
-        if (parent != null) {
-            parent.getChildren().remove(piece);
-        }
-        targetPane.getChildren().add(piece);
-    }
-
-    // Method to move a piece to a new Pane
-    private void movePieceToPosition(GameModelImmutable model, int player_index, int indexToGo) {
-
+    private void movePieceToPosition(int player_index, int indexToGo) {
         ImageView targetPane = bnImageViews[indexToGo];
         ImageView piece = pieces.get(player_index);
         Pane parent = (Pane) piece.getParent();
@@ -208,18 +196,67 @@ public class RunningController extends GenericController{
         targetPane.setImage(piece.getImage());
     }
 
+
     public void setPlayersPointsAndNicknames(GameModelImmutable model, String nickname) {
-        ArrayList<PlayerIC> allPlayers = model.getAllPlayers();
+        ArrayList<PlayerIC> players_list = model.getAllPlayers();
+        this.players_list = players_list;
+
+        // Update recipient combo box
+        recipientComboBox.getItems().clear();
+        recipientComboBox.getItems().add("Everyone");
+
+        // Clear existing rows except the header
+        otherPlayers.getChildren().removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) > 0);
+        // Remove existing RowConstraints except the first one
+        while (otherPlayers.getRowConstraints().size() > 1) {
+            otherPlayers.getRowConstraints().remove(1);
+        }
+
         int j = 0;
-        for(int i = 0; i < allPlayers.size(); i++){
-            if(allPlayers.get(i).getNickname().equals(nickname)){
-                myPoints.setText(String.valueOf(model.getAllPlayers().get(i).getScoreBoardPosition()));
-            }else{
-                othersNicknames.get(j).setText(String.valueOf(allPlayers.get(i).getScoreBoardPosition()));
-                othersNicknames.get(j).setText(allPlayers.get(i).getNickname());
+        for (PlayerIC player : players_list) {
+            if (!player.getNickname().equals(nickname)) {
+                // Add player to recipient combo box
+                recipientComboBox.getItems().add(player.getNickname());
+                // Create and add player label
+                Label playerLabel = new Label(player.getNickname());
+                playerLabel.setTextFill(Color.web("#4d0202"));
+                playerLabel.setAlignment(javafx.geometry.Pos.CENTER);
+                playerLabel.setFont(javafx.scene.text.Font.font("Luminari", 19));
+                GridPane.setRowIndex(playerLabel, j + 1);
+                GridPane.setColumnIndex(playerLabel, 0);
+                otherPlayers.getChildren().add(playerLabel);
+
+                // Create and add points label
+                Text pointsText = new Text(String.valueOf(player.getScoreBoardPosition()));
+                pointsText.setFill(Color.web("#4d0202"));
+                pointsText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
+                pointsText.setFont(javafx.scene.text.Font.font("Luminari", 19));
+                GridPane.setRowIndex(pointsText, j + 1);
+                GridPane.setColumnIndex(pointsText, 1);
+                otherPlayers.getChildren().add(pointsText);
+
+                // Create and add button
+                Button goButton = new Button("GO");
+                goButton.setPrefHeight(26.0);
+                goButton.setPrefWidth(188.0);
+                goButton.setEffect(new javafx.scene.effect.ColorAdjust(0.17, 0.3, 0.0, 0.0));
+                goButton.setOnAction((ActionEvent event) -> {
+                    showOthersPersonalBoard(player);
+                });
+                GridPane.setRowIndex(goButton, j + 1);
+                GridPane.setColumnIndex(goButton, 2);
+                otherPlayers.getChildren().add(goButton);
+
+                // Add row constraints
+                otherPlayers.getRowConstraints().add(new RowConstraints(30.0, 30.0, Double.MAX_VALUE));
                 j++;
             }
         }
+    }
+
+    private void showOthersPersonalBoard(PlayerIC player) {
+        // TODO: Logica per mostrare la board personale degli altri giocatori
+        System.out.println("Mostra board per " + player.getNickname());
     }
 
     // Method to set an image to one of the common card ImageViews
@@ -260,31 +297,40 @@ public class RunningController extends GenericController{
         }
     }
 
-//    public void setStarterCardFront(GameModelImmutable model, String nickname) {
-//        this.starterCard = model.getPlayerEntity(nickname).getStarterCard().getId();
-//        int cardId = model.getPlayerEntity(nickname).getStarterCard().getId();
-//        String imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
-//        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
-//        imageView.setFitWidth(90); // Imposta la larghezza desiderata
-//        imageView.setFitHeight(65); // Imposta l'altezza desiderata
-//        StarterCardImage.setImage(imageView.getImage());
-//    }
+    public void setStarterCardFront(GameModelImmutable model, String nickname) {
+        this.starterCard = model.getPlayerEntity(nickname).getStarterCardToChose().getFirst().getId();
+        String imagePath = "/images/cards/cards_front/" + String.format("%03d", starterCard) + ".png";
+        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+        imageView.setFitWidth(90); // Imposta la larghezza desiderata
+        imageView.setFitHeight(65); // Imposta l'altezza desiderata
+        StarterCardImage.setImage(imageView.getImage());
+        starterCardOrientation = Orientation.FRONT;
+    }
 
-//    public void setStarterCardBack(GameModelImmutable model, String nickname) {
-//        int cardId = model.getPlayerEntity(nickname).getStarterCard().getId();
-//        String imagePath = "/images/cards/cards_back/" + String.format("%03d", cardId) + ".png";
-//        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
-//        imageView.setFitWidth(90); // Imposta la larghezza desiderata
-//        imageView.setFitHeight(65); // Imposta l'altezza desiderata
-//        StarterCardImage.setImage(imageView.getImage());
-//    }
+    public void setStarterCardFront() {
+        String imagePath = "/images/cards/cards_front/"+ String.format("%03d", starterCard) + ".png"; // Aggiungi l'id della carta al percorso
+        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+        imageView.setFitWidth(90); // Imposta la larghezza desiderata
+        imageView.setFitHeight(65);; // Imposta l'altezza desiderata
+        StarterCardImage.setImage(imageView.getImage());
+        starterCardOrientation = Orientation.FRONT;
+    }
 
-//    public void flipStarterCard() {
-//        if (starterCardOrientation == Orientation.BACK)
-//            setStarterCardFront(starterCard);
-//        else
-//            setStarterCardBack(starterCard);
-//    }
+    public void setStarterCardBack() {
+        String imagePath = "/images/cards/cards_back/" + String.format("%03d", starterCard) + ".png";
+        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+        imageView.setFitWidth(90); // Imposta la larghezza desiderata
+        imageView.setFitHeight(65); // Imposta l'altezza desiderata
+        StarterCardImage.setImage(imageView.getImage());
+        starterCardOrientation = Orientation.BACK;
+    }
+
+    public void flipStarterCard() {
+        if (starterCardOrientation == Orientation.BACK)
+            setStarterCardFront();
+        else
+            setStarterCardBack();
+    }
 
     public void flipPersonalObjective(int cardId, int i) {
         Image image = new Image("/images/cards/cards_back/"+String.format("%03d", cardId) + ".png"); // Aggiungi l'id della carta al percorso
@@ -327,24 +373,6 @@ public class RunningController extends GenericController{
         cardHandOrientation = Orientation.BACK;
     }
 
-    public void setStarterCardFront(int cardId) {
-        Image starterCardView = new Image("/images/cards/cards_front/"+ String.format("%03d", cardId) + ".png"); // Aggiungi l'id della carta al percorso
-        ImageView imageView = new ImageView(starterCardView);
-        imageView.setFitWidth(50); // Imposta la larghezza desiderata
-        imageView.setFitHeight(70); // Imposta l'altezza desiderata
-        starterCardPane.getChildren().add(imageView);
-        starterCardOrientation = Orientation.FRONT;
-    }
-
-    public void setStarterCardBack(int cardId) {
-        Image starterCardView = new Image("/images/cards/cards_back/"+ String.format("%03d", cardId) + ".png"); // Aggiungi l'id della carta al percorso
-        ImageView imageView = new ImageView(starterCardView);
-        imageView.setFitWidth(50); // Imposta la larghezza desiderata
-        imageView.setFitHeight(70); // Imposta l'altezza desiderata
-        starterCardPane.getChildren().add(imageView);
-        starterCardOrientation = Orientation.BACK;
-    }
-
     public void flipCardHand() {
         if (cardHandOrientation == Orientation.BACK)
             setCardHandFront(cardHand);
@@ -353,13 +381,8 @@ public class RunningController extends GenericController{
     }
 
 
-    //TODO: to adjust the entering parameter
-    public void flipStarterCard(int id) {
-        if (starterCardOrientation == Orientation.BACK)
-            setStarterCardFront(id);
-        else
-            setStarterCardBack(id);
-    }
+    //--------------------DYNAMIC GAME---------------------------------------
+
 
     //TODO: quando faccio place devo togliere la carta dalla mano di carte
     //quando inserisco una carta in mano la inserisco in posizione 0
@@ -384,6 +407,14 @@ public class RunningController extends GenericController{
     }
 
 
+    public void changeTurn(GameModelImmutable model, String nickname) {
+        setMsgToShow("Next turn is up to: " + model.getCurrentPlayerNickname(), true);
+    }
+
+
+    //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
+
+
     public void setImportantEvents(List<String> importantEvents) {
         eventsListView.getItems().clear();
         for (String s : importantEvents) {
@@ -392,14 +423,33 @@ public class RunningController extends GenericController{
         eventsListView.scrollTo(eventsListView.getItems().size());
     }
 
-    /**
-     * This method manage the change of turn
-     * @param model
-     * @param nickname
-     */
-    public void changeTurn(GameModelImmutable model, String nickname) {
-        setMsgToShow("Next turn is up to: " + model.getCurrentPlayerNickname(), true);
+    @FXML
+    private void sendMessage() {
+        String message = chatInput.getText();
+        String recipient = recipientComboBox.getValue();
+        if (!message.trim().isEmpty()) {
+            if ("Everyone".equals(recipient)) {
+                chatArea.appendText("Me (to everyone): " + message + "\n");
+            } else {
+                chatArea.appendText("Me (a " + recipient + "): " + message + "\n");
+                // Logica per inviare il messaggio privato al destinatario specifico
+                for (PlayerIC player : players_list) {
+                    if (player.getNickname().equals(recipient)) {
+                        sendPrivateMessage(player, message);
+                        break;
+                    }
+                }
+            }
+            chatInput.clear();
+        }
     }
+
+    private void sendPrivateMessage(PlayerIC player, String message) {
+        // Logica per inviare un messaggio privato al giocatore
+        // Questo potrebbe includere aggiornare la GUI del giocatore o inviare il messaggio attraverso la rete
+        System.out.println("Messaggio privato a " + player.getNickname() + ": " + message);
+    }
+
 
     public void setMsgToShow(String msg, Boolean success) {
         labelMessage.setText(msg);

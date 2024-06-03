@@ -246,7 +246,7 @@ public class ApplicationGUI extends Application {
     public void showRunningModel(GameModelImmutable model, String nickname) {
         RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setCardHand(model, nickname);
-        //controller.setStarterCardFront(model, nickname);
+        controller.setStarterCardFront(model, nickname);
         controller.setScoreBoardPosition(model);
         controller.setPlayersPointsAndNicknames(model, nickname);
         controller.setCommonCards(model);
