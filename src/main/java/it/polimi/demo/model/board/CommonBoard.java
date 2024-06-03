@@ -78,6 +78,7 @@ public class CommonBoard implements CommonBoardIC, Serializable {
         decks.add(2, this.objective_concrete_deck);
     }
 
+
     // Method to draw a card directly from a ConcreteDeck
     //        decks[0] = this.resource_concrete_deck;
     //        decks[1] = this.gold_concrete_deck;
@@ -238,16 +239,27 @@ public class CommonBoard implements CommonBoardIC, Serializable {
         return common_objectives;
     }
 
+
+//how TUI works
+//     1: Resource Deck
+//     2: First Resource Card on the table
+//     3: Second Resource Card on the table
+//     4: Gold Deck
+//     5: First Gold Card on the table
+//     6: Second Gold Card on the table
     @Override
     //necessary for the GUI
     public Integer[] getCommonCardsId() {
-        Integer[] cards = new Integer[6];
-        cards[0] = table_cards[0][0].getId(); //deck risorsa
-        cards[1] = table_cards[0][1].getId(); //card risorsa
-        cards[2] = table_cards[1][0].getId(); //deck gold
-        cards[3] = table_cards[1][1].getId(); //card gold
-        cards[4] = getCommonObjectives().getFirst().getId();
-        cards[5] = getCommonObjectives().get(1).getId();
+        Integer[] cards = new Integer[9];
+        cards[0] = getResourceConcreteDeck().pop().getId(); //deck resource
+        cards[1] = table_cards[0][0].getId(); //card resource
+        cards[2] = table_cards[0][1].getId(); //card resource
+        cards[3] = getGoldConcreteDeck().pop().getId(); //deck gold
+        cards[4] = table_cards[1][0].getId(); //card gold
+        cards[5] = table_cards[1][1].getId(); //card gold
+        cards[6] = getObjectiveConcreteDeck().pop().getId(); //objective deck
+        cards[7] = table_cards[2][0].getId(); //objective card
+        cards[8] = table_cards[2][1].getId(); //objective card
         return cards;
     }
 }

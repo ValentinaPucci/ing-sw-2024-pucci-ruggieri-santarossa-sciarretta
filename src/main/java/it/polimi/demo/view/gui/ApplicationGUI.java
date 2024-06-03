@@ -18,15 +18,12 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static it.polimi.demo.view.gui.scene.SceneType.*;
 
@@ -108,10 +105,6 @@ public class ApplicationGUI extends Application {
         }
     }
 
-    /**
-     * This method set the input reader GUI to all the controllers.
-     * @param inputReaderGUI the input reader GUI {@link inputReaderGUI}
-     */
     public void setInputReaderGUItoAllControllers(inputReaderGUI inputReaderGUI) {
         loadScenes();
         for (SceneInfo s : scenes) {
@@ -137,12 +130,6 @@ public class ApplicationGUI extends Application {
         }
     }
 
-    /**
-     * This method is used to get a controller of a specific scene.
-     *
-     * @param scene the scene {@link SceneType}
-     * @return the controller of the scene {@link GenericController}
-     */
     public GenericController getController(SceneType scene) {
         int index = getSceneIndex(scene);
         if (index != -1) {
@@ -151,18 +138,28 @@ public class ApplicationGUI extends Application {
         return null;
     }
 
-    /**
-     * This method returns the index of the scene.
-     *
-     * @param sceneName the scene name {@link SceneType}
-     * @return the index of the scene
-     */
     private int getSceneIndex(SceneType sceneName) {
         for (int i = 0; i < scenes.size(); i++) {
             if (scenes.get(i).getSceneType().equals(sceneName))
                 return i;
         }
         return -1;
+    }
+
+    public void createNewWindowWithStyle() {
+        Stage newStage = new Stage();
+        newStage.setScene(this.primaryStage.getScene());
+        newStage.show();
+        this.primaryStage.close();
+        this.primaryStage = newStage;
+        this.primaryStage.centerOnScreen();
+        this.primaryStage.setAlwaysOnTop(true);
+
+        this.primaryStage.setOnCloseRequest(event -> {
+            System.out.println("Closing all");
+
+            System.exit(1);
+        });
     }
 
 
@@ -209,11 +206,6 @@ public class ApplicationGUI extends Application {
         panePlayerLobby.getChildren().add(stackPane);
     }
 
-
-    /**
-     * Show the player in the lobby
-     * @param model the model {@link GameModelImmutable}
-     */
     public void showPlayerToLobby(GameModelImmutable model) {
         hidePanesInLobby();
         int i = 0;
@@ -223,30 +215,23 @@ public class ApplicationGUI extends Application {
         }
     }
 
-
-    /**
-     * This method hide the btn "Ready to start".
-     */
     public void disableBtnReadyToStart() {
         ((LobbyController) scenes.get(getSceneIndex(SceneType.LOBBY)).getGenericController()).setVisibleBtnReady(false);
     }
 
-    /**
-     * This method is used to show a generic error.
-     * @param msg the message
-     */
-    public void showErrorGeneric(String msg) {
-//        ErrorController controller = (ErrorController) scenes.get(getSceneIndex(SceneType.ERROR)).getGenericController();
-//        controller.setMsg(msg,false);
+    //---------------------------------RUNNING----------------------------------------------
+
+
+    public void changeTurn(GameModelImmutable model, String nickname) {
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+        controller.setPlayersPointsAndNicknames(model, nickname);
+        controller.changeTurn(model, nickname);
     }
 
-
-    //chiamato da GUI
-    // AGGIORNA IL RUNNING CONTROLLER CON I NUOVI DATI DEL MODEL
     public void showRunningModel(GameModelImmutable model, String nickname) {
         RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setCardHand(model, nickname);
-        //controller.setStarterCardFront(model, nickname);
+        controller.setStarterCardFront(model, nickname);
         controller.setScoreBoardPosition(model);
         controller.setPlayersPointsAndNicknames(model, nickname);
         controller.setCommonCards(model);
@@ -254,89 +239,41 @@ public class ApplicationGUI extends Application {
         //TODO: controller.setPersonalBoard(model, nickname);
         //TODO: controller.setOthersPersonalBoard(model, nickname);
     }
-//
-//    /**
-//     * This method is used to show the player grabbed tiles.
-//     * @param model the model {@link GameModelImmutable}
-//     * @param nickname the nickname of the player
-//     */
-//    public void showPlayerDrawnCard(GameModelImmutable model, String nickname) {
-//        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
-//        controller.setPlayerDrawnCard(model, nickname);
-//    }
-//
-//    /**
-//     * This method is used to show the player positioned tiles.
-//     * @param model the model {@link GameModelImmutable}
-//     * @param nickname the nickname of the player
-//     */
-//    public void showPlayerPlacedCard(GameModelImmutable model, String nickname) {
-//        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
-//        controller.setCardHand(model, nickname);
-//        //TODO: controller.setPersonalBoard(model, nickname);
-//    }
-//
-//    /**
-//     * This method is used to change the turn.
-//     * @param model the model {@link GameModelImmutable}
-//     * @param nickname the nickname of the player
-//     */
-//    public void changeTurn(GameModelImmutable model, String nickname) {
-//        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-//        controller.setPlayersPointsAndNicknames(model, nickname);
-//        //TODO: controller.changeTurn(model, nickname);
-//    }
-//
-    /**
-     * This method is used to show the message in the game.
-     * @param model the model {@link GameModelImmutable}
-     * @param myNickname the nickname of the player
-     */
-    public void showMessages(GameModelImmutable model, String myNickname) {
-        //RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-        //controller.setMessage(model.getChat().getMsgs(), myNickname);
+
+    public void showPlayerDrawnCard(GameModelImmutable model, String nickname) {
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
+        controller.setPlayerDrawnCard(model, nickname);
     }
 
-    /**
-     * This method is used to show all the important events.
-     * @param importantEvents the list of the important events
-     */
+    public void showPlayerPlacedCard(GameModelImmutable model, String nickname) {
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
+        controller.setCardHand(model, nickname);
+        //TODO: controller.setPersonalBoard(model, nickname);
+    }
+
+    //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
+
+
+    public void showErrorGeneric(String msg) {
+        ErrorController controller = (ErrorController) scenes.get(getSceneIndex(SceneType.ERROR)).getGenericController();
+        controller.setMessage(msg,false);
+    }
+
+//TODO: understand what to do
+
+//    public void showMessages(GameModelImmutable model, String myNickname) {
+//        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+//        controller.setMessage(model.getChat().getMsgs(), myNickname);
+//    }
+
     public void showImportantEvents(List<String> importantEvents) {
         RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setImportantEvents(importantEvents);
     }
 
-    /**
-     * This method is used to create a window with a specific style.
-     */
-    public void createNewWindowWithStyle() {
-        Stage newStage = new Stage();
-        newStage.setScene(this.primaryStage.getScene());
-        newStage.show();
-        this.primaryStage.close();
-        this.primaryStage = newStage;
-        this.primaryStage.centerOnScreen();
-        this.primaryStage.setAlwaysOnTop(true);
 
-        this.primaryStage.setOnCloseRequest(event -> {
-            System.out.println("Closing all");
-
-            System.exit(1);
-        });
-    }
-
-
-    /**
-     * This method is used to show a generic error.
-     * @param msg the message
-     */
     public void showError(String msg) {
         ErrorController controller = (ErrorController) scenes.get(getSceneIndex(ERROR)).getGenericController();
     }
 
-    public void changeTurn(GameModelImmutable model, String nickname) {
-        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-        controller.setPlayersPointsAndNicknames(model, nickname);
-        controller.changeTurn(model, nickname);
-    }
 }
