@@ -13,10 +13,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -41,12 +38,11 @@ public class RunningController extends GenericController {
     public Button FlipStarter;
     public Pane personalObjective0Pane;
     public Pane personalObjective1Pane;
+    @FXML public HBox personalObjectivesBox;
     @FXML private AnchorPane mainAnchor;
     @FXML public ImageView personalObjective0;
     @FXML public ImageView personalObjective1;
     @FXML public GridPane commonCardsPane;
-    @FXML public GridPane personalObjectivesPane;
-
     @FXML public GridPane cardHandPane;
     @FXML private Pane scoreBoardPane;
     private Orientation cardHandOrientation;
@@ -100,6 +96,9 @@ public class RunningController extends GenericController {
     ArrayList<Integer> personalObjectiveIds = new ArrayList<>();
 
     public void initialize() {
+
+        personalObjectivesBox = new HBox();
+
         pieces = new ArrayList<>();
         ImageView piece1ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece1.png")))); //blue
         ImageView piece2ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece2.png")))); //green
@@ -154,13 +153,18 @@ public class RunningController extends GenericController {
             commonCardsPane.add(imageView, column, row);
         }
 
-        for (int i = 0; i < 2; i++) {
-            ImageView imageView = new ImageView();
-            imageView.setFitWidth(90);
-            imageView.setFitHeight(65);
-            imageView.setImage(null);
-            personalObjectivesPane.add(imageView, i, 0);
-        }
+        ImageView imageView1 = new ImageView();
+        imageView1.setFitWidth(90);
+        imageView1.setFitHeight(65);
+        imageView1.setImage(null);
+        personalObjective1Pane.getChildren().add(imageView1);
+
+        ImageView imageView0 = new ImageView();
+        imageView0.setFitWidth(90);
+        imageView0.setFitHeight(65);
+        imageView0.setImage(null);
+        personalObjective1Pane.getChildren().add(imageView0);
+
 
         for (int i = 0; i < 3; i++) {
             ImageView imageView = new ImageView();
@@ -189,7 +193,7 @@ public class RunningController extends GenericController {
         othersNicknames.add(playerLabel3);
 
         //disable all cards
-        cardPanes = Arrays.asList(starterCardPane, cardHandPane, personalObjectivesPane, commonCardsPane, personalObjective0Pane, personalObjective1Pane);
+        cardPanes = Arrays.asList(starterCardPane, cardHandPane, commonCardsPane, personalObjective0Pane, personalObjective1Pane);
         setComponentsDisable(cardPanes, true);
 
     }
@@ -313,9 +317,9 @@ public class RunningController extends GenericController {
             imageView.setFitWidth(90); // Imposta la larghezza desiderata
             imageView.setFitHeight(65); // Imposta l'altezza desiderata
             if (i == 0) {
-                personalObjectivesPane.add(imageView, 0, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
+                personalObjective0Pane.getChildren().add(imageView); // Add the image to the VBox
             } else {
-                personalObjectivesPane.add(imageView, 1, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
+                personalObjective1Pane.getChildren().add(imageView); // Add the image to the VBox
             }
         }
     }
@@ -356,14 +360,17 @@ public class RunningController extends GenericController {
     }
 
     public void flipPersonalObjective(int cardId, int i) {
-        Image image = new Image("/images/cards/cards_back/"+String.format("%03d", cardId) + ".png"); // Aggiungi l'id della carta al percorso
-        ImageView imageView = new ImageView(image);
+        String imagePath = "/images/cards/cards_back/"+String.format("%03d", cardId) + ".png";
+        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
         imageView.setFitWidth(90); // Imposta la larghezza desiderata
         imageView.setFitHeight(65); // Imposta l'altezza desiderata
-        if (i == 0)
-            personalObjectivesPane.add(imageView, 0, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
-        else
-            personalObjectivesPane.add(imageView, 0, 1); // Aggiungi l'immagine alla griglia nella posizione corretta
+        if (i == 0) {
+            personalObjective0Pane.getChildren().add(imageView); // Add the image to the VBox
+        } else {
+            personalObjective1Pane.getChildren().add(imageView); // Add the image to the VBox
+        }
+        personalObjective1Pane.setDisable(true);
+        personalObjective0Pane.setDisable(true);
     }
 
     public void setCardHand(GameModelImmutable model, String nickname) {
