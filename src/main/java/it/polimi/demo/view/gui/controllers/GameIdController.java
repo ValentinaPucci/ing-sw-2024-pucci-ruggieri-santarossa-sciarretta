@@ -11,6 +11,7 @@ public class GameIdController extends GenericController{
 
     @FXML
     void EnterGame(ActionEvent event) {
+        System.out.println("GameId entered:" + GameId + GameId.getText());
         if(!GameId.getText().isEmpty()){
             getInputReaderGUI().addTxt(GameId.getText());
         }

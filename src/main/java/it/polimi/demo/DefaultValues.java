@@ -28,8 +28,8 @@ public class DefaultValues implements Serializable {
     public final static int twelveHS = 43200;
     public final static int display_finalPoint = 13;
 
-    public final static int Default_port_RMI = 4321;
-    public final static int Default_port_Socket = 4320;
+    public final static int Default_port_RMI = 4331;
+    public final static int Default_port_Socket = 4332;
 
     public final static String Default_servername_RMI = "CodexNaturalis";
     public static String serverIp = "127.0.0.1";

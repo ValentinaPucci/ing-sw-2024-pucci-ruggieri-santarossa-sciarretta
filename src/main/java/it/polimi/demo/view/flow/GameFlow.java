@@ -207,9 +207,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      *              it says if he's just joined or if he's been kicked and why
      */
     private void statusNotInAGame(EventElement event) {
-
         switch (event.getType()) {
-
             case APP_MENU -> {
                 boolean selectionok;
                 do {
@@ -273,12 +271,15 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 //            }
 
             case GAME_STARTED -> {
+                System.out.println("status: GAME_STARTED");
                 ui.show_gameStarted(event.getModel());
                 this.inputParser.setPlayer(event.getModel().getPlayerEntity(nickname));
                 this.inputParser.setIdGame(event.getModel().getGameId());
             }
 
             case NEXT_TURN -> {
+                System.out.println("status: NEXT_TURN !!");
+                ui.show_nextTurn(event.getModel(), nickname);
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
                     ui.show_objectiveCards(event.getModel());
                     askWhichObjectiveCard();
@@ -417,7 +418,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-        // ui.show_chosenNickname(nickname);
+        ui.show_chosenNickname(nickname);
     }
 
     /**
@@ -445,7 +446,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             }
 
         } while (num_of_players == null);
-        ui.show_chosenNumOfPLayers(num_of_players);
         return num_of_players;
     }
 
@@ -466,25 +466,33 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
         if (optionChoose.equals("."))
             System.exit(1);
-        askNickname();
+        //askNickname();
 
         switch (optionChoose) {
             case "c" -> {
                 Integer num_players = askNumOfPlayers();
                 if (num_players < 2 || num_players > 4)
                     return false;
-                else
+                else{
+                    System.out.println("Chosen num of players: " + num_players);
+                    askNickname();
                     createGame(nickname, num_players);
+                }
             }
             case "j" -> {
+                askNickname();
                 joinFirstAvailableGame(nickname);
             }
             case "js" -> {
                 Integer gameId = askGameId();
                 if (gameId == -1)
                     return false;
-                else
+                else{
+                    this.game_id = gameId;
+                    askNickname();
                     joinGame(nickname, gameId);
+                }
+
             }
             case "x" -> reconnect(nickname, fileDisconnection.getLastGameId(nickname));
 
@@ -675,6 +683,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         ui.show_creatingNewGameMsg(nickname);
         try {
             clientActions.createGame(nickname, num_of_players);
+            System.out.println("Created game");
         } catch (IOException | InterruptedException | NotBoundException e) {
             printAsync("Error in here, createGame gameFlow!");
             noConnectionError();
@@ -721,6 +730,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
     }
 
+
+    //-----------------------------RUNNING METHODS-----------------------------------------
 
     @Override
     public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
@@ -906,6 +917,9 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void playerIsReadyToStart(GameModelImmutable gameModel, String nick) throws IOException {
         ui.show_playerJoined(gameModel, nickname);
+        if (nick.equals(nickname)) {
+            ui.show_ReadyToStart(gameModel, nickname);
+        }
         events.add(gameModel, PLAYER_IS_READY_TO_START);
     }
 

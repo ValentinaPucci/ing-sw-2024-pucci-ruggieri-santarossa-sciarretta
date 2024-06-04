@@ -441,6 +441,16 @@ public class TUI extends UI {
         System.exit(-1);
     }
 
+    @Override
+    protected void show_chosenNickname(String nickname) {
+
+    }
+
+    @Override
+    protected void show_nextTurn(GameModelImmutable model, String nickname) {
+
+    }
+
     /**
      * Asks the player to pick a direction
      */
@@ -512,11 +522,6 @@ public class TUI extends UI {
     public void show_insertNumOfPlayersMsg() {
         clearScreen();
         printAsyncNoCursorReset(ansi().cursor(DefaultValues.row_gameID, 0).a("> Choose the number of players for this game: "));
-    }
-
-    @Override
-    public void show_chosenNumOfPLayers(int n) {
-        printAsync(ansi().cursor(DefaultValues.row_gameID + 2, 0).a("> You have chosen " + n + " players"));
     }
 
     /**
@@ -633,5 +638,9 @@ public class TUI extends UI {
         printAsync(ansi().cursor(DefaultValues.row_input, 0));
     }
 
+
+    @Override
+    public void show_ReadyToStart(GameModelImmutable gameModel, String nicknameofyou) {
+    }
 
 }

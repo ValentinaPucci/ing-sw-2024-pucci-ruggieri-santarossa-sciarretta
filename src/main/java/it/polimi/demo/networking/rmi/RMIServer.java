@@ -160,6 +160,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
 
     @Override
     public GameControllerInterface setAsReady(GameListener lis, String nick, int idGame) throws RemoteException {
+        System.out.println("Sono in RMIServer");
         GameControllerInterface ris = serverObject.mainController.setAsReady(lis, nick, idGame);
         if (ris != null) {
             try {
