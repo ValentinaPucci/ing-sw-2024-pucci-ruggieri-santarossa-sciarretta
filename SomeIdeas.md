@@ -72,6 +72,34 @@ We would like to implement this advanced functionality on our program. Namely, w
 2. starter card orientation (f / b)
 3. place starter card 
 
+# IDEAS x disable buttons / cards
+- In case of images -> I need to use the relative Pane
+
+- If I want them to be clickable: starterCardPane.setDisable(false); / FlipStarter.setDisable(false);
+- If I want to disable them: FlipStarter.setDisable(true); / starterCardPane.setDisable(true);
+- If I want to make them invisible: setVisible(false)
+
+  - If I want to disable all others cards in group:
+  
+        cardPanes = Arrays.asList(starterCardPane /*, otherPanes */);
+        buttons = Arrays.asList(FlipStarter /*, otherButtons */);
+  
+        // Initially, only the starter card and button are enabled
+
+        setComponentsDisable(cardPanes, true);
+        setComponentsDisable(buttons, true);
+
+        starterCardPane.setDisable(false);
+        FlipStarter.setDisable(false);
+
+        ...
+
+        private void setComponentsDisable(List<? extends javafx.scene.Node> components, boolean disable) {
+            for (javafx.scene.Node component : components) {
+                component.setDisable(disable);
+                }
+            }       
+
 # IDEAS FOR PERSONAL BOARD IN GUI (03 june 2024)
 - AnchorPane + ScrollPane (AnchorPane utilizzato per contenere le ImageView, AnchorPane all'interno dello ScrollPane per gestire lo scorrimento.)
 - Posizionamento delle carte (ImageView): evento di clic sull'AnchorPane -> Verifica se la posizione del clic è valida -> Se è valida, aggiungi una nuova ImageView alle coordinate specifiche.

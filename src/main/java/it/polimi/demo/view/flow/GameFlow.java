@@ -278,6 +278,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             }
 
             case NEXT_TURN -> {
+                System.out.println("status: NEXT_TURN !!");
                 ui.show_nextTurn(event.getModel(), nickname);
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
                     ui.show_objectiveCards(event.getModel());

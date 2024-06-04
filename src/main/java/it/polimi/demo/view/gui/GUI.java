@@ -4,6 +4,7 @@ import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.view.flow.UI;
 import it.polimi.demo.view.flow.utilities.inputReaderGUI;
 import it.polimi.demo.view.gui.controllers.LobbyController;
+import it.polimi.demo.view.gui.controllers.RunningController;
 import it.polimi.demo.view.gui.scene.SceneType;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -163,6 +164,7 @@ public class GUI extends UI {
 
     @Override
     protected void show_objectiveCards(GameModelImmutable gameModel) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableObjectiveCardsClick());
 
     }
 
@@ -238,7 +240,7 @@ public class GUI extends UI {
 
     @Override
     protected void show_orientation(String message) {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableStarterCardClick());
     }
 
     @Override

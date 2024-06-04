@@ -6,6 +6,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.interfaces.PlayerIC;
+import it.polimi.demo.view.flow.utilities.inputReaderGUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -20,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,12 +37,16 @@ public class RunningController extends GenericController {
     public ArrayList<Label> othersNicknames = new ArrayList<>();
     @FXML public GridPane otherPlayers;
     @FXML public ImageView StarterCardImage;
+    @FXML public Pane starterCardPane;
+    public Button FlipStarter;
+    public Pane personalObjective0Pane;
+    public Pane personalObjective1Pane;
     @FXML private AnchorPane mainAnchor;
     @FXML public ImageView personalObjective0;
     @FXML public ImageView personalObjective1;
     @FXML public GridPane commonCardsPane;
     @FXML public GridPane personalObjectivesPane;
-    @FXML public Pane starterCardPane;
+
     @FXML public GridPane cardHandPane;
     @FXML private Pane scoreBoardPane;
     private Orientation cardHandOrientation;
@@ -87,6 +93,11 @@ public class RunningController extends GenericController {
     private ComboBox<String> recipientComboBox;
     private int starterCard = 0;
     private ArrayList<PlayerIC> players_list;
+
+    private List<Pane> cardPanes;
+    private List<Button> buttons;
+
+    ArrayList<Integer> personalObjectiveIds = new ArrayList<>();
 
     public void initialize() {
         pieces = new ArrayList<>();
@@ -177,6 +188,16 @@ public class RunningController extends GenericController {
         othersNicknames.add(playerLabel2);
         othersNicknames.add(playerLabel3);
 
+        //disable all cards
+        cardPanes = Arrays.asList(starterCardPane, cardHandPane, personalObjectivesPane, commonCardsPane, personalObjective0Pane, personalObjective1Pane);
+        setComponentsDisable(cardPanes, true);
+
+    }
+
+    private void setComponentsDisable(List<? extends javafx.scene.Node> components, boolean disable) {
+        for (javafx.scene.Node component : components) {
+            component.setDisable(disable);
+        }
     }
 
     public void setScoreBoardPosition(GameModelImmutable model) {
@@ -284,6 +305,7 @@ public class RunningController extends GenericController {
     // Method to set an image to one of the common card ImageViews
     public void setPersonalObjectives(GameModelImmutable model, String nickname) {
         Integer[] cardIds = model.getPlayerEntity(nickname).getSecretObjectiveCardsIds();
+        this.personalObjectiveIds = new ArrayList<>(Arrays.asList(cardIds));
         for (int i = 0; i < cardIds.length; i++) {
             int cardId = cardIds[i];
             String imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
@@ -384,6 +406,71 @@ public class RunningController extends GenericController {
 
     //--------------------------------------DYNAMIC GAME-------------------------------------------
 
+    public void ableStarterCardClick() {
+        starterCardPane.setDisable(false);
+        FlipStarter.setDisable(false);
+        setMsgToShow("Choose the orientation of your starter card: " , true);
+    }
+
+
+    public void ableObjectiveCardsClick() {
+        personalObjective0Pane.setDisable(false);
+        personalObjective1Pane.setDisable(false);
+        personalObjective0Pane.setMouseTransparent(false);
+        personalObjective1Pane.setMouseTransparent(false);
+        setMsgToShow("Choose one objective card: " , true);
+    }
+
+    @FXML
+    public void onPersonalObjective1Clicked(MouseEvent event) {
+        setMsgToShow("personalObjective0 clicked" , true);
+        flipPersonalObjective(personalObjectiveIds.getFirst(), 0);
+
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("2");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+    }
+
+    @FXML
+    public void onPersonalObjective0Clicked(MouseEvent event) {
+        setMsgToShow("personalObjective1 clicked" , true);
+        flipPersonalObjective(personalObjectiveIds.get(1), 1);
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("1");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+    }
+
+
+    @FXML
+    private void onStarterCardClicked(MouseEvent event) {
+        if (starterCardOrientation == Orientation.FRONT) {
+            setMsgToShow("Starter card clicked with orientation: FRONT", true);
+        } else {
+            setMsgToShow("Starter card clicked with orientation: BACK", true);
+        }
+        starterCardPane.setDisable(true);
+        FlipStarter.setDisable(true);
+        FlipStarter.setVisible(false);
+        StarterCardImage.setVisible(false);
+
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            if(starterCardOrientation == Orientation.FRONT)
+                reader.addTxt("f");
+            else if(starterCardOrientation == Orientation.BACK)
+                reader.addTxt("b");
+            else
+                System.out.println("Orientation non valida.");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+    }
 
     //TODO: quando faccio place devo togliere la carta dalla mano di carte
     //quando inserisco una carta in mano la inserisco in posizione 0
@@ -479,6 +566,8 @@ public class RunningController extends GenericController {
             labelMessage.setTextFill(Color.RED);
         }
     }
+
+
 }
 
 

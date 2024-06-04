@@ -223,6 +223,7 @@ public class ApplicationGUI extends Application {
 
 
     public void changeTurn(GameModelImmutable model, String nickname) {
+        System.out.println("CHANGE TURN");
         RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setPlayersPointsAndNicknames(model, nickname);
         controller.changeTurn(model, nickname);
