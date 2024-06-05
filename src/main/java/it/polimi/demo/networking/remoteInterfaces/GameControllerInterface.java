@@ -1,4 +1,4 @@
-package it.polimi.demo.networking.rmi.remoteInterfaces;
+package it.polimi.demo.networking.remoteInterfaces;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.Player;
@@ -58,20 +58,12 @@ public interface GameControllerInterface extends Remote {
      */
     int getGameId() throws RemoteException;
 
-    /**
-     * Set the player as connected
-     * @param p the player to set as connected
-     */
-    void setPlayerAsConnected(Player p) throws RemoteException;
-
     LinkedList<Player> getConnectedPlayers() throws RemoteException;
 
     Player getCurrentPlayer() throws RemoteException;
 
 
      void disconnectPlayer(String nick, GameListener lisOfClient) throws RemoteException;
-
-    void reconnectPlayer(Player p) throws RemoteException;
 
     /**
      * Add a message to the chat list
@@ -100,8 +92,6 @@ public interface GameControllerInterface extends Remote {
     GameStatus getStatus() throws RemoteException;
 
     void playerIsReadyToStart(String nickname) throws RemoteException;
-
-    boolean isThisMyTurn(String nickname) throws RemoteException;
 
     void addPing(String nickname, GameListener gameListener) throws RemoteException;
 

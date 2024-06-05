@@ -43,6 +43,8 @@ public interface GameListener extends Remote {
 
     void illegalMove(GameModelImmutable model) throws RemoteException;
 
+    void illegalMoveBecauseOf(GameModelImmutable model, String reason_why) throws RemoteException;
+
     /**
      * This method is invoked by gameUI when the player wants to draw a card.
      * @param model the game model

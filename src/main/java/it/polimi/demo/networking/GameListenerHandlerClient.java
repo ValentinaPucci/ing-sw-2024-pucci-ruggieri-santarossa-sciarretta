@@ -41,6 +41,11 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     }
 
     @Override
+    public void illegalMoveBecauseOf(GameModelImmutable model, String reason_why) throws RemoteException {
+        flow.illegalMoveBecauseOf(model, reason_why);
+    }
+
+    @Override
     public void cardDrawn(GameModelImmutable model, int index) throws RemoteException {
         flow.cardDrawn(model, index);
     }

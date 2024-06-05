@@ -7,7 +7,7 @@ import it.polimi.demo.model.*;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -17,16 +17,13 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 public class GameController implements GameControllerInterface, Serializable, Runnable {
 
-    /**
-     * The model to control
-     */
     private GameModel model;
 
-    private final Map<GameListener, Heartbeat>  heartbeats;
+    private final Map<GameListener, Heartbeat>  pings;
 
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new GameModel(gameID, numberOfPlayers, player);
-        heartbeats = new HashMap<>();
+        pings = new HashMap<>();
         new Thread(this).start();
     }
 
@@ -54,8 +51,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * and handleDisconnection will deal with it.
      */
     public void checkForDisconnections() {
-        synchronized (heartbeats) {
-            for (Map.Entry<GameListener, Heartbeat> entry : heartbeats.entrySet()) {
+        synchronized (pings) {
+            for (Map.Entry<GameListener, Heartbeat> entry : pings.entrySet()) {
                 GameListener listener = entry.getKey();
                 Heartbeat heartbeat = entry.getValue();
                 if (isHeartbeatExpired(heartbeat)) {
@@ -102,8 +99,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public synchronized void addPing(String nickname, GameListener me) {
-        synchronized (heartbeats) {
-            heartbeats.put(me, new Heartbeat(System.currentTimeMillis(), nickname));
+        synchronized (pings) {
+            pings.put(me, new Heartbeat(System.currentTimeMillis(), nickname));
         }
     }
 
@@ -120,11 +117,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
             removeListener(lisOfClient, p);
             model.removePlayer(p);
         }
-    }
-
-    @Override
-    public void reconnectPlayer(Player p) throws RemoteException {
-
     }
 
     /**
@@ -180,16 +172,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * Return the entity of the player associated with the nickname @param
-     *
-     * @param nick the nickname of the player
-     * @return the player by nickname @param
-     */
-    public Player getPlayer(String nick) {
-        return model.getPlayerEntity(nick);
-    }
-
-    /**
      * Return the entity of the player who is playing (it's his turn)
      *
      * @return the player who is playing the turn
@@ -207,11 +189,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     // Section: Overrides
-
-    @Override
-    public synchronized void setPlayerAsConnected(Player p) {
-        // model.setPlayerAsConnected(p);
-    }
 
     /**
      * Gets the player entity
@@ -261,11 +238,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     @Override
     public synchronized void playerIsReadyToStart(String nickname) {
         model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
-    }
-
-    @Override
-    public boolean isThisMyTurn(String nickname) {
-        return model.getPlayersConnected().peek().getNickname().equals(nickname);
     }
 
     /**
@@ -349,7 +321,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     public void addListener(GameListener l, Player p) {
         model.addListener(l);
-        // addPing(p.getNickname(), l);
     }
 
     /**
@@ -374,7 +345,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     public synchronized void sendMessage(String nick, Message mess) throws RemoteException {
         model.sendMessage(nick, mess);
     }
-
 }
 
 

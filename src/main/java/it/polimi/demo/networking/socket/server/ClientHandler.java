@@ -9,12 +9,10 @@ import java.rmi.RemoteException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import it.polimi.demo.controller.GameController;
 import it.polimi.demo.controller.MainController;
-import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;

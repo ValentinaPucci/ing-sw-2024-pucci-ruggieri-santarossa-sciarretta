@@ -1,137 +1,100 @@
 package it.polimi.demo.main;
 
-import it.polimi.demo.view.gui.ApplicationGUI;
-import javafx.application.Application;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.view.flow.ConnectionSelection;
 import it.polimi.demo.view.flow.GameFlow;
+import it.polimi.demo.view.gui.ApplicationGUI;
+import javafx.application.Application;
+import org.fusesource.jansi.Ansi;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Predicate;
 
-import static org.fusesource.jansi.Ansi.ansi;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
+// todo: checked class
 public class MainClient {
 
     public static void main(String[] args) {
+        boolean debug = DefaultValues.DEBUG;
 
-        //clearCMD();
-        int selection;
-
-        // Disable javaFX logger
-        // killLoggers();
-
-        if (!DefaultValues.DEBUG) {
-            String input;
-            do {
-                printAsync(ansi().cursor(1, 0).a("""
-                        Insert remote IP (leave empty for localhost)
-                        """));
-                input = new Scanner(System.in).nextLine();
-                if(!input.equals("") && !isValidIP(input)){
-                    //clearCMD();
-                    printAsync("Not valid");
-                }
-            } while (!input.equals("") && !isValidIP(input));
-            if (!input.equals(""))
-                DefaultValues.serverIp = input;
-
-            //clearCMD();
-
-            do {
-                printAsync(ansi().cursor(1, 0).a("""
-                        Insert your IP (leave empty for localhost)
-                        """));
-                input = new Scanner(System.in).nextLine();
-                if (!input.equals("") && !isValidIP(input)) {
-                    //clearCMD();
-                    printAsync("Not valid");
-                }
-            } while (!input.equals("") && !isValidIP(input));
-            if (!input.equals(""))
-                System.setProperty("java.rmi.server.hostname", input);
-
-
-            //clearCMD();
-            do {
-                printAsync(ansi().cursor(1, 0).a("""
-                        Select option:
-                        \t (1) TUI + Socket
-                        \t (2) TUI + RMI
-                        \t
-                        \t (3) GUI + Socket
-                        \t (4) GUI + RMI
-                        """));
-                input = new Scanner(System.in).nextLine();
-                try {
-                    selection = Integer.parseInt(input);
-                } catch (NumberFormatException e) {
-                    selection = -1;
-                    printAsync("Nan");
-                }
-            } while (selection != 1 && selection != 2 && selection != 3 && selection != 4);
-        } else {
-            selection = 2; //Default run configuration
+        if (!debug) {
+            getValidInput("Insert remote IP (leave empty for localhost)", MainClient::isValidIP);
+            getValidInput("Insert your IP (leave empty for localhost)", MainClient::isValidIP);
         }
 
+        int selection = debug ? 2 : getValidSelection(
+                "Select option:\n\t(1) TUI + Socket\n\t(2) TUI + RMI\n\t\n\t(3) GUI + Socket\n\t(4) GUI + RMI",
+                MainClient::isValidSelection);
 
-        //Get the Communication Protocol wanted
-        ConnectionSelection con_sel;
-        if (selection == 1 || selection == 3) {
-            con_sel = ConnectionSelection.SOCKET;
-        } else {
-            con_sel = ConnectionSelection.RMI;
-        }
-
+        ConnectionSelection conSel = (selection == 1 || selection == 3) ? ConnectionSelection.SOCKET : ConnectionSelection.RMI;
         printAsync("Starting the game!");
 
-        // Starts the UI wanted
         if (selection == 1 || selection == 2) {
-            // Starts the game with TUI
-            // I can start directly here the GameFlow
-            new GameFlow(con_sel);
+            new GameFlow(conSel); // Start game with TUI
         } else {
-            // Starts the game with GUI
-            // For doing so, I need to start the Main of GUI (GameFlow needs to be started inside the thread of GUI)
-            Application.launch(ApplicationGUI.class, con_sel.toString());
+            Application.launch(ApplicationGUI.class, conSel.toString()); // Start game with GUI
         }
-
     }
 
-    private static void clearCMD() {
-        try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-        } catch (IOException | InterruptedException e) {
-            printAsync("\033\143");   //for Mac
-        }
+    private static String getValidInput(String message, Predicate<String> validator) {
+        Scanner scanner = new Scanner(System.in);
+        String input;
+        do {
+            printAsync(Ansi.ansi().cursor(1, 0).a(message));
+            input = scanner.nextLine();
+            if (!input.isEmpty() && !validator.test(input)) {
+                printAsync("Not valid");
+            }
+        } while (!input.isEmpty() && !validator.test(input));
+        return input;
+    }
+
+    private static int getValidSelection(String message, Predicate<Integer> validator) {
+        Scanner scanner = new Scanner(System.in);
+        int selection;
+        do {
+            printAsync(Ansi.ansi().cursor(1, 0).a(message));
+            selection = Arrays.stream(scanner.nextLine().split("\\s+"))
+                    .mapToInt(Integer::parseInt)
+                    .findFirst()
+                    .orElse(-1);
+            if (!validator.test(selection)) {
+                printAsync("Not valid");
+            }
+        } while (!validator.test(selection));
+        return selection;
     }
 
     private static boolean isValidIP(String input) {
-        List<String> parsed;
-        parsed = Arrays.stream(input.split("\\.")).toList();
-        if (parsed.size() != 4) {
-            return false;
-        }
-        for (String part : parsed) {
+        List<String> parsed = Arrays.asList(input.split("\\."));
+        return parsed.size() == 4 && parsed.stream().allMatch(part -> {
             try {
-                Integer.parseInt(part);
+                int value = Integer.parseInt(part);
+                return value >= 0 && value <= 255;
             } catch (NumberFormatException e) {
                 return false;
             }
-        }
-        return true;
+        });
     }
 
-//    private static void killLoggers(){
-//        com.sun.javafx.util.Logging.getJavaFXLogger().disableLogging();
-//        com.sun.javafx.util.Logging.getCSSLogger().disableLogging();
-//        com.sun.javafx.util.Logging.getAccessibilityLogger().disableLogging();
-//        com.sun.javafx.util.Logging.getFocusLogger().disableLogging();
-//        com.sun.javafx.util.Logging.getInputLogger().disableLogging();
-//        com.sun.javafx.util.Logging.getLayoutLogger().disableLogging();
-//    }
-
+    private static boolean isValidSelection(int selection) {
+        return selection >= 1 && selection <= 4;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

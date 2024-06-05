@@ -259,6 +259,17 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         }
     }
 
+    @Override
+    public void illegalMoveBecauseOf(GameModelImmutable model, String reason_why) throws RemoteException {
+        try {
+            //Else the object is not updated!!
+            out.writeObject(new msgIllegalMoveBecauseOf(model, reason_why));
+            finishSending();
+        } catch (IOException e) {
+
+        }
+    }
+
     /**
      * This method is used to write on the ObjectOutputStream that the next turn is started
      * @param gamemodel is the game model {@link GameModelImmutable}

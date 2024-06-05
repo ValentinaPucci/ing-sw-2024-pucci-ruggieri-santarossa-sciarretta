@@ -136,6 +136,8 @@ public abstract class UI {
 
     protected abstract void show_illegalMove();
 
+    protected abstract void show_illegalMoveBecauseOf(String message);
+
     protected abstract void show_whereToDrawFrom();
 
     /**

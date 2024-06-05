@@ -769,32 +769,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     /**
-     * The client asks the server to reconnect to a specific game
-     *
-     * @param nick   nickname of the player
-     * @param idGame id of the game to reconnect
-     */
-    @Override
-    public void reconnect(String nick, int idGame) {
-        if (idGame != -1) {
-            ui.show_joiningToGameIdMsg(idGame, nick);
-            try {
-                clientActions.reconnect(nickname, idGame);
-            } catch (IOException | InterruptedException | NotBoundException e) {
-                noConnectionError();
-            }
-        } else {
-            ui.show_noAvailableGamesToJoin("No disconnection previously detected");
-            try {
-                this.inputParser.getDataToProcess().popData();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            events.add(null, APP_MENU);
-        }
-    }
-
-    /**
      * The client asks the server to leave the game
      *
      * @param nick   nickname of the player
@@ -807,11 +781,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         } catch (IOException | NotBoundException e) {
             noConnectionError();
         }
-    }
-
-    @Override
-    public boolean isMyTurn() {
-        return false;
     }
 
     @Override
@@ -848,6 +817,15 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
             ui.show_illegalMove();
             ui.show_genericMessage("Here we show you again your personal board:");
+            ui.show_personalBoard(nickname, model);
+            events.add(model, ILLEGAL_MOVE);
+        }
+    }
+
+    @Override
+    public void illegalMoveBecauseOf(GameModelImmutable model, String reason_why) {
+        if (model.getCurrentPlayerNickname().equals(nickname)) {
+            ui.show_illegalMoveBecauseOf(reason_why);
             ui.show_personalBoard(nickname, model);
             events.add(model, ILLEGAL_MOVE);
         }

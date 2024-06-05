@@ -113,22 +113,16 @@ public class GameModel implements Serializable {
      */
     public synchronized void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        System.out.println("p.setAsReadyToStart() in gameModel");
         listeners_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
-        System.out.println("arePlayersReadyToStartAndEnough: " + arePlayersReadyToStartAndEnough());
         if (arePlayersReadyToStartAndEnough()) {
             extractFirstPlayerToPlay();
-            System.out.println("first player to play extracted");
             initializeGame();
-            System.out.println("game initialized");
             setStatus(GameStatus.FIRST_ROUND);
-            System.out.println("FIRST_ROUND SET");
         }
     }
 
     public synchronized void extractFirstPlayerToPlay() {
         Player first_player = players_connected.get(random.nextInt(players_connected.size()));
-
         aux_order_players.remove(first_player);
         aux_order_players.addFirst(first_player);
         players_connected.remove(first_player);
@@ -148,9 +142,9 @@ public class GameModel implements Serializable {
      * @return player with the given nickname, or null if not found
      */
     public Player getPlayerEntity(String nick) {
-        for (int i = 0; i < players_connected.size(); i++) {
-            if (players_connected.get(i).getNickname().equals(nick)) {
-                return players_connected.get(i);
+        for (Player player : players_connected) {
+            if (player.getNickname().equals(nick)) {
+                return player;
             }
         }
         return null;
@@ -176,19 +170,18 @@ public class GameModel implements Serializable {
         String nickname = p.getNickname();
 
         if (nicknames.contains(nickname)) {
-            listeners_handler.notify_JoinUnableNicknameAlreadyIn(getPlayerEntity(nickname));
+            listeners_handler.notify_joinUnableNicknameAlreadyIn(getPlayerEntity(nickname));
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() >= num_required_players_to_start ||
                 aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
-            listeners_handler.notify_JoinUnableGameFull(getPlayerEntity(nickname), this);
+            listeners_handler.notify_joinUnableGameFull(getPlayerEntity(nickname), this);
             throw new MaxPlayersLimitException();
         }
         else {
             aux_order_players.add(p);
             players_connected.offer(p);
             listeners_handler.notify_playerJoined(this);
-            printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
         }
     }
 
@@ -263,55 +256,6 @@ public class GameModel implements Serializable {
         else {
             throw new IllegalArgumentException("Player not in the game!");
         }
-    }
-
-    /**
-     *
-     * @param p player is reconnected
-     * @throws PlayerAlreadyConnectedException player is already in
-     * @throws MaxPlayersLimitException there's already 4 players in game
-     * @throws GameEndedException the game has ended
-     */
-    public void reconnectPlayer(Player p) {
-
-        if (players_connected.contains(p)) {
-            System.out.println("ERROR: Trying to reconnect a player not offline!");
-            throw new PlayerAlreadyConnectedException();
-        }
-        p.setAsConnected();
-        listeners_handler.notify_playerReconnected(this, p.getNickname());
-        connectPlayerInOrder(p);
-    }
-
-    /**
-     * It connects a player in the right place (by order), that had already joined the game,
-     * but was disconnected, so that the game will continue with the correct order of the game (aux_order_players).
-     * (It also cares about the limit case of the first element).
-     * @param p player to connect
-     */
-    // todo: check if it is correct
-    public void connectPlayerInOrder(Player p) {
-        // index of previous player in aux_order_players
-        Player q;
-        int index_to_add = -1;
-        if (!aux_order_players.contains(p)) {
-            throw new IllegalArgumentException("Trying to connect a player which is not in the game!");
-        }
-
-        int index = aux_order_players.indexOf(p) - 1;
-
-        if (index < 0)
-            q = aux_order_players.getLast();
-        else
-            q = aux_order_players.get(index);
-
-        for (Player s : players_connected) {
-            if (s.equals(q))
-                index_to_add = players_connected.indexOf(s) + 1;
-        }
-        if (index_to_add != -1)
-            players_connected.add(index_to_add , p);
-
     }
 
     //-------------------------managing status---------------------------------------------
@@ -490,7 +434,7 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
-                            getWinners();
+                            declareWinners();
                             setStatus(GameStatus.ENDED);
                         }
                         else
@@ -512,7 +456,7 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
-                            getWinners();
+                            declareWinners();
                             setStatus(GameStatus.ENDED);
                         }
                         else
@@ -548,7 +492,7 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
-                            getWinners();
+                            declareWinners();
                             setStatus(GameStatus.ENDED);
                         }
                         else
@@ -570,7 +514,7 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
-                            getWinners();
+                            declareWinners();
                             setStatus(GameStatus.ENDED);
                         }
                         else
@@ -594,52 +538,92 @@ public class GameModel implements Serializable {
      */
 
     public void drawCard(Player p, int index) throws GameEndedException {
+
+        // auxiliary variables for special cases at the end of the game
+        boolean illegal_draw = false;
+
+        if (common_board.getResourceConcreteDeck().isEmpty() &&
+                common_board.getGoldConcreteDeck().isEmpty() &&
+                !getStatus().equals(GameStatus.SECOND_LAST_ROUND)) {
+            setStatus(GameStatus.SECOND_LAST_ROUND);
+            if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
+                setStatus(GameStatus.LAST_ROUND);
+            }
+            return;
+        }
+
         switch (index) {
             case 1:
                 // Draw from Resource Deck
                 if (!common_board.getResourceConcreteDeck().isEmpty())
                     p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0));
-//                else
-//                    // todo: manage this exception
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Resource Deck is empty!");
+                }
                 break;
             case 2:
                 // Draw first Resource Card from table
-                p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0));
+                if (!common_board.getResourceConcreteDeck().isEmpty())
+                    p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0));
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Resource Table is empty!");
+                }
                 break;
             case 3:
                 // Draw second Resource Card from table
-                p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0));
+                if (!common_board.getResourceConcreteDeck().isEmpty())
+                    p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0));
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Resource Table is empty!");
+                }
                 break;
             case 4:
                 // Draw from Gold Deck
                 if (!common_board.getGoldConcreteDeck().isEmpty())
                     p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1));
-//                else
-//                    // todo: manage this exception
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Gold Deck is empty!");
+                }
                 break;
             case 5:
                 // Draw first Gold Card from table
-                p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1));
+                if (!common_board.getGoldConcreteDeck().isEmpty())
+                    p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1));
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Gold Table is empty!");
+                }
                 break;
             case 6:
                 // Draw second Gold Card from table
-                p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
+                if (!common_board.getGoldConcreteDeck().isEmpty())
+                    p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Gold Table is empty!");
+                }
                 break;
         }
-        listeners_handler.notify_cardDrawn(this, index);
-        // at the end of every player round, we check for her/his points
-        if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
-            setStatus(GameStatus.LAST_ROUND);
-        }
-        else if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
-            if (aux_order_players.getLast().equals(p)) {
+
+        if (!illegal_draw) {
+            listeners_handler.notify_cardDrawn(this, index);
+            // at the end of every player round, we check for her/his points
+            if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
                 setStatus(GameStatus.LAST_ROUND);
             }
-            else if (getStatus() == GameStatus.RUNNING)
-                setStatus(GameStatus.SECOND_LAST_ROUND);
+            else if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
+                if (aux_order_players.getLast().equals(p)) {
+                    setStatus(GameStatus.LAST_ROUND);
+                }
+                else if (getStatus() == GameStatus.RUNNING)
+                    setStatus(GameStatus.SECOND_LAST_ROUND);
+            }
+            nextTurn();
         }
-
-        nextTurn();
     }
 
     /**
@@ -688,6 +672,9 @@ public class GameModel implements Serializable {
      * It is called by getWinners() method.
      */
     public void declareWinners() {
+
+        List<Player> aux_final_scores_tie = new ArrayList<>();
+
         calculateFinalScores();
 
         // Sort players by final score in descending order
@@ -697,29 +684,46 @@ public class GameModel implements Serializable {
         // Get the maximum score
         int maxScore = orderedPlayers.getFirst().getFinalScore();
 
-        // Collect players with the maximum score as winners
-        winners.clear();
-        aux_order_players.stream()
-                .filter(player -> player.getFinalScore() == maxScore)
-                .forEach(winners::add);
+        // check for a tie
+        for (Player player : orderedPlayers) {
+            if (player.getFinalScore() == maxScore) {
+                aux_final_scores_tie.add(player);
+            }
+        }
+
+        if (aux_final_scores_tie.size() == 1) {
+            winners.addAll(orderedPlayers);
+        }
+        else {
+            // aux_final_scores_tie.size() >= 2
+            // another filtering:
+            aux_final_scores_tie.sort(Comparator.comparingInt(Player::scoreOnlyObjectiveCards).reversed());
+            StringBuilder aux = new StringBuilder(aux_final_scores_tie.getFirst().getNickname());
+            int counter = 0;
+            for (Player p : aux_final_scores_tie) {
+                if (p.scoreOnlyObjectiveCards() == aux_final_scores_tie.getFirst().scoreOnlyObjectiveCards()) {
+                    aux.append(p.getNickname());
+                    counter++;
+                }
+            }
+            winners.clear();
+            Player p_aux = new Player(aux.toString());
+            p_aux.setFinalScore(aux_final_scores_tie.getFirst().getFinalScore());
+            winners.add(p_aux);
+            for (int i = counter; i < orderedPlayers.size(); i++) {
+                winners.add(orderedPlayers.get(i));
+            }
+        }
 
         // Populate the leaderboard
-        orderedPlayers.forEach(player -> leaderboard.put(player, player.getFinalScore()));
+        leaderboard.clear(); // Clear the leaderboard before adding new entries
+        for (Player player : orderedPlayers) {
+            leaderboard.put(player, player.getFinalScore());
+        }
     }
-
 
     public Map<Player, Integer> getLeaderboard() {
         return leaderboard;
-    }
-
-    /**
-     * Retrieves the winner(s) of the game.
-     *
-     * @return A list of Player objects representing the winner(s).
-     */
-    public List<Player> getWinners() {
-        declareWinners();
-        return winners;
     }
 
     /**
@@ -731,43 +735,6 @@ public class GameModel implements Serializable {
         return this.common_board;
     }
 
-    /**
-     * Retrieves the concrete deck containing resource cards.
-     *
-     * @return The concrete deck of resource cards.
-     */
-    public ConcreteDeck getResourceDeck() {
-        return this.common_board.getResourceConcreteDeck();
-    }
-
-    /**
-     * Retrieves the concrete deck containing gold cards.
-     *
-     * @return The concrete deck of gold cards.
-     */
-    public ConcreteDeck getGoldDeck() {
-        return this.common_board.getGoldConcreteDeck();
-    }
-
-    /**
-     * Retrieves the concrete deck containing objective cards.
-     *
-     * @return The concrete deck of objective cards.
-     */
-    public ConcreteDeck getObjectiveDeck() {
-        return this.common_board.getObjectiveConcreteDeck();
-    }
-
-    /**
-     * Retrieves the concrete deck containing starter cards.
-     *
-     * @return The concrete deck of starter cards.
-     */
-    public ConcreteDeck getStarterDeck() {
-        return this.common_board.getStarterConcreteDeck();
-    }
-
-
     public void setErrorMessage(String error) {
 
     }
@@ -778,10 +745,7 @@ public class GameModel implements Serializable {
      * @param obj adds the listener to the list
      */
     public void addListener(GameListener obj) {
-        printAsync("listeners_handler used for the first time at time " + System.currentTimeMillis());
-        printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
         listeners_handler.addListener(obj);
-        printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
     }
 
     /**

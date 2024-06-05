@@ -1,13 +1,10 @@
 package it.polimi.demo.networking.socket.client;
 
 import it.polimi.demo.DefaultValues;
-import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.GameListenerHandlerClient;
-import it.polimi.demo.networking.HeartbeatSender;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.socket.client.gameControllerMessages.*;
 import it.polimi.demo.networking.socket.client.mainControllerMessages.*;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage;
@@ -176,13 +173,6 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     }
 
     @Override
-    public void reconnect(String nick, int idGame) throws IOException, InterruptedException, NotBoundException {
-        nickname = nick;
-        ob_out.writeObject(new SocketClientMessageReconnect(nick, idGame));
-        finishSending();
-    }
-
-    @Override
     public void leave(String nick, int idGame) throws IOException, NotBoundException {
         ob_out.writeObject(new SocketClientMessageLeave(nick, idGame));
         finishSending();
@@ -196,11 +186,6 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     public void setAsReady() throws IOException, NotBoundException {
         ob_out.writeObject(new SocketClientMessageSetReady(nickname));
         finishSending();
-    }
-
-    @Override
-    public boolean isMyTurn() throws RemoteException {
-        return false;
     }
 
     @Override

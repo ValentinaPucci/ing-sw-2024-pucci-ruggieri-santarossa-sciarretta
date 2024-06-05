@@ -9,8 +9,8 @@ import it.polimi.demo.networking.GameListenerHandlerClient;
 import it.polimi.demo.networking.HeartbeatSender;
 import it.polimi.demo.view.flow.CommonClientActions;
 import it.polimi.demo.view.flow.Flow;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 
 import java.io.IOException;
 import java.rmi.NotBoundException;
@@ -23,109 +23,86 @@ import java.rmi.server.UnicastRemoteObject;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
 
-/**
- * RMIClient Class <br>
- * Handle all the network communications between RMIClient and RMIServer <br>
- * From the first connection, to the creation, joining, leaving, grabbing and positioning messages through the network<br>
- * by the RMI Network Protocol
- */
+// todo: implement differently
 public class RMIClient implements CommonClientActions {
-    /**
-     * The remote object returned by the registry that represents the main controller
-     */
+
     private static MainControllerInterface requests;
-    /**
-     * The remote object returned by the RMI server that represents the connected game
-     */
+
     private GameControllerInterface gameController = null;
-    /**
-     * The remote object on which the server will invoke remote methods
-     */
+
     private static GameListener modelInvokedEvents;
-    /**
-     * The nickname associated to the socket (!=null only when connected in a game)
-     */
+
     private String nickname;
+
     private int game_id;
 
     private boolean initialized = false;
-    /**
-     * The remote object on which the server will invoke remote methods
-     */
+
     private final GameListenerHandlerClient gameListenersHandler;
-    /**
-     * Registry of the RMI
-     */
+
     private Registry registry;
-    /**
-     * Flow to notify network error messages
-     */
+
     private Flow flow;
 
     private HeartbeatSender rmiHeartbeat;
 
-
-    /**
-     * Create, start and connect a RMI Client to the server
-     *
-     * @param flow for visualising network error messages
-     */
     public RMIClient(Flow flow) {
-        super();
         gameListenersHandler = new GameListenerHandlerClient(flow);
-        connect();
-
         this.flow = flow;
-
-        rmiHeartbeat = new HeartbeatSender(flow,this);
+        rmiHeartbeat = new HeartbeatSender(flow, this);
         rmiHeartbeat.start();
+        connect();
     }
 
     public void connect() {
-        boolean retry = false;
         int attempt = 1;
-        int i;
+        boolean retry;
 
         do {
             try {
                 registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
                 requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
                 modelInvokedEvents = (GameListener) UnicastRemoteObject.exportObject(gameListenersHandler, 0);
-
                 printAsync("Client RMI ready");
                 retry = false;
-
             } catch (Exception e) {
-                if (!retry) {
-                    printAsync("[ERROR] CONNECTING TO RMI SERVER: \n\tClient RMI exception: " + e + "\n");
-                }
-                printAsyncNoLine("[#" + attempt + "]Waiting to reconnect to RMI Server on port: '" + DefaultValues.Default_port_RMI + "' with name: '" + DefaultValues.Default_servername_RMI + "'");
-
-                i = 0;
-                while (i < DefaultValues.seconds_between_reconnection) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    printAsyncNoLine(".");
-                    i++;
-                }
-                printAsyncNoLine("\n");
-
-                if (attempt >= DefaultValues.num_of_attempt_to_connect_toServer_before_giveup) {
-                    printAsyncNoLine("Give up!");
-                    try {
-                        System.in.read();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    System.exit(-1);
-                }
-                retry = true;
-                attempt++;
+                handleConnectionError(e, attempt);
+                retry = ++attempt <= DefaultValues.num_of_attempt_to_connect_toServer_before_giveup;
             }
         } while (retry);
+    }
+
+    private void handleConnectionError(Exception e, int attempt) {
+        if (attempt == 1) {
+            printAsync("[ERROR] CONNECTING TO RMI SERVER: \n\tClient RMI exception: " + e + "\n");
+        }
+        printRetryMessage(attempt);
+        waitAndPrintDots(DefaultValues.seconds_between_reconnection);
+        if (attempt >= DefaultValues.num_of_attempt_to_connect_toServer_before_giveup) {
+            printAsyncNoLine("Give up!");
+            try {
+                System.in.read();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            System.exit(-1);
+        }
+    }
+
+    private void printRetryMessage(int attempt) {
+        printAsyncNoLine("[#" + attempt + "]Waiting to reconnect to RMI Server on port: '" + DefaultValues.Default_port_RMI + "' with name: '" + DefaultValues.Default_servername_RMI + "'");
+    }
+
+    private void waitAndPrintDots(int seconds) {
+        for (int i = 0; i < seconds; i++) {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            }
+            printAsyncNoLine(".");
+        }
+        printAsyncNoLine("\n");
     }
 
     /**
@@ -247,22 +224,6 @@ public class RMIClient implements CommonClientActions {
     }
 
     /**
-     * Request the reconnection of a player @param nick to a game @param idGame
-     *
-     * @param nick of the player who wants to be reconnected
-     * @param idGame of the game to be reconnected
-     * @throws RemoteException
-     * @throws NotBoundException
-     */
-    @Override
-    public void reconnect(String nick, int idGame) throws RemoteException, NotBoundException {
-        registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
-        requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-        gameController = requests.reconnect(modelInvokedEvents, nick, idGame);
-        nickname = nick;
-    }
-
-    /**
      * Request to leave a game without the possibility to be reconnected
      * Calling leave means that the player wants to quit forever the game
      *
@@ -278,16 +239,5 @@ public class RMIClient implements CommonClientActions {
         requests.leaveGame(modelInvokedEvents, nick, idGame);
         gameController = null;
         nickname = null;
-    }
-
-    /**
-     * Ask the server if it is currently my turn
-     *
-     * @return
-     * @throws RemoteException
-     */
-    @Override
-    public boolean isMyTurn() throws RemoteException {
-        return gameController.isThisMyTurn(nickname);
     }
 }

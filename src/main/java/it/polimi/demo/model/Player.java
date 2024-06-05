@@ -240,5 +240,9 @@ public class Player implements PlayerIC, Serializable {
         personalObjectiveIds[1] = getSecretObjectiveCards().get(1).getId();
         return personalObjectiveIds;
     }
+
+    public int scoreOnlyObjectiveCards() {
+        return getFinalScore() - getScoreBoardPosition();
+    }
 }
 

@@ -6,10 +6,9 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.model.exceptions.MaxPlayersLimitException;
-import it.polimi.demo.model.exceptions.PlayerAlreadyConnectedException;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.networking.rmi.remoteInterfaces.*;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -199,22 +198,6 @@ public class MainController implements MainControllerInterface, Serializable {
             throws RemoteException {
         if (games.containsKey(gameId))
             games.get(gameId).addPing(nickname, listener);
-    }
-
-    /**
-     * Reconnects a player to a game specified by its ID.
-     *
-     * @param listener The GameListener of the player attempting to reconnect to the game.
-     * @param nickname The nickname of the player attempting to reconnect to the game.
-     * @param gameId The ID of the game to reconnect to.
-     * @return The GameControllerInterface associated with the game if the player successfully reconnects,
-     *         or null if the game does not exist or the player was not previously connected.
-     * @throws RemoteException If there is a communication-related issue during the method execution.
-     */
-    @Override
-    public synchronized GameControllerInterface reconnect(GameListener listener, String nickname, int gameId)
-            throws RemoteException {
-        return null;
     }
 
     /**

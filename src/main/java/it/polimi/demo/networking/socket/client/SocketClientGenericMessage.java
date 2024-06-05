@@ -2,8 +2,8 @@ package it.polimi.demo.networking.socket.client;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
