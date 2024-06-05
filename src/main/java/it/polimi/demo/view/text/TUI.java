@@ -259,6 +259,13 @@ public class TUI extends UI {
     }
 
     @Override
+    public void show_illegalMoveBecauseOf(String message) {
+        clearScreen();
+        printAsync("Illegal move! " + message + "\n");
+        clearScreen();
+    }
+
+    @Override
     public void show_whereToDrawFrom() {
         clearScreen();
         printAsync("""                       

@@ -204,6 +204,11 @@ public class GUI extends UI {
     }
 
     @Override
+    protected void show_illegalMoveBecauseOf(String message) {
+
+    }
+
+    @Override
     protected void show_whereToDrawFrom() {
 
     }

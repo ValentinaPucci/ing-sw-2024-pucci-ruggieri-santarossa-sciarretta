@@ -2,16 +2,15 @@ package it.polimi.demo.networking.socket.client.gameControllerMessages;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class SocketClientMessageHeartBeat extends SocketClientGenericMessage implements Serializable {
+public class SocketClientMessageHeartbeat extends SocketClientGenericMessage {
 
-    public SocketClientMessageHeartBeat(String nick) {
+    public SocketClientMessageHeartbeat(String nick) {
         this.nick = nick;
         this.isMessageForMainController = false;
         this.isHeartbeat = true;

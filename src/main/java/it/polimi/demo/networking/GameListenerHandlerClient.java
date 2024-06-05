@@ -41,6 +41,11 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     }
 
     @Override
+    public void illegalMoveBecauseOf(GameModelImmutable model, String reason_why) throws RemoteException {
+        flow.illegalMoveBecauseOf(model, reason_why);
+    }
+
+    @Override
     public void cardDrawn(GameModelImmutable model, int index) throws RemoteException {
         flow.cardDrawn(model, index);
     }
@@ -96,11 +101,6 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     }
 
     @Override
-    public void secondLastRound(GameModelImmutable gamemodel) throws RemoteException {
-        flow.secondLastRound(gamemodel);
-    }
-
-    @Override
     public void nextTurn(GameModelImmutable gamemodel) throws RemoteException {
         flow.nextTurn(gamemodel);
     }
@@ -113,6 +113,11 @@ public class GameListenerHandlerClient implements GameListener, Serializable {
     @Override
     public void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
         flow.onlyOnePlayerConnected(gameModel,secondsToWaitUntilGameEnded);
+    }
+
+    @Override
+    public void secondLastRound(GameModelImmutable gamemodel) throws RemoteException {
+        flow.secondLastRound(gamemodel);
     }
 
     @Override

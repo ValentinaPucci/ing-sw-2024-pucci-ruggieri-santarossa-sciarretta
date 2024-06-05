@@ -35,17 +35,6 @@ public interface CommonClientActions extends Serializable {
     void joinFirstAvailableGame(String nick) throws IOException, InterruptedException, NotBoundException;
 
     /**
-     * Reconnect the player to the game
-     *
-     * @param nick
-     * @param idGame
-     * @throws IOException
-     * @throws InterruptedException
-     * @throws NotBoundException
-     */
-    void reconnect(String nick, int idGame) throws IOException, InterruptedException, NotBoundException;
-
-    /**
      * Leaves the game
      *
      * @param nick
@@ -58,14 +47,6 @@ public interface CommonClientActions extends Serializable {
 
     void setAsReady() throws IOException, NotBoundException;
 
-
-    /**
-     * Checks if it's the invoker's turn
-     *
-     * @return
-     * @throws RemoteException
-     */
-    boolean isMyTurn() throws RemoteException;
 
     /**
      * This method is called by the socket to get the list of players in the game.
@@ -108,6 +89,6 @@ public interface CommonClientActions extends Serializable {
      *
      * @throws RemoteException
      */
-    void heartbeat() throws RemoteException;
+    void heartbeat() throws IOException, NotBoundException;
 
 }

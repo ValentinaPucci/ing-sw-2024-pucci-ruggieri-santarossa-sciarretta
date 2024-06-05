@@ -1,9 +1,10 @@
 package it.polimi.demo.view.flow.utilities;
 
+import java.io.Serializable;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class BufferData {
+public class BufferData implements Serializable {
     private Queue<String> data;
 
     /**
@@ -46,8 +47,4 @@ public class BufferData {
             }
         }
     }
-
-
-
-
 }

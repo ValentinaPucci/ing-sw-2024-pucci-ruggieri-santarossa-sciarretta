@@ -1,8 +1,8 @@
 package it.polimi.demo.networking.socket.client.gameControllerMessages;
 
 import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
 import java.io.Serializable;
@@ -43,7 +43,6 @@ public class SocketClientMessageSetReady extends SocketClientGenericMessage impl
      */
     @Override
     public void execute(GameControllerInterface gameController) throws RemoteException {
-        System.out.println("GameController sent says: " + gameController.getPlayerEntity(nick));
         gameController.playerIsReadyToStart(this.nick);
     }
 }

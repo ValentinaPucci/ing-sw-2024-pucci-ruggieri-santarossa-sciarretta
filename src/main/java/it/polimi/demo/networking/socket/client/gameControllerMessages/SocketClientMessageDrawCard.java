@@ -2,8 +2,8 @@ package it.polimi.demo.networking.socket.client.gameControllerMessages;
 
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
 import java.io.Serializable;
@@ -18,7 +18,6 @@ public class SocketClientMessageDrawCard extends SocketClientGenericMessage impl
      * @param index the index of the card to draw
      */
     public SocketClientMessageDrawCard( int index) {
-
          this.index = index;
          this.isMessageForMainController = false;
     }
