@@ -148,6 +148,10 @@ public class ListenersHandler implements Serializable {
                 l.gameStarted(new GameModelImmutable(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_GameStarted, a disconnection has been detected before heartbeat");
+                try {
+                    aux_gameEndedNotifier(l, model);
+                } catch (RemoteException ex) {
+                }
                 i.remove();
             }
         }
@@ -178,6 +182,10 @@ public class ListenersHandler implements Serializable {
                 l.starterCardPlaced(new GameModelImmutable(model), o, nick);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_starterCardPlaced, a disconnection has been detected before heartbeat");
+                try {
+                    aux_gameEndedNotifier(l, model);
+                } catch (RemoteException ex) {
+                }
                 i.remove();
             }
         }
@@ -191,6 +199,10 @@ public class ListenersHandler implements Serializable {
                 l.cardChosen(new GameModelImmutable(model), which_card);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_cardChosen, a disconnection has been detected before heartbeat");
+                try {
+                    aux_gameEndedNotifier(l, model);
+                } catch (RemoteException ex) {
+                }
                 i.remove();
             }
         }
@@ -204,6 +216,10 @@ public class ListenersHandler implements Serializable {
                 l.cardPlaced(new GameModelImmutable(model), where_to_place_x, where_to_place_y, o);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_cardPlaced, a disconnection has been detected before heartbeat");
+                try {
+                    aux_gameEndedNotifier(l, model);
+                } catch (RemoteException ex) {
+                }
                 i.remove();
             }
         }
@@ -218,6 +234,10 @@ public class ListenersHandler implements Serializable {
                 l.illegalMove(new GameModelImmutable(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_illegalMove, a disconnection has been detected before heartbeat");
+                try {
+                    aux_gameEndedNotifier(l, model);
+                } catch (RemoteException ex) {
+                }
                 i.remove();
             }
         }
@@ -231,6 +251,10 @@ public class ListenersHandler implements Serializable {
                 l.cardDrawn(new GameModelImmutable(model), index);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_cardDrawn, a disconnection has been detected before heartbeat");
+                try {
+                    aux_gameEndedNotifier(l, model);
+                } catch (RemoteException ex) {
+                }
                 i.remove();
             }
         }
@@ -244,6 +268,10 @@ public class ListenersHandler implements Serializable {
                 l.secondLastRound(new GameModelImmutable(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_SecondLastRound, a disconnection has been detected before heartbeat");
+                try {
+                    aux_gameEndedNotifier(l, model);
+                } catch (RemoteException ex) {
+                }
                 i.remove();
             }
         }
@@ -257,6 +285,10 @@ public class ListenersHandler implements Serializable {
                 l.lastRound(new GameModelImmutable(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_LastRound, a disconnection has been detected before heartbeat");
+                try {
+                    aux_gameEndedNotifier(l, model);
+                } catch (RemoteException ex) {
+                }
                 i.remove();
             }
         }
@@ -267,14 +299,18 @@ public class ListenersHandler implements Serializable {
      * @param nick
      * @param message
      */
-    public synchronized void notify_messageSent(GameModel gameModel, String nick, Message message) {
+    public synchronized void notify_messageSent(GameModel model, String nick, Message message) {
         Iterator<GameListener> i = listeners.iterator();
         while (i.hasNext()) {
             GameListener l = i.next();
             try {
-                l.messageSent(new GameModelImmutable(gameModel), nick, message);
+                l.messageSent(new GameModelImmutable(model), nick, message);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_SentMessage, a disconnection has been detected before heartbeat");
+                try {
+                    aux_gameEndedNotifier(l, model);
+                } catch (RemoteException ex) {
+                }
                 i.remove();
             }
         }
@@ -292,6 +328,10 @@ public class ListenersHandler implements Serializable {
                 l.nextTurn(new GameModelImmutable(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_nextTurn, a disconnection has been detected before heartbeat");
+                try {
+                    aux_gameEndedNotifier(l, model);
+                } catch (RemoteException ex) {
+                }
                 i.remove();
             }
         }
@@ -333,25 +373,6 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-
-    /**
-     * The notify_onlyOnePlayerConnected method notifies that only one player is connected <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable} <br>
-     * @param secondsToWaitUntillGameEnded is the number of seconds to wait untill the game ends
-     */
-    public synchronized void notify_onlyOnePlayerConnected(GameModel model, int secondsToWaitUntillGameEnded) {
-        Iterator<GameListener> i = listeners.iterator();
-        while (i.hasNext()) {
-            GameListener l = i.next();
-            try {
-                l.onlyOnePlayerConnected(new GameModelImmutable(model), secondsToWaitUntillGameEnded);
-            } catch (RemoteException e) {
-                printAsync("During notification of notify_onlyOnePlayerConnected, a disconnection has been detected before heartbeat");
-                i.remove();
-            }
-        }
-    }
-
     /**
      * The removeListener method removes a listener from the list of listeners <br>
      * @param lis is the listener to remove
@@ -360,5 +381,12 @@ public class ListenersHandler implements Serializable {
         listeners.remove(lis);
     }
 
+    public void aux_gameEndedNotifier(GameListener l, GameModel model) throws RemoteException {
+        for (GameListener listener : listeners) {
+            if (!listener.equals(l)) {
+                listener.gameEnded(new GameModelImmutable(model));
+            }
+        }
+    }
 
 }

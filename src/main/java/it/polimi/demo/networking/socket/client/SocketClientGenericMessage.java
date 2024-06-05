@@ -14,7 +14,6 @@ public abstract class SocketClientGenericMessage implements Serializable {
     protected boolean isMessageForMainController;
     protected boolean isHeartbeat = false;
 
-
     /**
      * Executes the corresponding action for the message.
      * @param lis the game listener
@@ -38,14 +37,6 @@ public abstract class SocketClientGenericMessage implements Serializable {
      */
     public boolean isMessageForMainController() {
         return isMessageForMainController;
-    }
-
-    /**
-     * Sets whether the message is intended for the main controller.
-     * @param messageForMainController true if the message is intended for the main controller, false otherwise
-     */
-    public void setMessageForMainController(boolean messageForMainController) {
-        isMessageForMainController = messageForMainController;
     }
 
     /**

@@ -48,7 +48,7 @@ public class RMIClient implements CommonClientActions {
     private String nickname;
     private int game_id;
 
-    private boolean initilized = false;
+    private boolean initialized = false;
     /**
      * The remote object on which the server will invoke remote methods
      */
@@ -90,7 +90,6 @@ public class RMIClient implements CommonClientActions {
             try {
                 registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
                 requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-
                 modelInvokedEvents = (GameListener) UnicastRemoteObject.exportObject(gameListenersHandler, 0);
 
                 printAsync("Client RMI ready");
@@ -127,7 +126,6 @@ public class RMIClient implements CommonClientActions {
                 attempt++;
             }
         } while (retry);
-
     }
 
     /**
@@ -162,7 +160,7 @@ public class RMIClient implements CommonClientActions {
             nickname = nick;
             game_id = gameController.getGameId();
             if (gameController.getNumConnectedPlayers() == gameController.getNumPlayersToPlay()) {
-                initilized = true;
+                initialized = true;
             }
         }
     }
@@ -176,7 +174,7 @@ public class RMIClient implements CommonClientActions {
             nickname = nick;
             game_id = gameController.getGameId();
             if (gameController.getNumConnectedPlayers() == gameController.getNumPlayersToPlay()) {
-                initilized = true;
+                initialized = true;
             }
         }
     }
@@ -241,7 +239,7 @@ public class RMIClient implements CommonClientActions {
      */
     @Override
     public void heartbeat() throws RemoteException, NotBoundException {
-        if (initilized) {
+        if (initialized) {
             registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
             requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
             requests.addPing(modelInvokedEvents, nickname, game_id);
@@ -292,5 +290,4 @@ public class RMIClient implements CommonClientActions {
     public boolean isMyTurn() throws RemoteException {
         return gameController.isThisMyTurn(nickname);
     }
-
 }

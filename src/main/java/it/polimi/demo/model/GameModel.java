@@ -17,6 +17,7 @@ import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.*;
 
 import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -444,7 +445,7 @@ public class GameModel implements Serializable {
         }
     }
 
-    public void placeStarterCard(Player p, Orientation o) throws GameEndedException {
+    public void placeStarterCard(Player p, Orientation o) throws GameEndedException, RemoteException {
 
         PersonalBoard personal_board = p.getPersonalBoard();
 

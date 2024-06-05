@@ -2,6 +2,7 @@ package it.polimi.demo.networking.socket.server;
 
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
  * Handle all the incoming network requests and start for each one a specific that handle the single Socket Connection<br>
  * by the Socket Network protocol
  */
-public class Server extends Thread {
+public class Server extends Thread implements Serializable {
     /**
      * The Socket that represents the Server
      */

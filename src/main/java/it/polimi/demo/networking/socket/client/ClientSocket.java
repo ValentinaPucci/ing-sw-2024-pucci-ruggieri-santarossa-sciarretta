@@ -27,13 +27,12 @@ import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
 
 //TODO:Check transient fields
 
-public class ClientSocket extends Thread implements CommonClientActions {
+public class ClientSocket extends Thread implements CommonClientActions, Serializable {
 
     /**
      * This is the socket that represents the client
      */
     private transient Socket clientSoc;
-
     /**
      * This is the output stream
      */
@@ -51,12 +50,12 @@ public class ClientSocket extends Thread implements CommonClientActions {
      * This is the gameListner we use to perform every action requested by the server
      */
     private final GameListenerHandlerClient modelInvokedEvents;
+
     /**
      *
      */
-    private final transient HeartbeatSender socketHeartbeat;
+    // private final HeartbeatSender socketHeartbeat;
 
-    private boolean initialized = false;
     /**
      *
      */
@@ -67,7 +66,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
         startConnection(DefaultValues.serverIp, DefaultValues.Default_port_Socket);
         modelInvokedEvents =  new GameListenerHandlerClient(flow);
         this.start();
-        socketHeartbeat = new HeartbeatSender(flow,this);
+        // socketHeartbeat = new HeartbeatSender(flow,this);
     }
 
     /**
@@ -76,7 +75,7 @@ public class ClientSocket extends Thread implements CommonClientActions {
     public void run() {
         while (true) {
             try {
-                it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage msg = (SocketServerGenericMessage) ob_in.readObject();
+                SocketServerGenericMessage msg = (SocketServerGenericMessage) ob_in.readObject();
                 msg.execute(modelInvokedEvents);
 
             } catch (IOException | ClassNotFoundException | InterruptedException e) {
@@ -90,7 +89,6 @@ public class ClientSocket extends Thread implements CommonClientActions {
             }
         }
     }
-
 
     /**
      * Start the Connection to the Socket Server
@@ -107,7 +105,6 @@ public class ClientSocket extends Thread implements CommonClientActions {
             try {
                 // New socket
                 clientSoc = new Socket(ip, port);
-
                 // Attach the output stream to the socket
                 ob_out = new ObjectOutputStream(clientSoc.getOutputStream());
                 // Attach the input stream to the socket
@@ -147,29 +144,15 @@ public class ClientSocket extends Thread implements CommonClientActions {
 
     }
 
-    /**
-     * Close the connection
-     *
-     * @throws IOException
-     */
-    public void stopConnection() throws IOException {
-        ob_in.close();
-        ob_out.close();
-        clientSoc.close();
-        if(socketHeartbeat.isAlive()) {
-            socketHeartbeat.interrupt();
-        }
-    }
-
     @Override
     public void createGame(String nickname, int num_of_players) throws IOException, InterruptedException, NotBoundException {
         this.nickname = nickname;
         System.out.println("Nickname in Client socket [out]: " + nickname);
         ob_out.writeObject(new SocketClientMessageCreateGame(nickname, num_of_players));
         finishSending();
-        if (!socketHeartbeat.isAlive()) {
-            socketHeartbeat.start();
-        }
+//        if (!socketHeartbeat.isAlive()) {
+//            socketHeartbeat.start();
+//        }
     }
 
     @Override
@@ -177,9 +160,9 @@ public class ClientSocket extends Thread implements CommonClientActions {
         nickname = nick;
         ob_out.writeObject(new SocketClientMessageJoinGame(nick, idGame));
         finishSending();
-        if (!socketHeartbeat.isAlive()) {
-            socketHeartbeat.start();
-        }
+//        if (!socketHeartbeat.isAlive()) {
+//            socketHeartbeat.start();
+//        }
     }
 
     @Override
@@ -187,9 +170,9 @@ public class ClientSocket extends Thread implements CommonClientActions {
         nickname = nick;
         ob_out.writeObject(new SocketClientMessageJoinFirstAvailableGame(nick));
         finishSending();
-        if (!socketHeartbeat.isAlive()) {
-            socketHeartbeat.start();
-        }
+//        if (!socketHeartbeat.isAlive()) {
+//            socketHeartbeat.start();
+//        }
     }
 
     @Override
@@ -197,9 +180,6 @@ public class ClientSocket extends Thread implements CommonClientActions {
         nickname = nick;
         ob_out.writeObject(new SocketClientMessageReconnect(nick, idGame));
         finishSending();
-        if (!socketHeartbeat.isAlive()) {
-            socketHeartbeat.start();
-        }
     }
 
     @Override
@@ -207,9 +187,9 @@ public class ClientSocket extends Thread implements CommonClientActions {
         ob_out.writeObject(new SocketClientMessageLeave(nick, idGame));
         finishSending();
         nickname = null;
-        if (socketHeartbeat.isAlive()) {
-            socketHeartbeat.interrupt();
-        }
+//        if (socketHeartbeat.isAlive()) {
+//            socketHeartbeat.interrupt();
+//        }
     }
 
     @Override
@@ -253,14 +233,13 @@ public class ClientSocket extends Thread implements CommonClientActions {
         finishSending();
     }
 
-
     @Override
     public void heartbeat() throws IOException {
-        // todo: check how I can ensure this condition (symmetric to RMI)
-        if (initialized) {
-            ob_out.writeObject(new SocketClientMessageHeartbeat(modelInvokedEvents));
-            finishSending();
-        }
+//        // todo: check how I can ensure this condition (symmetric to RMI)
+//        if (ob_out != null) {
+//            ob_out.writeObject(new SocketClientMessageHeartbeat(nickname));
+//            finishSending();
+//        }
     }
 
     /**

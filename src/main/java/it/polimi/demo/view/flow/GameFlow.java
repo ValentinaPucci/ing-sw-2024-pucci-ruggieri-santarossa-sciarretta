@@ -63,10 +63,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
      * The action that the client can perform {@link CommonClientActions}
      */
     private CommonClientActions clientActions;
-    /**
-     * FileDisconnection {@link FileDisconnection} to handle the disconnection
-     */
-    private final FileDisconnection fileDisconnection;
 
     /**
      * The last player that reconnected
@@ -87,7 +83,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
     /**
      * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI}(TUI)
-     * the FileDisconnection {@link FileDisconnection}, the InputReader {@link InputReader} and the InputParser {@link InputParser}
+     * the InputReader {@link InputReader} and the InputParser {@link InputParser}
      *
      * @param connectionSelection the connection type
      */
@@ -101,7 +97,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 
         importantEvents = new ArrayList<>();
         nickname = "";
-        fileDisconnection = new FileDisconnection();
         // Thread for reading the input (TUI)
         this.inputReader = new inputReaderTUI();
         // We bind inputParser and inputReader
@@ -128,7 +123,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         ui = new GUI(guiApplication, (inputReaderGUI) inputReader); //inputReaderGUI@5184ffd2
         importantEvents = new ArrayList<>();
         nickname = "";
-        fileDisconnection = new FileDisconnection();
 
         this.inputParser = new InputParser(this.inputReader.getBuffer(), this); //inputReaderGUI@5184ffd2
         new Thread(this).start();
@@ -255,7 +249,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 // we execute this only one time, i.e. the first time we enter the game
                 if (nickLastPlayer.equals(nickname)) {
                     ui.show_playerJoined(event.getModel(), nickname);
-                    saveGameId(fileDisconnection, nickname, event.getModel().getGameId());
                     askReadyToStart();
                 }
             }
@@ -263,12 +256,8 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     private void statusFirstRound(EventElement event) throws IOException, InterruptedException {
-        // We opted for async starter card placement for simplicity
+        // We opted for a sync starter card placement for simplicity
         switch (event.getType()) {
-
-//            case MESSAGE_SENT -> {
-//                ui.show_messageSent(event.getModel(), nickname);
-//            }
 
             case GAME_STARTED -> {
                 System.out.println("status: GAME_STARTED");
@@ -301,10 +290,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     private void statusRunning(EventElement event) throws IOException, InterruptedException {
         
         switch (event.getType()) {
-            
-//            case MESSAGE_SENT -> {
-//                ui.show_messageSent(event.getModel(), nickname);
-//            }
 
             case NEXT_TURN -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
@@ -332,10 +317,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     private void statusLastRound(EventElement event) throws IOException, InterruptedException {
 
         switch (event.getType()) {
-
-//            case MESSAGE_SENT -> {
-//                ui.show_messageSent(event.getModel(), nickname);
-//            }
 
             case NEXT_TURN -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
@@ -494,7 +475,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 }
 
             }
-            case "x" -> reconnect(nickname, fileDisconnection.getLastGameId(nickname));
 
             default -> {
                 return false;
@@ -1029,7 +1009,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         ended = true;
         events.add(gameModel, EventType.GAME_ENDED);
         ui.show_gameEnded(gameModel);
-        resetGameId(fileDisconnection, gameModel);
     }
 
     /**
@@ -1071,18 +1050,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     @Override
     public void lastRound(GameModelImmutable gameModel) throws RemoteException {
         ui.show_genericMessage("*** Last round begins! Now you will not be able to draw any additional card! ***");
-    }
-
-    /*==Testing purpose==*/
-    
-    @Deprecated
-    public BufferData getBuffer_ForTesting() {
-        return this.inputReader.getBuffer();
-    }
-
-    @Deprecated
-    public boolean isEnded_ForTesting() {
-        return this.ended;
     }
 
 }

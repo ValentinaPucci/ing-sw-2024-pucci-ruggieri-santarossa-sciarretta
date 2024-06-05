@@ -148,7 +148,6 @@ public class MainController implements MainControllerInterface, Serializable {
             printRunningGames();
             return game;
         }
-
         listener.genericErrorWhenEnteringGame("No games currently available to join...");
         return null;
     }
@@ -156,7 +155,6 @@ public class MainController implements MainControllerInterface, Serializable {
     @Override
     public synchronized GameControllerInterface setAsReady(GameListener listener, String nickname, int gameId)
             throws RemoteException {
-        System.out.println("Sono in MainController");
         games.get(gameId).playerIsReadyToStart(nickname);
         return games.get(gameId);
     }
@@ -216,24 +214,7 @@ public class MainController implements MainControllerInterface, Serializable {
     @Override
     public synchronized GameControllerInterface reconnect(GameListener listener, String nickname, int gameId)
             throws RemoteException {
-
-        return games.values().stream()
-                .filter(game -> game.getGameId() == gameId)
-                .findFirst()
-                .flatMap(game -> game.getPlayers().stream()
-                        .filter(player -> player.getNickname().equals(nickname))
-                        .findFirst()
-                        .map(player -> {
-                            try {
-                                //game.addListener(listener, player);
-                                game.reconnectPlayer(player);
-                                return game;
-                            } catch (MaxPlayersLimitException | PlayerAlreadyConnectedException | RemoteException e) {
-                                return null;
-                            }
-                        }))
-                .orElseGet(() -> null);
-
+        return null;
     }
 
     /**

@@ -3,8 +3,6 @@ package it.polimi.demo.controller;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
-import it.polimi.demo.model.cards.gameCards.ResourceCard;
-import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.*;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
@@ -29,7 +27,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new GameModel(gameID, numberOfPlayers, player);
         heartbeats = new HashMap<>();
-        // todo: make this call to work
         new Thread(this).start();
     }
 
@@ -252,11 +249,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     //------------------------------------ logic management -----------------------------------------------
 
-
-    public List<ObjectiveCard> getCommonObjectives() {
-        return model.getCommonBoard().getCommonObjectives();
-    }
-
     /**
      * Return the status of the model
      *
@@ -284,7 +276,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param o the orientation of the card
      */
     @Override
-    public void placeStarterCard(String nick, Orientation o) throws GameEndedException {
+    public void placeStarterCard(String nick, Orientation o) throws GameEndedException, RemoteException {
         model.placeStarterCard(getPlayerEntity(nick), o);
     }
 
@@ -339,7 +331,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         model.drawCard(getPlayerEntity(player_nickname), index);
     }
 
-
     /**
      * @return the ID of the game
      */
@@ -347,8 +338,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     public int getGameId() {
         return model.getGameId();
     }
-
-
 
 //---------------------------------listeners management--------------------------------------
 
@@ -360,14 +349,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     public void addListener(GameListener l, Player p) {
         model.addListener(l);
-//        for (GameListener othersListener : model.getListeners()) {
-//            p.addListener(othersListener);
-//        }
-//        for (Player otherPlayer : model.getAllPlayers()) {
-//            if (!otherPlayer.equals(p)) {
-//                otherPlayer.addListener(l);
-//            }
-//        }
+        // addPing(p.getNickname(), l);
     }
 
     /**
@@ -378,10 +360,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     public void removeListener(GameListener lis, Player p) {
         model.removeListener(lis);
-//        Optional.ofNullable(p.getListeners()).ifPresent(List::clear);
-//        getPlayers().stream()
-//                .filter(otherPlayer -> !otherPlayer.equals(p))
-//                .forEach(otherPlayer -> otherPlayer.removeListener(lis));
     }
 
     //-------------------------------chat management----------------------------

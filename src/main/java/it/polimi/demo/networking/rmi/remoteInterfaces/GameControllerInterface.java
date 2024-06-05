@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * This interface contains all the action a player can do in a single game */
 public interface GameControllerInterface extends Remote {
 
-    void placeStarterCard(String nickname, Orientation orientation) throws GameEndedException;
+    void placeStarterCard(String nickname, Orientation orientation) throws GameEndedException, RemoteException;
 
     void chooseCardFromHand(String nick, int index) throws RemoteException;
 
