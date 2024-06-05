@@ -211,7 +211,7 @@ public class Player implements PlayerIC, Serializable {
      * Place the card in the middle of the personal board
      */
     public void playStarterCard() {
-        personal_board.bruteForcePlaceCardSE(starter_card, 500, 500);
+        personal_board.bruteForcePlaceCardSE(starter_card, 250, 250);
     }
 
     /**
