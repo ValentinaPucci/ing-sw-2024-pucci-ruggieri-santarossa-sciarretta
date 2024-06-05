@@ -764,5 +764,9 @@ public class GameModel implements Serializable {
     public List<ObjectiveCard> getPersonalObjectiveCardsToChoose(String nickname) {
         return getPlayerEntity(nickname).getSecretObjectiveCards();
     }
+
+    public List<Player> getWinners(){
+        return this.winners;
+    }
 }
 
