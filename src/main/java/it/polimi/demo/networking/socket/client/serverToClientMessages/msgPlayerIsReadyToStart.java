@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.observer.Listener;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
  * indicating that a player is ready to start the game.
  */
 public class msgPlayerIsReadyToStart extends SocketServerGenericMessage {
-    private GameModelImmutable model;
+    private ModelView model;
     private String nick;
 
     /**
@@ -19,7 +19,7 @@ public class msgPlayerIsReadyToStart extends SocketServerGenericMessage {
      * @param model the immutable game model
      * @param nick the nickname of the player who is ready to start
      */
-    public msgPlayerIsReadyToStart(GameModelImmutable model, String nick) {
+    public msgPlayerIsReadyToStart(ModelView model, String nick) {
         this.model = model;
         this.nick = nick;
     }

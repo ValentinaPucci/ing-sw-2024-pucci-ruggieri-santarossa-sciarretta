@@ -1,7 +1,7 @@
 package it.polimi.demo.view.flow.utilities.gameFacts;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.enumerations.GameStatus;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.io.Serializable;
 import java.util.LinkedList;
@@ -18,11 +18,11 @@ public class FactQueue implements Serializable {
         modelFactQueue = new LinkedList<>();
     }
 
-    public synchronized void add(GameModelImmutable gameModel, FactType factType) {
+    public synchronized void add(ModelView gameModel, FactType factType) {
 
         modelFactQueue.add(new ModelFact(gameModel, factType));
 
-        Predicate<GameModelImmutable> isGameRunningOrLastRound =
+        Predicate<ModelView> isGameRunningOrLastRound =
                 gm -> gm != null && (gm.getStatus().equals(GameStatus.RUNNING) || gm.getStatus().equals(GameStatus.LAST_ROUND));
 
         if (factType.equals(FactType.PLAYER_JOINED) || isGameRunningOrLastRound.test(gameModel)) {

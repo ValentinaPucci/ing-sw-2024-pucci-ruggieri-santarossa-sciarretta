@@ -1,7 +1,7 @@
 package it.polimi.demo.view.gui.controllers;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.flow.utilities.GuiReader;
 import javafx.event.ActionEvent;
@@ -201,7 +201,7 @@ public class RunningController extends GenericController {
         }
     }
 
-    public void setScoreBoardPosition(GameModelImmutable model) {
+    public void setScoreBoardPosition(ModelView model) {
         for (int i = 0; i < model.getAllPlayers().size(); i++) {
             int player_position = model.getCommonBoard().getPlayerPosition(i);
             movePieceToPosition(i, player_position);
@@ -220,7 +220,7 @@ public class RunningController extends GenericController {
     }
 
 
-    public void setPlayersPointsAndNicknames(GameModelImmutable model, String nickname) {
+    public void setPlayersPointsAndNicknames(ModelView model, String nickname) {
         ArrayList<PlayerIC> players_list = model.getAllPlayers();
         this.players_list = players_list;
 
@@ -283,7 +283,7 @@ public class RunningController extends GenericController {
     }
 
     // Method to set an image to one of the common card ImageViews
-    public void setCommonCards(GameModelImmutable model) {
+    public void setCommonCards(ModelView model) {
         Integer[] cardIds = model.getCommonBoard().getCommonCardsId();
         for (int i = 0; i < cardIds.length; i++) {
             int cardId = cardIds[i];
@@ -304,7 +304,7 @@ public class RunningController extends GenericController {
 
 
     // Method to set an image to one of the common card ImageViews
-    public void setPersonalObjectives(GameModelImmutable model, String nickname) {
+    public void setPersonalObjectives(ModelView model, String nickname) {
         Integer[] cardIds = model.getPlayerEntity(nickname).getSecretObjectiveCardsIds();
         this.personalObjectiveIds = new ArrayList<>(Arrays.asList(cardIds));
         for (int i = 0; i < cardIds.length; i++) {
@@ -321,7 +321,7 @@ public class RunningController extends GenericController {
         }
     }
 
-    public void setStarterCardFront(GameModelImmutable model, String nickname) {
+    public void setStarterCardFront(ModelView model, String nickname) {
         this.starterCard = model.getPlayerEntity(nickname).getStarterCardToChose().getFirst().getId();
         String imagePath = "/images/cards/cards_front/" + String.format("%03d", starterCard) + ".png";
         ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
@@ -370,7 +370,7 @@ public class RunningController extends GenericController {
         personalObjective0Pane.setDisable(true);
     }
 
-    public void setCardHand(GameModelImmutable model, String nickname) {
+    public void setCardHand(ModelView model, String nickname) {
         setCardHandFront(model.getPlayerEntity(nickname).getCardHandIds());
     }
 
@@ -488,18 +488,18 @@ public class RunningController extends GenericController {
         cardHandOrientation = Orientation.FRONT;
     }
 
-    public void setPlayerDrawnCard(GameModelImmutable model, String nickname) {
+    public void setPlayerDrawnCard(ModelView model, String nickname) {
         setCommonCards(model);
         setCardHand(model, nickname);
     }
 
     //mostra che la carta giocata non è più in mano
-    public void setPlayerPlacedCard(GameModelImmutable model, String nickname) {
+    public void setPlayerPlacedCard(ModelView model, String nickname) {
         setCardHand(model, nickname);
     }
 
 
-    public void changeTurn(GameModelImmutable model, String nickname) {
+    public void changeTurn(ModelView model, String nickname) {
         setMsgToShow("Next turn is up to: " + model.getCurrentPlayerNickname(), true);
     }
 

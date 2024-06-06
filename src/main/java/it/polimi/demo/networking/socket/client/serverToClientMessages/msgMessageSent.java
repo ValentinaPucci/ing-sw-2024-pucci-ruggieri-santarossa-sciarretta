@@ -1,8 +1,8 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.rmi.RemoteException;
 
@@ -14,14 +14,14 @@ import java.rmi.RemoteException;
 public class msgMessageSent extends SocketServerGenericMessage {
     private String nick;
     private Message msg;
-    private GameModelImmutable gameModel;
+    private ModelView gameModel;
 
     /**
      * Constructor of the class.
      * @param gameModel the immutable game model
      * @param msg the sent chat message
      */
-    public msgMessageSent(GameModelImmutable gameModel, String nickname, Message msg) {
+    public msgMessageSent(ModelView gameModel, String nickname, Message msg) {
         this.nick = nickname;
         this.gameModel = gameModel;
         this.msg = msg;

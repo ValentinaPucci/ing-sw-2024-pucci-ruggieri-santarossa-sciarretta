@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 
-public class GameModel implements Serializable {
+public class Model implements Serializable {
 
     // the first list let us keep the order of players. It is immutable!!
     // aux_order_player.size() always >= players_connected.size()
@@ -49,7 +49,7 @@ public class GameModel implements Serializable {
      */
     private ObserverManager listeners_handler;
 
-    public GameModel() {
+    public Model() {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
         common_board = new CommonBoard();
@@ -63,7 +63,7 @@ public class GameModel implements Serializable {
         listeners_handler = new ObserverManager();
     }
 
-    public GameModel(int gameID, int numberOfPlayers, Player player) {
+    public Model(int gameID, int numberOfPlayers, Player player) {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
         common_board = new CommonBoard();

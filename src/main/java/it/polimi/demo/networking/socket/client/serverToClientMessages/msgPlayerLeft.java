@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
 import it.polimi.demo.observer.Listener;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 
 import java.rmi.RemoteException;
 
@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
  * indicating that a player has left the game.
  */
 public class msgPlayerLeft extends SocketServerGenericMessage{
-    private GameModelImmutable gamemodel;
+    private ModelView gamemodel;
     private String nick;
 
     /**
@@ -19,7 +19,7 @@ public class msgPlayerLeft extends SocketServerGenericMessage{
      * @param gamemodel the immutable game model
      * @param nick the nickname of the player who left
      */
-    public msgPlayerLeft(GameModelImmutable gamemodel,String nick) {
+    public msgPlayerLeft(ModelView gamemodel, String nick) {
         this.gamemodel = gamemodel;
         this.nick=nick;
     }

@@ -8,12 +8,12 @@ import java.rmi.NotBoundException;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
-public class HeartbeatSender extends Thread implements Serializable {
+public class PingSender extends Thread implements Serializable {
 
     private Dynamics dynamics;
     private ClientInterface server;
 
-    public HeartbeatSender(Dynamics dynamics, ClientInterface server) {
+    public PingSender(Dynamics dynamics, ClientInterface server) {
         this.dynamics = dynamics;
         this.server = server;
     }

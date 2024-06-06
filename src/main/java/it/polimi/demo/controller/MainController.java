@@ -23,6 +23,7 @@ import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
  * Allowing players to create, join, reconnect, leave and delete games
  * Therefore, the MainController is unique across the app and thus implements the Singleton Pattern
  */
+// todo: from main controller down to all other classes javadocs must be checked
 public class MainController implements MainControllerInterface, Serializable {
 
     /**

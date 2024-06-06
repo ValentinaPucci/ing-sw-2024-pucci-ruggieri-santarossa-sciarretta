@@ -4,7 +4,7 @@ import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.ListenerHandlerClient;
+import it.polimi.demo.networking.ObserverManagerClient;
 import it.polimi.demo.networking.socket.client.gameControllerMessages.*;
 import it.polimi.demo.networking.socket.client.mainControllerMessages.*;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage;
@@ -45,12 +45,12 @@ public class ClientSocket extends Thread implements ClientInterface, Serializabl
     /**
      * This is the gameListner we use to perform every action requested by the server
      */
-    private final ListenerHandlerClient modelInvokedEvents;
+    private final ObserverManagerClient modelInvokedEvents;
 
     /**
      *
      */
-    // private final HeartbeatSender socketHeartbeat;
+    // private final PingSender socketHeartbeat;
 
     /**
      *
@@ -60,9 +60,9 @@ public class ClientSocket extends Thread implements ClientInterface, Serializabl
     public ClientSocket(Dynamics dynamics) {
         this.dynamics = dynamics;
         startConnection(DefaultValues.serverIp, DefaultValues.Default_port_Socket);
-        modelInvokedEvents =  new ListenerHandlerClient(dynamics);
+        modelInvokedEvents =  new ObserverManagerClient(dynamics);
         this.start();
-        // socketHeartbeat = new HeartbeatSender(dynamics,this);
+        // socketHeartbeat = new PingSender(dynamics,this);
     }
 
     /**

@@ -1,16 +1,16 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.rmi.RemoteException;
 
 
 public class msgStarterCardPlaced extends SocketServerGenericMessage{
-    private GameModelImmutable gameModel;
+    private ModelView gameModel;
     private Orientation orientation;
 
-    public msgStarterCardPlaced(GameModelImmutable gameModel, Orientation orientation) {
+    public msgStarterCardPlaced(ModelView gameModel, Orientation orientation) {
         this.gameModel = gameModel;
         this.orientation = orientation;
     }

@@ -1,9 +1,9 @@
 package it.polimi.demo.observer;
 
+import it.polimi.demo.model.Model;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.GameModel;
 import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.Player;
 
 import java.io.IOException;
@@ -42,12 +42,12 @@ public class ObserverManager implements Serializable {
      * The notify_playerJoined method is used to notify the listeners that a player has joined the game
      * @param model is the game model
      */
-    public synchronized void notify_playerJoined(GameModel model) {
+    public synchronized void notify_playerJoined(Model model) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.playerJoined(new GameModelImmutable(model));
+                listener.playerJoined(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_playerJoined");
                 toRemove.add(listener);
@@ -62,12 +62,12 @@ public class ObserverManager implements Serializable {
      * @param p is the player that tried to join
      * @param model is the game model
      */
-    public synchronized void notify_joinUnableGameFull(Player p, GameModel model) {
+    public synchronized void notify_joinUnableGameFull(Player p, Model model) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.joinUnableGameFull(p, new GameModelImmutable(model));
+                listener.joinUnableGameFull(p, new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_joinUnableGameFull");
                 toRemove.add(listener);
@@ -92,12 +92,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_PlayerIsReadyToStart(GameModel model, String nick) {
+    public synchronized void notify_PlayerIsReadyToStart(Model model, String nick) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.playerIsReadyToStart(new GameModelImmutable(model), nick);
+                listener.playerIsReadyToStart(new ModelView(model), nick);
             } catch (IOException e) {
                 printAsync("Disconnection detected - notify_PlayerIsReadyToStart");
                 toRemove.add(listener);
@@ -106,12 +106,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_GameStarted(GameModel model) {
+    public synchronized void notify_GameStarted(Model model) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.gameStarted(new GameModelImmutable(model));
+                listener.gameStarted(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_GameStarted");
                 toRemove.add(listener);
@@ -121,12 +121,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_GameEnded(GameModel model) {
+    public synchronized void notify_GameEnded(Model model) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.gameEnded(new GameModelImmutable(model));
+                listener.gameEnded(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_GameEnded");
                 toRemove.add(listener);
@@ -136,12 +136,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_starterCardPlaced(GameModel model, Orientation o, String nick) {
+    public synchronized void notify_starterCardPlaced(Model model, Orientation o, String nick) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.starterCardPlaced(new GameModelImmutable(model), o, nick);
+                listener.starterCardPlaced(new ModelView(model), o, nick);
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_starterCardPlaced");
                 toRemove.add(listener);
@@ -151,12 +151,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_cardChosen(GameModel model, int which_card) {
+    public synchronized void notify_cardChosen(Model model, int which_card) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.cardChosen(new GameModelImmutable(model), which_card);
+                listener.cardChosen(new ModelView(model), which_card);
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_cardChosen");
                 toRemove.add(listener);
@@ -166,12 +166,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_cardPlaced(GameModel model, int where_to_place_x, int where_to_place_y, Orientation o) {
+    public synchronized void notify_cardPlaced(Model model, int where_to_place_x, int where_to_place_y, Orientation o) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.cardPlaced(new GameModelImmutable(model), where_to_place_x, where_to_place_y, o);
+                listener.cardPlaced(new ModelView(model), where_to_place_x, where_to_place_y, o);
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_cardPlaced");
                 toRemove.add(listener);
@@ -181,12 +181,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_illegalMove(GameModel model) {
+    public synchronized void notify_illegalMove(Model model) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.illegalMove(new GameModelImmutable(model));
+                listener.illegalMove(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_illegalMove");
                 toRemove.add(listener);
@@ -194,12 +194,12 @@ public class ObserverManager implements Serializable {
         });
     }
 
-    public synchronized void notify_illegalMoveBecauseOf(GameModel model, String reason_why) {
+    public synchronized void notify_illegalMoveBecauseOf(Model model, String reason_why) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.illegalMoveBecauseOf(new GameModelImmutable(model), reason_why);
+                listener.illegalMoveBecauseOf(new ModelView(model), reason_why);
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_illegalMoveBecauseOf");
                 toRemove.add(listener);
@@ -209,12 +209,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_cardDrawn(GameModel model, int index) {
+    public synchronized void notify_cardDrawn(Model model, int index) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.cardDrawn(new GameModelImmutable(model), index);
+                listener.cardDrawn(new ModelView(model), index);
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_cardDrawn");
                 toRemove.add(listener);
@@ -224,12 +224,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_secondLastRound(GameModel model) {
+    public synchronized void notify_secondLastRound(Model model) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.secondLastRound(new GameModelImmutable(model));
+                listener.secondLastRound(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_secondLastRound");
                 toRemove.add(listener);
@@ -239,12 +239,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_lastRound(GameModel model) {
+    public synchronized void notify_lastRound(Model model) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.lastRound(new GameModelImmutable(model));
+                listener.lastRound(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_lastRound");
                 toRemove.add(listener);
@@ -254,12 +254,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_messageSent(GameModel model, String nick, Message message) {
+    public synchronized void notify_messageSent(Model model, String nick, Message message) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.messageSent(new GameModelImmutable(model), nick, message);
+                listener.messageSent(new ModelView(model), nick, message);
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_messageSent");
                 toRemove.add(listener);
@@ -269,12 +269,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_nextTurn(GameModel model) {
+    public synchronized void notify_nextTurn(Model model) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.nextTurn(new GameModelImmutable(model));
+                listener.nextTurn(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_nextTurn");
                 toRemove.add(listener);
@@ -284,12 +284,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public synchronized void notify_playerDisconnected(GameModel gamemodel, String nick) {
+    public synchronized void notify_playerDisconnected(Model gamemodel, String nick) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.playerDisconnected(new GameModelImmutable(gamemodel), nick);
+                listener.playerDisconnected(new ModelView(gamemodel), nick);
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_playerDisconnected");
                 toRemove.add(listener);
@@ -299,12 +299,12 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    public void notify_playerLeft(GameModel gameModel, String nick) {
+    public void notify_playerLeft(Model model, String nick) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.playerLeft(new GameModelImmutable(gameModel), nick);
+                listener.playerLeft(new ModelView(model), nick);
             } catch (RemoteException e) {
                 printAsync("Disconnection detected - notify_playerLeft");
                 toRemove.add(listener);

@@ -17,12 +17,12 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 public class GameController implements GameControllerInterface, Serializable, Runnable {
 
-    private GameModel model;
+    private Model model;
 
     private final Map<Listener, Heartbeat>  pings;
 
     public GameController(int gameID, int numberOfPlayers, Player player) {
-        model = new GameModel(gameID, numberOfPlayers, player);
+        model = new Model(gameID, numberOfPlayers, player);
         pings = new HashMap<>();
         new Thread(this).start();
     }
@@ -294,7 +294,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     /**
      * Draw a card from the deck in commonBoard. It also incorporates the logic of the game
-     * with respect to the game flow, since it calls (through myTurnIsFinished) the nextTurn method in GameModel
+     * with respect to the game flow, since it calls (through myTurnIsFinished) the nextTurn method in Model
      * @param player_nickname the nickname of the player
      * @param index the index of the card to draw
      */

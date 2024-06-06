@@ -1,10 +1,10 @@
 package it.polimi.demo.view.flow;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.networking.rmi.RMIClient;
 import it.polimi.demo.view.flow.utilities.*;
 import it.polimi.demo.view.flow.utilities.gameFacts.ModelFact;
@@ -598,20 +598,20 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     /*============ Server event received ============*/
 
     @Override
-    public void starterCardPlaced(GameModelImmutable model, Orientation orientation, String nick) {
+    public void starterCardPlaced(ModelView model, Orientation orientation, String nick) {
         if (model.getCurrentPlayerNickname().equals(nickname))
             ui.show_personalBoard(nickname, model);
     }
 
     @Override
-    public void cardChosen(GameModelImmutable model, int which_card) {
+    public void cardChosen(ModelView model, int which_card) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
             facts.add(model, ASK_WHICH_ORIENTATION);
         }
     }
 
     @Override
-    public void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
+    public void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
             ui.show_personalBoard(nickname, model);
             ui.show_commonBoard(model);
@@ -620,7 +620,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
-    public void illegalMove(GameModelImmutable model) {
+    public void illegalMove(ModelView model) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
             ui.show_illegalMove();
             ui.show_genericMessage("Here we show you again your personal board:");
@@ -630,7 +630,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
-    public void illegalMoveBecauseOf(GameModelImmutable model, String reason_why) {
+    public void illegalMoveBecauseOf(ModelView model, String reason_why) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
             ui.show_illegalMoveBecauseOf(reason_why);
             ui.show_personalBoard(nickname, model);
@@ -639,14 +639,14 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
-    public void cardDrawn(GameModelImmutable model, int index) {
+    public void cardDrawn(ModelView model, int index) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
 
         }
     }
 
     @Override
-    public void nextTurn(GameModelImmutable gameModel) {
+    public void nextTurn(ModelView gameModel) {
         if (!gameModel.getCurrentPlayerNickname().equals(nickname) &&
                 (gameModel.getStatus() == GameStatus.RUNNING ||
                 gameModel.getStatus() == GameStatus.SECOND_LAST_ROUND))
@@ -657,7 +657,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
-    public void playerJoined(GameModelImmutable gameModel) {
+    public void playerJoined(ModelView gameModel) {
         // shared.setLastModelReceived(gameModel);
         game_id = gameModel.getGameId();
         facts.add(gameModel, FactType.PLAYER_JOINED);
@@ -666,7 +666,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
-    public void playerIsReadyToStart(GameModelImmutable gameModel, String nick) throws IOException {
+    public void playerIsReadyToStart(ModelView gameModel, String nick) throws IOException {
         ui.show_playerJoined(gameModel, nickname);
         if (nick.equals(nickname)) {
             ui.show_ReadyToStart(gameModel, nickname);
@@ -675,17 +675,17 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
-    public void playerLeft(GameModelImmutable gameModel, String nick) throws RemoteException {
+    public void playerLeft(ModelView gameModel, String nick) throws RemoteException {
         ui.addImportantEvent("[EVENT]: Player " + nick + " decided to leave the game!");
     }
 
     @Override
-    public void joinUnableGameFull(Player wantedToJoin, GameModelImmutable gameModel) throws RemoteException {
+    public void joinUnableGameFull(Player wantedToJoin, ModelView gameModel) throws RemoteException {
         facts.add(null, JOIN_UNABLE_GAME_FULL);
     }
 
     @Override
-    public void messageSent(GameModelImmutable gameModel, String nick, Message msg) {
+    public void messageSent(ModelView gameModel, String nick, Message msg) {
         if (!msg.getSender().getNickname().equals(nickname)) {
             if (nickname.equals(nick)) {
                 // async
@@ -716,20 +716,20 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
-    public void gameStarted(GameModelImmutable gameModel) {
+    public void gameStarted(ModelView gameModel) {
         ui.addImportantEvent("All players are connected, the game will start soon!");
         facts.add(gameModel, FactType.GAME_STARTED);
     }
 
     @Override
-    public void gameEnded(GameModelImmutable gameModel) {
+    public void gameEnded(ModelView gameModel) {
         ended = true;
         facts.add(gameModel, FactType.GAME_ENDED);
         ui.show_gameEnded(gameModel);
     }
 
     @Override
-    public void playerDisconnected(GameModelImmutable gameModel, String nick) {
+    public void playerDisconnected(ModelView gameModel, String nick) {
         ui.addImportantEvent("Player " + nick + " has just disconnected");
 
         if (gameModel.getStatus().equals(GameStatus.WAIT)) {
@@ -738,12 +738,12 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
-    public void secondLastRound(GameModelImmutable gameModel) {
+    public void secondLastRound(ModelView gameModel) {
         ui.show_genericMessage("*** Second last round begins! ***");
     }
 
     @Override
-    public void lastRound(GameModelImmutable gameModel) throws RemoteException {
+    public void lastRound(ModelView gameModel) throws RemoteException {
         ui.show_genericMessage("*** Last round begins! Now you will not be able to draw any additional card! ***");
     }
 

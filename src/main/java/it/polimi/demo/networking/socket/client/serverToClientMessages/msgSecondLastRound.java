@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.observer.Listener;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.rmi.RemoteException;
 
@@ -11,13 +11,13 @@ import java.rmi.RemoteException;
  * indicating that it is the last circle of the game.
  */
 public class msgSecondLastRound extends SocketServerGenericMessage {
-    private GameModelImmutable gamemodel;
+    private ModelView gamemodel;
 
     /**
      * Constructor of the class.
      * @param gamemodel the immutable game model
      */
-    public msgSecondLastRound(GameModelImmutable gamemodel) {
+    public msgSecondLastRound(ModelView gamemodel) {
         this.gamemodel = gamemodel;
     }
 
