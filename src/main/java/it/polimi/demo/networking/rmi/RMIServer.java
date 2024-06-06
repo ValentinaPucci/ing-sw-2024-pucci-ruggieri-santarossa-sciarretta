@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.rmi;
 
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.controller.MainController;
-import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
@@ -61,7 +61,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
-    public GameControllerInterface createGame(GameListener lis, String nick, int num_of_players)
+    public GameControllerInterface createGame(Listener lis, String nick, int num_of_players)
             throws RemoteException {
 
         // Before every call, we need to recreate the stub, or java will just GC everything.
@@ -79,7 +79,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
-    public GameControllerInterface joinGame(GameListener lis, String nick, int idGame) throws RemoteException {
+    public GameControllerInterface joinGame(Listener lis, String nick, int idGame) throws RemoteException {
 
         GameControllerInterface ris = serverObject.mainController.joinGame(lis, nick, idGame);
         if (ris != null) {
@@ -92,7 +92,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
-    public GameControllerInterface joinFirstAvailableGame(GameListener lis, String nick) throws RemoteException {
+    public GameControllerInterface joinFirstAvailableGame(Listener lis, String nick) throws RemoteException {
         GameControllerInterface ris = serverObject.mainController.joinFirstAvailableGame(lis, nick);
         if (ris != null) {
             try {
@@ -104,7 +104,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
-    public GameControllerInterface setAsReady(GameListener lis, String nick, int idGame) throws RemoteException {
+    public GameControllerInterface setAsReady(Listener lis, String nick, int idGame) throws RemoteException {
         System.out.println("Sono in RMIServer");
         GameControllerInterface ris = serverObject.mainController.setAsReady(lis, nick, idGame);
         if (ris != null) {
@@ -116,7 +116,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
-    public GameControllerInterface placeStarterCard(GameListener lis, String nick, Orientation o, int idGame) throws RemoteException, GameEndedException {
+    public GameControllerInterface placeStarterCard(Listener lis, String nick, Orientation o, int idGame) throws RemoteException, GameEndedException {
         GameControllerInterface ris = serverObject.mainController.placeStarterCard(lis, nick, o, idGame);
         if (ris != null) {
             try {
@@ -127,7 +127,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
-    public GameControllerInterface chooseCard(GameListener lis, String nick, int cardIndex, int idGame) throws RemoteException, GameEndedException {
+    public GameControllerInterface chooseCard(Listener lis, String nick, int cardIndex, int idGame) throws RemoteException, GameEndedException {
         GameControllerInterface ris = serverObject.mainController.chooseCard(lis, nick, cardIndex, idGame);
         if (ris != null) {
             try {
@@ -138,7 +138,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
-    public GameControllerInterface placeCard(GameListener lis, String nick, int where_to_place_x, int where_to_place_y, Orientation orientation, int idGame) throws RemoteException, GameEndedException {
+    public GameControllerInterface placeCard(Listener lis, String nick, int where_to_place_x, int where_to_place_y, Orientation orientation, int idGame) throws RemoteException, GameEndedException {
         GameControllerInterface ris = serverObject.mainController.placeCard(lis, nick, where_to_place_x, where_to_place_y, orientation, idGame);
         if (ris != null) {
             try {
@@ -149,7 +149,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
-    public GameControllerInterface drawCard(GameListener lis, String nick, int index, int idGame) throws RemoteException, GameEndedException {
+    public GameControllerInterface drawCard(Listener lis, String nick, int index, int idGame) throws RemoteException, GameEndedException {
         GameControllerInterface ris = serverObject.mainController.drawCard(lis, nick, index, idGame);
         if (ris != null) {
             try {
@@ -160,7 +160,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
-    public GameControllerInterface sendMessage(GameListener lis, String nick, Message message, int idGame) throws RemoteException {
+    public GameControllerInterface sendMessage(Listener lis, String nick, Message message, int idGame) throws RemoteException {
         GameControllerInterface ris = serverObject.mainController.sendMessage(lis, nick, message, idGame);
         if (ris != null) {
             try {
@@ -171,12 +171,12 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     }
 
     @Override
-    public void addPing(GameListener lis, String nick, int idGame) throws RemoteException {
+    public void addPing(Listener lis, String nick, int idGame) throws RemoteException {
         serverObject.mainController.addPing(lis, nick, idGame);
     }
 
     @Override
-    public GameControllerInterface leaveGame(GameListener lis, String nick, int idGame) throws RemoteException {
+    public GameControllerInterface leaveGame(Listener lis, String nick, int idGame) throws RemoteException {
         serverObject.mainController.leaveGame(lis,nick,idGame);
         return null;
     }

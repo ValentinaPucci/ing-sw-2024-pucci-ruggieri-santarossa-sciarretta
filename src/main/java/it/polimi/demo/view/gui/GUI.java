@@ -2,29 +2,27 @@ package it.polimi.demo.view.gui;
 
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.view.flow.UI;
-import it.polimi.demo.view.flow.utilities.inputReaderGUI;
+import it.polimi.demo.view.flow.utilities.GuiReader;
 import it.polimi.demo.view.gui.controllers.LobbyController;
 import it.polimi.demo.view.gui.controllers.RunningController;
 import it.polimi.demo.view.gui.scene.SceneType;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 
 public class GUI extends UI {
 
     private ApplicationGUI guiApplication;
-    private inputReaderGUI inputReaderGUI;
+    private GuiReader GuiReader;
     private boolean alreadyShowedPublisher = false; //to delete in tui
     private boolean alreadyShowedLobby = false;
 
     private String nickname;
 
-    public GUI(ApplicationGUI guiApplication, inputReaderGUI inputReaderGUI) {
+    public GUI(ApplicationGUI guiApplication, it.polimi.demo.view.flow.utilities.GuiReader GuiReader) {
         this.guiApplication = guiApplication;
-        this.inputReaderGUI = inputReaderGUI;
-        //System.out.println("GUI constructor: "+ this.inputReaderGUI);
+        this.GuiReader = GuiReader;
+        //System.out.println("GUI constructor: "+ this.GuiReader);
         nickname = null;
         init();
     }
@@ -40,24 +38,14 @@ public class GUI extends UI {
         Platform.runLater(r);
     }
 
-    /**
-     * The show method is used to show the GUI, and set the active scene to the publisher.
-     */
-    @Override
-    protected void show_publisher() {
-        alreadyShowedPublisher = true;
-    }
-
     @Override
     protected void show_menuOptions() {
         if (alreadyShowedPublisher) {
-            callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.inputReaderGUI));//So the controllers can add text to the buffer for the gameflow
+            callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.GuiReader));//So the controllers can add text to the buffer for the gameflow
             callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
             callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
         }
     }
-
-
 
     @Override
     protected void show_creatingNewGameMsg(String nickname) {
@@ -117,7 +105,7 @@ public class GUI extends UI {
     /**
      * this method show that the player is ready to start
      *
-     * @param gameModel     model where events happen
+     * @param gameModel     model where gameFacts happen
      * @param nickname player's nickname
      */
     @Override
@@ -261,7 +249,7 @@ public class GUI extends UI {
 
 
     /**
-     * This method add an important event to the list of important events, and show it
+     * This method add an important event to the list of important gameFacts, and show it
      * @param input the string of the important event to add
      */
     @Override
@@ -271,7 +259,7 @@ public class GUI extends UI {
     }
 
     /**
-     * This method reset the important events
+     * This method reset the important gameFacts
      */
     @Override
     protected void resetImportantEvents() {

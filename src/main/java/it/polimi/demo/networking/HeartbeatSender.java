@@ -1,6 +1,7 @@
 package it.polimi.demo.networking;
-import it.polimi.demo.view.flow.CommonClientActions;
-import it.polimi.demo.view.flow.Flow;
+import it.polimi.demo.view.flow.ClientInterface;
+import it.polimi.demo.view.flow.Dynamics;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
@@ -9,11 +10,11 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 public class HeartbeatSender extends Thread implements Serializable {
 
-    private Flow flow;
-    private CommonClientActions server;
+    private Dynamics dynamics;
+    private ClientInterface server;
 
-    public HeartbeatSender(Flow flow, CommonClientActions server) {
-        this.flow = flow;
+    public HeartbeatSender(Dynamics dynamics, ClientInterface server) {
+        this.dynamics = dynamics;
         this.server = server;
     }
 

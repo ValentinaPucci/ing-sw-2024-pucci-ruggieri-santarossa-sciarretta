@@ -1,8 +1,8 @@
 package it.polimi.demo.model;
 
-import it.polimi.demo.listener.ListenersHandler;
+import it.polimi.demo.observer.Listener;
+import it.polimi.demo.observer.ObserverManager;
 import it.polimi.demo.DefaultValues;
-import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
@@ -47,7 +47,7 @@ public class GameModel implements Serializable {
     /**
      * Listener handler that handles the listeners
      */
-    private ListenersHandler listeners_handler;
+    private ObserverManager listeners_handler;
 
     public GameModel() {
         aux_order_players = new ArrayList<>();
@@ -60,7 +60,7 @@ public class GameModel implements Serializable {
         chat = new Chat();
         winners = new ArrayList<>();
         leaderboard = new HashMap<>();
-        listeners_handler = new ListenersHandler();
+        listeners_handler = new ObserverManager();
     }
 
     public GameModel(int gameID, int numberOfPlayers, Player player) {
@@ -74,7 +74,7 @@ public class GameModel implements Serializable {
         chat = new Chat();
         winners = new ArrayList<>();
         leaderboard = new HashMap<>();
-        listeners_handler = new ListenersHandler();
+        listeners_handler = new ObserverManager();
     }
 
     //------------------------------------methods for players-----------------------
@@ -224,38 +224,6 @@ public class GameModel implements Serializable {
     public void sendMessage(String nick, Message message) throws ActionPerformedByAPlayerNotPlayingException {
         chat.addMessage(message);
         listeners_handler.notify_messageSent(this, nick, message);
-    }
-
-    //-------------------------connection/disconnection management---------------------------------------------
-
-    /**
-     * Sets the player p as disconnected, it removes p from the players_connected list.
-     * @param p player to disconnect
-     */
-    public void setPlayerAsDisconnected(Player p) {
-
-        if (players_connected.contains(p)) {
-            p.setAsNotConnected();
-            listeners_handler.notify_playerDisconnected(this, p.getNickname());
-            p.setAsNotReadyToStart();
-            players_connected.remove(p);
-        }
-    }
-
-    /**
-     * It requires player.isConnected() == true.
-     * Add the player, that is connected, to the players_connected list, notify that the player is connected.
-     * If the player is already connected, it throws exception. Dynamical add (connection).
-     * @param p player to set as connected.
-     */
-    public void setPlayerAsConnected(Player p) {
-        if (aux_order_players.contains(p) && !players_connected.contains(p)) {
-            // Here we bypass the question 'are you ready to start?'
-            p.setAsReadyToStart();
-        }
-        else {
-            throw new IllegalArgumentException("Player not in the game!");
-        }
     }
 
     //-------------------------managing status---------------------------------------------
@@ -742,16 +710,16 @@ public class GameModel implements Serializable {
     // **************************** Listeners ********************************
 
     /**
-     * @param obj adds the listener to the list
+     * @param obj adds the observer to the list
      */
-    public void addListener(GameListener obj) {
+    public void addListener(Listener obj) {
         listeners_handler.addListener(obj);
     }
 
     /**
-     * @param lis removes listener from list
+     * @param lis removes observer from list
      */
-    public void removeListener(GameListener lis) {
+    public void removeListener(Listener lis) {
         listeners_handler.removeListener(lis);
     }
 

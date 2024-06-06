@@ -1,5 +1,5 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
@@ -16,7 +16,7 @@ public class msgStarterCardPlaced extends SocketServerGenericMessage{
     }
 
     @Override
-    public void execute(GameListener lis) throws RemoteException {
+    public void execute(Listener lis) throws RemoteException {
         lis.starterCardPlaced(gameModel, orientation, gameModel.getCurrentPlayerNickname());
     }
 

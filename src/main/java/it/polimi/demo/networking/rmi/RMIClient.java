@@ -1,14 +1,14 @@
 package it.polimi.demo.networking.rmi;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.GameListenerHandlerClient;
+import it.polimi.demo.networking.ListenerHandlerClient;
 import it.polimi.demo.networking.HeartbeatSender;
-import it.polimi.demo.view.flow.CommonClientActions;
-import it.polimi.demo.view.flow.Flow;
+import it.polimi.demo.view.flow.ClientInterface;
+import it.polimi.demo.view.flow.Dynamics;
 import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 
@@ -24,13 +24,13 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
 
 // todo: implement differently
-public class RMIClient implements CommonClientActions {
+public class RMIClient implements ClientInterface {
 
     private static MainControllerInterface requests;
 
     private GameControllerInterface gameController = null;
 
-    private static GameListener modelInvokedEvents;
+    private static Listener modelInvokedEvents;
 
     private String nickname;
 
@@ -38,18 +38,18 @@ public class RMIClient implements CommonClientActions {
 
     private boolean initialized = false;
 
-    private final GameListenerHandlerClient gameListenersHandler;
+    private final ListenerHandlerClient gameListenersHandler;
 
     private Registry registry;
 
-    private Flow flow;
+    private Dynamics dynamics;
 
     private HeartbeatSender rmiHeartbeat;
 
-    public RMIClient(Flow flow) {
-        gameListenersHandler = new GameListenerHandlerClient(flow);
-        this.flow = flow;
-        rmiHeartbeat = new HeartbeatSender(flow, this);
+    public RMIClient(Dynamics dynamics) {
+        gameListenersHandler = new ListenerHandlerClient(dynamics);
+        this.dynamics = dynamics;
+        rmiHeartbeat = new HeartbeatSender(dynamics, this);
         rmiHeartbeat.start();
         connect();
     }
@@ -62,7 +62,7 @@ public class RMIClient implements CommonClientActions {
             try {
                 registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
                 requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
-                modelInvokedEvents = (GameListener) UnicastRemoteObject.exportObject(gameListenersHandler, 0);
+                modelInvokedEvents = (Listener) UnicastRemoteObject.exportObject(gameListenersHandler, 0);
                 printAsync("Client RMI ready");
                 retry = false;
             } catch (Exception e) {

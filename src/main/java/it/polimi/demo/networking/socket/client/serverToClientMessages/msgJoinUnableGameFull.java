@@ -1,6 +1,6 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
@@ -27,11 +27,11 @@ public class msgJoinUnableGameFull extends SocketServerGenericMessage {
 
     /**
      * Method to execute the corresponding action for the message.
-     * @param lis the game listener
+     * @param lis the game observer
      * @throws RemoteException if there is an error in remote communication
      */
     @Override
-    public void execute(GameListener lis) throws RemoteException {
+    public void execute(Listener lis) throws RemoteException {
         // lis.JoinUnableGameFull(p,gamemodel);
     }
 }

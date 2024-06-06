@@ -14,7 +14,7 @@ import java.util.List;
  */
 public abstract class UI {
 
-    protected List<String> importantEvents; //events that needs to be showed always in screen
+    protected List<String> importantEvents; //gameFacts that needs to be showed always in screen
 
     /**
      * Initialises GUI or TUI
@@ -24,14 +24,6 @@ public abstract class UI {
     //----------------------
     //SHOW
     //----------------------
-
-    /**
-     * Show's Cranio Creation's logo
-     *
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    protected abstract void show_publisher() throws IOException, InterruptedException;
 
     /**
      * Shows menu options
@@ -102,7 +94,7 @@ public abstract class UI {
     /**
      * Shows the players that have joined
      *
-     * @param gameModel model where events happen
+     * @param gameModel model where gameFacts happen
      * @param nick      player's nickname
      */
     protected abstract void show_playerJoined(GameModelImmutable gameModel, String nick);
@@ -193,7 +185,7 @@ public abstract class UI {
     public abstract void addImportantEvent(String input);
 
     /**
-     * Resets the important events
+     * Resets the important gameFacts
      */
     protected abstract void resetImportantEvents();
 

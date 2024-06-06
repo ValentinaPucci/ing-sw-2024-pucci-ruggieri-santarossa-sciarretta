@@ -1,133 +1,123 @@
 package it.polimi.demo.networking;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.view.flow.Flow;
+import it.polimi.demo.view.flow.Dynamics;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class GameListenerHandlerClient implements GameListener, Serializable {
+public class ListenerHandlerClient implements Listener, Serializable {
 
 
-    private Flow flow;
+    private Dynamics dynamics;
 
-    public GameListenerHandlerClient(Flow gui) {
-        this.flow = gui;
+    public ListenerHandlerClient(Dynamics gui) {
+        this.dynamics = gui;
     }
 
     @Override
     public void starterCardPlaced(GameModelImmutable model, Orientation orientation, String nick) throws RemoteException {
-        flow.starterCardPlaced(model, orientation, nick);
+        dynamics.starterCardPlaced(model, orientation, nick);
     }
 
     @Override
     public void cardChosen(GameModelImmutable model, int which_card) throws RemoteException {
-        flow.cardChosen(model, which_card);
+        dynamics.cardChosen(model, which_card);
     }
 
     @Override
     public void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
-        flow.cardPlaced(model, where_to_place_x, where_to_place_y, orientation);
+        dynamics.cardPlaced(model, where_to_place_x, where_to_place_y, orientation);
     }
 
     @Override
     public void illegalMove(GameModelImmutable model) throws RemoteException {
-        flow.illegalMove(model);
+        dynamics.illegalMove(model);
     }
 
     @Override
     public void illegalMoveBecauseOf(GameModelImmutable model, String reason_why) throws RemoteException {
-        flow.illegalMoveBecauseOf(model, reason_why);
+        dynamics.illegalMoveBecauseOf(model, reason_why);
     }
 
     @Override
     public void cardDrawn(GameModelImmutable model, int index) throws RemoteException {
-        flow.cardDrawn(model, index);
+        dynamics.cardDrawn(model, index);
     }
 
     @Override
     public void playerJoined(GameModelImmutable gamemodel) throws RemoteException {
-        flow.playerJoined(gamemodel);
+        dynamics.playerJoined(gamemodel);
     }
 
     @Override
     public void playerLeft(GameModelImmutable gamemodel,String nick) throws RemoteException {
-        flow.playerLeft(gamemodel,nick);
+        dynamics.playerLeft(gamemodel,nick);
     }
 
     @Override
     public void joinUnableGameFull(Player wantedToJoin, GameModelImmutable gamemodel) throws RemoteException {
-        flow.joinUnableGameFull(wantedToJoin, gamemodel);
-    }
-
-    @Override
-    public void playerReconnected(GameModelImmutable gamemodel, String nickPlayerReconnected) throws RemoteException {
-        flow.playerReconnected(gamemodel, nickPlayerReconnected);
+        dynamics.joinUnableGameFull(wantedToJoin, gamemodel);
     }
 
     @Override
     public void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
-        flow.joinUnableNicknameAlreadyIn(wantedToJoin);
+        dynamics.joinUnableNicknameAlreadyIn(wantedToJoin);
     }
 
     @Override
     public void gameIdNotExists(int gameid) throws RemoteException {
-        flow.gameIdNotExists(gameid);
+        dynamics.gameIdNotExists(gameid);
     }
 
     @Override
     public void genericErrorWhenEnteringGame(String why) throws RemoteException {
-        flow.genericErrorWhenEnteringGame(why);
+        dynamics.genericErrorWhenEnteringGame(why);
     }
 
     @Override
     public void playerIsReadyToStart(GameModelImmutable gamemodel, String nick) throws IOException {
-        flow.playerIsReadyToStart(gamemodel, nick);
+        dynamics.playerIsReadyToStart(gamemodel, nick);
     }
 
     @Override
     public void gameStarted(GameModelImmutable gamemodel) throws RemoteException {
-        flow.gameStarted(gamemodel);
+        dynamics.gameStarted(gamemodel);
     }
 
     @Override
     public void gameEnded(GameModelImmutable gamemodel) throws RemoteException {
-        flow.gameEnded(gamemodel);
+        dynamics.gameEnded(gamemodel);
     }
 
     @Override
     public void nextTurn(GameModelImmutable gamemodel) throws RemoteException {
-        flow.nextTurn(gamemodel);
+        dynamics.nextTurn(gamemodel);
     }
 
     @Override
     public void playerDisconnected(GameModelImmutable gameModel,String nick) throws RemoteException {
-        flow.playerDisconnected(gameModel,nick);
-    }
-
-    @Override
-    public void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
-        flow.onlyOnePlayerConnected(gameModel,secondsToWaitUntilGameEnded);
+        dynamics.playerDisconnected(gameModel,nick);
     }
 
     @Override
     public void secondLastRound(GameModelImmutable gamemodel) throws RemoteException {
-        flow.secondLastRound(gamemodel);
+        dynamics.secondLastRound(gamemodel);
     }
 
     @Override
     public void lastRound(GameModelImmutable gamemodel) throws RemoteException {
-        flow.lastRound(gamemodel);
+        dynamics.lastRound(gamemodel);
     }
 
     @Override
     public void messageSent(GameModelImmutable gameModel, String nickname, Message message) throws RemoteException {
-        flow.messageSent(gameModel, nickname, message);
+        dynamics.messageSent(gameModel, nickname, message);
     }
 
 }

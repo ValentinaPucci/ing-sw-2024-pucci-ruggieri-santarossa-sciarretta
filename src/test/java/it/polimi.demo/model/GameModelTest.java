@@ -7,12 +7,9 @@ import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.polimi.demo.listener.GameListener;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.model.Player;
 
-import java.rmi.Remote;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;

@@ -1,12 +1,9 @@
 package it.polimi.demo.view.gui.controllers;
 
-import it.polimi.demo.model.Player;
-import it.polimi.demo.model.cards.gameCards.StarterCard;
-import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.interfaces.PlayerIC;
-import it.polimi.demo.view.flow.utilities.inputReaderGUI;
+import it.polimi.demo.view.flow.utilities.GuiReader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -433,11 +430,11 @@ public class RunningController extends GenericController {
         setMsgToShow("personalObjective0 clicked" , true);
         flipPersonalObjective(personalObjectiveIds.getFirst(), 0);
 
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("2");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("L'oggetto GuiReader è null.");
         }
     }
 
@@ -445,11 +442,11 @@ public class RunningController extends GenericController {
     public void onPersonalObjective0Clicked(MouseEvent event) {
         setMsgToShow("personalObjective1 clicked" , true);
         flipPersonalObjective(personalObjectiveIds.get(1), 1);
-        inputReaderGUI reader = getInputReaderGUI();
+        it.polimi.demo.view.flow.utilities.GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("1");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("L'oggetto GuiReader è null.");
         }
     }
 
@@ -466,7 +463,7 @@ public class RunningController extends GenericController {
         FlipStarter.setVisible(false);
         StarterCardImage.setVisible(false);
 
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             if(starterCardOrientation == Orientation.FRONT)
                 reader.addTxt("f");
@@ -475,7 +472,7 @@ public class RunningController extends GenericController {
             else
                 System.out.println("Orientation non valida.");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("L'oggetto GuiReader è null.");
         }
     }
 

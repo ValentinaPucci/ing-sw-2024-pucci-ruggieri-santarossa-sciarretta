@@ -1,4 +1,4 @@
-package it.polimi.demo.listener;
+package it.polimi.demo.observer;
 
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.GameModel;
@@ -19,22 +19,22 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 /**
  * This class is used to handle the listeners of the game
  */
-public class ListenersHandler implements Serializable {
+public class ObserverManager implements Serializable {
 
-    private List<GameListener> listeners;
+    private List<Listener> listeners;
 
     /**
-     * The constructor of the class ListenersHandler
+     * The constructor of the class ObserverManager
      */
-    public ListenersHandler() {
+    public ObserverManager() {
         listeners = new ArrayList<>();
     }
 
     /**
-     * The addListener method adds a listener to the list of listeners
-     * @param obj is the listener to add
+     * The addListener method adds a observer to the list of listeners
+     * @param obj is the observer to add
      */
-    public synchronized void addListener(GameListener obj) {
+    public synchronized void addListener(Listener obj) {
         listeners.add(obj);
     }
 
@@ -43,7 +43,7 @@ public class ListenersHandler implements Serializable {
      * @param model is the game model
      */
     public synchronized void notify_playerJoined(GameModel model) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -63,7 +63,7 @@ public class ListenersHandler implements Serializable {
      * @param model is the game model
      */
     public synchronized void notify_joinUnableGameFull(Player p, GameModel model) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -78,7 +78,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_joinUnableNicknameAlreadyIn(Player p) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -93,7 +93,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_PlayerIsReadyToStart(GameModel model, String nick) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -107,7 +107,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_GameStarted(GameModel model) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -122,7 +122,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_GameEnded(GameModel model) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -137,7 +137,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_starterCardPlaced(GameModel model, Orientation o, String nick) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -152,7 +152,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_cardChosen(GameModel model, int which_card) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -167,7 +167,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_cardPlaced(GameModel model, int where_to_place_x, int where_to_place_y, Orientation o) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -182,7 +182,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_illegalMove(GameModel model) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -195,7 +195,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_illegalMoveBecauseOf(GameModel model, String reason_why) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -210,7 +210,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_cardDrawn(GameModel model, int index) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -225,7 +225,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_secondLastRound(GameModel model) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -240,7 +240,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_lastRound(GameModel model) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -255,7 +255,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_messageSent(GameModel model, String nick, Message message) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -270,7 +270,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_nextTurn(GameModel model) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -285,7 +285,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public synchronized void notify_playerDisconnected(GameModel gamemodel, String nick) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -300,7 +300,7 @@ public class ListenersHandler implements Serializable {
     }
 
     public void notify_playerLeft(GameModel gameModel, String nick) {
-        List<GameListener> toRemove = new ArrayList<>();
+        List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
@@ -315,10 +315,10 @@ public class ListenersHandler implements Serializable {
     }
 
     /**
-     * The removeListener method removes a listener from the list of listeners <br>
-     * @param lis is the listener to remove
+     * The removeListener method removes a observer from the list of listeners <br>
+     * @param lis is the observer to remove
      */
-    public synchronized void removeListener(GameListener lis) {
+    public synchronized void removeListener(Listener lis) {
         listeners.remove(lis);
     }
 

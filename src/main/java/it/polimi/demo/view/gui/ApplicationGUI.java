@@ -3,10 +3,10 @@ package it.polimi.demo.view.gui;
 import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.flow.ConnectionSelection;
-import it.polimi.demo.view.flow.GameFlow;
+import it.polimi.demo.view.flow.GameDynamics;
+import it.polimi.demo.view.flow.utilities.GuiReader;
 import it.polimi.demo.view.gui.controllers.*;
 import it.polimi.demo.view.gui.scene.SceneType;
-import it.polimi.demo.view.flow.utilities.inputReaderGUI;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +32,7 @@ import static it.polimi.demo.view.gui.scene.SceneType.*;
 public class ApplicationGUI extends Application {
     private Stage primaryStage;
     private StackPane root;
-    private GameFlow gameFlow;
+    private GameDynamics gameDynamics;
     private ArrayList<SceneInfo> scenes;
     private double widthOld, heightOld;
     private boolean resizing = true;
@@ -43,7 +43,7 @@ public class ApplicationGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        gameFlow = new GameFlow(this, ConnectionSelection.valueOf(getParameters().getUnnamed().get(0)));
+        gameDynamics = new GameDynamics(this, ConnectionSelection.valueOf(getParameters().getUnnamed().get(0)));
         loadScenes();
 
         this.primaryStage = primaryStage;
@@ -105,10 +105,10 @@ public class ApplicationGUI extends Application {
         }
     }
 
-    public void setInputReaderGUItoAllControllers(inputReaderGUI inputReaderGUI) {
+    public void setInputReaderGUItoAllControllers(GuiReader GuiReader) {
         loadScenes();
         for (SceneInfo s : scenes) {
-            s.setInputReaderGUI(inputReaderGUI);
+            s.setInputReaderGUI(GuiReader);
         }
         System.out.println("setInputReaderGUItoAllControllers");
     }

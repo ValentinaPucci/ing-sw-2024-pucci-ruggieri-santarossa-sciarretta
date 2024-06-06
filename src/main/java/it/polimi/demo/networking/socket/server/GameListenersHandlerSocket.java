@@ -1,6 +1,6 @@
 package it.polimi.demo.networking.socket.server;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
@@ -14,11 +14,11 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 /**
- * This class is used to pass the GameListener to the client via socket
- * {@link GameListener}
+ * This class is used to pass the Listener to the client via socket
+ * {@link Listener}
  * It has a private ObjectOutputStream where it writes the data
  **/
-public class GameListenersHandlerSocket implements GameListener, Serializable {
+public class GameListenersHandlerSocket implements Listener, Serializable {
 
     private final transient ObjectOutputStream out;
 
@@ -91,23 +91,6 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     public void playerLeft(GameModelImmutable gamemodel,String nick) throws RemoteException {
         try {
             out.writeObject(new msgPlayerLeft(gamemodel,nick));
-            finishSending();
-        } catch (IOException e) {
-
-        }
-    }
-
-    /**
-     * This method is used to write on the ObjectOutputStream the message that a player has reconnected to the game
-     * @param gamemodel is the game model {@link GameModelImmutable}
-     * @param nickPlayerReconnected is the nickname of the player
-     * @throws RemoteException if the connection fails
-     */
-    @Override
-    public void playerReconnected(GameModelImmutable gamemodel, String nickPlayerReconnected) throws RemoteException {
-        //System.out.println(nickNewPlayer +" by socket");
-        try {
-            out.writeObject(new msgPlayerReconnected(gamemodel, nickPlayerReconnected));
             finishSending();
         } catch (IOException e) {
 
@@ -295,23 +278,6 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     public void playerDisconnected(GameModelImmutable gameModel,String nick) throws RemoteException {
         try {
             out.writeObject(new msgPlayerDisconnected(gameModel,nick));
-            finishSending();
-        } catch (IOException e) {
-
-        }
-    }
-
-
-    /**
-     * This method is used to write on the ObjectOutputStream that only one player is connected
-     * @param gameModel is the game model {@link GameModelImmutable}
-     * @param secondsToWaitUntilGameEnded is the number of seconds to wait until the game ends
-     * @throws RemoteException if the connection fails
-     */
-    @Override
-    public void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
-        try {
-            out.writeObject(new msgOnlyOnePlayerConnected(gameModel,secondsToWaitUntilGameEnded));
             finishSending();
         } catch (IOException e) {
 
