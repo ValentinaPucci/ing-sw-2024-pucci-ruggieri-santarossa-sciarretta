@@ -26,7 +26,7 @@ public class msgPlayerLeft extends SocketServerGenericMessage{
 
     /**
      * Method to execute the corresponding action for the message.
-     * @param lis the game listener
+     * @param lis the game observer
      * @throws RemoteException if there is a remote exception
      */
     @Override

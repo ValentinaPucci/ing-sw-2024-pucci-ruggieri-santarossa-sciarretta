@@ -8,7 +8,7 @@ public class GameControllerTest {
 
     @BeforeEach
     public void setUp() {
-        GameModel gameModel = new GameModel();
+        Model gameModel = new Model();
         Player p = new Player("Player1");
         Integer id = gameModel.getGameId();
         //this.GameController = new GameController(id, 2, p);
@@ -18,11 +18,11 @@ public class GameControllerTest {
 //
 //    @Test
 //    public void getGameModelTest() {
-//        GameModel gameModel = new GameModel();
+//        Model gameModel = new Model();
 //        Player p = new Player("Player1");
 //        Integer id = gameModel.getGameId();
 //        //GameController = new GameController(gameModel);
-//        GameModel actualGameModel = (GameModel) GameController.getModel();
+//        Model actualGameModel = (Model) GameController.getModel();
 //        assertEquals(gameModel, actualGameModel);
 //    }
 

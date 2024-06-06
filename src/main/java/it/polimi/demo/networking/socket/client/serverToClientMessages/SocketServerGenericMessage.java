@@ -13,7 +13,7 @@ public abstract class SocketServerGenericMessage implements Serializable {
 
     /**
      * Executes the corresponding action for the message.
-     * @param lis the game listener
+     * @param lis the game observer
      * @throws IOException if there is an IO exception
      * @throws InterruptedException if the execution is interrupted
      */

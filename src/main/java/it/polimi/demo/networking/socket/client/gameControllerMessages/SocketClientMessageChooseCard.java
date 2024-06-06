@@ -29,7 +29,7 @@ public class SocketClientMessageChooseCard extends SocketClientGenericMessage im
 
     /**
      * Method to execute the corresponding action for the message.
-     * @param lis the game listener
+     * @param lis the game observer
      * @param mainController the main controller of the application
      * @return the game controller interface
      * @throws RemoteException if there is an error in remote communication

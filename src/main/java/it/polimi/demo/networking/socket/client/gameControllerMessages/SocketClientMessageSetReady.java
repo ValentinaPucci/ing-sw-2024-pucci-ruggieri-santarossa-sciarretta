@@ -26,7 +26,7 @@ public class SocketClientMessageSetReady extends SocketClientGenericMessage impl
 
     /**
      * Method to execute the corresponding action for the message.
-     * @param lis the game listener
+     * @param lis the game observer
      * @param mainController the main controller of the application
      * @return the game controller interface
      * @throws RemoteException if there is an error in remote communication
@@ -43,7 +43,6 @@ public class SocketClientMessageSetReady extends SocketClientGenericMessage impl
      */
     @Override
     public void execute(GameControllerInterface gameController) throws RemoteException {
-        System.out.println("GameController sent says: " + gameController.getPlayerEntity(nick));
         gameController.playerIsReadyToStart(this.nick);
     }
 }

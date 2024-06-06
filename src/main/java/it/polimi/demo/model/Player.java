@@ -29,7 +29,7 @@ public class Player implements PlayerIC, Serializable {
     private boolean is_connected;
     private boolean is_ready_to_start;
 
-    //private transient List<GameListener> listeners;
+    //private transient List<Listener> listeners;
 
     public Player(String nickname) {
         this.nickname = nickname;
@@ -211,7 +211,7 @@ public class Player implements PlayerIC, Serializable {
      * Place the card in the middle of the personal board
      */
     public void playStarterCard() {
-        personal_board.bruteForcePlaceCardSE(starter_card, 500, 500);
+        personal_board.bruteForcePlaceCardSE(starter_card, 250, 250);
     }
 
     /**
@@ -239,6 +239,10 @@ public class Player implements PlayerIC, Serializable {
         personalObjectiveIds[0] = getSecretObjectiveCards().getFirst().getId();
         personalObjectiveIds[1] = getSecretObjectiveCards().get(1).getId();
         return personalObjectiveIds;
+    }
+
+    public int scoreOnlyObjectiveCards() {
+        return getFinalScore() - getScoreBoardPosition();
     }
 }
 
