@@ -1,14 +1,14 @@
 package it.polimi.demo.networking.rmi;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.listener.Listener;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.GameListenerHandlerClient;
-import it.polimi.demo.networking.HeartbeatSender;
-import it.polimi.demo.view.flow.CommonClientActions;
-import it.polimi.demo.view.flow.Flow;
+import it.polimi.demo.networking.ObserverManagerClient;
+import it.polimi.demo.networking.PingSender;
+import it.polimi.demo.view.flow.ClientInterface;
+import it.polimi.demo.view.flow.Dynamics;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
 
@@ -29,7 +29,7 @@ import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
  * From the first connection, to the creation, joining, leaving, grabbing and positioning messages through the network<br>
  * by the RMI Network Protocol
  */
-public class RMIClient implements CommonClientActions {
+public class RMIClient implements ClientInterface {
     /**
      * The remote object returned by the registry that represents the main controller
      */
@@ -41,7 +41,7 @@ public class RMIClient implements CommonClientActions {
     /**
      * The remote object on which the server will invoke remote methods
      */
-    private static GameListener modelInvokedEvents;
+    private static Listener modelInvokedEvents;
     /**
      * The nickname associated to the socket (!=null only when connected in a game)
      */
@@ -50,7 +50,7 @@ public class RMIClient implements CommonClientActions {
     /**
      * The remote object on which the server will invoke remote methods
      */
-    private final GameListenerHandlerClient gameListenersHandler;
+    private final ObserverManagerClient gameListenersHandler;
     /**
      * Registry of the RMI
      */
@@ -58,24 +58,24 @@ public class RMIClient implements CommonClientActions {
     /**
      * Flow to notify network error messages
      */
-    private Flow flow;
+    private Dynamics dynamics;
 
-    private HeartbeatSender rmiHeartbeat;
+    private PingSender rmiHeartbeat;
 
 
     /**
      * Create, start and connect a RMI Client to the server
      *
-     * @param flow for visualising network error messages
+     * @param dynamics for visualising network error messages
      */
-    public RMIClient(Flow flow) {
+    public RMIClient(Dynamics dynamics) {
         super();
-        gameListenersHandler = new GameListenerHandlerClient(flow);
+        gameListenersHandler = new ObserverManagerClient(dynamics);
         connect();
 
-        this.flow = flow;
+        this.dynamics = dynamics;
 
-        rmiHeartbeat = new HeartbeatSender(flow,this);
+        rmiHeartbeat = new PingSender(dynamics,this);
         rmiHeartbeat.start();
     }
 
@@ -89,7 +89,7 @@ public class RMIClient implements CommonClientActions {
                 registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
                 requests = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
 
-                modelInvokedEvents = (GameListener) UnicastRemoteObject.exportObject(gameListenersHandler, 0);
+                modelInvokedEvents = (Listener) UnicastRemoteObject.exportObject(gameListenersHandler, 0);
 
                 printAsync("Client RMI ready");
                 retry = false;

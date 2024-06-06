@@ -1,6 +1,6 @@
 package it.polimi.demo.networking.socket.client.mainControllerMessages;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.listener.Listener;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
@@ -36,7 +36,7 @@ public class SocketClientMessageReconnect extends SocketClientGenericMessage {
      */
 
     @Override
-    public GameControllerInterface execute(GameListener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface execute(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return mainController.reconnect(lis, nick, idGame);
     }
 

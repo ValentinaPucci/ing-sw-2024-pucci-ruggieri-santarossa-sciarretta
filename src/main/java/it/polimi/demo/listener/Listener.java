@@ -3,33 +3,32 @@ package it.polimi.demo.listener;
 import it.polimi.demo.model.chat.Message;
 
 import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
 
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 /**
  * This interface is used to notify the socket about the changes in the game
  */
-public interface GameListener extends Remote {
+public interface Listener extends Remote {
 
     /**
      * This method is invoked when startUI wants to place the starter card.
      * @param model the game model
      * @param orientation the orientation of the starter card
      */
-    void starterCardPlaced(GameModelImmutable model, Orientation orientation, String nick) throws RemoteException;
+    void starterCardPlaced(ModelView model, Orientation orientation, String nick) throws RemoteException;
 
     /**
      * This method is invoked by gameUI when the player wants to choose a card
      * @param model the game model
      * @param which_card the index of the card the player wants to choose
      */
-    void cardChosen(GameModelImmutable model, int which_card) throws RemoteException;
+    void cardChosen(ModelView model, int which_card) throws RemoteException;
 
     /**
      * This method is invoked by gameUI when the player wants to place a card.
@@ -39,49 +38,49 @@ public interface GameListener extends Remote {
      * @param where_to_place_y the y coordinate of the cell where the player wants to place the card
      * @param orientation
      */
-    void cardPlaced(GameModelImmutable model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException;
+    void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException;
 
-    void illegalMove(GameModelImmutable model) throws RemoteException;
+    void illegalMove(ModelView model) throws RemoteException;
 
-    void successfulMove(GameModelImmutable gameModelImmutable) throws RemoteException;
+    void successfulMove(ModelView modelView) throws RemoteException;
 
     /**
      * This method is invoked by gameUI when the player wants to draw a card.
      * @param model the game model
      * @param index the index of the card the player wants to draw
      */
-    void cardDrawn(GameModelImmutable model, int index) throws RemoteException;
+    void cardDrawn(ModelView model, int index) throws RemoteException;
 
     /**
      * This method is used to notify the socket that a player has joined the game
      * @param model is the game model
      * @throws RemoteException if the reference could not be accessed
      */
-    void playerJoined(GameModelImmutable model) throws RemoteException;
+    void playerJoined(ModelView model) throws RemoteException;
 
     /**
      * This method is used to notify the socket that a player has left the game
-     * @param model is the game model {@link GameModelImmutable}
+     * @param model is the game model {@link ModelView}
      * @param nick is the nickname of the player that has left
      * @throws RemoteException if the reference could not be accessed
      */
-    void playerLeft(GameModelImmutable model, String nick) throws RemoteException;
+    void playerLeft(ModelView model, String nick) throws RemoteException;
 
     /**
      * This method is used to notify the socket that a player has tried to join the game but the game is full
      * @param p is the player that has tried to join the game
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the reference could not be accessed
      */
-    void joinUnableGameFull(Player p, GameModelImmutable gamemodel) throws RemoteException;
+    void joinUnableGameFull(Player p, ModelView gamemodel) throws RemoteException;
 
     /**
      * This method is used to notify the socket that a player has reconnected to the game
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @param nickPlayerReconnected is the nickname of the player that has reconnected
      * @throws RemoteException if the reference could not be accessed
      */
-    void playerReconnected(GameModelImmutable gamemodel, String nickPlayerReconnected) throws RemoteException;
+    void playerReconnected(ModelView gamemodel, String nickPlayerReconnected) throws RemoteException;
 
     /**
      * This method is used to notify the socket that a player has tried to join the game but the nickname is already in use
@@ -107,34 +106,34 @@ public interface GameListener extends Remote {
 
     /**
      * This method is used to notify that the player is ready to start the game
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @param nick is the nickname of the player that is ready to start
      * @throws IOException if the reference could not be accessed
      */
-    void playerIsReadyToStart(GameModelImmutable gamemodel, String nick) throws IOException;
+    void playerIsReadyToStart(ModelView gamemodel, String nick) throws IOException;
 
     /**
      * This method is used to notify the socket that the game has started
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the reference could not be accessed
      */
-    void gameStarted(GameModelImmutable gamemodel) throws RemoteException;
+    void gameStarted(ModelView gamemodel) throws RemoteException;
 
     /**
      * This method is used to notify the socket that the game has ended
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the reference could not be accessed
      */
-    void gameEnded(GameModelImmutable gamemodel) throws RemoteException;
+    void gameEnded(ModelView gamemodel) throws RemoteException;
 
-    void secondLastRound(GameModelImmutable gamemodel) throws RemoteException;
+    void secondLastRound(ModelView gamemodel) throws RemoteException;
 
     /**
      * This method is used to notify the client entered the last round
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the reference could not be accessed
      */
-    void lastRound(GameModelImmutable gamemodel) throws RemoteException;
+    void lastRound(ModelView gamemodel) throws RemoteException;
 
     /**
      * This method is used to notify the client that the game has ended
@@ -143,32 +142,32 @@ public interface GameListener extends Remote {
      * @param message
      * @throws RemoteException
      */
-    void messageSent(GameModelImmutable gameModel, String nickname, Message message) throws RemoteException;
+    void messageSent(ModelView gameModel, String nickname, Message message) throws RemoteException;
 
     /**
      * This method is used to notify that the next turn triggered
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the reference could not be accessed
      */
-    void nextTurn(GameModelImmutable gamemodel) throws RemoteException;
+    void nextTurn(ModelView gamemodel) throws RemoteException;
 
 
     /**
      * This method is used to notify that a player has disconnected
-     * @param gameModel is the game model {@link GameModelImmutable}
+     * @param gameModel is the game model {@link ModelView}
      * @param nick is the nickname of the player that has disconnected
      * @throws RemoteException if the reference could not be accessed
      */
-    void playerDisconnected(GameModelImmutable gameModel, String nick) throws RemoteException;
+    void playerDisconnected(ModelView gameModel, String nick) throws RemoteException;
 
 
     /**
      * This method is used to notify that only one player is connected
-     * @param gameModel is the game model {@link GameModelImmutable}
+     * @param gameModel is the game model {@link ModelView}
      * @param secondsToWaitUntilGameEnded is the number of seconds to wait until the game ends
      * @throws RemoteException if the reference could not be accessed
      */
-    void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException;
+    void onlyOnePlayerConnected(ModelView gameModel, int secondsToWaitUntilGameEnded) throws RemoteException;
 
 
 

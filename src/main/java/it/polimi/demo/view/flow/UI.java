@@ -1,9 +1,6 @@
 package it.polimi.demo.view.flow;
 
-import it.polimi.demo.model.GameModel;
-import it.polimi.demo.model.Player;
-import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 
 import java.io.IOException;
 import java.util.List;
@@ -81,9 +78,9 @@ public abstract class UI {
      *
      * @param model model where the game has started
      */
-    protected abstract void show_gameStarted(GameModelImmutable model);
+    protected abstract void show_gameStarted(ModelView model);
 
-    protected abstract void show_ReadyToStart(GameModelImmutable gameModel, String nicknameofyou);
+    protected abstract void show_ReadyToStart(ModelView gameModel, String nicknameofyou);
 
     /**
      * Shows error message when there are no games available for joining
@@ -97,7 +94,7 @@ public abstract class UI {
      *
      * @param model where the game is ended
      */
-    protected abstract void show_gameEnded(GameModelImmutable model);
+    protected abstract void show_gameEnded(ModelView model);
 
     /**
      * Shows the players that have joined
@@ -105,15 +102,15 @@ public abstract class UI {
      * @param gameModel model where events happen
      * @param nick      player's nickname
      */
-    protected abstract void show_playerJoined(GameModelImmutable gameModel, String nick);
+    protected abstract void show_playerJoined(ModelView gameModel, String nick);
 
-    protected abstract void show_starterCards(GameModelImmutable gameModel);
+    protected abstract void show_starterCards(ModelView gameModel);
 
-    protected abstract void show_objectiveCards(GameModelImmutable gameModel);
+    protected abstract void show_objectiveCards(ModelView gameModel);
 
-    protected abstract void show_personalBoard(String nick, GameModelImmutable gameModel);
+    protected abstract void show_personalBoard(String nick, ModelView gameModel);
 
-    protected abstract void show_commonBoard(GameModelImmutable gameModel);
+    protected abstract void show_commonBoard(ModelView gameModel);
 
     protected abstract void show_myTurnIsFinished();
 
@@ -122,9 +119,9 @@ public abstract class UI {
      *
      * @param gameModel the model that has the player hand that needs to be shown
      */
-    protected abstract void show_playerHand(GameModelImmutable gameModel, String nickname);
+    protected abstract void show_playerHand(ModelView gameModel, String nickname);
 
-    protected abstract void show_personalObjectiveCard(GameModelImmutable gameModel);
+    protected abstract void show_personalObjectiveCard(ModelView gameModel);
 
     /**
      * Shows player's grabbed tiles
@@ -132,7 +129,7 @@ public abstract class UI {
      * @param nickname the player that grabbed the tiles
      * @param model    the model in which the player grabbed the tiles
      */
-    protected abstract void show_cardChosen(String nickname, GameModelImmutable model);
+    protected abstract void show_cardChosen(String nickname, ModelView model);
 
     protected abstract void show_illegalMove();
     protected abstract void show_successfulMove();
@@ -144,7 +141,7 @@ public abstract class UI {
      *
      * @param gameModel the model that has the common cards to show
      */
-    protected abstract void show_commonObjectives(GameModelImmutable gameModel);
+    protected abstract void show_commonObjectives(ModelView gameModel);
 
     /**
      * Shows the message that has been sent
@@ -152,7 +149,7 @@ public abstract class UI {
      * @param model    the model where the message need to be shown
      * @param nickname the sender's nickname
      */
-    protected abstract void show_messageSent(GameModelImmutable model, String nickname);
+    protected abstract void show_messageSent(ModelView model, String nickname);
 
 
     public abstract void show_whichObjectiveToChooseMsg();
@@ -204,7 +201,7 @@ public abstract class UI {
 
     protected abstract void show_chosenNickname(String nickname);
 
-    protected abstract void show_nextTurn(GameModelImmutable model, String nickname);
+    protected abstract void show_nextTurn(ModelView model, String nickname);
 
 
     protected abstract void show_updateCommonCards();

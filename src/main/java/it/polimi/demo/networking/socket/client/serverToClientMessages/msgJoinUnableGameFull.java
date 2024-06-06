@@ -1,8 +1,8 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.listener.Listener;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 
 import java.rmi.RemoteException;
 
@@ -13,14 +13,14 @@ import java.rmi.RemoteException;
  */
 public class msgJoinUnableGameFull extends SocketServerGenericMessage {
     private Player p;
-    private GameModelImmutable gamemodel;
+    private ModelView gamemodel;
 
     /**
      * Constructor of the class.
      * @param p the player who was unable to join the game
      * @param gamemodel the immutable game model
      */
-    public msgJoinUnableGameFull(Player p, GameModelImmutable gamemodel) {
+    public msgJoinUnableGameFull(Player p, ModelView gamemodel) {
         this.p = p;
         this.gamemodel = gamemodel;
     }
@@ -31,7 +31,7 @@ public class msgJoinUnableGameFull extends SocketServerGenericMessage {
      * @throws RemoteException if there is an error in remote communication
      */
     @Override
-    public void execute(GameListener lis) throws RemoteException {
+    public void execute(Listener lis) throws RemoteException {
         // lis.JoinUnableGameFull(p,gamemodel);
     }
 }

@@ -1,8 +1,8 @@
 package it.polimi.demo.model;
 
-import it.polimi.demo.listener.ListenersHandler;
+import it.polimi.demo.listener.ObserverManager;
 import it.polimi.demo.DefaultValues;
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.listener.Listener;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 
-public class GameModel implements Serializable {
+public class Model implements Serializable {
 
     // the first list let us keep the order of players. It is immutable!!
     // aux_order_player.size() always >= players_connected.size()
@@ -46,9 +46,9 @@ public class GameModel implements Serializable {
     /**
      * Listener handler that handles the listeners
      */
-    private ListenersHandler listeners_handler;
+    private ObserverManager listeners_handler;
 
-    public GameModel() {
+    public Model() {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
         common_board = new CommonBoard();
@@ -59,10 +59,10 @@ public class GameModel implements Serializable {
         chat = new Chat();
         winners = new ArrayList<>();
         leaderboard = new HashMap<>();
-        listeners_handler = new ListenersHandler();
+        listeners_handler = new ObserverManager();
     }
 
-    public GameModel(int gameID, int numberOfPlayers, Player player) {
+    public Model(int gameID, int numberOfPlayers, Player player) {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
         common_board = new CommonBoard();
@@ -73,7 +73,7 @@ public class GameModel implements Serializable {
         chat = new Chat();
         winners = new ArrayList<>();
         leaderboard = new HashMap<>();
-        listeners_handler = new ListenersHandler();
+        listeners_handler = new ObserverManager();
     }
 
     //------------------------------------methods for players-----------------------
@@ -780,7 +780,7 @@ public class GameModel implements Serializable {
     /**
      * @param obj adds the listener to the list
      */
-    public void addListener(GameListener obj) {
+    public void addListener(Listener obj) {
         printAsync("listeners_handler used for the first time at time " + System.currentTimeMillis());
         printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
         listeners_handler.addListener(obj);
@@ -790,7 +790,7 @@ public class GameModel implements Serializable {
     /**
      * @param lis removes listener from list
      */
-    public void removeListener(GameListener lis) {
+    public void removeListener(Listener lis) {
         listeners_handler.removeListener(lis);
     }
 

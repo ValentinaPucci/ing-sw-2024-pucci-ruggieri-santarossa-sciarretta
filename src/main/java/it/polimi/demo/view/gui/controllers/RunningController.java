@@ -1,12 +1,9 @@
 package it.polimi.demo.view.gui.controllers;
 
-import it.polimi.demo.model.Player;
-import it.polimi.demo.model.cards.gameCards.StarterCard;
-import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.interfaces.PlayerIC;
-import it.polimi.demo.view.flow.utilities.inputReaderGUI;
+import it.polimi.demo.view.flow.utilities.GuiReader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -251,7 +248,7 @@ public class RunningController extends GenericController {
         }
     }
 
-    public void setScoreBoardPosition(GameModelImmutable model) {
+    public void setScoreBoardPosition(ModelView model) {
         for (int i = 0; i < model.getAllPlayers().size(); i++) {
             int player_position = model.getCommonBoard().getPlayerPosition(i);
             movePieceToPosition(i, player_position);
@@ -270,7 +267,7 @@ public class RunningController extends GenericController {
     }
 
 
-    public void setPlayersPointsAndNicknames(GameModelImmutable model, String nickname) {
+    public void setPlayersPointsAndNicknames(ModelView model, String nickname) {
         ArrayList<PlayerIC> players_list = model.getAllPlayers();
         this.players_list = players_list;
 
@@ -333,7 +330,7 @@ public class RunningController extends GenericController {
     }
 
     // Method to set an image to one of the common card ImageViews
-    public void setCommonCards(GameModelImmutable model) {
+    public void setCommonCards(ModelView model) {
         Integer[] cardIds = model.getCommonBoard().getCommonCardsId();
         for (int i = 0; i < cardIds.length; i++) {
             int cardId = cardIds[i];
@@ -369,7 +366,7 @@ public class RunningController extends GenericController {
     }
 
     // Method to set an image to one of the common card ImageViews
-    public void setPersonalObjectives(GameModelImmutable model, String nickname) {
+    public void setPersonalObjectives(ModelView model, String nickname) {
         Integer[] cardIds = model.getPlayerEntity(nickname).getSecretObjectiveCardsIds();
         this.personalObjectiveIds = new ArrayList<>(Arrays.asList(cardIds));
         for (int i = 0; i < cardIds.length; i++) {
@@ -386,7 +383,7 @@ public class RunningController extends GenericController {
         }
     }
 
-    public void setStarterCardFront(GameModelImmutable model, String nickname) {
+    public void setStarterCardFront(ModelView model, String nickname) {
         this.starterCard = model.getPlayerEntity(nickname).getStarterCardToChose().getFirst().getId();
         String imagePath = "/images/cards/cards_front/" + String.format("%03d", starterCard) + ".png";
         ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
@@ -435,7 +432,7 @@ public class RunningController extends GenericController {
         personalObjective0Pane.setDisable(true);
     }
 
-    public void setCardHand(GameModelImmutable model, String nickname) {
+    public void setCardHand(ModelView model, String nickname) {
         setCardHandFront(model.getPlayerEntity(nickname).getCardHandIds());
     }
 
@@ -506,7 +503,7 @@ public class RunningController extends GenericController {
         setMsgToShow("personalObjective0 clicked" , true);
         flipPersonalObjective(personalObjectiveIds.getFirst(), 0);
 
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("2");
         } else {
@@ -518,7 +515,7 @@ public class RunningController extends GenericController {
     public void onPersonalObjective0Clicked(MouseEvent event) {
         setMsgToShow("personalObjective1 clicked" , true);
         flipPersonalObjective(personalObjectiveIds.get(1), 1);
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("1");
         } else {
@@ -538,7 +535,7 @@ public class RunningController extends GenericController {
         FlipStarter.setVisible(false);
         StarterCardImage.setVisible(false);
 
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             if(starterCardOrientation == Orientation.FRONT)
                 reader.addTxt("f");
@@ -560,7 +557,7 @@ public class RunningController extends GenericController {
         }
         cardHandVBox.setDisable(true);
 
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("1");
         } else {
@@ -589,7 +586,7 @@ public class RunningController extends GenericController {
         }
         cardHandVBox.setDisable(true);
 
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("2");
         } else {
@@ -618,7 +615,7 @@ public class RunningController extends GenericController {
         }
         cardHandVBox.setDisable(true);
 
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("3");
         } else {
@@ -686,7 +683,7 @@ public class RunningController extends GenericController {
     }
 
     public void whichOrientationToPlace() {
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             if(cardHandOrientation == Orientation.FRONT)
                 reader.addTxt("f");
@@ -699,13 +696,13 @@ public class RunningController extends GenericController {
         }
     }
 
-    public void setPlayerDrawnCard(GameModelImmutable model, String nickname) {
+    public void setPlayerDrawnCard(ModelView model, String nickname) {
         setCommonCards(model);
         setCardHand(model, nickname);
     }
 
 
-    public void changeTurn(GameModelImmutable model, String nickname) {
+    public void changeTurn(ModelView model, String nickname) {
         setMsgToShow("Next turn is up to: " + model.getCurrentPlayerNickname(), true);
     }
 
@@ -727,7 +724,7 @@ public class RunningController extends GenericController {
 
         if (result != null) {
             System.out.println("coordinate selezionate: (" + result[0] + ", " + result[1] + ")");
-            inputReaderGUI reader = getInputReaderGUI();
+            GuiReader reader = getInputReaderGUI();
             if (reader != null) {
                 //System.out.println("(x,y): " + result[0] + ", " + result[1]);
                 reader.addTxt(String.valueOf(result[0]));
@@ -779,7 +776,7 @@ public class RunningController extends GenericController {
 
     @FXML
     public void commonCard1Clicked(MouseEvent mouseEvent) {
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("2");
         } else {
@@ -790,7 +787,7 @@ public class RunningController extends GenericController {
     }
     @FXML
     public void commonCard2Clicked(MouseEvent mouseEvent) {
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("2");
         } else {
@@ -801,7 +798,7 @@ public class RunningController extends GenericController {
     }
     @FXML
     public void commonCard3Clicked(MouseEvent mouseEvent) {
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("3");
         } else {
@@ -812,7 +809,7 @@ public class RunningController extends GenericController {
     }
     @FXML
     public void commonCard4Clicked(MouseEvent mouseEvent) {
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("4");
         } else {
@@ -823,7 +820,7 @@ public class RunningController extends GenericController {
     }
     @FXML
     public void commonCard5Clicked(MouseEvent mouseEvent) {
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("5");
         } else {
@@ -834,7 +831,7 @@ public class RunningController extends GenericController {
     }
     @FXML
     public void commonCard6Clicked(MouseEvent mouseEvent) {
-        inputReaderGUI reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("6");
         } else {

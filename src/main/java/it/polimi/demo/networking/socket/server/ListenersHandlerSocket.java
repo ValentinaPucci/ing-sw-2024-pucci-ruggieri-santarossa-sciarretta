@@ -1,10 +1,10 @@
 package it.polimi.demo.networking.socket.server;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.listener.Listener;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.*;
 
 
@@ -15,10 +15,10 @@ import java.rmi.RemoteException;
 
 /**
  * This class is used to pass the GameListener to the client via socket
- * {@link GameListener}
+ * {@link Listener}
  * It has a private ObjectOutputStream where it writes the data
  **/
-public class GameListenersHandlerSocket implements GameListener, Serializable {
+public class ListenersHandlerSocket implements Listener, Serializable {
 
     private final transient ObjectOutputStream out;
 
@@ -26,12 +26,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
      * This constructor creates a GameListenersHandlerSocket
      * @param o the ObjectOutputStream
      */
-    public GameListenersHandlerSocket(ObjectOutputStream o) {
+    public ListenersHandlerSocket(ObjectOutputStream o) {
         out = o;
     }
 
     @Override
-    public void starterCardPlaced(GameModelImmutable gamemodel, Orientation orientation, String nick) throws RemoteException {
+    public void starterCardPlaced(ModelView gamemodel, Orientation orientation, String nick) throws RemoteException {
         try {
             //Else the object is not updated!!
             out.writeObject(new msgStarterCardPlaced(gamemodel, orientation));
@@ -43,7 +43,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     }
 
     @Override
-    public void cardChosen(GameModelImmutable model, int which_card) throws RemoteException {
+    public void cardChosen(ModelView model, int which_card) throws RemoteException {
         try {
             //Else the object is not updated!!
             out.writeObject(new msgCardChosen(model, which_card));
@@ -55,7 +55,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     }
 
     @Override
-    public void cardDrawn(GameModelImmutable model, int index) throws RemoteException {
+    public void cardDrawn(ModelView model, int index) throws RemoteException {
         try {
             //Else the object is not updated!!
             out.writeObject(new msgCardDrawn(model, index));
@@ -68,11 +68,11 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     /**
      * This method is used to write on the ObjectOutputStream the message that a player has joined the game
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void playerJoined(GameModelImmutable gamemodel) throws RemoteException {
+    public void playerJoined(ModelView gamemodel) throws RemoteException {
         try {
             out.writeObject(new msgPlayerJoined(gamemodel));
             finishSending();
@@ -83,12 +83,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     /**
      * This method is used to write on the ObjectOutputStream the message that a player has left the game
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @param nick is the nickname of the player
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void playerLeft(GameModelImmutable gamemodel,String nick) throws RemoteException {
+    public void playerLeft(ModelView gamemodel, String nick) throws RemoteException {
         try {
             out.writeObject(new msgPlayerLeft(gamemodel,nick));
             finishSending();
@@ -99,12 +99,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     /**
      * This method is used to write on the ObjectOutputStream the message that a player has reconnected to the game
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @param nickPlayerReconnected is the nickname of the player
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void playerReconnected(GameModelImmutable gamemodel, String nickPlayerReconnected) throws RemoteException {
+    public void playerReconnected(ModelView gamemodel, String nickPlayerReconnected) throws RemoteException {
         //System.out.println(nickNewPlayer +" by socket");
         try {
             out.writeObject(new msgPlayerReconnected(gamemodel, nickPlayerReconnected));
@@ -117,11 +117,11 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     /**
      * This method is used to write on the ObjectOutputStream the message that a player is unable to join the game because it is full
      * @param p is the player that has tried to join the game {@link Player}
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void joinUnableGameFull(Player p, GameModelImmutable gamemodel) throws RemoteException {
+    public void joinUnableGameFull(Player p, ModelView gamemodel) throws RemoteException {
         try {
             out.writeObject(new msgJoinUnableGameFull(p,gamemodel));
             finishSending();
@@ -177,12 +177,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     /**
      * This method is used to write on the ObjectOutputStream the message that player is ready to start
-     * @param model is the game model {@link GameModelImmutable}
+     * @param model is the game model {@link ModelView}
      * @param nick is the nickname of the player
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void playerIsReadyToStart(GameModelImmutable model, String nick) throws RemoteException {
+    public void playerIsReadyToStart(ModelView model, String nick) throws RemoteException {
         //System.out.println(nick +" ready to start by socket");
         try {
             out.writeObject(new msgPlayerIsReadyToStart(model, nick));
@@ -194,11 +194,11 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     /**
      * This method is used to write on the ObjectOutputStream the game started
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void gameStarted(GameModelImmutable gamemodel) throws RemoteException {
+    public void gameStarted(ModelView gamemodel) throws RemoteException {
         //System.out.println(gamemodel.getGameId() +" game started by socket");
         try {
             out.writeObject(new msgGameStarted(gamemodel));
@@ -210,11 +210,11 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     /**
      * This method is used to write on the ObjectOutputStream that the game ended
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void gameEnded(GameModelImmutable gamemodel) throws RemoteException {
+    public void gameEnded(ModelView gamemodel) throws RemoteException {
         try {
             out.writeObject(new msgGameEnded(gamemodel));
             finishSending();
@@ -224,7 +224,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     }
 
     @Override
-    public void secondLastRound(GameModelImmutable gamemodel) throws RemoteException {
+    public void secondLastRound(ModelView gamemodel) throws RemoteException {
         try {
             out.writeObject(new msgSecondLastRound(gamemodel));
             finishSending();
@@ -238,7 +238,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void cardPlaced(GameModelImmutable gamemodel, int x, int y, Orientation orientation) throws RemoteException {
+    public void cardPlaced(ModelView gamemodel, int x, int y, Orientation orientation) throws RemoteException {
         try {
             //Else the object is not updated!!
             out.writeObject(new msgCardPlaced(gamemodel, x, y, orientation));
@@ -249,7 +249,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     }
 
     @Override
-    public void illegalMove(GameModelImmutable model) throws RemoteException {
+    public void illegalMove(ModelView model) throws RemoteException {
         try {
             //Else the object is not updated!!
             out.writeObject(new msgIllegalMove(model));
@@ -260,7 +260,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     }
 
     @Override
-    public void successfulMove(GameModelImmutable model) {
+    public void successfulMove(ModelView model) {
         try {
             //Else the object is not updated!!
             out.writeObject(new msgSuccessfulMove(model));
@@ -272,11 +272,11 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     /**
      * This method is used to write on the ObjectOutputStream that the next turn is started
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void nextTurn(GameModelImmutable gamemodel) throws RemoteException {
+    public void nextTurn(ModelView gamemodel) throws RemoteException {
         try {
             out.writeObject(new msgNextTurn(gamemodel));
             finishSending();
@@ -287,12 +287,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     /**
      * This method is used to write on the ObjectOutputStream that a player has disconnected
-     * @param gameModel is the game model {@link GameModelImmutable}
+     * @param gameModel is the game model {@link ModelView}
      * @param nick is the nickname of the player that has disconnected
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void playerDisconnected(GameModelImmutable gameModel,String nick) throws RemoteException {
+    public void playerDisconnected(ModelView gameModel, String nick) throws RemoteException {
         try {
             out.writeObject(new msgPlayerDisconnected(gameModel,nick));
             finishSending();
@@ -304,12 +304,12 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     /**
      * This method is used to write on the ObjectOutputStream that only one player is connected
-     * @param gameModel is the game model {@link GameModelImmutable}
+     * @param gameModel is the game model {@link ModelView}
      * @param secondsToWaitUntilGameEnded is the number of seconds to wait until the game ends
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
+    public void onlyOnePlayerConnected(ModelView gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
         try {
             out.writeObject(new msgOnlyOnePlayerConnected(gameModel,secondsToWaitUntilGameEnded));
             finishSending();
@@ -320,11 +320,11 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
 
     /**
      * This method is used to write on the ObjectOutputStream that the last circle is started
-     * @param gamemodel is the game model {@link GameModelImmutable}
+     * @param gamemodel is the game model {@link ModelView}
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void lastRound(GameModelImmutable gamemodel) throws RemoteException {
+    public void lastRound(ModelView gamemodel) throws RemoteException {
         try {
             out.writeObject(new msgLastRound(gamemodel));
             finishSending();
@@ -334,7 +334,7 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
     }
 
     @Override
-    public void messageSent(GameModelImmutable gameModel, String nickname, Message message) throws RemoteException {
+    public void messageSent(ModelView gameModel, String nickname, Message message) throws RemoteException {
         try {
             out.writeObject(new msgMessageSent(gameModel, nickname, message));
             finishSending();

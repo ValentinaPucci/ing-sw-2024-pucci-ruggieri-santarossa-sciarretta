@@ -4,14 +4,14 @@ package it.polimi.demo.view.flow.utilities;
  * InputReaderGUI class
  * InputReaderGUI is the class that reads the input and add it to the buffer
  */
-public class inputReaderGUI implements InputReader {
+public class GuiReader implements AbstractReader {
 
     private final BufferData buffer;
 
     /**
      * Init
      */
-    public inputReaderGUI(){
+    public GuiReader(){
         buffer = new BufferData();
     }
 

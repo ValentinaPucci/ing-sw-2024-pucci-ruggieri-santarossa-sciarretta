@@ -2,114 +2,109 @@ package it.polimi.demo.model;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
-import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.model.Player;
 
-import java.rmi.Remote;
 import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
-public class GameModelTest {
+public class ModelTest {
 
-    private GameModel gameModel;
+    private Model model;
 
     @BeforeEach
     public void setUp() {
-        gameModel = new GameModel();
-        gameModel.setNumPlayersToPlay(3);
+        model = new Model();
+        model.setNumPlayersToPlay(3);
     }
 
 
     //--------------------methods for player + connection/disconnection management-------------------
     @Test
     public void testGetBeginnerPlayer() {
-        assertThrows(NoSuchElementException.class, ()->gameModel.getBeginnerPlayer());
+        assertThrows(NoSuchElementException.class, ()-> model.getBeginnerPlayer());
         addPlayersToGameModel(DefaultValues.minNumOfPlayer);
-        assertNotNull(gameModel.getBeginnerPlayer());
+        assertNotNull(model.getBeginnerPlayer());
     }
 
     @Test
     public void testGetAllPlayers() {
-        assertEquals(0, gameModel.getAllPlayers().size());
+        assertEquals(0, model.getAllPlayers().size());
         // Add some players
         addPlayersToGameModel(3);
-        assertEquals(3, gameModel.getAllPlayers().size());
+        assertEquals(3, model.getAllPlayers().size());
     }
 
     @Test
     public void testSetPlayerAsReadyToStart() {
         addPlayersToGameModel(3);
-        Player player = gameModel.getAllPlayers().get(0);
+        Player player = model.getAllPlayers().get(0);
         assertFalse(player.getReadyToStart());
-        gameModel.setPlayerAsReadyToStart(player);
+        model.setPlayerAsReadyToStart(player);
         assertTrue(player.getReadyToStart());
     }
 
     @Test
     public void testArePlayersReadyToStartAndEnough() {
-        assertFalse(gameModel.arePlayersReadyToStartAndEnough());
+        assertFalse(model.arePlayersReadyToStartAndEnough());
         // Add enough players to start the game
         addPlayersToGameModel(3);
-        assertFalse(gameModel.arePlayersReadyToStartAndEnough());
+        assertFalse(model.arePlayersReadyToStartAndEnough());
         // set all players as ready
-        gameModel.getAllPlayers().forEach(Player::setAsReadyToStart);
-        System.out.println(gameModel.getAllPlayers().get(0).getReadyToStart());
-        System.out.println(gameModel.getAllPlayers().get(1).getReadyToStart());
-        System.out.println(gameModel.getAllPlayers().get(2).getReadyToStart());
-        assertTrue(gameModel.arePlayersReadyToStartAndEnough());
+        model.getAllPlayers().forEach(Player::setAsReadyToStart);
+        System.out.println(model.getAllPlayers().get(0).getReadyToStart());
+        System.out.println(model.getAllPlayers().get(1).getReadyToStart());
+        System.out.println(model.getAllPlayers().get(2).getReadyToStart());
+        assertTrue(model.arePlayersReadyToStartAndEnough());
     }
 
     @Test
     public void testGetPlayerEntity() {
-        assertNull(gameModel.getPlayerEntity("Player1"));
+        assertNull(model.getPlayerEntity("Player1"));
         Player player1 = new Player("Player1");
         Player player2 = new Player("Player2");
-        gameModel.addPlayer(player1);
-        gameModel.addPlayer(player2);
-        assertEquals(gameModel.getAllPlayers().getFirst(), gameModel.getPlayerEntity("Player1"));
-        assertEquals(gameModel.getAllPlayers().get(1), gameModel.getPlayerEntity("Player2"));
-        assertNull(gameModel.getPlayerEntity("UnknownPlayer"));
+        model.addPlayer(player1);
+        model.addPlayer(player2);
+        assertEquals(model.getAllPlayers().getFirst(), model.getPlayerEntity("Player1"));
+        assertEquals(model.getAllPlayers().get(1), model.getPlayerEntity("Player2"));
+        assertNull(model.getPlayerEntity("UnknownPlayer"));
     }
 
     @Test
     public void testAddPlayer() {
-        assertEquals(0, gameModel.getAllPlayers().size());
+        assertEquals(0, model.getAllPlayers().size());
         // Add a player
         Player player = new Player("Player1");
-        gameModel.addPlayer(player);
-        assertEquals(1, gameModel.getAllPlayers().size());
-        assertTrue(gameModel.getAllPlayers().contains(player));
+        model.addPlayer(player);
+        assertEquals(1, model.getAllPlayers().size());
+        assertTrue(model.getAllPlayers().contains(player));
         // Attempt to add the same player again
-        assertThrows(PlayerAlreadyConnectedException.class, () -> gameModel.addPlayer(player));
+        assertThrows(PlayerAlreadyConnectedException.class, () -> model.addPlayer(player));
         //Add other players
         Player player2 = new Player("Player2");
-        gameModel.addPlayer(player2);
-        assertEquals(2, gameModel.getAllPlayers().size());
-        assertTrue(gameModel.getAllPlayers().contains(player2));
+        model.addPlayer(player2);
+        assertEquals(2, model.getAllPlayers().size());
+        assertTrue(model.getAllPlayers().contains(player2));
 
         Player player3 = new Player("Player3");
-        gameModel.addPlayer(player3);
-        assertEquals(3, gameModel.getAllPlayers().size());
-        assertTrue(gameModel.getAllPlayers().contains(player3));
-        assertThrows(PlayerAlreadyConnectedException.class, () -> gameModel.addPlayer(player3));
+        model.addPlayer(player3);
+        assertEquals(3, model.getAllPlayers().size());
+        assertTrue(model.getAllPlayers().contains(player3));
+        assertThrows(PlayerAlreadyConnectedException.class, () -> model.addPlayer(player3));
 
-        System.out.println(gameModel.getNumPlayersToPlay());
+        System.out.println(model.getNumPlayersToPlay());
 
         Player player4 = new Player("Player4");
-        assertThrows(MaxPlayersLimitException.class,()->gameModel.addPlayer(player4));
+        assertThrows(MaxPlayersLimitException.class,()-> model.addPlayer(player4));
 
-        assertEquals(3, gameModel.getAllPlayers().size());
-        System.out.println(gameModel.getAllPlayers().getFirst().getNickname());
-        System.out.println(gameModel.getAllPlayers().get(1).getNickname());
-        System.out.println(gameModel.getAllPlayers().get(2).getNickname());
+        assertEquals(3, model.getAllPlayers().size());
+        System.out.println(model.getAllPlayers().getFirst().getNickname());
+        System.out.println(model.getAllPlayers().get(1).getNickname());
+        System.out.println(model.getAllPlayers().get(2).getNickname());
 
 
     }
@@ -117,17 +112,17 @@ public class GameModelTest {
     @Test
     public void testRemovePlayer() {
         addPlayersToGameModel(DefaultValues.minNumOfPlayer);
-        Player playerToRemove = gameModel.getAllPlayers().getFirst();
-        assertEquals(DefaultValues.minNumOfPlayer, gameModel.getAllPlayers().size());
-        gameModel.removePlayer(playerToRemove);
-        assertFalse(gameModel.getAllPlayers().contains(playerToRemove));
-        assertEquals(DefaultValues.minNumOfPlayer - 1, gameModel.getAllPlayers().size());
+        Player playerToRemove = model.getAllPlayers().getFirst();
+        assertEquals(DefaultValues.minNumOfPlayer, model.getAllPlayers().size());
+        model.removePlayer(playerToRemove);
+        assertFalse(model.getAllPlayers().contains(playerToRemove));
+        assertEquals(DefaultValues.minNumOfPlayer - 1, model.getAllPlayers().size());
     }
 
     // Utility method to add a specific number of players to the game model
     private void addPlayersToGameModel(int numPlayers) {
         for (int i = 0; i < numPlayers; i++) {
-            gameModel.addPlayer(new Player("Player" + i));
+            model.addPlayer(new Player("Player" + i));
         }
     }
     @Test
@@ -136,25 +131,25 @@ public class GameModelTest {
 
         Player player1 = new Player("Player1");
         Player player2 = new Player("Player2");
-        gameModel.addPlayer(player1);
-        gameModel.addPlayer(player2);
-        assertEquals(2, gameModel.getAllPlayers().size());
+        model.addPlayer(player1);
+        model.addPlayer(player2);
+        assertEquals(2, model.getAllPlayers().size());
 
         //assertThrows(IllegalArgumentException.class, () -> gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst()));
         //assertThrows(IllegalArgumentException.class, () -> gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1)));
 
-        gameModel.getAllPlayers().getFirst().setAsConnected();
-        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst());
-        System.out.println(gameModel.getAllPlayers().getFirst().getIsConnected());
+        model.getAllPlayers().getFirst().setAsConnected();
+        model.setPlayerAsConnected(model.getAllPlayers().getFirst());
+        System.out.println(model.getAllPlayers().getFirst().getIsConnected());
 
-        assertEquals(1, gameModel.getPlayersConnected().size());
-        assertNotEquals(2, gameModel.getPlayersConnected().size());
+        assertEquals(1, model.getPlayersConnected().size());
+        assertNotEquals(2, model.getPlayersConnected().size());
 
-        assertTrue(gameModel.getAllPlayers().getFirst().getIsConnected());
-        assertFalse(gameModel.getAllPlayers().get(1).getIsConnected());
-        gameModel.getAllPlayers().get(1).setAsConnected();
-        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
-        assertEquals(2, gameModel.getPlayersConnected().size());
+        assertTrue(model.getAllPlayers().getFirst().getIsConnected());
+        assertFalse(model.getAllPlayers().get(1).getIsConnected());
+        model.getAllPlayers().get(1).setAsConnected();
+        model.setPlayerAsConnected(model.getAllPlayers().get(1));
+        assertEquals(2, model.getPlayersConnected().size());
     }
 
     @Test
@@ -163,32 +158,32 @@ public class GameModelTest {
 
         addPlayersToGameModel(3);
 
-        System.out.println((gameModel.getAllPlayers().getFirst().getIsConnected()));
+        System.out.println((model.getAllPlayers().getFirst().getIsConnected()));
 
 
         // Verify that the player1 is connected
-        assertTrue(gameModel.getAllPlayers().getFirst().getIsConnected());
+        assertTrue(model.getAllPlayers().getFirst().getIsConnected());
         // Disconnect player1
-        gameModel.setPlayerAsDisconnected(gameModel.getAllPlayers().getFirst());
+        model.setPlayerAsDisconnected(model.getAllPlayers().getFirst());
         //Verify that the player1 is disconnect and not ready to start
-        assertFalse(gameModel.getAllPlayers().getFirst().getIsConnected());
-        assertFalse(gameModel.getAllPlayers().getFirst().getReadyToStart());
+        assertFalse(model.getAllPlayers().getFirst().getIsConnected());
+        assertFalse(model.getAllPlayers().getFirst().getReadyToStart());
         //Verify that the player1 is not in players_connected list
 
-        assertFalse(gameModel.getPlayersConnected().contains(gameModel.getAllPlayers().getFirst()));
+        assertFalse(model.getPlayersConnected().contains(model.getAllPlayers().getFirst()));
 
         // Verifica che il metodo notify_playerDisconnected sia stato chiamato con i parametri corretti
         //verify(listener_handler).notify_playerDisconnected(gameModel, player1.getNickname());
 
         // Add and connect player2
         //gameModel.addPlayer("Player2");
-        gameModel.getAllPlayers().get(1).setAsConnected();
-        gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1));
+        model.getAllPlayers().get(1).setAsConnected();
+        model.setPlayerAsConnected(model.getAllPlayers().get(1));
 
 
         // Disconnect player2
-        gameModel.setPlayerAsDisconnected(gameModel.getAllPlayers().get(1));
-        assertFalse(gameModel.getAllPlayers().get(1).getIsConnected());
+        model.setPlayerAsDisconnected(model.getAllPlayers().get(1));
+        assertFalse(model.getAllPlayers().get(1).getIsConnected());
 
     }
 
@@ -373,23 +368,23 @@ public class GameModelTest {
     public void testPlaceResourceCard() throws GameEndedException {
         //initialize game
         addPlayersToGameModel(3);
-        gameModel.getCommonBoard().setPlayerCount(gameModel.getAllPlayers().size());
-        gameModel.getCommonBoard().initializeBoard();
-        gameModel.dealCards();
+        model.getCommonBoard().setPlayerCount(model.getAllPlayers().size());
+        model.getCommonBoard().initializeBoard();
+        model.dealCards();
         //set the starter card for each player
-        gameModel.getAllPlayers().getFirst().setStarterCard(gameModel.getAllPlayers().getFirst().getStarterCardToChose().get(0));
-        gameModel.getAllPlayers().get(1).setStarterCard(gameModel.getAllPlayers().get(1).getStarterCardToChose().get(0));
-        gameModel.getAllPlayers().get(2).setStarterCard(gameModel.getAllPlayers().get(2).getStarterCardToChose().get(0));
+        model.getAllPlayers().getFirst().setStarterCard(model.getAllPlayers().getFirst().getStarterCardToChose().get(0));
+        model.getAllPlayers().get(1).setStarterCard(model.getAllPlayers().get(1).getStarterCardToChose().get(0));
+        model.getAllPlayers().get(2).setStarterCard(model.getAllPlayers().get(2).getStarterCardToChose().get(0));
 
         //System.out.println(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[0]);
         //System.out.println(gameModel.getAllPlayers().getFirst().getStarterCardToChose()[1]);
 
         //set the objective card for each player
-        gameModel.getAllPlayers().getFirst().setChosenObjectiveCard(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards().get(0));
-        gameModel.getAllPlayers().get(1).setChosenObjectiveCard(gameModel.getAllPlayers().get(1).getSecretObjectiveCards().get(0));
-        gameModel.getAllPlayers().get(2).setChosenObjectiveCard(gameModel.getAllPlayers().get(2).getSecretObjectiveCards().get(0));
+        model.getAllPlayers().getFirst().setChosenObjectiveCard(model.getAllPlayers().getFirst().getSecretObjectiveCards().get(0));
+        model.getAllPlayers().get(1).setChosenObjectiveCard(model.getAllPlayers().get(1).getSecretObjectiveCards().get(0));
+        model.getAllPlayers().get(2).setChosenObjectiveCard(model.getAllPlayers().get(2).getSecretObjectiveCards().get(0));
 
-        System.out.println(gameModel.getAllPlayers().getFirst().getSecretObjectiveCards().get(0));
+        System.out.println(model.getAllPlayers().getFirst().getSecretObjectiveCards().get(0));
 //
 //        for (Player player : gameModel.getAllPlayers()) {
 //            player.playStarterCard();
@@ -436,23 +431,23 @@ public class GameModelTest {
 //        System.out.println(gameModel.getAllPlayers().getFirst().getHand().size());
 
 
-        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2));
-        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).getCornerAtSE());
-        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).getCornerAtSW());
-        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).getCornerAtNE());
-        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).getCornerAtNW().item);
-        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).getPoints());
-        System.out.println(gameModel.getAllPlayers().get(1).getHand().get(2).type);
+        System.out.println(model.getAllPlayers().get(1).getHand().get(2));
+        System.out.println(model.getAllPlayers().get(1).getHand().get(2).getCornerAtSE());
+        System.out.println(model.getAllPlayers().get(1).getHand().get(2).getCornerAtSW());
+        System.out.println(model.getAllPlayers().get(1).getHand().get(2).getCornerAtNE());
+        System.out.println(model.getAllPlayers().get(1).getHand().get(2).getCornerAtNW().item);
+        System.out.println(model.getAllPlayers().get(1).getHand().get(2).getPoints());
+        System.out.println(model.getAllPlayers().get(1).getHand().get(2).type);
 
-        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2));
-        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).getCornerAtSE());
-        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).getCornerAtSW());
-        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).getCornerAtNE().is_visible);
-        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).getCornerAtNW().item);
-        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).points);
-        System.out.println(gameModel.getAllPlayers().get(2).getHand().get(2).type);
+        System.out.println(model.getAllPlayers().get(2).getHand().get(2));
+        System.out.println(model.getAllPlayers().get(2).getHand().get(2).getCornerAtSE());
+        System.out.println(model.getAllPlayers().get(2).getHand().get(2).getCornerAtSW());
+        System.out.println(model.getAllPlayers().get(2).getHand().get(2).getCornerAtNE().is_visible);
+        System.out.println(model.getAllPlayers().get(2).getHand().get(2).getCornerAtNW().item);
+        System.out.println(model.getAllPlayers().get(2).getHand().get(2).points);
+        System.out.println(model.getAllPlayers().get(2).getHand().get(2).type);
 
-        GoldCard card = (GoldCard) gameModel.getAllPlayers().get(2).getHand().get(2);
+        GoldCard card = (GoldCard) model.getAllPlayers().get(2).getHand().get(2);
         System.out.println(card.getMushroomRequired());
         System.out.println(card.getButterflyRequired());
 
@@ -631,9 +626,9 @@ public class GameModelTest {
     @Test
     public void testObjectiveCard(){
         addPlayersToGameModel(3);
-        gameModel.getCommonBoard().setPlayerCount(gameModel.getAllPlayers().size());
-        gameModel.getCommonBoard().initializeBoard();
-        gameModel.dealCards();
+        model.getCommonBoard().setPlayerCount(model.getAllPlayers().size());
+        model.getCommonBoard().initializeBoard();
+        model.dealCards();
 
 
 

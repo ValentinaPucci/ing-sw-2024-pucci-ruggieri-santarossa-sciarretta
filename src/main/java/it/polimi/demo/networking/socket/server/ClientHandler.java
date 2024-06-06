@@ -9,7 +9,6 @@ import java.rmi.RemoteException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import it.polimi.demo.controller.GameController;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
@@ -46,7 +45,7 @@ public class ClientHandler extends Thread implements Serializable{
     /**
      * The GameListener of the ClientSocket for notifications
      */
-    private GameListenersHandlerSocket gameListenersHandlerSocket;
+    private ListenersHandlerSocket gameListenersHandlerSocket;
 
     /**
      * Nickname of the SocketClient
@@ -65,7 +64,7 @@ public class ClientHandler extends Thread implements Serializable{
         this.clientSocket = soc;
         this.in = new ObjectInputStream(soc.getInputStream());
         this.out = new ObjectOutputStream(soc.getOutputStream());
-        gameListenersHandlerSocket = new GameListenersHandlerSocket(out);
+        gameListenersHandlerSocket = new ListenersHandlerSocket(out);
     }
 
     /**

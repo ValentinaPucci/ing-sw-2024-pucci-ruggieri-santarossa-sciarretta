@@ -2,13 +2,13 @@ package it.polimi.demo.view.flow.utilities;
 
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.interfaces.PlayerIC;
-import it.polimi.demo.view.flow.GameFlow;
+import it.polimi.demo.view.flow.GameDynamics;
 
 /**
  * InputParser class
  * This class parses the input from the queue
  */
-public class InputParser extends Thread {
+public class GenericParser extends Thread {
     /**
      * The buffer from which I pop the data
      */
@@ -20,7 +20,7 @@ public class InputParser extends Thread {
     /**
      * The game flow
      */
-    private final GameFlow gameFlow;
+    private final GameDynamics gameDynamics;
     /**
      * The player
      */
@@ -34,12 +34,12 @@ public class InputParser extends Thread {
      * Init class
      *
      * @param bufferInput
-     * @param gameFlow
+     * @param gameDynamics
      */
-    public InputParser(BufferData bufferInput, GameFlow gameFlow) {
+    public GenericParser(BufferData bufferInput, GameDynamics gameDynamics) {
         this.bufferInput = bufferInput;
         dataToProcess = new BufferData();
-        this.gameFlow = gameFlow;
+        this.gameDynamics = gameDynamics;
         this.p = null;
         this.gameId = null;
         this.start();
@@ -64,12 +64,12 @@ public class InputParser extends Thread {
                 if (txt.contains(" ")){
                     String receiver = txt.substring(0, txt.indexOf(" "));
                     String msg = txt.substring(receiver.length() + 1);
-                    gameFlow.sendMessage(receiver, new Message(msg, p));
+                    gameDynamics.sendMessage(receiver, new Message(msg, p));
                 }
             } else if (p != null && txt.startsWith("/c")) {
                 // I send a message
                 txt = txt.charAt(2) == ' ' ? txt.substring(3) : txt.substring(2);
-                gameFlow.sendMessage("all", new Message(txt, p));
+                gameDynamics.sendMessage("all", new Message(txt, p));
 
             } else if (txt.startsWith("/quit") || (txt.startsWith("/leave"))) {
                 assert p != null;

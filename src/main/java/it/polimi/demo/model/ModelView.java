@@ -1,6 +1,6 @@
-package it.polimi.demo.model.gameModelImmutable;
+package it.polimi.demo.model;
 
-import it.polimi.demo.model.GameModel;
+import it.polimi.demo.model.Model;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
@@ -12,7 +12,7 @@ import it.polimi.demo.model.interfaces.*;
 import java.io.Serializable;
 import java.util.*;
 
-public class GameModelImmutable implements Serializable {
+public class ModelView implements Serializable {
 
     private final ArrayList<PlayerIC> aux_order_players;
     private final LinkedList<PlayerIC> players_connected;
@@ -28,7 +28,7 @@ public class GameModelImmutable implements Serializable {
     private final List<StarterCard> starter_cards;
     private final List<ObjectiveCard> objective_cards;
 
-    public GameModelImmutable(GameModel model) {
+    public ModelView(Model model) {
         this.gameId = model.getGameId();
         this.aux_order_players = new ArrayList<>(model.getAllPlayers());
         this.players_connected = new LinkedList<>(model.getPlayersConnected());

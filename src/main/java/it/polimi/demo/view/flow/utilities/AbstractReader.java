@@ -1,5 +1,5 @@
 package it.polimi.demo.view.flow.utilities;
 
-public interface InputReader {
+public interface AbstractReader {
     BufferData getBuffer();
 }

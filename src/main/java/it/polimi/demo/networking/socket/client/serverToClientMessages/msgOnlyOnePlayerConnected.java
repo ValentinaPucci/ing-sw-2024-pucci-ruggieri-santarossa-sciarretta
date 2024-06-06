@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.listener.Listener;
+import it.polimi.demo.model.ModelView;
 
 import java.rmi.RemoteException;
 
@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
  * indicating that only one player is currently connected to the game.
  */
 public class msgOnlyOnePlayerConnected extends SocketServerGenericMessage {
-    private GameModelImmutable model;
+    private ModelView model;
     private int secondsToWaintUntilGameEnded;
 
     /**
@@ -19,7 +19,7 @@ public class msgOnlyOnePlayerConnected extends SocketServerGenericMessage {
      * @param gamemodel the immutable game model
      * @param secondsToWaintUntilGameEnded the number of seconds to wait until the game is ended
      */
-    public msgOnlyOnePlayerConnected(GameModelImmutable gamemodel,int secondsToWaintUntilGameEnded) {
+    public msgOnlyOnePlayerConnected(ModelView gamemodel, int secondsToWaintUntilGameEnded) {
         this.model = gamemodel;
         this.secondsToWaintUntilGameEnded=secondsToWaintUntilGameEnded;
     }
@@ -30,7 +30,7 @@ public class msgOnlyOnePlayerConnected extends SocketServerGenericMessage {
      * @throws RemoteException if there is an error in remote communication
      */
     @Override
-    public void execute(GameListener lis) throws RemoteException {
+    public void execute(Listener lis) throws RemoteException {
         lis.onlyOnePlayerConnected(model,secondsToWaintUntilGameEnded);
     }
 }

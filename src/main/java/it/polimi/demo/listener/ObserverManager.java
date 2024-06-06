@@ -1,9 +1,9 @@
 package it.polimi.demo.listener;
 
 import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.GameModel;
+import it.polimi.demo.model.Model;
 import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
 
 import java.io.IOException;
@@ -16,47 +16,47 @@ import java.util.List;
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 /**
- * The ListenersHandler class is responsible for managing a List of GameListener {@link GameListener} <br>
- * and for notifying the view when a change occurs in the GameModel {@link GameModel}. <br>
- * When notifying an event, we need to pass the GameModelImmutable {@link GameModelImmutable} to the view to have access to the updated GameModel.
+ * The ListenersHandler class is responsible for managing a List of GameListener {@link Listener} <br>
+ * and for notifying the view when a change occurs in the GameModel {@link Model}. <br>
+ * When notifying an event, we need to pass the GameModelImmutable {@link ModelView} to the view to have access to the updated GameModel.
  */
-public class ListenersHandler implements Serializable {
+public class ObserverManager implements Serializable {
 
-    private List<GameListener> listeners;
+    private List<Listener> listeners;
 
     /**
-     * The constructor creates a new ArrayList of GameListener {@link GameListener}
+     * The constructor creates a new ArrayList of GameListener {@link Listener}
      */
-    public ListenersHandler() {
+    public ObserverManager() {
         listeners = new ArrayList<>();
     }
 
     /**
-     * The addListener method adds a new GameListener {@link GameListener} to the List of GameListener {@link GameListener} <br>
-     * @param obj is the GameListener {@link GameListener} to add
+     * The addListener method adds a new GameListener {@link Listener} to the List of GameListener {@link Listener} <br>
+     * @param obj is the GameListener {@link Listener} to add
      */
-    public synchronized void addListener(GameListener obj) {
+    public synchronized void addListener(Listener obj) {
         listeners.add(obj);
     }
 
     /**
-     * The getListeners method returns the List of GameListener {@link GameListener} <br>
-     * @return the List of GameListener {@link GameListener}
+     * The getListeners method returns the List of GameListener {@link Listener} <br>
+     * @return the List of GameListener {@link Listener}
      */
-    public synchronized List<GameListener> getListeners() {
+    public synchronized List<Listener> getListeners() {
         return listeners;
     }
 
     /**
      * The notify_playerJoined method notifies the view that a player has joined the game <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable}
+     * @param model is the GameModel {@link Model} to pass as a new GameModelImmutable {@link ModelView}
      */
-    public synchronized void notify_playerJoined(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_playerJoined(Model model) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.playerJoined(new GameModelImmutable(model));
+                l.playerJoined(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_playerJoined, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -66,15 +66,15 @@ public class ListenersHandler implements Serializable {
 
     /**
      * The notify_playerReconnected method notifies the view that a player has reconnected to the game <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable} <br>
+     * @param model is the GameModel {@link Model} to pass as a new GameModelImmutable {@link ModelView} <br>
      * @param nickPlayerReconnected is the nickname of the player that has left the game and now is reconnected
      */
-    public synchronized void notify_playerReconnected(GameModel model, String nickPlayerReconnected) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_playerReconnected(Model model, String nickPlayerReconnected) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.playerReconnected(new GameModelImmutable(model), nickPlayerReconnected);
+                l.playerReconnected(new ModelView(model), nickPlayerReconnected);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_playerReconnected, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -86,14 +86,14 @@ public class ListenersHandler implements Serializable {
     /**
      * The notify_JoinUnableGameFull method notifies that a player cannot join the game because the game is full <br>
      * @param playerWantedToJoin is the player that wanted to join the game <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable}
+     * @param model is the GameModel {@link Model} to pass as a new GameModelImmutable {@link ModelView}
      */
-    public synchronized void notify_JoinUnableGameFull(Player playerWantedToJoin, GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_JoinUnableGameFull(Player playerWantedToJoin, Model model) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.joinUnableGameFull(playerWantedToJoin, new GameModelImmutable(model));
+                l.joinUnableGameFull(playerWantedToJoin, new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_JoinUnableGameFull, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -106,9 +106,9 @@ public class ListenersHandler implements Serializable {
      * @param playerWantedToJoin is the player that wanted to join the game {@link Player} <br>
      */
     public synchronized void notify_JoinUnableNicknameAlreadyIn(Player playerWantedToJoin) {
-        Iterator<GameListener> i = listeners.iterator();
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
                 l.joinUnableNicknameAlreadyIn(playerWantedToJoin);
             } catch (RemoteException e) {
@@ -120,15 +120,15 @@ public class ListenersHandler implements Serializable {
 
     /**
      * The notify_PlayerIsReadyToStart method notifies that a player is ready to start the game <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable} <br>
+     * @param model is the GameModel {@link Model} to pass as a new GameModelImmutable {@link ModelView} <br>
      * @param nick is the nickname of the player that is ready to start the game
      */
-    public synchronized void notify_PlayerIsReadyToStart(GameModel model, String nick) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_PlayerIsReadyToStart(Model model, String nick) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.playerIsReadyToStart(new GameModelImmutable(model), nick);
+                l.playerIsReadyToStart(new ModelView(model), nick);
             } catch (IOException e) {
                 printAsync("During notification of notify_PlayerIsReadyToStart, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -138,14 +138,14 @@ public class ListenersHandler implements Serializable {
 
     /**
      * The notify_GameStarted method notifies that the game has started <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable} <br>
+     * @param model is the GameModel {@link Model} to pass as a new GameModelImmutable {@link ModelView} <br>
      */
-    public synchronized void notify_GameStarted(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_GameStarted(Model model) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.gameStarted(new GameModelImmutable(model));
+                l.gameStarted(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_GameStarted, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -155,14 +155,14 @@ public class ListenersHandler implements Serializable {
 
     /**
      * The notify_GameEnded method notifies that the game has ended <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable}
+     * @param model is the GameModel {@link Model} to pass as a new GameModelImmutable {@link ModelView}
      */
-    public synchronized void notify_GameEnded(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_GameEnded(Model model) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.gameEnded(new GameModelImmutable(model));
+                l.gameEnded(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_GameEnded, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -170,12 +170,12 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_starterCardPlaced(GameModel model, Orientation o, String nick) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_starterCardPlaced(Model model, Orientation o, String nick) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.starterCardPlaced(new GameModelImmutable(model), o, nick);
+                l.starterCardPlaced(new ModelView(model), o, nick);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_starterCardPlaced, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -183,12 +183,12 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_cardChosen(GameModel model, int which_card) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_cardChosen(Model model, int which_card) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.cardChosen(new GameModelImmutable(model), which_card);
+                l.cardChosen(new ModelView(model), which_card);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_cardChosen, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -196,12 +196,12 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_cardPlaced(GameModel model, int where_to_place_x, int where_to_place_y, Orientation o) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_cardPlaced(Model model, int where_to_place_x, int where_to_place_y, Orientation o) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.cardPlaced(new GameModelImmutable(model), where_to_place_x, where_to_place_y, o);
+                l.cardPlaced(new ModelView(model), where_to_place_x, where_to_place_y, o);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_cardPlaced, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -209,13 +209,13 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_illegalMove(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_illegalMove(Model model) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
                 printAsync("Illegal move detected");
-                l.illegalMove(new GameModelImmutable(model));
+                l.illegalMove(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_illegalMove, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -224,13 +224,13 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_successMove(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_successMove(Model model) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
                 printAsync("Successful move");
-                l.successfulMove(new GameModelImmutable(model));
+                l.successfulMove(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_successfulMove, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -238,12 +238,12 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_cardDrawn(GameModel model, int index) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_cardDrawn(Model model, int index) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.cardDrawn(new GameModelImmutable(model), index);
+                l.cardDrawn(new ModelView(model), index);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_cardDrawn, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -251,12 +251,12 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_secondLastRound(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_secondLastRound(Model model) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.secondLastRound(new GameModelImmutable(model));
+                l.secondLastRound(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_SecondLastRound, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -264,12 +264,12 @@ public class ListenersHandler implements Serializable {
         }
     }
 
-    public synchronized void notify_lastRound(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_lastRound(Model model) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.lastRound(new GameModelImmutable(model));
+                l.lastRound(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_LastRound, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -282,12 +282,12 @@ public class ListenersHandler implements Serializable {
      * @param nick
      * @param message
      */
-    public synchronized void notify_messageSent(GameModel gameModel, String nick, Message message) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_messageSent(Model model, String nick, Message message) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.messageSent(new GameModelImmutable(gameModel), nick, message);
+                l.messageSent(new ModelView(model), nick, message);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_SentMessage, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -297,14 +297,14 @@ public class ListenersHandler implements Serializable {
 
     /**
      * The notify_nextTurn method notifies that the next turn has started <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable}
+     * @param model is the GameModel {@link Model} to pass as a new GameModelImmutable {@link ModelView}
      */
-    public synchronized void notify_nextTurn(GameModel model) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_nextTurn(Model model) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.nextTurn(new GameModelImmutable(model));
+                l.nextTurn(new ModelView(model));
             } catch (RemoteException e) {
                 printAsync("During notification of notify_nextTurn, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -314,15 +314,15 @@ public class ListenersHandler implements Serializable {
 
     /**
      * The notify_playerDisconnected method notifies that a player has disconnected <br>
-     * @param gamemodel is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable} <br>
+     * @param gamemodel is the GameModel {@link Model} to pass as a new GameModelImmutable {@link ModelView} <br>
      * @param nick is the nickname of the player that has disconnected
      */
-    public synchronized void notify_playerDisconnected(GameModel gamemodel, String nick) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_playerDisconnected(Model gamemodel, String nick) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.playerDisconnected(new GameModelImmutable(gamemodel), nick);
+                l.playerDisconnected(new ModelView(gamemodel), nick);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_playerDisconnected, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -332,15 +332,15 @@ public class ListenersHandler implements Serializable {
 
     /**
      * The notify_playerLeft method notifies that a player has left the game <br>
-     * @param gameModel is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable} <br>
+     * @param model is the GameModel {@link Model} to pass as a new GameModelImmutable {@link ModelView} <br>
      * @param nick is the nickname of the player that has left the game
      */
-    public void notify_playerLeft(GameModel gameModel, String nick) {
-        Iterator<GameListener> i = listeners.iterator();
+    public void notify_playerLeft(Model model, String nick) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.playerLeft(new GameModelImmutable(gameModel), nick);
+                l.playerLeft(new ModelView(model), nick);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_playerLeft, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -351,15 +351,15 @@ public class ListenersHandler implements Serializable {
 
     /**
      * The notify_onlyOnePlayerConnected method notifies that only one player is connected <br>
-     * @param model is the GameModel {@link GameModel} to pass as a new GameModelImmutable {@link GameModelImmutable} <br>
+     * @param model is the GameModel {@link Model} to pass as a new GameModelImmutable {@link ModelView} <br>
      * @param secondsToWaitUntillGameEnded is the number of seconds to wait untill the game ends
      */
-    public synchronized void notify_onlyOnePlayerConnected(GameModel model, int secondsToWaitUntillGameEnded) {
-        Iterator<GameListener> i = listeners.iterator();
+    public synchronized void notify_onlyOnePlayerConnected(Model model, int secondsToWaitUntillGameEnded) {
+        Iterator<Listener> i = listeners.iterator();
         while (i.hasNext()) {
-            GameListener l = i.next();
+            Listener l = i.next();
             try {
-                l.onlyOnePlayerConnected(new GameModelImmutable(model), secondsToWaitUntillGameEnded);
+                l.onlyOnePlayerConnected(new ModelView(model), secondsToWaitUntillGameEnded);
             } catch (RemoteException e) {
                 printAsync("During notification of notify_onlyOnePlayerConnected, a disconnection has been detected before heartbeat");
                 i.remove();
@@ -371,7 +371,7 @@ public class ListenersHandler implements Serializable {
      * The removeListener method removes a listener from the list of listeners <br>
      * @param lis is the listener to remove
      */
-    public synchronized void removeListener(GameListener lis) {
+    public synchronized void removeListener(Listener lis) {
         listeners.remove(lis);
     }
 

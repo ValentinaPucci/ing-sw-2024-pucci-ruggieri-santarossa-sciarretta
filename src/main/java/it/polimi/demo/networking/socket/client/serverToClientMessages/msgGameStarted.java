@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.listener.Listener;
+import it.polimi.demo.model.ModelView;
 
 import java.rmi.RemoteException;
 
@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
  */
 public class msgGameStarted extends SocketServerGenericMessage {
 
-    private GameModelImmutable model;
+    private ModelView model;
 
     /**
      * Empty constructor of the class.
@@ -26,7 +26,7 @@ public class msgGameStarted extends SocketServerGenericMessage {
      * Constructor of the class.
      * @param model the immutable game model
      */
-    public msgGameStarted(GameModelImmutable model) {
+    public msgGameStarted(ModelView model) {
         this.model = model;
     }
 
@@ -36,7 +36,7 @@ public class msgGameStarted extends SocketServerGenericMessage {
      * @throws RemoteException if there is an error in remote communication
      */
     @Override
-    public void execute(GameListener lis) throws RemoteException {
+    public void execute(Listener lis) throws RemoteException {
         lis.gameStarted(model);
     }
 }

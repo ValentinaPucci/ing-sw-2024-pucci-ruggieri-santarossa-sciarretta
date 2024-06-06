@@ -1,6 +1,6 @@
-package it.polimi.demo.view.flow.utilities.events;
+package it.polimi.demo.view.flow.utilities.gameFacts;
 
-public enum EventType {
+public enum FactType {
     APP_MENU,
     PLAYER_JOINED,
     JOIN_UNABLE_GAME_FULL,

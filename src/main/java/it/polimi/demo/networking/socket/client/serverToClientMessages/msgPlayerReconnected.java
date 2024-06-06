@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.listener.Listener;
+import it.polimi.demo.model.ModelView;
 
 import java.io.IOException;
 
@@ -11,7 +11,7 @@ import java.io.IOException;
  * indicating that a player has reconnected to the game.
  */
 public class msgPlayerReconnected extends SocketServerGenericMessage {
-    private GameModelImmutable gamemodel;
+    private ModelView gamemodel;
     private String nickPlayerReconnected;
 
     /**
@@ -19,7 +19,7 @@ public class msgPlayerReconnected extends SocketServerGenericMessage {
      * @param gamemodel the immutable game model
      * @param nickPlayerReconnected the nickname of the player who reconnected
      */
-    public msgPlayerReconnected(GameModelImmutable gamemodel, String nickPlayerReconnected) {
+    public msgPlayerReconnected(ModelView gamemodel, String nickPlayerReconnected) {
         this.gamemodel = gamemodel;
         this.nickPlayerReconnected = nickPlayerReconnected;
     }
@@ -31,7 +31,7 @@ public class msgPlayerReconnected extends SocketServerGenericMessage {
      * @throws InterruptedException if the execution is interrupted
      */
     @Override
-    public void execute(GameListener lis) throws IOException, InterruptedException {
+    public void execute(Listener lis) throws IOException, InterruptedException {
         lis.playerReconnected(gamemodel, nickPlayerReconnected);
     }
 }

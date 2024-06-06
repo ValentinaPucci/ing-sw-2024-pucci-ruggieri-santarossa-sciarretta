@@ -1,6 +1,6 @@
 package it.polimi.demo.networking.socket.client.gameControllerMessages;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.listener.Listener;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
@@ -37,7 +37,7 @@ public class SocketClientMessageSendMessage extends SocketClientGenericMessage i
      * @throws RemoteException if there is an error in remote communication
      */
     @Override
-    public GameControllerInterface execute(GameListener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface execute(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
 

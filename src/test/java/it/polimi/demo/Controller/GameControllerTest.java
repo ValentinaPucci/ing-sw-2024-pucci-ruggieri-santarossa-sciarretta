@@ -1,13 +1,6 @@
 package it.polimi.demo.Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import it.polimi.demo.controller.GameController;
-import it.polimi.demo.model.GameModel;
-import it.polimi.demo.model.Player;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import it.polimi.demo.model.enumerations.GameStatus;
 /*
 public class GameControllerTest {
 

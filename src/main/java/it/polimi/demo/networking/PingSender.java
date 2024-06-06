@@ -2,8 +2,8 @@ package it.polimi.demo.networking;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.networking.rmi.TaskOnNetworkDisconnection;
-import it.polimi.demo.view.flow.CommonClientActions;
-import it.polimi.demo.view.flow.Flow;
+import it.polimi.demo.view.flow.ClientInterface;
+import it.polimi.demo.view.flow.Dynamics;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -12,13 +12,13 @@ import java.util.TimerTask;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
-public class HeartbeatSender extends Thread implements Serializable {
+public class PingSender extends Thread implements Serializable {
 
-    private Flow flow;
-    private CommonClientActions server;
+    private Dynamics dynamics;
+    private ClientInterface server;
 
-    public HeartbeatSender(Flow flow, CommonClientActions server) {
-        this.flow = flow;
+    public PingSender(Dynamics dynamics, ClientInterface server) {
+        this.dynamics = dynamics;
         this.server = server;
     }
 
@@ -28,7 +28,7 @@ public class HeartbeatSender extends Thread implements Serializable {
         //For the heartbeat
         while (!Thread.interrupted()) {
             Timer timer = new Timer();
-            TimerTask task = new TaskOnNetworkDisconnection(flow);
+            TimerTask task = new TaskOnNetworkDisconnection(dynamics);
             timer.schedule(task, DefaultValues.timeoutConnection_millis);
             //send heartbeat so the server knows I am still online
             try {

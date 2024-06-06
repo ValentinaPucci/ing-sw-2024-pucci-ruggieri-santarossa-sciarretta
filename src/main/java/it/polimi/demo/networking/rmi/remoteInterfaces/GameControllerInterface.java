@@ -1,6 +1,6 @@
 package it.polimi.demo.networking.rmi.remoteInterfaces;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.listener.Listener;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.GameStatus;
@@ -69,7 +69,7 @@ public interface GameControllerInterface extends Remote {
     Player getCurrentPlayer() throws RemoteException;
 
 
-     void disconnectPlayer(String nick, GameListener lisOfClient) throws RemoteException;
+     void disconnectPlayer(String nick, Listener lisOfClient) throws RemoteException;
 
     void reconnectPlayer(Player p) throws RemoteException;
 
@@ -89,11 +89,11 @@ public interface GameControllerInterface extends Remote {
 
     /**
      * It removes a player by nickname @param nick from the game including the associated listeners
-     * @param lis the GameListener of the player {@link GameListener}
+     * @param lis the GameListener of the player {@link Listener}
      * @param nick the nickname of the player
      * @throws RemoteException if the connection fails
      */
-    void leave(GameListener lis, String nick) throws RemoteException;
+    void leave(Listener lis, String nick) throws RemoteException;
 
     void setError(String s) throws RemoteException;
 
@@ -103,5 +103,5 @@ public interface GameControllerInterface extends Remote {
 
     boolean isThisMyTurn(String nickname) throws RemoteException;
 
-    void addPing(String nickname, GameListener gameListener) throws RemoteException;
+    void addPing(String nickname, Listener listener) throws RemoteException;
 }

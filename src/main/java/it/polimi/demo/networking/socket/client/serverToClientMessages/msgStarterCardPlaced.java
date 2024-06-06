@@ -1,22 +1,22 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.listener.Listener;
 import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 
 import java.rmi.RemoteException;
 
 
 public class msgStarterCardPlaced extends SocketServerGenericMessage{
-    private GameModelImmutable gameModel;
+    private ModelView gameModel;
     private Orientation orientation;
 
-    public msgStarterCardPlaced(GameModelImmutable gameModel, Orientation orientation) {
+    public msgStarterCardPlaced(ModelView gameModel, Orientation orientation) {
         this.gameModel = gameModel;
         this.orientation = orientation;
     }
 
     @Override
-    public void execute(GameListener lis) throws RemoteException {
+    public void execute(Listener lis) throws RemoteException {
         lis.starterCardPlaced(gameModel, orientation, gameModel.getCurrentPlayerNickname());
     }
 

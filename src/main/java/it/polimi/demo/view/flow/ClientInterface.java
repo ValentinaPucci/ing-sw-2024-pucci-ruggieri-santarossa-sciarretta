@@ -3,14 +3,13 @@ package it.polimi.demo.view.flow;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 
-public interface CommonClientActions extends Serializable {
+public interface ClientInterface extends Serializable {
     /**
      * Creates a new game
      *

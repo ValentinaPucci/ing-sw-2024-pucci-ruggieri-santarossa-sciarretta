@@ -1,6 +1,6 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.listener.Listener;
 
 import java.rmi.RemoteException;
 
@@ -27,7 +27,7 @@ public class msgGenericErrorWhenEntryingGame extends SocketServerGenericMessage{
      * @throws RemoteException if there is an error in remote communication
      */
     @Override
-    public void execute(GameListener lis) throws RemoteException {
+    public void execute(Listener lis) throws RemoteException {
         lis.genericErrorWhenEnteringGame(why);
     }
 }

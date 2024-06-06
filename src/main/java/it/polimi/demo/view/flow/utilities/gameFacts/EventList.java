@@ -1,8 +1,8 @@
-package it.polimi.demo.view.flow.utilities.events;
+package it.polimi.demo.view.flow.utilities.gameFacts;
 
 
 import it.polimi.demo.model.enumerations.GameStatus;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 
 import java.io.Serializable;
 import java.util.ArrayDeque;
@@ -10,7 +10,7 @@ import java.util.Queue;
 
 public class EventList implements Serializable {
 
-    private Queue<EventElement> list;
+    private Queue<ModelFact> list;
     private boolean joined = false;
 
     /**
@@ -25,16 +25,16 @@ public class EventList implements Serializable {
      * @param model
      * @param type
      */
-    public synchronized void add(GameModelImmutable model, EventType type) {
+    public synchronized void add(ModelView model, FactType type) {
 
-        list.add(new EventElement(model, type));
+        list.add(new ModelFact(model, type));
 
-        if (type.equals(EventType.PLAYER_JOINED) ||
+        if (type.equals(FactType.PLAYER_JOINED) ||
                 (model != null && (model.getStatus().equals(GameStatus.RUNNING)
                         || model.getStatus().equals(GameStatus.LAST_ROUND))))
             joined = true;
 
-        if (type.equals(EventType.APP_MENU))
+        if (type.equals(FactType.APP_MENU))
             joined = false;
     }
 
@@ -42,7 +42,7 @@ public class EventList implements Serializable {
      *
      * @return an element from the queue(FIFO)
      */
-    public synchronized EventElement pop() {
+    public synchronized ModelFact pop() {
         return list.poll();
     }
 

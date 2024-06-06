@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.listener.Listener;
+import it.polimi.demo.model.ModelView;
 
 import java.rmi.RemoteException;
 
@@ -12,14 +12,14 @@ import java.rmi.RemoteException;
  */
 public class msgPlayerDisconnected extends SocketServerGenericMessage {
     private String nick;
-    private GameModelImmutable gameModel;
+    private ModelView gameModel;
 
     /**
      * Constructor of the class.
      * @param gameModel the immutable game model
      * @param nick the nickname of the disconnected player
      */
-    public msgPlayerDisconnected(GameModelImmutable gameModel,String nick) {
+    public msgPlayerDisconnected(ModelView gameModel, String nick) {
         this.nick = nick;
         this.gameModel=gameModel;
     }
@@ -30,7 +30,7 @@ public class msgPlayerDisconnected extends SocketServerGenericMessage {
      * @throws RemoteException if there is an error in remote communication
      */
     @Override
-    public void execute(GameListener lis) throws RemoteException {
+    public void execute(Listener lis) throws RemoteException {
         lis.playerDisconnected(gameModel,nick);
     }
 }
