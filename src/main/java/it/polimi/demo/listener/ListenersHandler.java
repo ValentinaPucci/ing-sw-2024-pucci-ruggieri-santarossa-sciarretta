@@ -219,6 +219,21 @@ public class ListenersHandler implements Serializable {
             } catch (RemoteException e) {
                 printAsync("During notification of notify_illegalMove, a disconnection has been detected before heartbeat");
                 i.remove();
+
+            }
+        }
+    }
+
+    public synchronized void notify_successMove(GameModel model) {
+        Iterator<GameListener> i = listeners.iterator();
+        while (i.hasNext()) {
+            GameListener l = i.next();
+            try {
+                printAsync("Successful move");
+                l.successfulMove(new GameModelImmutable(model));
+            } catch (RemoteException e) {
+                printAsync("During notification of notify_successfulMove, a disconnection has been detected before heartbeat");
+                i.remove();
             }
         }
     }
@@ -359,6 +374,5 @@ public class ListenersHandler implements Serializable {
     public synchronized void removeListener(GameListener lis) {
         listeners.remove(lis);
     }
-
 
 }

@@ -112,14 +112,10 @@ public class GameModel implements Serializable {
      */
     public synchronized void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        System.out.println("p.setAsReadyToStart() in gameModel");
         listeners_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
-        System.out.println("arePlayersReadyToStartAndEnough: " + arePlayersReadyToStartAndEnough());
         if (arePlayersReadyToStartAndEnough()) {
             extractFirstPlayerToPlay();
-            System.out.println("first player to play extracted");
             initializeGame();
-            System.out.println("game initialized");
             setStatus(GameStatus.FIRST_ROUND);
             System.out.println("FIRST_ROUND SET");
         }
@@ -488,6 +484,7 @@ public class GameModel implements Serializable {
                 }
                 else {
                     // remove the card from the player's hand
+                    listeners_handler.notify_successMove(this);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
@@ -509,6 +506,7 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
+                    listeners_handler.notify_successMove(this);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
@@ -545,6 +543,7 @@ public class GameModel implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
+                    listeners_handler.notify_successMove(this);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
@@ -568,6 +567,7 @@ public class GameModel implements Serializable {
                 }
                 else {
                     // remove the card from the player's hand
+                    listeners_handler.notify_successMove(this);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);

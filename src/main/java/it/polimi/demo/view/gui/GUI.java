@@ -12,6 +12,8 @@ import javafx.util.Duration;
 
 import java.util.ArrayList;
 
+import static it.polimi.demo.view.text.PrintAsync.printAsync;
+
 public class GUI extends UI {
 
     private ApplicationGUI guiApplication;
@@ -113,6 +115,11 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.changeTurn(model, nickname));
     }
 
+    @Override
+    protected void show_updateCommonCards() {
+
+    }
+
 
     /**
      * this method show that the player is ready to start
@@ -175,17 +182,19 @@ public class GUI extends UI {
 
     @Override
     protected void show_commonBoard(GameModelImmutable gameModel) {
-
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel));
     }
 
     @Override
     protected void show_myTurnIsFinished() {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).myTurnIsFinished());
     }
 
     @Override
-    protected void show_playerHand(GameModelImmutable gameModel) {
-
+    protected void show_playerHand(GameModelImmutable gameModel, String nickname) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
     }
 
     @Override
@@ -199,13 +208,18 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_illegalMove() {
+    public void show_illegalMove() {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).illegalMove());
+    }
 
+    @Override
+    protected void show_successfulMove() {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove());
     }
 
     @Override
     protected void show_whereToDrawFrom() {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
     }
 
     @Override
@@ -225,8 +239,9 @@ public class GUI extends UI {
 
     @Override
     public void show_whichCardToPlaceMsg() {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).whichCardToPlace());
     }
+
 
     @Override
     protected void show_NaNMsg() {
@@ -240,12 +255,18 @@ public class GUI extends UI {
 
     @Override
     protected void show_orientation(String message) {
-        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableStarterCardClick());
+        if(message.equals("Choose the orientation of the card to place")) {
+            //System.out.println("GUI: whichOrientationToPlace()");
+            callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).whichOrientationToPlace());
+        }
+        else if(message.equals("Choose the orientation of the starter card")){
+            callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableStarterCardClick());
+        }
+
     }
 
     @Override
     protected void show_genericMessage(String s) {
-
     }
 
     @Override

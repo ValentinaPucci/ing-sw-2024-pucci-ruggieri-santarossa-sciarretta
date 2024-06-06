@@ -39,11 +39,27 @@ public class RunningController extends GenericController {
     public Pane personalObjective0Pane;
     public Pane personalObjective1Pane;
     @FXML public HBox personalObjectivesBox;
+    @FXML public AnchorPane personalBoardAnchorPane;
+    @FXML public VBox cardHandVBox;
+    @FXML public Pane handCard0;
+    @FXML public Pane handCard1;
+    @FXML public Pane handCard2;
+    @FXML public VBox commonCardsVbox;
+    @FXML public Pane commonCard1;
+    @FXML public Pane commonCard2;
+    @FXML public Pane commonCard3;
+    @FXML public Pane commonCard4;
+    @FXML public Pane commonCard5;
+    @FXML public Pane commonCard6;
+    @FXML public Pane commonCard7;
+    @FXML public Pane commonCard8;
+    @FXML public Pane commonCard9;
+
     @FXML private AnchorPane mainAnchor;
     @FXML public ImageView personalObjective0;
     @FXML public ImageView personalObjective1;
-    @FXML public GridPane commonCardsPane;
-    @FXML public GridPane cardHandPane;
+    //@FXML public GridPane commonCardsPane;
+    //@FXML public GridPane cardHandPane;
     @FXML private Pane scoreBoardPane;
     private Orientation cardHandOrientation;
     private Orientation starterCardOrientation;
@@ -51,6 +67,7 @@ public class RunningController extends GenericController {
     @FXML private ListView<String> eventsListView;
     private ImageView pieceBlackImageView;
     private ArrayList<ImageView> pieces;
+
     @FXML private Label labelMessage;
     private final ImageView[] bnImageViews = new ImageView[30];
     @FXML private ImageView bn0;
@@ -92,6 +109,15 @@ public class RunningController extends GenericController {
 
     private List<Pane> cardPanes;
     private List<Button> buttons;
+    private Mapper mapper = new Mapper();
+
+    private int chosenCard = 0;
+
+    double chosenX = 0;
+    double chosenY = 0;
+
+    int cardIndex = 0;
+    int commonIndex = 0;
 
     ArrayList<Integer> personalObjectiveIds = new ArrayList<>();
 
@@ -148,9 +174,19 @@ public class RunningController extends GenericController {
             imageView.setFitWidth(90);
             imageView.setFitHeight(65);
             imageView.setImage(null);
-            int column = i % 2;
-            int row = i / 2;
-            commonCardsPane.add(imageView, column, row);
+            if(i==0) {
+                commonCard1.getChildren().add(imageView);
+            } else if (i==1) {
+                commonCard2.getChildren().add(imageView);
+            } else if (i==2) {
+                commonCard3.getChildren().add(imageView);
+            } else if (i==3) {
+                commonCard4.getChildren().add(imageView);
+            } else if (i==4) {
+                commonCard5.getChildren().add(imageView);
+            } else {
+                commonCard6.getChildren().add(imageView);
+            }
         }
 
         ImageView imageView1 = new ImageView();
@@ -166,12 +202,19 @@ public class RunningController extends GenericController {
         personalObjective1Pane.getChildren().add(imageView0);
 
 
+        cardHandVBox = new VBox();
         for (int i = 0; i < 3; i++) {
             ImageView imageView = new ImageView();
             imageView.setFitWidth(90);
             imageView.setFitHeight(65);
             imageView.setImage(null);
-            cardHandPane.add(imageView, i, 0);
+            if(i==0) {
+                handCard0.getChildren().add(imageView);
+            } else if (i==1) {
+                handCard1.getChildren().add(imageView);
+            } else {
+                handCard2.getChildren().add(imageView);
+            }
         }
 
         ImageView starterCardView = new ImageView();
@@ -193,10 +236,14 @@ public class RunningController extends GenericController {
         othersNicknames.add(playerLabel3);
 
         //disable all cards
-        cardPanes = Arrays.asList(starterCardPane, cardHandPane, commonCardsPane, personalObjective0Pane, personalObjective1Pane);
+        cardPanes = Arrays.asList(starterCardPane, cardHandVBox, commonCardsVbox, personalObjective0Pane, personalObjective1Pane);
         setComponentsDisable(cardPanes, true);
 
+        personalBoardAnchorPane.setOnMouseClicked(this::handleMouseClick);
+
+
     }
+
 
     private void setComponentsDisable(List<? extends javafx.scene.Node> components, boolean disable) {
         for (javafx.scene.Node component : components) {
@@ -299,12 +346,27 @@ public class RunningController extends GenericController {
             ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
             imageView.setFitWidth(90); // Imposta la larghezza desiderata
             imageView.setFitHeight(65); // Imposta l'altezza desiderata
-            int column = i % 3;
-            int row = i / 3;
-            commonCardsPane.add(imageView, column, row);
+            if (i == 0) {
+                commonCard1.getChildren().add(imageView); // Add the image to the VBox
+            } else if (i == 1) {
+                commonCard2.getChildren().add(imageView); // Add the image to the VBox
+            } else if (i == 2) {
+                commonCard3.getChildren().add(imageView); // Add the image to the VBox
+            } else if (i == 3) {
+                commonCard4.getChildren().add(imageView); // Add the image to the VBox
+            } else if (i == 4) {
+                commonCard5.getChildren().add(imageView); // Add the image to the VBox
+            } else if (i == 5) {
+                commonCard6.getChildren().add(imageView); // Add the image to the VBox
+            } else if (i == 6) {
+                commonCard7.getChildren().add(imageView); // Add the image to the VBox
+            } else if (i == 7) {
+                commonCard8.getChildren().add(imageView); // Add the image to the VBox
+            } else {
+                commonCard9.getChildren().add(imageView); // Add the image to the VBox
+            }
         }
     }
-
 
     // Method to set an image to one of the common card ImageViews
     public void setPersonalObjectives(GameModelImmutable model, String nickname) {
@@ -385,7 +447,13 @@ public class RunningController extends GenericController {
             ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
             imageView.setFitWidth(90); // Imposta la larghezza desiderata
             imageView.setFitHeight(65); // Imposta l'altezza desiderata
-            cardHandPane.add(imageView, i, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
+            if(i==0) {
+                handCard0.getChildren().add(imageView);
+            } else if (i==1) {
+                handCard1.getChildren().add(imageView);
+            } else {
+                handCard2.getChildren().add(imageView);
+            }
         }
         cardHandOrientation = Orientation.FRONT;
     }
@@ -398,7 +466,13 @@ public class RunningController extends GenericController {
             ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
             imageView.setFitWidth(90); // Imposta la larghezza desiderata
             imageView.setFitHeight(65); // Imposta l'altezza desiderata
-            cardHandPane.add(imageView, i, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
+            if(i==0) {
+                handCard0.getChildren().add(imageView);
+            } else if (i==1) {
+                handCard1.getChildren().add(imageView);
+            } else {
+                handCard2.getChildren().add(imageView);
+            }
         }
         cardHandOrientation = Orientation.BACK;
     }
@@ -416,9 +490,8 @@ public class RunningController extends GenericController {
     public void ableStarterCardClick() {
         starterCardPane.setDisable(false);
         FlipStarter.setDisable(false);
-        setMsgToShow("Choose the orientation of your starter card: " , true);
+        setMsgToShow("Choose the orientation of your starter card: ", true);
     }
-
 
     public void ableObjectiveCardsClick() {
         personalObjective0Pane.setDisable(false);
@@ -453,7 +526,6 @@ public class RunningController extends GenericController {
         }
     }
 
-
     @FXML
     private void onStarterCardClicked(MouseEvent event) {
         if (starterCardOrientation == Orientation.FRONT) {
@@ -477,27 +549,158 @@ public class RunningController extends GenericController {
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
+        placeStarterCard();
     }
 
-    //TODO: quando faccio place devo togliere la carta dalla mano di carte
-    //quando inserisco una carta in mano la inserisco in posizione 0
-    public void modifyCardHandFront(int cardId) {
-        cardHand.set(0, cardId);
-        Image image = new Image("/images/cards/cards_front/"+ String.format("%03d", cardId) + ".png"); // Aggiungi l'id della carta al percorso
-        ImageView imageView = new ImageView(image);
-        imageView.setFitWidth(50); // Imposta la larghezza desiderata
-        imageView.setFitHeight(70); // Imposta l'altezza desiderata
-        cardHandPane.add(imageView, 0, 0); // Aggiungi l'immagine alla griglia nella posizione corretta
-        cardHandOrientation = Orientation.FRONT;
+    public void onCardHand0Clicked(MouseEvent mouseEvent) {
+        if (cardHandOrientation == Orientation.FRONT) {
+            setMsgToShow("Card 1 from hand clicked with orientation: FRONT", true);
+        } else {
+            setMsgToShow("Card 1 from hand clicked with orientation: BACK", true);
+        }
+        cardHandVBox.setDisable(true);
+
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("1");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+
+        if (reader != null) {
+            if(cardHandOrientation == Orientation.FRONT)
+                reader.addTxt("f");
+            else if(cardHandOrientation == Orientation.BACK)
+                reader.addTxt("b");
+            else
+                System.out.println("Orientation non valida.");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        placeCard(0);
+    }
+
+    @FXML
+    public void onCardHand1Clicked(MouseEvent mouseEvent) {
+        if (cardHandOrientation == Orientation.FRONT) {
+            setMsgToShow("Card 2 from hand clicked with orientation: FRONT", true);
+        } else {
+            setMsgToShow("Card 2 from hand clicked with orientation: BACK", true);
+        }
+        cardHandVBox.setDisable(true);
+
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("2");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+
+        if (reader != null) {
+            if(cardHandOrientation == Orientation.FRONT)
+                reader.addTxt("f");
+            else if(cardHandOrientation == Orientation.BACK)
+                reader.addTxt("b");
+            else
+                System.out.println("Orientation non valida.");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        placeCard(1);
+    }
+
+    @FXML
+    public void onCardHand2Clicked(MouseEvent mouseEvent) {
+        if (cardHandOrientation == Orientation.FRONT) {
+            setMsgToShow("Card 3 from hand clicked with orientation: FRONT", true);
+        } else {
+            setMsgToShow("Card 3 from hand clicked with orientation: BACK", true);
+        }
+        cardHandVBox.setDisable(true);
+
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("3");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+
+        if (reader != null) {
+            if(cardHandOrientation == Orientation.FRONT)
+                reader.addTxt("f");
+            else if(cardHandOrientation == Orientation.BACK)
+                reader.addTxt("b");
+            else
+                System.out.println("Orientation non valida.");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        placeCard(2);
+    }
+
+    private void placeCard(int index) {
+        cardIndex = index;
+        if(index ==  0){
+            handCard0.setStyle("-fx-border-color: blue; -fx-border-width: 3;");
+            chosenCard = cardHand.getFirst();
+        } else if (index ==  1) {
+            handCard1.setStyle("-fx-border-color: blue; -fx-border-width: 3;");
+            chosenCard = cardHand.get(1);
+        } else {
+            handCard2.setStyle("-fx-border-color: blue; -fx-border-width: 3;");
+            chosenCard = cardHand.get(2);
+        }
+        handCard0.setDisable(true);
+        handCard1.setDisable(true);
+        handCard2.setDisable(true);
+        setMsgToShow("Select where to put the chosen card", true);
+        personalBoardAnchorPane.setDisable(false);
+    }
+    private void placeStarterCard() {
+        double xCenter = personalBoardAnchorPane.getWidth() / 2;
+        double yCenter = personalBoardAnchorPane.getHeight() / 2;
+        String imagePath;
+        // Posiziona la carta iniziale al centro
+        String formattedCardId = String.format("%03d", starterCard);
+        if(starterCardOrientation == Orientation.FRONT){
+            imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
+        }else if(starterCardOrientation == Orientation.BACK){
+            imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
+        } else {
+            System.out.println("Orientation non valida.");
+            return;
+        }
+        ImageView StarterCardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+        StarterCardPic.setFitWidth(90); // Imposta la larghezza desiderata
+        StarterCardPic.setFitHeight(65); // Imposta l'altezza desiderata
+        StarterCardPic.setLayoutX(xCenter);
+        StarterCardPic.setLayoutY(yCenter);
+        personalBoardAnchorPane.getChildren().add(StarterCardPic);
+        setMsgToShow("StarterCard placed", true);
+    }
+    public void whichCardToPlace() {
+        cardHandVBox.setDisable(false);
+        cardHandVBox.setMouseTransparent(false);
+        cardPanes.forEach(pane -> pane.setDisable(false));
+        setMsgToShow("Choose a card to place from your hand: ", true);
+    }
+
+    public void whichOrientationToPlace() {
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            if(cardHandOrientation == Orientation.FRONT)
+                reader.addTxt("f");
+            else if(cardHandOrientation == Orientation.BACK)
+                reader.addTxt("b");
+            else
+                System.out.println("Orientation non valida.");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
     }
 
     public void setPlayerDrawnCard(GameModelImmutable model, String nickname) {
         setCommonCards(model);
-        setCardHand(model, nickname);
-    }
-
-    //mostra che la carta giocata non è più in mano
-    public void setPlayerPlacedCard(GameModelImmutable model, String nickname) {
         setCardHand(model, nickname);
     }
 
@@ -506,6 +709,151 @@ public class RunningController extends GenericController {
         setMsgToShow("Next turn is up to: " + model.getCurrentPlayerNickname(), true);
     }
 
+
+    public void myTurnIsFinished() {
+        setMsgToShow("Your turn is finished. Now, wait until it is again your turn! ", true);
+    }
+
+    @FXML
+    private void handleMouseClick(MouseEvent event) {
+        personalBoardAnchorPane.setDisable(true);
+
+        double clickX = event.getX();
+        double clickY = event.getY();
+        chosenX = clickX;
+        chosenY = clickY;
+
+        int[] result = mapper.getMappedPosition(clickX, clickY);
+
+        if (result != null) {
+            System.out.println("coordinate selezionate: (" + result[0] + ", " + result[1] + ")");
+            inputReaderGUI reader = getInputReaderGUI();
+            if (reader != null) {
+                //System.out.println("(x,y): " + result[0] + ", " + result[1]);
+                reader.addTxt(String.valueOf(result[0]));
+                reader.addTxt(String.valueOf(result[1]));
+            } else {
+                System.out.println("L'oggetto inputReaderGUI è null.");
+            }
+        } else {
+            System.out.println("posizione non valida");
+        }
+    }
+
+
+    private void reallyPlaceCard(double clickX, double clickY) {
+        String imagePath;
+        String formattedCardId = String.format("%03d", chosenCard);
+        if(cardHandOrientation == Orientation.FRONT){
+            imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
+        }else if(cardHandOrientation == Orientation.BACK){
+            imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
+        } else {
+            System.out.println("Orientation non valida.");
+            return;
+        }
+        ImageView CardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+        CardPic.setFitWidth(90); // Imposta la larghezza desiderata
+        CardPic.setFitHeight(65); // Imposta l'altezza desiderata
+        CardPic.setLayoutX(clickX);
+        CardPic.setLayoutY(clickY);
+        personalBoardAnchorPane.getChildren().add(CardPic);
+        setMsgToShow("Card placed", true);
+        removeFromHand(cardIndex);
+    }
+
+    private void removeFromHand(int index) {
+        if (index == 0) {
+            handCard0.getChildren().clear();
+        } else if (index == 1) {
+            handCard1.getChildren().clear();
+        } else {
+            handCard2.getChildren().clear();
+        }
+    }
+
+    public void ableCommonCardsClick() {
+        commonCardsVbox.setDisable(false);
+        setMsgToShow("Choose a common card ", true);
+    }
+
+    @FXML
+    public void commonCard1Clicked(MouseEvent mouseEvent) {
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("2");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 1;
+    }
+    @FXML
+    public void commonCard2Clicked(MouseEvent mouseEvent) {
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("2");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 2;
+    }
+    @FXML
+    public void commonCard3Clicked(MouseEvent mouseEvent) {
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("3");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 3;
+    }
+    @FXML
+    public void commonCard4Clicked(MouseEvent mouseEvent) {
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("4");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 4;
+    }
+    @FXML
+    public void commonCard5Clicked(MouseEvent mouseEvent) {
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("5");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 5;
+    }
+    @FXML
+    public void commonCard6Clicked(MouseEvent mouseEvent) {
+        inputReaderGUI reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.addTxt("6");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 6;
+    }
+
+    public void illegalMove() {
+        setMsgToShow("Card can't be placed there, retry", false);
+        personalBoardAnchorPane.setDisable(false);
+    }
+
+
+    public void successfulMove() {
+        reallyPlaceCard(mapper.getMinCorner(chosenX,chosenY)[0], (mapper.getMinCorner(chosenX,chosenY)[1]));
+        setMsgToShow("Posizione valida!", true);
+    }
 
     //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
 
@@ -519,15 +867,16 @@ public class RunningController extends GenericController {
     }
 
     @FXML
-    private void sendMessage() {
+    private void ActionSendMessage() {
         String message = chatInput.getText();
         String recipient = recipientComboBox.getValue();
         if (!message.trim().isEmpty()) {
             if ("Everyone".equals(recipient)) {
+                getInputReaderGUI().addTxt("/c " + chatInput.getText());
                 chatArea.appendText("Me (to everyone): " + message + "\n");
             } else {
-                chatArea.appendText("Me (a " + recipient + "): " + message + "\n");
-                // Logica per inviare il messaggio privato al destinatario specifico
+                chatArea.appendText("Me (to " + recipient + "): " + message + "\n");
+                getInputReaderGUI().addTxt("/cs " + recipientComboBox.getValue().toString() + " " + chatInput.getText());
                 for (PlayerIC player : players_list) {
                     if (player.getNickname().equals(recipient)) {
                         sendPrivateMessage(player, message);
@@ -538,23 +887,6 @@ public class RunningController extends GenericController {
             chatInput.clear();
         }
     }
-
-//    public void actionSendMessage(MouseEvent e) {
-//        if (!messageText.getText().isEmpty()) {
-//            Sound.playSound("sendmsg.wav");
-//
-//            if (comboBoxMessage.getValue().toString().isEmpty()) {
-//                getInputReaderGUI().addTxt("/c " + messageText.getText());
-//            } else {
-//                //Player wants to send a private message
-//                getInputReaderGUI().addTxt("/cs " + comboBoxMessage.getValue().toString() + " " + messageText.getText());
-//                comboBoxMessage.getSelectionModel().selectFirst();
-//            }
-//            messageText.setText("");
-//
-//
-//        }
-//    }
 
     private void sendPrivateMessage(PlayerIC player, String message) {
         // Logica per inviare un messaggio privato al giocatore
@@ -573,8 +905,6 @@ public class RunningController extends GenericController {
             labelMessage.setTextFill(Color.RED);
         }
     }
-
-
 }
 
 

@@ -259,6 +259,17 @@ public class GameListenersHandlerSocket implements GameListener, Serializable {
         }
     }
 
+    @Override
+    public void successfulMove(GameModelImmutable model) {
+        try {
+            //Else the object is not updated!!
+            out.writeObject(new msgSuccessfulMove(model));
+            finishSending();
+        } catch (IOException e) {
+
+        }
+    }
+
     /**
      * This method is used to write on the ObjectOutputStream that the next turn is started
      * @param gamemodel is the game model {@link GameModelImmutable}

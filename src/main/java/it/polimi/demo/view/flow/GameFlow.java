@@ -271,14 +271,12 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
 //            }
 
             case GAME_STARTED -> {
-                System.out.println("status: GAME_STARTED");
                 ui.show_gameStarted(event.getModel());
                 this.inputParser.setPlayer(event.getModel().getPlayerEntity(nickname));
                 this.inputParser.setIdGame(event.getModel().getGameId());
             }
 
             case NEXT_TURN -> {
-                System.out.println("status: NEXT_TURN !!");
                 ui.show_nextTurn(event.getModel(), nickname);
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
                     ui.show_objectiveCards(event.getModel());
@@ -309,7 +307,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             case NEXT_TURN -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
                     ui.show_personalObjectiveCard(event.getModel());
-                    ui.show_playerHand(event.getModel());
+                    ui.show_playerHand(event.getModel(), nickname);
                     askWhichCard();
                 }
             }
@@ -340,7 +338,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
             case NEXT_TURN -> {
                 if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
                     ui.show_personalObjectiveCard(event.getModel());
-                    ui.show_playerHand(event.getModel());
+                    ui.show_playerHand(event.getModel(), nickname);
                     askWhichCard();
                 }
             }
@@ -474,7 +472,6 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
                 if (num_players < 2 || num_players > 4)
                     return false;
                 else{
-                    System.out.println("Chosen num of players: " + num_players);
                     askNickname();
                     createGame(nickname, num_players);
                 }
@@ -602,7 +599,7 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         }
     }
 
-    public void askGameCardOrientationAndPlace() {
+    public void askGameCardOrientationAndPlace() throws InterruptedException {
         String ris;
         String ris1;
         String ris2;
@@ -617,24 +614,19 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
         } while (!(ris.equals("f") || ris.equals("b")));
         do {
             ui.show_genericMessage("Choose the ** x ** coordinates where to place the card (insert a number between -250 and 250)");
-            try {
-                ris1 = this.inputParser.getDataToProcess().popData();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            ris1 = this.inputParser.getDataToProcess().popData();
+        } while (!isValidCoordinate(ris1));
 
+        do {
             ui.show_genericMessage("Choose the ** y ** coordinates where to place the card (insert a number between -250 and 250)");
-            try {
-                ris2 = this.inputParser.getDataToProcess().popData();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        } while (!isValidCoordinate(ris1) || !isValidCoordinate(ris2));
+            ris2 = this.inputParser.getDataToProcess().popData();
+        } while (!isValidCoordinate(ris2));
         try {
             if (ris.equals("f"))
                 aux = "FRONT";
             else
                 aux = "BACK";
+            //System.out.println("ris1: " + ris1 + " ris2: " + ris2 + " aux: " + aux);
             placeCard(Integer.parseInt(ris1) + 250, Integer.parseInt(ris2) + 250, Orientation.valueOf(aux));
         } catch (RemoteException e) {
             throw new RuntimeException(e);
@@ -874,9 +866,16 @@ public class GameFlow extends Flow implements Runnable, CommonClientActions {
     }
 
     @Override
+    public void successfulMove(GameModelImmutable model) {
+        if (model.getCurrentPlayerNickname().equals(nickname)) {
+            ui.show_successfulMove();
+        }
+    }
+
+    @Override
     public void cardDrawn(GameModelImmutable model, int index) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
-
+            ui.show_playerHand(model, nickname);
         }
     }
 

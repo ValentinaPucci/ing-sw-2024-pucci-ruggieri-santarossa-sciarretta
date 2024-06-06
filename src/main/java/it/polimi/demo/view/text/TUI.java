@@ -204,8 +204,8 @@ public class TUI extends UI {
      * @param gameModel the model that has the player hand that needs to be shown
      */
     @Override
-    public void show_playerHand(GameModelImmutable gameModel) {
-        List<ResourceCard> player_hand = gameModel.getPlayerEntity(nickname).getHand();
+    public void show_playerHand(GameModelImmutable gameModel, String nickname) {
+        List<ResourceCard> player_hand = gameModel.getPlayerEntity(this.nickname).getHand();
         for (ResourceCard c : player_hand) {
             if (c instanceof GoldCard) {
                 System.out.println("** GOLD CARD **" + " " + "(" + (player_hand.indexOf(c) + 1) + ")" + "\n");
@@ -256,6 +256,11 @@ public class TUI extends UI {
         clearScreen();
         printAsync("Illegal move! Try again and choose different coordinates! \n");
         clearScreen();
+    }
+
+    @Override
+    protected void show_successfulMove() {
+        printAsync("Successful move! \n");
     }
 
     @Override
@@ -451,6 +456,11 @@ public class TUI extends UI {
 
     }
 
+    @Override
+    protected void show_updateCommonCards() {
+
+    }
+
     /**
      * Asks the player to pick a direction
      */
@@ -627,7 +637,7 @@ public class TUI extends UI {
         show_alwaysShowForAll(model);
         //show_personalObjectiveCard(model.getPlayerEntity(nick));
         if (!model.getPlayerEntity(nick).getHand().isEmpty())
-            show_playerHand(model);
+            show_playerHand(model, nick);
         else {
             if (!model.getPlayersConnected().peek().getHand().isEmpty())
                 show_cardChosen(model.getPlayersConnected().peek().getNickname(), model);

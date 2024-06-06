@@ -5,19 +5,14 @@ import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.rmi.RemoteException;
 
-/**
- * msgNextTurn class.
- * Extends SocketServerGenericMessage and is used to send a message to the client
- * indicating that it is the next turn in the game.
- */
-public class msgIllegalMove extends SocketServerGenericMessage {
+public class msgSuccessfulMove extends SocketServerGenericMessage{
     private GameModelImmutable gamemodel;
 
     /**
      * Constructor of the class.
      * @param gamemodel the immutable game model
      */
-    public msgIllegalMove(GameModelImmutable gamemodel) {
+    public msgSuccessfulMove(GameModelImmutable gamemodel) {
         this.gamemodel = gamemodel;
     }
 
@@ -29,6 +24,6 @@ public class msgIllegalMove extends SocketServerGenericMessage {
      */
     @Override
     public void execute(GameListener lis) throws RemoteException {
-        lis.illegalMove(gamemodel);
+        lis.successfulMove(gamemodel);
     }
 }

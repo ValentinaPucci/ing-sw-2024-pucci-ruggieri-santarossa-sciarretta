@@ -18,7 +18,6 @@ public class numPlayersController extends GenericController {
 
     @FXML
     public void twoPLayers(ActionEvent actionEvent) {
-        System.out.println("PlayerSelection: twoPLayers "+ actionEvent);
         inputReaderGUI reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("2");
@@ -29,7 +28,6 @@ public class numPlayersController extends GenericController {
 
     @FXML
     public void threePLayers(ActionEvent actionEvent) {
-        System.out.println("PlayerSelection: threePLayers "+ actionEvent);
         inputReaderGUI reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("3");
@@ -39,7 +37,6 @@ public class numPlayersController extends GenericController {
     }
     @FXML
     public void fourPLayers(ActionEvent actionEvent) {
-        System.out.println("PlayerSelection: fourPLayers "+ actionEvent);
         inputReaderGUI reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("4");

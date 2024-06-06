@@ -11,7 +11,6 @@ public class NicknameController extends GenericController {
 
     @FXML
     void enter(ActionEvent event) {
-        System.out.println("Nickname entered:" + nickname + nickname.getText());
         if(!nickname.getText().isEmpty()) {
             getInputReaderGUI().addTxt(nickname.getText());
         }

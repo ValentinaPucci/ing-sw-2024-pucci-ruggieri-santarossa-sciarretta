@@ -122,7 +122,7 @@ public abstract class UI {
      *
      * @param gameModel the model that has the player hand that needs to be shown
      */
-    protected abstract void show_playerHand(GameModelImmutable gameModel);
+    protected abstract void show_playerHand(GameModelImmutable gameModel, String nickname);
 
     protected abstract void show_personalObjectiveCard(GameModelImmutable gameModel);
 
@@ -135,6 +135,7 @@ public abstract class UI {
     protected abstract void show_cardChosen(String nickname, GameModelImmutable model);
 
     protected abstract void show_illegalMove();
+    protected abstract void show_successfulMove();
 
     protected abstract void show_whereToDrawFrom();
 
@@ -204,4 +205,7 @@ public abstract class UI {
     protected abstract void show_chosenNickname(String nickname);
 
     protected abstract void show_nextTurn(GameModelImmutable model, String nickname);
+
+
+    protected abstract void show_updateCommonCards();
 }

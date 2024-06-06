@@ -97,7 +97,6 @@ public class ApplicationGUI extends Application {
         resizing=true;
 
         InputStream logoStream = ApplicationGUI.class.getClassLoader().getResourceAsStream("logo.png");
-        System.out.println(logoStream); // Stampa per debug
         if (logoStream != null) {
             primaryStage.getIcons().add(new Image(logoStream));
         } else {
@@ -110,7 +109,6 @@ public class ApplicationGUI extends Application {
         for (SceneInfo s : scenes) {
             s.setInputReaderGUI(inputReaderGUI);
         }
-        System.out.println("setInputReaderGUItoAllControllers");
     }
 
     public void rescale(double width, double heigh) {
@@ -125,7 +123,7 @@ public class ApplicationGUI extends Application {
             widthOld = widthWindow;
             heightOld = heightWindow;
             Scale scale = new Scale(w, h, 0, 0);
-            //primaryStage.getScene().getRoot().getTransforms().add(scale);
+            primaryStage.getScene().getRoot().getTransforms().add(scale);
             primaryStage.getScene().lookup("#content").getTransforms().add(scale);
         }
     }

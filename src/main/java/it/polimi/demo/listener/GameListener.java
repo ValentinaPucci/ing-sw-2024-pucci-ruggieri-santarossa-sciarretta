@@ -43,6 +43,8 @@ public interface GameListener extends Remote {
 
     void illegalMove(GameModelImmutable model) throws RemoteException;
 
+    void successfulMove(GameModelImmutable gameModelImmutable) throws RemoteException;
+
     /**
      * This method is invoked by gameUI when the player wants to draw a card.
      * @param model the game model
@@ -167,6 +169,7 @@ public interface GameListener extends Remote {
      * @throws RemoteException if the reference could not be accessed
      */
     void onlyOnePlayerConnected(GameModelImmutable gameModel, int secondsToWaitUntilGameEnded) throws RemoteException;
+
 
 
 }
