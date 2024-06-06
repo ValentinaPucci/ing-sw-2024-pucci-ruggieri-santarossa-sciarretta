@@ -1,6 +1,6 @@
 package it.polimi.demo.networking;
 
-import it.polimi.demo.listener.Listener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.ModelView;
@@ -41,8 +41,8 @@ public class ObserverManagerClient implements Listener, Serializable {
     }
 
     @Override
-    public void successfulMove(ModelView model) throws RemoteException{
-        dynamics.successfulMove(model);
+    public void illegalMoveBecauseOf(ModelView model, String reason_why) throws RemoteException {
+        dynamics.illegalMoveBecauseOf(model, reason_why);
     }
 
     @Override
@@ -57,17 +57,12 @@ public class ObserverManagerClient implements Listener, Serializable {
 
     @Override
     public void playerLeft(ModelView gamemodel, String nick) throws RemoteException {
-        dynamics.playerLeft(gamemodel,nick);
+        dynamics.playerLeft(gamemodel, nick);
     }
 
     @Override
     public void joinUnableGameFull(Player wantedToJoin, ModelView gamemodel) throws RemoteException {
         dynamics.joinUnableGameFull(wantedToJoin, gamemodel);
-    }
-
-    @Override
-    public void playerReconnected(ModelView gamemodel, String nickPlayerReconnected) throws RemoteException {
-        dynamics.playerReconnected(gamemodel, nickPlayerReconnected);
     }
 
     @Override
@@ -101,23 +96,18 @@ public class ObserverManagerClient implements Listener, Serializable {
     }
 
     @Override
-    public void secondLastRound(ModelView gamemodel) throws RemoteException {
-        dynamics.secondLastRound(gamemodel);
-    }
-
-    @Override
     public void nextTurn(ModelView gamemodel) throws RemoteException {
         dynamics.nextTurn(gamemodel);
     }
 
     @Override
     public void playerDisconnected(ModelView gameModel, String nick) throws RemoteException {
-        dynamics.playerDisconnected(gameModel,nick);
+        dynamics.playerDisconnected(gameModel, nick);
     }
 
     @Override
-    public void onlyOnePlayerConnected(ModelView gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
-        dynamics.onlyOnePlayerConnected(gameModel,secondsToWaitUntilGameEnded);
+    public void secondLastRound(ModelView gamemodel) throws RemoteException {
+        dynamics.secondLastRound(gamemodel);
     }
 
     @Override
@@ -128,6 +118,6 @@ public class ObserverManagerClient implements Listener, Serializable {
     @Override
     public void messageSent(ModelView gameModel, String nickname, Message message) throws RemoteException {
         dynamics.messageSent(gameModel, nickname, message);
-    }
 
+    }
 }

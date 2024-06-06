@@ -1,34 +1,24 @@
 package it.polimi.demo.view.flow.utilities;
 
+import java.util.concurrent.LinkedBlockingQueue;
+
 /**
  * InputReaderGUI class
  * InputReaderGUI is the class that reads the input and add it to the buffer
  */
 public class GuiReader implements AbstractReader {
+    private final LinkedBlockingQueue<String> buffer;
 
-    private final BufferData buffer;
-
-    /**
-     * Init
-     */
     public GuiReader(){
-        buffer = new BufferData();
+        buffer = new LinkedBlockingQueue<>();
     }
 
-    /**
-     *
-     * @return the buffer
-     */
-    public BufferData getBuffer(){
+    public LinkedBlockingQueue<String> getBuffer(){
         return buffer;
     }
 
-    /**
-     *
-     * @param txt text to add to the buffer
-     */
     public synchronized void addTxt(String txt){
-        buffer.addData(txt);
+        buffer.add(txt);
     }
 
 }

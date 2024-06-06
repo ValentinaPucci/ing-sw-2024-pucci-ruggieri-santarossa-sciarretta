@@ -1,6 +1,6 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.Listener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.ModelView;
 
 import java.rmi.RemoteException;
@@ -22,8 +22,9 @@ public class msgSuccessfulMove extends SocketServerGenericMessage{
      * @param lis the game listener
      * @throws RemoteException if there is an error in remote communication
      */
+    //todo vale reimplement
     @Override
     public void execute(Listener lis) throws RemoteException {
-        lis.successfulMove(gamemodel);
+//        lis.successfulMove(gamemodel);
     }
 }

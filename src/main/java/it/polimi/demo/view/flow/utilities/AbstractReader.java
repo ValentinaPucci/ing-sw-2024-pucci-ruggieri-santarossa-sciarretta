@@ -1,5 +1,7 @@
 package it.polimi.demo.view.flow.utilities;
 
+import java.util.concurrent.LinkedBlockingQueue;
+
 public interface AbstractReader {
-    BufferData getBuffer();
+    LinkedBlockingQueue<String> getBuffer();
 }

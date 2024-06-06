@@ -1,14 +1,14 @@
 package it.polimi.demo.view.flow;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.model.ModelView;
 import it.polimi.demo.networking.rmi.RMIClient;
 import it.polimi.demo.view.flow.utilities.*;
 import it.polimi.demo.view.flow.utilities.gameFacts.ModelFact;
-import it.polimi.demo.view.flow.utilities.gameFacts.EventList;
+import it.polimi.demo.view.flow.utilities.gameFacts.FactQueue;
 import it.polimi.demo.view.flow.utilities.gameFacts.FactType;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import it.polimi.demo.view.gui.GUI;
@@ -20,172 +20,86 @@ import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static it.polimi.demo.view.flow.utilities.gameFacts.FactType.*;
 
-/**
- * GameFlow class<br>
- * As a workaround to the different GUI and TUI implementations, we created this class<br>
- * The TUI obviously has a different pace in the game that the GUI, as the TUI is more linear<br>
- * -> Only one action can be performed at any point in time, <br>
- * where the GUi is more complex, a message can be sent while the tiles are being picked up, and so on<br>
- * We opted for this class hat sets the pace of the game to be the same for both TUI and GUI.<br>
- * we have two additional threads that help us do so: InputReader and InputParser.<br>
- * GameFlow is directly connected to InputParser, which creates InputReader.<br>
- * InputReader reads from the input (in TUI) or matches any action performed by the client as a TUI input (in GUI)<br>
- * For example, if the player was to click on a tile in the GUI's playground, it would register the click as three inputs in TUI (row, column and direction)<br>
- * Then adds the data read to a buffer queue.<br>
- * <br>
- * InputParser then pops entries from this queue and parses them, to understand what each means.<br>
- * If he understands that the player wanted to send a message, the message is created and sent,<br>
- * if not, the data is sent to the gameFlow, which will then perform an action accordingly (pick up tiles, place tiles, ecc)<br>
- */
 public class GameDynamics extends Dynamics implements Runnable, ClientInterface {
-    /**
-     * Nickname of the player {@link Player}
-     */
+
     private String nickname;
 
     private int game_id;
 
-    /**
-     * The list of events {@link EventList}
-     */
-    private final EventList events = new EventList();
+    private final FactQueue facts = new FactQueue();
 
-    /**
-     * The action that the client can perform {@link ClientInterface}
-     */
-    private ClientInterface clientActions;
-    /**
-     * FileDisconnection {@link FileDisconnection} to handle the disconnection
-     */
-    private final FileDisconnection fileDisconnection;
+    private ClientInterface client_interface;
 
-    /**
-     * The last player that reconnected
-     */
-    private String lastPlayerReconnected;
     private final UI ui;
-    /**
-     * InputReader {@link AbstractReader} to read the input, and add it to the buffer.
-     * InputParser {@link GenericParser} pops the input from the buffer and parses it
-     */
-    protected GenericParser genericParser;
-    protected AbstractReader abstractReader;
-    /**
-     * Events that always need to be shown on the screen
-     */
-    protected List<String> importantEvents;
+
+    protected GenericParser generic_parser;
+
+    protected AbstractReader abstract_reader;
+
+    protected List<String> relevant_facts;
+
     private boolean ended = false;
 
-    /**
-     * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI}(TUI)
-     * the FileDisconnection {@link FileDisconnection}, the InputReader {@link AbstractReader} and the InputParser {@link GenericParser}
-     *
-     * @param connectionSelection the connection type
-     */
     public GameDynamics(ConnectionSelection connectionSelection) {
         //Invoked for starting with TUI
         switch (connectionSelection) {
-            case SOCKET -> clientActions = new ClientSocket(this);
-            case RMI -> clientActions = new RMIClient(this);
+            case SOCKET -> client_interface = new ClientSocket(this);
+            case RMI -> client_interface = new RMIClient(this);
         }
         ui = new TUI();
 
-        importantEvents = new ArrayList<>();
+        relevant_facts = new ArrayList<>();
         nickname = "";
-        fileDisconnection = new FileDisconnection();
         // Thread for reading the input (TUI)
-        this.abstractReader = new TuiReader();
-        // We bind inputParser and inputReader
-        this.genericParser = new GenericParser(this.abstractReader.getBuffer(), this);
+        this.abstract_reader = new TuiReader();
+        // We bind generic_parser and abstract_reader
+        this.generic_parser = new GenericParser(this.abstract_reader.getBuffer(), this);
 
         new Thread(this).start();
     }
 
-    /**
-     * Constructor of the class, based on the connection type it creates the clientActions and initializes the UI {@link UI} (GUI)
-     *
-     * @param guiApplication      the GUI application {@link ApplicationGUI}
-     * @param connectionSelection the connection type {@link ConnectionSelection}
-     */
     public GameDynamics(ApplicationGUI guiApplication, ConnectionSelection connectionSelection) {
         //Invoked for starting with GUI
         switch (connectionSelection) {
-            case SOCKET -> clientActions = new ClientSocket(this);
-            case RMI -> clientActions = new RMIClient(this);
+            case SOCKET -> client_interface = new ClientSocket(this);
+            case RMI -> client_interface = new RMIClient(this);
         }
 
-        this.abstractReader = new GuiReader(); //inputReaderGUI@5184ffd2
+        this.abstract_reader = new GuiReader(); //GuiReader@5184ffd2
 
-        ui = new GUI(guiApplication, (GuiReader) abstractReader); //inputReaderGUI@5184ffd2
-        importantEvents = new ArrayList<>();
+        ui = new GUI(guiApplication, (GuiReader) abstract_reader); //GuiReader@5184ffd2
+        relevant_facts = new ArrayList<>();
         nickname = "";
-        fileDisconnection = new FileDisconnection();
 
-        this.genericParser = new GenericParser(this.abstractReader.getBuffer(), this); //inputReaderGUI@5184ffd2
+        this.generic_parser = new GenericParser(this.abstract_reader.getBuffer(), this); //GuiReader@5184ffd2
         new Thread(this).start();
     }
 
-    /**
-     * The gameFlow works with a list of events<br>
-     * each event maps the status of the game, whether it's not started, running, in its last cycle or ended<br>
-     */
-    @SuppressWarnings("BusyWait")
     @Override
     public void run() {
-        ModelFact event;
-        try {
-            ui.show_publisher();
-            events.add(null, APP_MENU);
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+
+        facts.add(null, APP_MENU);
+
+        Map<GameStatus, Consumer<ModelFact>> statusHandlers = Map.of(
+                GameStatus.WAIT, this::safeStatusWait,
+                GameStatus.FIRST_ROUND, this::safeStatusFirstRound,
+                GameStatus.RUNNING, this::safeStatusRunning,
+                GameStatus.SECOND_LAST_ROUND, this::safeStatusRunning,
+                GameStatus.LAST_ROUND, this::safeStatusLastRound,
+                GameStatus.ENDED, this::statusEnded
+        );
+
         while (!Thread.interrupted()) {
-            if (events.isJoined()) {
-                // Get one event
-                event = events.pop();
-                if (event != null) {
-                    // if something happened
-                    switch (event.getModel().getStatus()) {
-                        case WAIT -> {
-                            try {
-                                statusWait(event);
-                            } catch (IOException | InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                        case FIRST_ROUND -> {
-                            try {
-                                statusFirstRound(event);
-                            } catch (IOException | InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                        case RUNNING, SECOND_LAST_ROUND -> {
-                            try {
-                                statusRunning(event);
-                            } catch (IOException | InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                        case LAST_ROUND -> {
-                            try {
-                                statusLastRound(event);
-                            } catch (IOException | InterruptedException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                        case ENDED -> statusEnded(event);
-                    }
-                }
+            if (facts.isJoined()) {
+                handleEvent(statusHandlers);
             } else {
-                event = events.pop();
-                if (event != null) {
-                    statusNotInAGame(event);
-                }
+                handleFallbackEvent(this::safeStatusNotInAGame);
             }
             try {
                 Thread.sleep(100);
@@ -195,440 +109,368 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         }
     }
 
-    /**
-     * This method is called when a player is not added to a game<br>
-     *
-     * @param event from here we get the updated model and can understand why the player was not put in a game<br>
-     *              it says if he's just joined or if he's been kicked and why
-     */
-    private void statusNotInAGame(ModelFact event) {
-        switch (event.getType()) {
-            case APP_MENU -> {
-                boolean selectionok;
-                do {
-                    selectionok = askSelectGame();
-                } while (!selectionok);
-            }
-
-            case JOIN_UNABLE_NICKNAME_ALREADY_IN -> {
-                nickname = null;
-                events.add(null, APP_MENU);
-                ui.addImportantEvent("WARNING> Nickname already used!");
-            }
-
-            case JOIN_UNABLE_GAME_FULL -> {
-                nickname = null;
-                events.add(null, APP_MENU);
-                ui.addImportantEvent("WARNING> Game is Full!");
-            }
-
-            case GENERIC_ERROR_WHEN_ENTERING_GAME -> {
-                nickname = null;
-                ui.show_returnToMenuMsg();
-                try {
-                    this.genericParser.getDataToProcess().popData();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                events.add(null, APP_MENU);
-            }
+    private void handleEvent(Map<GameStatus, Consumer<ModelFact>> handlers) {
+        ModelFact event = facts.pop();
+        if (event != null) {
+            handlers.getOrDefault(event.getModel().getStatus(), this::doNothing).accept(event);
         }
     }
 
-    /**
-     * The player is in this stage when he joins a lobby, but the game has not yet started<br>
-     *
-     * @param event from here we get the updated model and game status
-     * @throws IOException          if there are problems with the input or output
-     * @throws InterruptedException if there are problems with the connection
-     */
-    private void statusWait(ModelFact event) throws IOException, InterruptedException {
-        String nickLastPlayer = event.getModel().getPlayersConnected().getLast().getNickname();
-        // If the event is that I joined then I wait until the user inputs 'y'
-        switch (event.getType()) {
-            case PLAYER_JOINED -> {
-                // we execute this only one time, i.e. the first time we enter the game
-                if (nickLastPlayer.equals(nickname)) {
-                    ui.show_playerJoined(event.getModel(), nickname);
-                    saveGameId(fileDisconnection, nickname, event.getModel().getGameId());
-                    askReadyToStart();
-                }
-            }
+    private void handleFallbackEvent(Consumer<ModelFact> fallback) {
+        ModelFact event = facts.pop();
+        if (event != null) {
+            fallback.accept(event);
         }
     }
 
-    private void statusFirstRound(ModelFact event) throws IOException, InterruptedException {
-        // We opted for async starter card placement for simplicity
-        switch (event.getType()) {
-
-//            case MESSAGE_SENT -> {
-//                ui.show_messageSent(event.getModel(), nickname);
-//            }
-
-            case GAME_STARTED -> {
-                ui.show_gameStarted(event.getModel());
-                this.genericParser.setPlayer(event.getModel().getPlayerEntity(nickname));
-                this.genericParser.setIdGame(event.getModel().getGameId());
-            }
-
-            case NEXT_TURN -> {
-                ui.show_nextTurn(event.getModel(), nickname);
-                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
-                    ui.show_objectiveCards(event.getModel());
-                    askWhichObjectiveCard();
-                    ui.show_starterCards(event.getModel());
-                    askStarterCardOrientationAndPlace();
-                }
-            }
+    private void safeStatusWait(ModelFact event) {
+        try {
+            statusWait(event);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    /**
-     * The player is here for all the game's duration<br>
-     * Each eventType maps a different action that can happen in the game, while it's running<br>
-     *
-     * @param event from here we get the updated model and game status
-     * @throws IOException          if there are problems with the input or output
-     * @throws InterruptedException if there are problems with the connection
-     */
-    private void statusRunning(ModelFact event) throws IOException, InterruptedException {
-        
-        switch (event.getType()) {
-            
-//            case MESSAGE_SENT -> {
-//                ui.show_messageSent(event.getModel(), nickname);
-//            }
-
-            case NEXT_TURN -> {
-                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
-                    ui.show_personalObjectiveCard(event.getModel());
-                    ui.show_playerHand(event.getModel(), nickname);
-                    askWhichCard();
-                }
-            }
-
-            case ASK_WHICH_ORIENTATION, ILLEGAL_MOVE -> {
-                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
-                    ui.show_cardChosen(nickname, event.getModel());
-                    askGameCardOrientationAndPlace();
-                }
-            }
-
-            case CARD_PLACED -> {
-                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
-                    askWhereToDrawFrom();
-                }
-            }
+    private void safeStatusFirstRound(ModelFact event) {
+        try {
+            statusFirstRound(event);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void statusLastRound(ModelFact event) throws IOException, InterruptedException {
-
-        switch (event.getType()) {
-
-//            case MESSAGE_SENT -> {
-//                ui.show_messageSent(event.getModel(), nickname);
-//            }
-
-            case NEXT_TURN -> {
-                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
-                    ui.show_personalObjectiveCard(event.getModel());
-                    ui.show_playerHand(event.getModel(), nickname);
-                    askWhichCard();
-                }
-            }
-
-            case ASK_WHICH_ORIENTATION, ILLEGAL_MOVE -> {
-                if (event.getModel().getCurrentPlayerNickname().equals(nickname)) {
-                    ui.show_cardChosen(nickname, event.getModel());
-                    askGameCardOrientationAndPlace();
-                }
-            }
+    private void safeStatusRunning(ModelFact event) {
+        try {
+            statusRunning(event);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    /**
-     * The player is here once the game has ended<br>
-     * Here the leaderboard will be shown, and then he'll be prompted with the choice to close the application <br>
-     * or return to the main menu, to play another game<br>
-     *
-     * @param event from here we get the updated model and game status
-     */
-    private void statusEnded(ModelFact event) {
-        switch (event.getType()) {
-            case GAME_ENDED -> {
-                ui.show_returnToMenuMsg();
-                this.genericParser.getDataToProcess().popAllData();
-                try {
-                    this.genericParser.getDataToProcess().popData();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                this.leave(nickname, event.getModel().getGameId());
-                this.youLeft();
-            }
+    private void safeStatusLastRound(ModelFact event) {
+        try {
+            statusLastRound(event);
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    /**
-     *
-     */
+    private void safeStatusNotInAGame(ModelFact event) {
+        statusNotInAGame(event);
+    }
+
+    private void doNothing(ModelFact event) {
+        // No action required for undefined statuses
+    }
+
+    // GameDynamics
+
+    private void statusNotInAGame(ModelFact fact) {
+        Map<FactType, Runnable> actions = Map.of(
+                FactType.APP_MENU, () -> {
+                    boolean selectionOk;
+                    do {
+                        selectionOk = askSelectGame();
+                    } while (!selectionOk);
+                },
+                FactType.JOIN_UNABLE_NICKNAME_ALREADY_IN, () -> {
+                    nickname = null;
+                    facts.add(null, FactType.APP_MENU);
+                    ui.addImportantEvent("WARNING> Nickname already used!");
+                },
+                FactType.JOIN_UNABLE_GAME_FULL, () -> {
+                    nickname = null;
+                    facts.add(null, FactType.APP_MENU);
+                    ui.addImportantEvent("WARNING> Game is Full!");
+                },
+                FactType.GENERIC_ERROR_WHEN_ENTERING_GAME, () -> {
+                    nickname = null;
+                    ui.show_returnToMenuMsg();
+                    try {
+                        this.generic_parser.getProcessedDataQueue().take();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    facts.add(null, FactType.APP_MENU);
+                }
+        );
+
+        actions.getOrDefault(fact.getType(), () -> {}).run();
+    }
+
+    private void statusWait(ModelFact fact) throws IOException, InterruptedException {
+        Map<FactType, Runnable> actions = Map.of(
+                FactType.PLAYER_JOINED, () -> {
+                    String nickLastPlayer = fact.getModel().getPlayersConnected().getLast().getNickname();
+                    if (nickLastPlayer.equals(nickname)) {
+                        ui.show_playerJoined(fact.getModel(), nickname);
+                        askReadyToStart();
+                    }
+                }
+        );
+
+        actions.getOrDefault(fact.getType(), () -> {}).run();
+    }
+
+    private void statusFirstRound(ModelFact fact) throws IOException, InterruptedException {
+        Map<FactType, Runnable> actions = Map.of(
+                FactType.GAME_STARTED, () -> {
+                    ui.show_gameStarted(fact.getModel());
+                    this.generic_parser.setPlayer(fact.getModel().getPlayerEntity(nickname));
+                    this.generic_parser.setGameId(fact.getModel().getGameId());
+                },
+                FactType.NEXT_TURN, () -> {
+                    ui.show_nextTurn(fact.getModel(), nickname);
+                    if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                        ui.show_objectiveCards(fact.getModel());
+                        askWhichObjectiveCard();
+                        ui.show_starterCards(fact.getModel());
+                        askStarterCardOrientationAndPlace();
+                    }
+                }
+        );
+
+        actions.getOrDefault(fact.getType(), () -> {}).run();
+    }
+
+    private void statusRunning(ModelFact fact) throws IOException, InterruptedException {
+        Map<FactType, Runnable> actions = Map.of(
+                FactType.NEXT_TURN, () -> {
+                    if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                        ui.show_personalObjectiveCard(fact.getModel());
+                        ui.show_playerHand(fact.getModel(), nickname);
+                        askWhichCard();
+                    }
+                },
+                FactType.ASK_WHICH_ORIENTATION, () -> handleOrientationOrIllegalMove(fact),
+                FactType.ILLEGAL_MOVE, () -> handleOrientationOrIllegalMove(fact),
+                FactType.CARD_PLACED, () -> {
+                    if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                        askWhereToDrawFrom();
+                    }
+                }
+        );
+
+        actions.getOrDefault(fact.getType(), () -> {}).run();
+    }
+
+    private void statusLastRound(ModelFact fact) throws IOException, InterruptedException {
+        Map<FactType, Runnable> actions = Map.of(
+                FactType.NEXT_TURN, () -> {
+                    if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                        ui.show_personalObjectiveCard(fact.getModel());
+                        ui.show_playerHand(fact.getModel(), nickname);
+                        askWhichCard();
+                    }
+                },
+                FactType.ASK_WHICH_ORIENTATION, () -> handleOrientationOrIllegalMove(fact),
+                FactType.ILLEGAL_MOVE, () -> handleOrientationOrIllegalMove(fact)
+        );
+
+        actions.getOrDefault(fact.getType(), () -> {}).run();
+    }
+
+    private void statusEnded(ModelFact fact) {
+        Map<FactType, Runnable> actions = Map.of(
+                FactType.GAME_ENDED, () -> {
+                    ui.show_returnToMenuMsg();
+                    this.generic_parser.getProcessedDataQueue().clear();
+                    try {
+                        this.generic_parser.getProcessedDataQueue().take();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    this.leave(nickname, fact.getModel().getGameId());
+                    this.youLeft();
+                }
+        );
+
+        actions.getOrDefault(fact.getType(), () -> {}).run();
+    }
+
+    private void handleOrientationOrIllegalMove(ModelFact fact) {
+        if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
+            ui.show_cardChosen(nickname, fact.getModel());
+            askGameCardOrientationAndPlace();
+        }
+    }
+
+
     public void youLeft() {
         ended = true;
         ui.resetImportantEvents();
-        events.add(null, APP_MENU);
+        facts.add(null, APP_MENU);
 
-        this.genericParser.setPlayer(null);
-        this.genericParser.setIdGame(null);
+        this.generic_parser.setPlayer(null);
+        this.generic_parser.setGameId(null);
     }
 
-    /**
-     * @return true if the game has ended, false otherwise
-     */
     public boolean isEnded() {
         return ended;
     }
 
-    /**
-     * Sets the ended attribute
-     *
-     * @param ended true if the game has ended, false otherwise
-     */
     public void setEnded(boolean ended) {
         this.ended = ended;
     }
 
-
     /*===============ASK METHODS===============*/
 
-    /**
-     * Asks the nickname to the player<br>
-     */
     private void askNickname() {
         ui.show_insertNicknameMsg();
-        try {
-            nickname = this.genericParser.getDataToProcess().popData();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        nickname = getProcessedData();
         ui.show_chosenNickname(nickname);
     }
 
-    /**
-     * Ask the player how many players he wants to play with
-
-     * @return number of tiles to pick up
-     */
     private Integer askNumOfPlayers() {
-        String temp;
         Integer num_of_players = null;
-        do {
+        while (num_of_players == null) {
             ui.show_insertNumOfPlayersMsg();
             try {
-                try {
-                    temp = this.genericParser.getDataToProcess().popData();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                if (temp.equals(".")) {
-                    return -1;
-                }
+                String temp = getProcessedData();
+                if (temp.equals(".")) return -1;
                 num_of_players = Integer.parseInt(temp);
             } catch (NumberFormatException e) {
                 ui.show_NaNMsg();
             }
-
-        } while (num_of_players == null);
+        }
         return num_of_players;
     }
 
-    /**
-     * Ask the player to select a game to join
-     *
-     * @return ture if the player has selected a game, false otherwise
-     */
     private boolean askSelectGame() {
-        String optionChoose;
-        ended = false;
         ui.show_menuOptions();
+        String optionChoose = getProcessedData();
+        if (optionChoose.equals(".")) System.exit(1);
 
-        try {
-            optionChoose = this.genericParser.getDataToProcess().popData();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        if (optionChoose.equals("."))
-            System.exit(1);
-        //askNickname();
+        return switch (optionChoose) {
+            case "c" -> handleCreateGame();
+            case "j" -> handleJoinGame();
+            case "js" -> handleJoinSpecificGame();
+            default -> false;
+        };
+    }
 
-        switch (optionChoose) {
-            case "c" -> {
-                Integer num_players = askNumOfPlayers();
-                if (num_players < 2 || num_players > 4)
-                    return false;
-                else{
-                    askNickname();
-                    createGame(nickname, num_players);
-                }
-            }
-            case "j" -> {
-                askNickname();
-                joinFirstAvailableGame(nickname);
-            }
-            case "js" -> {
-                Integer gameId = askGameId();
-                if (gameId == -1)
-                    return false;
-                else{
-                    this.game_id = gameId;
-                    askNickname();
-                    joinGame(nickname, gameId);
-                }
-
-            }
-            case "x" -> reconnect(nickname, fileDisconnection.getLastGameId(nickname));
-
-            default -> {
-                return false;
-            }
-        }
+    private boolean handleCreateGame() {
+        Integer num_players = askNumOfPlayers();
+        if (num_players < 2 || num_players > 4) return false;
+        askNickname();
+        createGame(nickname, num_players);
         return true;
     }
 
-    /**
-     * Ask the player the game id to join
-     *
-     * @return the game id
-     */
+    private boolean handleJoinGame() {
+        askNickname();
+        joinFirstAvailableGame(nickname);
+        return true;
+    }
+
+    private boolean handleJoinSpecificGame() {
+        Integer gameId = askGameId();
+        if (gameId == -1) return false;
+        this.game_id = gameId;
+        askNickname();
+        joinGame(nickname, gameId);
+        return true;
+    }
+
     private Integer askGameId() {
-        String temp;
-        // ui.show_gamesList();
-        do {
+        int gameId = -1;
+        while (gameId < 0) {
             ui.show_inputGameIdMsg();
             try {
-                try {
-                    temp = this.genericParser.getDataToProcess().popData();
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                if (temp.equals(".")) {
-                    return -1;
-                }
-                game_id = Integer.parseInt(temp);
+                String temp = getProcessedData();
+                if (temp.equals(".")) return -1;
+                gameId = Integer.parseInt(temp);
             } catch (NumberFormatException e) {
                 ui.show_NaNMsg();
             }
-
-        } while (game_id < 0);
-        return game_id;
+        }
+        return gameId;
     }
 
-    /**
-     * Ask the player if it's ready to start the game
-     */
     public void askReadyToStart() {
-        String ris;
-        do {
-            try {
-                ris = this.genericParser.getDataToProcess().popData();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        } while (!ris.equals("y"));
+        ui.show_genericMessage("Are you ready to start? (y)");
+        waitForValidInput("y");
         setAsReady();
     }
 
     public void askWhichObjectiveCard() {
-        String ris;
-        do {
-            ui.show_whichObjectiveToChooseMsg();
-            try {
-                ris = this.genericParser.getDataToProcess().popData();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        } while (!(ris.equals("1") || ris.equals("2")));
+        ui.show_whichObjectiveToChooseMsg();
+        String choice = waitForValidInput("1", "2");
         try {
-            chooseCard(Integer.parseInt(ris) - 1);
+            chooseCard(Integer.parseInt(choice) - 1);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void askWhichCard() {
-        String ris;
-        do {
-            ui.show_whichCardToPlaceMsg();
-            try {
-                ris = this.genericParser.getDataToProcess().popData();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        } while (!(ris.equals("1") || ris.equals("2") || ris.equals("3")));
+        ui.show_whichCardToPlaceMsg();
+        String choice = waitForValidInput("1", "2", "3");
         try {
-            chooseCard(Integer.parseInt(ris) - 1);
+            chooseCard(Integer.parseInt(choice) - 1);
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
     public void askStarterCardOrientationAndPlace() {
-        String ris;
-        String aux;
-        do {
-            ui.show_orientation("Choose the orientation of the starter card");
-            try {
-                ris = this.genericParser.getDataToProcess().popData();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        } while (!(ris.equals("f") || ris.equals("b")));
+        ui.show_orientation("Choose the orientation of the starter card");
+        String orientation = waitForValidInput("f", "b").equals("f") ? "FRONT" : "BACK";
         try {
-            if (ris.equals("f"))
-                aux = "FRONT";
-            else
-                aux = "BACK";
-            placeStarterCard(Orientation.valueOf(aux));
+            placeStarterCard(Orientation.valueOf(orientation));
         } catch (RemoteException | GameEndedException | NotBoundException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void askGameCardOrientationAndPlace() throws InterruptedException {
-        String ris;
-        String ris1;
-        String ris2;
-        String aux;
-        do {
-            ui.show_orientation("Choose the orientation of the card to place");
-            try {
-                ris = this.genericParser.getDataToProcess().popData();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        } while (!(ris.equals("f") || ris.equals("b")));
-        do {
-            ui.show_genericMessage("Choose the ** x ** coordinates where to place the card (insert a number between -250 and 250)");
-            ris1 = this.genericParser.getDataToProcess().popData();
-        } while (!isValidCoordinate(ris1));
-
-        do {
-            ui.show_genericMessage("Choose the ** y ** coordinates where to place the card (insert a number between -250 and 250)");
-            ris2 = this.genericParser.getDataToProcess().popData();
-        } while (!isValidCoordinate(ris2));
+    public void askGameCardOrientationAndPlace() {
+        ui.show_orientation("Choose the orientation of the card to place");
+        String orientation = waitForValidInput("f", "b").equals("f") ? "FRONT" : "BACK";
+        int x = getValidatedCoordinate("x");
+        int y = getValidatedCoordinate("y");
         try {
-            if (ris.equals("f"))
-                aux = "FRONT";
-            else
-                aux = "BACK";
-            //System.out.println("ris1: " + ris1 + " ris2: " + ris2 + " aux: " + aux);
-            placeCard(Integer.parseInt(ris1) + 250, Integer.parseInt(ris2) + 250, Orientation.valueOf(aux));
+            placeCard(x + 250, y + 250, Orientation.valueOf(orientation));
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private boolean isValidCoordinate(String input) {
+    public void askWhereToDrawFrom() {
+        ui.show_whereToDrawFrom();
+        int choice = Integer.parseInt(waitForValidInput("1", "2", "3", "4", "5", "6"));
+        try {
+            drawCard(choice);
+        } catch (RemoteException | GameEndedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String getProcessedData() {
+        try {
+            return this.generic_parser.getProcessedDataQueue().take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private String waitForValidInput(String... validInputs) {
+        String input;
+        do {
+            input = getProcessedData();
+        } while (!List.of(validInputs).contains(input));
+        return input;
+    }
+
+    private int getValidatedCoordinate(String coordinate) {
+        String input;
+        do {
+            ui.show_genericMessage("Choose the ** " + coordinate + " ** coordinates where to place the card (insert a number between -250 and 250)");
+            input = getProcessedData();
+        } while (!isCoordinateValid(input));
+        return Integer.parseInt(input.trim());
+    }
+
+    private boolean isCoordinateValid(String input) {
         try {
             int value = Integer.parseInt(input.trim());
             return value >= -250 && value <= 250;
@@ -638,29 +480,8 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         }
     }
 
-    public void askWhereToDrawFrom() {
-        String ris;
-        do {
-            ui.show_whereToDrawFrom();
-            try {
-                ris = this.genericParser.getDataToProcess().popData();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        } while (!(Integer.parseInt(ris) >= 1 && Integer.parseInt(ris) <= 6));
-        try {
-            drawCard(Integer.parseInt(ris));
-        } catch (RemoteException | GameEndedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
     /*============ Methods that the client can request to the server ============*/
 
-    /**
-     * Throw a nonConnection error
-     */
     public void noConnectionError() {
         ui.show_noConnectionError();
     }
@@ -669,7 +490,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     public void createGame(String nickname, int num_of_players) {
         ui.show_creatingNewGameMsg(nickname);
         try {
-            clientActions.createGame(nickname, num_of_players);
+            client_interface.createGame(nickname, num_of_players);
             System.out.println("Created game");
         } catch (IOException | InterruptedException | NotBoundException e) {
             printAsync("Error in here, createGame gameFlow!");
@@ -681,35 +502,27 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     public void joinFirstAvailableGame(String nick) {
         ui.show_joiningFirstAvailableMsg(nick);
         try {
-            clientActions.joinFirstAvailableGame(nick);
+            client_interface.joinFirstAvailableGame(nick);
         } catch (IOException | InterruptedException | NotBoundException e) {
             noConnectionError();
         }
     }
 
-    /**
-     * The client asks the server to join a specific game
-     *
-     * @param nick   nickname of the player
-     * @param game_id id of the game to join
-     */
+
     @Override
     public void joinGame(String nick, int game_id) {
         ui.show_joiningToGameIdMsg(game_id, nick);
         try {
-            clientActions.joinGame(nick, game_id);
+            client_interface.joinGame(nick, game_id);
         } catch (IOException | InterruptedException | NotBoundException e) {
             noConnectionError();
         }
     }
 
-    /**
-     * The client set himself as ready
-     */
     @Override
     public void setAsReady() {
         try {
-            clientActions.setAsReady();
+            client_interface.setAsReady();
         } catch (IOException e) {
             noConnectionError();
         } catch (NotBoundException e) {
@@ -717,13 +530,12 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         }
     }
 
-
     //-----------------------------RUNNING METHODS-----------------------------------------
 
     @Override
     public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
         try {
-            clientActions.placeStarterCard(orientation);
+            client_interface.placeStarterCard(orientation);
         } catch (GameEndedException | NotBoundException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -732,7 +544,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     @Override
     public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
         try {
-            clientActions.placeCard(where_to_place_x, where_to_place_y, orientation);
+            client_interface.placeCard(where_to_place_x, where_to_place_y, orientation);
         } catch (GameEndedException | NotBoundException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -742,7 +554,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     @Override
     public void chooseCard(int which_card) throws RemoteException {
         try {
-            clientActions.chooseCard(which_card);
+            client_interface.chooseCard(which_card);
         } catch (GameEndedException | NotBoundException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -751,21 +563,16 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     @Override
     public void drawCard(int index) throws RemoteException, GameEndedException {
         try {
-            clientActions.drawCard(index);
+            client_interface.drawCard(index);
         } catch (GameEndedException | NotBoundException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    /**
-     * The client asks the server to send a message
-     *
-     * @param msg message to send {@link Message}
-     */
     @Override
     public void sendMessage(String receiver, Message msg) {
         try {
-            clientActions.sendMessage(receiver, msg);
+            client_interface.sendMessage(receiver, msg);
         } catch (RemoteException e) {
             noConnectionError();
         } catch (NotBoundException e) {
@@ -775,50 +582,13 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         }
     }
 
-    /**
-     * The client asks the server to reconnect to a specific game
-     *
-     * @param nick   nickname of the player
-     * @param idGame id of the game to reconnect
-     */
-    @Override
-    public void reconnect(String nick, int idGame) {
-        if (idGame != -1) {
-            ui.show_joiningToGameIdMsg(idGame, nick);
-            try {
-                clientActions.reconnect(nickname, idGame);
-            } catch (IOException | InterruptedException | NotBoundException e) {
-                noConnectionError();
-            }
-        } else {
-            ui.show_noAvailableGamesToJoin("No disconnection previously detected");
-            try {
-                this.genericParser.getDataToProcess().popData();
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            events.add(null, APP_MENU);
-        }
-    }
-
-    /**
-     * The client asks the server to leave the game
-     *
-     * @param nick   nickname of the player
-     * @param idGame id of the game to leave
-     */
     @Override
     public void leave(String nick, int idGame) {
         try {
-            clientActions.leave(nick, idGame);
+            client_interface.leave(nick, idGame);
         } catch (IOException | NotBoundException e) {
             noConnectionError();
         }
-    }
-
-    @Override
-    public boolean isMyTurn() {
-        return false;
     }
 
     @Override
@@ -837,7 +607,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     @Override
     public void cardChosen(ModelView model, int which_card) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
-            events.add(model, ASK_WHICH_ORIENTATION);
+            facts.add(model, ASK_WHICH_ORIENTATION);
         }
     }
 
@@ -846,7 +616,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         if (model.getCurrentPlayerNickname().equals(nickname)) {
             ui.show_personalBoard(nickname, model);
             ui.show_commonBoard(model);
-            events.add(model, CARD_PLACED);
+            facts.add(model, CARD_PLACED);
         }
     }
 
@@ -856,112 +626,75 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
             ui.show_illegalMove();
             ui.show_genericMessage("Here we show you again your personal board:");
             ui.show_personalBoard(nickname, model);
-            events.add(model, ILLEGAL_MOVE);
+            facts.add(model, ILLEGAL_MOVE);
         }
     }
 
+//    @Override
+//    public void successfulMove(ModelView modelView) throws RemoteException {
+//
+//    }
+
     @Override
-    public void successfulMove(ModelView model) {
+    public void illegalMoveBecauseOf(ModelView model, String reason_why) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
-            ui.show_successfulMove();
+            ui.show_illegalMoveBecauseOf(reason_why);
+            ui.show_personalBoard(nickname, model);
+            facts.add(model, ILLEGAL_MOVE);
         }
     }
 
     @Override
     public void cardDrawn(ModelView model, int index) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
-            ui.show_playerHand(model, nickname);
+
         }
     }
 
-    /**
-     * It adds the NextTurn event to the event list
-     * @param gameModel game model {@link ModelView}
-     */
     @Override
     public void nextTurn(ModelView gameModel) {
         if (!gameModel.getCurrentPlayerNickname().equals(nickname) &&
                 (gameModel.getStatus() == GameStatus.RUNNING ||
-                gameModel.getStatus() == GameStatus.SECOND_LAST_ROUND))
+                        gameModel.getStatus() == GameStatus.SECOND_LAST_ROUND))
             ui.show_myTurnIsFinished();
-        events.add(gameModel, FactType.NEXT_TURN);
+        facts.add(gameModel, FactType.NEXT_TURN);
         //I remove all the input that the user sends when It is not his turn
-        this.genericParser.getDataToProcess().popAllData();
+        this.generic_parser.getProcessedDataQueue().clear();
     }
 
-    /**
-     * A player has joined the game
-     * @param gameModel game model {@link ModelView}
-     */
     @Override
     public void playerJoined(ModelView gameModel) {
         // shared.setLastModelReceived(gameModel);
         game_id = gameModel.getGameId();
-        events.add(gameModel, FactType.PLAYER_JOINED);
-        //Print also here because: If a player is in askReadyToStart is blocked and cannot showPlayerJoined by watching the events
+        facts.add(gameModel, FactType.PLAYER_JOINED);
+        //Print also here because: If a player is in askReadyToStart is blocked and cannot showPlayerJoined by watching the gameFacts
         ui.show_playerJoined(gameModel, nickname);
     }
 
-    /**
-     * A player is ready to start
-     * @param gameModel game model {@link ModelView}
-     * @param nick nickname of the player
-     * @throws IOException if the reference could not be accessed
-     */
     @Override
     public void playerIsReadyToStart(ModelView gameModel, String nick) throws IOException {
         ui.show_playerJoined(gameModel, nickname);
         if (nick.equals(nickname)) {
             ui.show_ReadyToStart(gameModel, nickname);
         }
-        events.add(gameModel, PLAYER_IS_READY_TO_START);
+        facts.add(gameModel, PLAYER_IS_READY_TO_START);
     }
 
-    /**
-     * A player has left the game
-     * @param gameModel game model {@link ModelView}
-     * @param nick nickname of the player
-     * @throws RemoteException if the reference could not be accessed
-     */
     @Override
     public void playerLeft(ModelView gameModel, String nick) throws RemoteException {
-        if (gameModel.getStatus().equals(GameStatus.WAIT)) {
-            ui.show_playerJoined(gameModel, nickname);
-        } else {
-            ui.addImportantEvent("[EVENT]: Player " + nick + " decided to leave the game!");
-        }
-
+        ui.addImportantEvent("[EVENT]: Player " + nick + " decided to leave the game!");
     }
 
-    /**
-     * A player wanted to join a game but the game is full
-     * @param wantedToJoin player that wanted to join
-     * @param gameModel game model {@link ModelView}
-     * @throws RemoteException if the reference could not be accessed
-     */
     @Override
     public void joinUnableGameFull(Player wantedToJoin, ModelView gameModel) throws RemoteException {
-        events.add(null, JOIN_UNABLE_GAME_FULL);
+        facts.add(null, JOIN_UNABLE_GAME_FULL);
     }
 
-    /**
-     * A player reconnected to the game
-     * @param gameModel game model {@link ModelView}
-     * @param nickPlayerReconnected nickname of the player
-     */
-    @Override
-    public void playerReconnected(ModelView gameModel, String nickPlayerReconnected) {
-        lastPlayerReconnected = nickPlayerReconnected;
-        events.add(gameModel, PLAYER_RECONNECTED);
-        ui.addImportantEvent("[EVENT]: Player reconnected!");
-        //events.add(gameModel, EventType.PLAYER_JOINED);
-    }
+//    @Override
+//    public void playerReconnected(ModelView gamemodel, String nickPlayerReconnected) throws RemoteException {
+//
+//    }
 
-    /**
-     * A player has sent a message
-     * @param gameModel game model {@link ModelView}
-     * @param msg message sent {@link Message}
-     */
     @Override
     public void messageSent(ModelView gameModel, String nick, Message msg) {
         if (!msg.getSender().getNickname().equals(nickname)) {
@@ -975,114 +708,59 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         }
     }
 
-
-    /**
-     * A player wanted to join a game but the nickname is already in
-     * @param wantedToJoin player that wanted to join {@link Player}
-     * @throws RemoteException if the reference could not be accessed
-     */
     @Override
     public void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
         //System.out.println("[EVENT]: "+ wantedToJoin.getNickname() + " has already in");
-        events.add(null, JOIN_UNABLE_NICKNAME_ALREADY_IN);
+        facts.add(null, JOIN_UNABLE_NICKNAME_ALREADY_IN);
     }
 
-    /**
-     * A player wanted to join a game but the gameID is not valid
-     * @param gameid game id
-     * @throws RemoteException if the reference could not be accessed
-     */
     @Override
     public void gameIdNotExists(int gameid) throws RemoteException {
         ui.show_noAvailableGamesToJoin("No currently game available with the following GameID: " + gameid);
-        events.add(null, GENERIC_ERROR_WHEN_ENTERING_GAME);
+        facts.add(null, GENERIC_ERROR_WHEN_ENTERING_GAME);
     }
 
-    /**
-     * Generic error when entering a game
-     * @param why why the error occurred
-     * @throws RemoteException if the reference could not be accessed
-     */
     @Override
     public void genericErrorWhenEnteringGame(String why) throws RemoteException {
         ui.show_noAvailableGamesToJoin(why);
-        events.add(null, GENERIC_ERROR_WHEN_ENTERING_GAME);
+        facts.add(null, GENERIC_ERROR_WHEN_ENTERING_GAME);
     }
 
-    /**
-     * The game started
-     * @param gameModel game model {@link ModelView}
-     */
     @Override
     public void gameStarted(ModelView gameModel) {
         ui.addImportantEvent("All players are connected, the game will start soon!");
-        events.add(gameModel, FactType.GAME_STARTED);
+        facts.add(gameModel, FactType.GAME_STARTED);
     }
 
-    /**
-     * The game ended
-     * @param gameModel game model {@link ModelView}
-     */
     @Override
     public void gameEnded(ModelView gameModel) {
         ended = true;
-        events.add(gameModel, FactType.GAME_ENDED);
+        facts.add(gameModel, FactType.GAME_ENDED);
         ui.show_gameEnded(gameModel);
-        resetGameId(fileDisconnection, gameModel);
-
     }
 
-    /**
-     * A player has been disconnected
-     * @param gameModel game model {@link ModelView}
-     * @param nick nickname of the player
-     */
     @Override
     public void playerDisconnected(ModelView gameModel, String nick) {
         ui.addImportantEvent("Player " + nick + " has just disconnected");
 
-        //Print also here because: If a player is in askReadyToStart is blocked and cannot showPlayerJoined by watching the events
         if (gameModel.getStatus().equals(GameStatus.WAIT)) {
             ui.show_playerJoined(gameModel, nickname);
         }
     }
 
-    /**
-     * Only one player is connected
-     * @param gameModel game model {@link ModelView}
-     * @param secondsToWaitUntilGameEnded seconds to wait until the game ends
-     * @throws RemoteException if the reference could not be accessed
-     */
-    @Override
-    public void onlyOnePlayerConnected(ModelView gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
-        ui.addImportantEvent("Only one player is connected, waiting " + secondsToWaitUntilGameEnded + " seconds before calling Game Ended!");
-    }
+//    @Override
+//    public void onlyOnePlayerConnected(ModelView gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
+//
+//    }
 
     @Override
     public void secondLastRound(ModelView gameModel) {
         ui.show_genericMessage("*** Second last round begins! ***");
     }
 
-    /**
-     * Last circle begins
-     * @param gameModel game model {@link ModelView}
-     * @throws RemoteException if the reference could not be accessed
-     */
     @Override
     public void lastRound(ModelView gameModel) throws RemoteException {
         ui.show_genericMessage("*** Last round begins! Now you will not be able to draw any additional card! ***");
-    }
-
-    /*==Testing purpose==*/
-    
-    @Deprecated
-    public BufferData getBuffer_ForTesting() {
-        return this.abstractReader.getBuffer();
-    }
-
-    @Deprecated
-    public boolean isEnded_ForTesting() {
-        return this.ended;
     }
 
 }

@@ -4,112 +4,149 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.flow.GameDynamics;
 
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * InputParser class
  * This class parses the input from the queue
  */
 public class GenericParser extends Thread {
-    /**
-     * The buffer from which I pop the data
-     */
-    private final BufferData bufferInput;
-    /**
-     * The data to process
-     */
-    private final BufferData dataToProcess;
-    /**
-     * The game flow
-     */
+
+
+    private final LinkedBlockingQueue<String> inputQueue;
+    private final LinkedBlockingQueue<String> processedDataQueue;
     private final GameDynamics gameDynamics;
-    /**
-     * The player
-     */
-    private PlayerIC p;
-    /**
-     * The game id
-     */
-    private Integer gameId;
+    private PlayerIC currentPlayer = null;
+    private Integer currentGameId = null;
+
+    // Updated regex patterns to ensure proper matching
+    private static final Pattern PRIVATE_MESSAGE_PATTERN = Pattern.compile("^/cs\\s+(\\S+)\\s+(.+)$");
+    private static final Pattern PUBLIC_MESSAGE_PATTERN = Pattern.compile("^/c\\s+(.+)$");
 
     /**
-     * Init class
+     * Constructs a GenericParser instance.
      *
-     * @param bufferInput
-     * @param gameDynamics
+     * @param inputQueue the queue containing input commands
+     * @param gameDynamics   the game flow instance to interact with
      */
-    public GenericParser(BufferData bufferInput, GameDynamics gameDynamics) {
-        this.bufferInput = bufferInput;
-        dataToProcess = new BufferData();
+    public GenericParser(LinkedBlockingQueue<String> inputQueue, GameDynamics gameDynamics) {
+        this.inputQueue = inputQueue;
+        this.processedDataQueue = new LinkedBlockingQueue<>();
         this.gameDynamics = gameDynamics;
-        this.p = null;
-        this.gameId = null;
         this.start();
     }
 
     /**
-     * Parses the data contained in the buffer
+     * The main run method that continuously processes input from the queue.
      */
+    @Override
     public void run() {
-
-        String txt;
         while (!this.isInterrupted()) {
-            // I pop the data from the buffer, if there is no data I wait
             try {
-                txt = bufferInput.popData();
+                String inputCommand = inputQueue.take();
+                processInput(inputCommand);
             } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            // I popped an input from the buffer
-            if (p != null && txt.startsWith("/cs")) {
-                txt = txt.charAt(3) == ' ' ? txt.substring(4) : txt.substring(3);
-                if (txt.contains(" ")){
-                    String receiver = txt.substring(0, txt.indexOf(" "));
-                    String msg = txt.substring(receiver.length() + 1);
-                    gameDynamics.sendMessage(receiver, new Message(msg, p));
-                }
-            } else if (p != null && txt.startsWith("/c")) {
-                // I send a message
-                txt = txt.charAt(2) == ' ' ? txt.substring(3) : txt.substring(2);
-                gameDynamics.sendMessage("all", new Message(txt, p));
-
-            } else if (txt.startsWith("/quit") || (txt.startsWith("/leave"))) {
-                assert p != null;
-                System.exit(1);
-                // gameFlow.leave(p.getNickname(), gameId);
-                // gameFlow.youLeft();
-
-            } else {
-                //I didn't pop a message
-
-                //I add the data to the buffer processed via GameFlow
-                dataToProcess.addData(txt);
+                Thread.currentThread().interrupt(); // Restore interrupted status
+                return; // Exit the loop and end the thread
             }
         }
     }
 
     /**
-     * Sets the game id to the param passed
+     * Processes the input command by finding and executing the appropriate handler.
      *
-     * @param gameId game id to set
+     * @param s the input command to process
      */
-    public void setIdGame(Integer gameId) {
-        this.gameId = gameId;
+    private void processInput(String s) {
+        if (s.startsWith("/cs")) {
+            handlePrivateMessage(s);
+        } else if (s.startsWith("/c")) {
+            handlePublicMessage(s);
+        } else if (s.startsWith("/quit") || s.startsWith("/leave")) {
+            handleQuit();
+        } else {
+            processedDataQueue.add(s);
+        }
     }
 
     /**
-     * Sets the player
+     * Handles the private message command.
      *
-     * @param p player to set
+     * @param command the command string
      */
-    public void setPlayer(PlayerIC p) {
-        this.p = p;
+    private void handlePrivateMessage(String command) {
+        if (currentPlayer == null) {
+            return;
+        }
+        Matcher matcher = PRIVATE_MESSAGE_PATTERN.matcher(command);
+        if (matcher.matches()) {
+            String receiver = matcher.group(1);
+            String messageContent = matcher.group(2);
+            gameDynamics.sendMessage(receiver, new Message(messageContent, currentPlayer));
+        } else {
+            System.err.println("Private message command format is incorrect: " + command);
+        }
     }
 
     /**
-     * @return data to process
+     * Handles the public message command.
+     *
+     * @param command the command string
      */
-    public BufferData getDataToProcess() {
-        return dataToProcess;
+    private void handlePublicMessage(String command) {
+        if (currentPlayer == null) {
+            return;
+        }
+        Matcher matcher = PUBLIC_MESSAGE_PATTERN.matcher(command);
+        if (matcher.matches()) {
+            String messageContent = matcher.group(1);
+            gameDynamics.sendMessage("all", new Message(messageContent, currentPlayer));
+        } else {
+            System.err.println("Public message command format is incorrect: " + command);
+        }
     }
 
+    /**
+     * Handles the quit command by making the player leave the game and exiting the system.
+     */
+    private void handleQuit() {
+        if (currentPlayer != null) {
+            gameDynamics.leave(currentPlayer.getNickname(), currentGameId);
+            gameDynamics.youLeft();
+        }
+        System.exit(1);
+    }
 
+    /**
+     * Sets the current game ID.
+     *
+     * @param gameId the game ID to set
+     */
+    public void setGameId(Integer gameId) {
+        this.currentGameId = gameId;
+    }
+
+    /**
+     * Sets the current player.
+     *
+     * @param player the player to set
+     */
+    public void setPlayer(PlayerIC player) {
+        this.currentPlayer = player;
+    }
+
+    /**
+     * Gets the queue of processed data.
+     *
+     * @return the queue of processed data
+     */
+    public LinkedBlockingQueue<String> getProcessedDataQueue() {
+        return processedDataQueue;
+    }
 }
+
+
+
+

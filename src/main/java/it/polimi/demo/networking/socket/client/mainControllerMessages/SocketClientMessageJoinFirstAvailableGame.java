@@ -1,8 +1,8 @@
 package it.polimi.demo.networking.socket.client.mainControllerMessages;
 
-import it.polimi.demo.listener.Listener;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.observer.Listener;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
 import java.io.Serializable;

@@ -12,7 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
@@ -45,7 +45,7 @@ public class ClientHandler extends Thread implements Serializable{
     /**
      * The GameListener of the ClientSocket for notifications
      */
-    private ListenersHandlerSocket gameListenersHandlerSocket;
+    private GameListenersHandlerSocket gameListenersHandlerSocket;
 
     /**
      * Nickname of the SocketClient
@@ -64,7 +64,7 @@ public class ClientHandler extends Thread implements Serializable{
         this.clientSocket = soc;
         this.in = new ObjectInputStream(soc.getInputStream());
         this.out = new ObjectOutputStream(soc.getOutputStream());
-        gameListenersHandlerSocket = new ListenersHandlerSocket(out);
+        gameListenersHandlerSocket = new GameListenersHandlerSocket(out);
     }
 
     /**

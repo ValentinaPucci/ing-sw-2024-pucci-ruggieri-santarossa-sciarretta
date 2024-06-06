@@ -2,7 +2,6 @@ package it.polimi.demo.view.flow;
 
 import it.polimi.demo.model.ModelView;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -11,7 +10,7 @@ import java.util.List;
  */
 public abstract class UI {
 
-    protected List<String> importantEvents; //events that needs to be showed always in screen
+    protected List<String> importantEvents; //gameFacts that needs to be showed always in screen
 
     /**
      * Initialises GUI or TUI
@@ -21,14 +20,6 @@ public abstract class UI {
     //----------------------
     //SHOW
     //----------------------
-
-    /**
-     * Show's Cranio Creation's logo
-     *
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    protected abstract void show_publisher() throws IOException, InterruptedException;
 
     /**
      * Shows menu options
@@ -99,7 +90,7 @@ public abstract class UI {
     /**
      * Shows the players that have joined
      *
-     * @param gameModel model where events happen
+     * @param gameModel model where gameFacts happen
      * @param nick      player's nickname
      */
     protected abstract void show_playerJoined(ModelView gameModel, String nick);
@@ -118,6 +109,7 @@ public abstract class UI {
      * Message that shows the player's hand
      *
      * @param gameModel the model that has the player hand that needs to be shown
+     * @param nickname
      */
     protected abstract void show_playerHand(ModelView gameModel, String nickname);
 
@@ -132,7 +124,8 @@ public abstract class UI {
     protected abstract void show_cardChosen(String nickname, ModelView model);
 
     protected abstract void show_illegalMove();
-    protected abstract void show_successfulMove();
+
+    protected abstract void show_illegalMoveBecauseOf(String message);
 
     protected abstract void show_whereToDrawFrom();
 
@@ -189,7 +182,7 @@ public abstract class UI {
     public abstract void addImportantEvent(String input);
 
     /**
-     * Resets the important events
+     * Resets the important gameFacts
      */
     protected abstract void resetImportantEvents();
 
@@ -202,7 +195,4 @@ public abstract class UI {
     protected abstract void show_chosenNickname(String nickname);
 
     protected abstract void show_nextTurn(ModelView model, String nickname);
-
-
-    protected abstract void show_updateCommonCards();
 }

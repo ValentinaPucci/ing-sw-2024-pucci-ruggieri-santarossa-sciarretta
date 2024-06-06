@@ -1,8 +1,8 @@
 package it.polimi.demo.model;
 
-import it.polimi.demo.listener.ObserverManager;
+import it.polimi.demo.observer.ObserverManager;
 import it.polimi.demo.DefaultValues;
-import it.polimi.demo.listener.Listener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
@@ -171,19 +171,18 @@ public class Model implements Serializable {
         String nickname = p.getNickname();
 
         if (nicknames.contains(nickname)) {
-            listeners_handler.notify_JoinUnableNicknameAlreadyIn(getPlayerEntity(nickname));
+            listeners_handler.notify_joinUnableNicknameAlreadyIn(getPlayerEntity(nickname));
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() >= num_required_players_to_start ||
                 aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
-            listeners_handler.notify_JoinUnableGameFull(getPlayerEntity(nickname), this);
+            listeners_handler.notify_joinUnableGameFull(getPlayerEntity(nickname), this);
             throw new MaxPlayersLimitException();
         }
         else {
             aux_order_players.add(p);
             players_connected.offer(p);
             listeners_handler.notify_playerJoined(this);
-            printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
         }
     }
 
@@ -262,24 +261,6 @@ public class Model implements Serializable {
         else {
             throw new IllegalArgumentException("Player not in the game!");
         }
-    }
-
-    /**
-     *
-     * @param p player is reconnected
-     * @throws PlayerAlreadyConnectedException player is already in
-     * @throws MaxPlayersLimitException there's already 4 players in game
-     * @throws GameEndedException the game has ended
-     */
-    public void reconnectPlayer(Player p) {
-
-        if (players_connected.contains(p)) {
-            System.out.println("ERROR: Trying to reconnect a player not offline!");
-            throw new PlayerAlreadyConnectedException();
-        }
-        p.setAsConnected();
-        listeners_handler.notify_playerReconnected(this, p.getNickname());
-        connectPlayerInOrder(p);
     }
 
     /**
@@ -484,7 +465,7 @@ public class Model implements Serializable {
                 }
                 else {
                     // remove the card from the player's hand
-                    listeners_handler.notify_successMove(this);
+                    //TODO: reimplement vale x gui listeners_handler.notify_successMove(this);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
@@ -506,7 +487,7 @@ public class Model implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    listeners_handler.notify_successMove(this);
+                    //TODO: reimplement vale x gui  listeners_handler.notify_successMove(this);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
@@ -543,7 +524,7 @@ public class Model implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    listeners_handler.notify_successMove(this);
+                    //TODO: reimplement vale x gui listeners_handler.notify_successMove(this);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
@@ -567,7 +548,7 @@ public class Model implements Serializable {
                 }
                 else {
                     // remove the card from the player's hand
-                    listeners_handler.notify_successMove(this);
+                    //TODO: reimplement vale x gui listeners_handler.notify_successMove(this);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
@@ -781,11 +762,9 @@ public class Model implements Serializable {
      * @param obj adds the listener to the list
      */
     public void addListener(Listener obj) {
-        printAsync("listeners_handler used for the first time at time " + System.currentTimeMillis());
-        printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
         listeners_handler.addListener(obj);
-        printAsync("\n listener_handler is correctly initialized and of size " + listeners_handler.getListeners().size() + "\n");
     }
+
 
     /**
      * @param lis removes listener from list

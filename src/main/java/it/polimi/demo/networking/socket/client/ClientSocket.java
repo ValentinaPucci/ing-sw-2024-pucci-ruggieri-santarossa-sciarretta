@@ -6,7 +6,7 @@ import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.ObserverManagerClient;
 import it.polimi.demo.networking.PingSender;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.socket.client.gameControllerMessages.*;
 import it.polimi.demo.networking.socket.client.mainControllerMessages.*;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage;
@@ -192,16 +192,6 @@ public class ClientSocket extends Thread implements ClientInterface {
     }
 
     @Override
-    public void reconnect(String nick, int idGame) throws IOException, InterruptedException, NotBoundException {
-        nickname = nick;
-        ob_out.writeObject(new SocketClientMessageReconnect(nick, idGame));
-        finishSending();
-        if(!socketHeartbeat.isAlive()) {
-            socketHeartbeat.start();
-        }
-    }
-
-    @Override
     public void leave(String nick, int idGame) throws IOException, NotBoundException {
         ob_out.writeObject(new SocketClientMessageLeave(nick, idGame));
         finishSending();
@@ -215,11 +205,6 @@ public class ClientSocket extends Thread implements ClientInterface {
     public void setAsReady() throws IOException, NotBoundException {
         ob_out.writeObject(new SocketClientMessageSetReady(nickname));
         finishSending();
-    }
-
-    @Override
-    public boolean isMyTurn() throws RemoteException {
-        return false;
     }
 
     @Override

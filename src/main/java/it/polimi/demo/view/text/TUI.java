@@ -74,55 +74,6 @@ public class TUI extends UI {
     }
 
     /**
-     * Shows the publisher's name
-     */
-    @Override
-    public void show_publisher() {
-        // this.resize();
-        clearScreen();
-        new PrintStream(System.out, true, System.console() != null
-                ? System.console().charset()
-                : Charset.defaultCharset()
-        ).println(ansi().cursor(1, 1).fg(YELLOW).a("""
-                                                                                                           \s
-                                                                                                           \s
-                  ,----..                                                                                  \s
-                 /   /   \\                                   ,--,                                          \s
-                |   :     :  __  ,-.                 ,---, ,--.'|    ,---.                                 \s
-                .   |  ;. /,' ,'/ /|             ,-+-. /  ||  |,    '   ,'\\                                \s
-                .   ; /--` '  | |' | ,--.--.    ,--.'|'   |`--'_   /   /   |                               \s
-                ;   | ;    |  |   ,'/       \\  |   |  ,"' |,' ,'| .   ; ,. :                               \s
-                |   : |    '  :  / .--.  .-. | |   | /  | |'  | | '   | |: :                               \s
-                .   | '___ |  | '   \\__\\/: . . |   | |  | ||  | : '   | .; :                               \s
-                '   ; : .'|;  : |   ," .--.; | |   | |  |/ '  : |_|   :    |                               \s
-                '   | '/  :|  , ;  /  /  ,.  | |   | |--'  |  | '.'\\   \\  /                                \s
-                |   :    /  ---'  ;  :   .'   \\|   |/      ;  :    ;`----'                                 \s
-                 \\   \\ .'         |  ,     .-./'---'       |  ,   /                                        \s
-                  `---`            `--`---'                 ---`-'                                         \s
-                  ,----..                                   ___                                            \s
-                 /   /   \\                                ,--.'|_    ,--,                                  \s
-                |   :     :  __  ,-.                      |  | :,' ,--.'|    ,---.        ,---,            \s
-                .   |  ;. /,' ,'/ /|                      :  : ' : |  |,    '   ,'\\   ,-+-. /  | .--.--.   \s
-                .   ; /--` '  | |' | ,---.     ,--.--.  .;__,'  /  `--'_   /   /   | ,--.'|'   |/  /    '  \s
-                ;   | ;    |  |   ,'/     \\   /       \\ |  |   |   ,' ,'| .   ; ,. :|   |  ,"' |  :  /`./  \s
-                |   : |    '  :  / /    /  | .--.  .-. |:__,'| :   '  | | '   | |: :|   | /  | |  :  ;_    \s
-                .   | '___ |  | ' .    ' / |  \\__\\/: . .  '  : |__ |  | : '   | .; :|   | |  | |\\  \\    `. \s
-                '   ; : .'|;  : | '   ;   /|  ," .--.; |  |  | '.'|'  : |_|   :    ||   | |  |/  `----.   \\\s
-                '   | '/  :|  , ; '   |  / | /  /  ,.  |  ;  :    ;|  | '.'\\   \\  / |   | |--'  /  /`--'  /\s
-                |   :    /  ---'  |   :    |;  :   .'   \\ |  ,   / ;  :    ;`----'  |   |/     '--'.     / \s
-                 \\   \\ .'          \\   \\  / |  ,     .-./  ---`-'  |  ,   /         '---'        `--'---'  \s
-                  `---`             `----'   `--`---'               ---`-'                                 \s
-                """).reset());
-
-        try {
-            Thread.sleep(DefaultValues.time_publisher_showing_seconds * 1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        this.show_titleCodexNaturalis();
-    }
-
-    /**
      * Shows the game title
      */
     public void show_titleCodexNaturalis() {
@@ -152,6 +103,7 @@ public class TUI extends UI {
      *
      * @param model where the game is ended
      */
+    // todo: check for correctness
     @Override
     public void show_gameEnded(ModelView model) {
         clearScreen();
@@ -205,7 +157,7 @@ public class TUI extends UI {
      */
     @Override
     public void show_playerHand(ModelView gameModel, String nickname) {
-        List<ResourceCard> player_hand = gameModel.getPlayerEntity(this.nickname).getHand();
+        List<ResourceCard> player_hand = gameModel.getPlayerEntity(nickname).getHand();
         for (ResourceCard c : player_hand) {
             if (c instanceof GoldCard) {
                 System.out.println("** GOLD CARD **" + " " + "(" + (player_hand.indexOf(c) + 1) + ")" + "\n");
@@ -259,8 +211,10 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void show_successfulMove() {
-        printAsync("Successful move! \n");
+    public void show_illegalMoveBecauseOf(String message) {
+        clearScreen();
+        printAsync("Illegal move! " + message + "\n");
+        clearScreen();
     }
 
     @Override
@@ -324,7 +278,7 @@ public class TUI extends UI {
     }
 
     /**
-     * @param gameModel model where events happen
+     * @param gameModel model where gameFacts happen
      * @param nick      player's nickname
      */
     @Override
@@ -358,7 +312,7 @@ public class TUI extends UI {
     }
 
     /**
-     * Shows the important events
+     * Shows the important gameFacts
      */
     public void show_important_events() {
 
@@ -422,7 +376,7 @@ public class TUI extends UI {
     }
 
     /**
-     * Clears important events' list
+     * Clears important gameFacts' list
      */
     @Override
     public void resetImportantEvents() {
@@ -456,11 +410,6 @@ public class TUI extends UI {
 
     }
 
-    @Override
-    protected void show_updateCommonCards() {
-
-    }
-
     /**
      * Asks the player to pick a direction
      */
@@ -491,9 +440,7 @@ public class TUI extends UI {
     public void show_gameStarted(ModelView model) {
         this.clearScreen();
         this.show_titleCodexNaturalis();
-//        this.show_allPlayers(model);
         this.show_alwaysShowForAll(model);
-//        this.show_gameId(model);
     }
 
     /**
@@ -541,13 +488,12 @@ public class TUI extends UI {
     public void show_menuOptions() {
         this.clearScreen();
         this.show_titleCodexNaturalis();
-        printAsyncNoCursorReset(ansi().cursor(9, 0).a("""
+        printAsync(ansi().cursor(9, 0).a("""
                 > Select one option:
-                \t(c) Create a new Game
-                \t(j) Join to a random Game
-                \t(js) Join a specific Game by idGame
-                \t(x) Reconnect
-                \t(.) to leave
+                \tpress (c) to create a new game
+                \tpress (j) to join to a randomly an existent game
+                \tpress (js) to join to a specific game
+                \tpress (.) to leave
                 \t
                 \t -> Useful commands that can be used at any point in the game:
                 \t\t  type "/c [msg]" to send a public message!
@@ -579,7 +525,8 @@ public class TUI extends UI {
     @Override
     public void show_whichCardToPlaceMsg() {
         clearScreen();
-        printAsync(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a("\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
+        printAsync(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(
+                "\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
     }
 
     @Override
@@ -626,28 +573,6 @@ public class TUI extends UI {
         printAsync("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
         this.nickname = nickname;
     }
-
-    /**
-     * Messages that always need to be on screen
-     *
-     * @param model
-     * @param nick
-     */
-    public void show_alwaysShow(ModelView model, String nick) {
-        show_alwaysShowForAll(model);
-        //show_personalObjectiveCard(model.getPlayerEntity(nick));
-        if (!model.getPlayerEntity(nick).getHand().isEmpty())
-            show_playerHand(model, nick);
-        else {
-            if (!model.getPlayersConnected().peek().getHand().isEmpty())
-                show_cardChosen(model.getPlayersConnected().peek().getNickname(), model);
-        }
-        show_personalBoard(nick, model);
-        show_nextTurn(model);
-        show_welcome(nick);
-        printAsync(ansi().cursor(DefaultValues.row_input, 0));
-    }
-
 
     @Override
     public void show_ReadyToStart(ModelView gameModel, String nicknameofyou) {

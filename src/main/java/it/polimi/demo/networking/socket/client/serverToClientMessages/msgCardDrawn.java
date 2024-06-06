@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
 
-import it.polimi.demo.listener.Listener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.ModelView;
 
 import java.rmi.RemoteException;

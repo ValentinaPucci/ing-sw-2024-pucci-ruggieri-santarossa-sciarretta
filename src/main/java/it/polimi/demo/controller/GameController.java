@@ -1,14 +1,14 @@
 package it.polimi.demo.controller;
 
 import it.polimi.demo.DefaultValues;
-import it.polimi.demo.listener.Listener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.*;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -96,9 +96,9 @@ public class GameController implements GameControllerInterface, Serializable, Ru
                     while (heartIter.hasNext()) {
                         Map.Entry<Listener, Heartbeat> el = (Map.Entry<Listener, Heartbeat>) heartIter.next();
                         System.out.println("System time: " + System.currentTimeMillis() + " Ping value: " +  el.getValue().getPing());
-                        System.out.println("Default time: "+ DefaultValues.timeout_for_detecting_disconnection);
+                        System.out.println("Default time: "+ DefaultValues.secondsToWaitReconnection);
                         System.out.println("Differenza== " + (System.currentTimeMillis() - el.getValue().getPing()));
-                        if (System.currentTimeMillis() - el.getValue().getPing() > DefaultValues.timeout_for_detecting_disconnection) {
+                        if (System.currentTimeMillis() - el.getValue().getPing() > DefaultValues.secondsToWaitReconnection) {
                             try {
                                 this.disconnectPlayer(el.getValue().getNick(),el.getKey());
                                 printAsync("Disconnection detected by heartbeat of player: "+el.getValue().getNick()+"");
@@ -243,15 +243,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         //else It means that a player reconnected but the timer was not started (ex 3 players and 1 disconnects)
     }
 
-    /**
-     * Reconnect the player with the nickname @param to the game
-     *
-     * @throws PlayerAlreadyConnectedException if a player tries to rejoin the same game
-     * @throws MaxPlayersLimitException    if there are already 4 players in game
-     */
-    public void reconnectPlayer(Player p) throws RemoteException {
-        this.model.reconnectPlayer(p);
-    }
 
     /**
      * It removes a player by nickname @param nick from the game including the associated listeners
@@ -340,12 +331,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         return model.getNumPlayersToPlay();
     }
 
-    // Section: Overrides
-
-    @Override
-    public synchronized void setPlayerAsConnected(Player p) {
-        // model.setPlayerAsConnected(p);
-    }
 
     /**
      * Gets the player entity
@@ -400,11 +385,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     @Override
     public synchronized void playerIsReadyToStart(String nickname) {
         model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
-    }
-
-    @Override
-    public boolean isThisMyTurn(String nickname) {
-        return model.getPlayersConnected().peek().getNickname().equals(nickname);
     }
 
     /**

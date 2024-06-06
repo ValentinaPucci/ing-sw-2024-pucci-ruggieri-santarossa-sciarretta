@@ -40,14 +40,6 @@ public class GUI extends UI {
         Platform.runLater(r);
     }
 
-    /**
-     * The show method is used to show the GUI, and set the active scene to the publisher.
-     */
-    @Override
-    protected void show_publisher() {
-        alreadyShowedPublisher = true;
-    }
-
     @Override
     protected void show_menuOptions() {
         if (alreadyShowedPublisher) {
@@ -113,10 +105,11 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.changeTurn(model, nickname));
     }
 
-    @Override
-    protected void show_updateCommonCards() {
-
-    }
+    //TODO x vale: reimplement
+//    @Override
+//    protected void show_updateCommonCards() {
+//
+//    }
 
 
     /**
@@ -211,9 +204,15 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_successfulMove() {
-        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove());
+    protected void show_illegalMoveBecauseOf(String message) {
+
     }
+
+    //TODO: reimplement vale
+//    @Override
+//    protected void show_successfulMove() {
+//        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove());
+//    }
 
     @Override
     protected void show_whereToDrawFrom() {

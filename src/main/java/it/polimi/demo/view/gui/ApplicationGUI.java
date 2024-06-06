@@ -43,12 +43,10 @@ public class ApplicationGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        gameDynamics = new GameDynamics(this, ConnectionSelection.valueOf(getParameters().getUnnamed().get(0)));
+        gameDynamics = new GameDynamics(this, ConnectionSelection.valueOf(getParameters().getUnnamed().getFirst()));
         loadScenes();
-
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Codex Naturalis");
-
         root = new StackPane();
     }
 
