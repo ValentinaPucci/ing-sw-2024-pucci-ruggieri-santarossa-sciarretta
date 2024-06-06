@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
+import it.polimi.demo.observer.Listener;
 
 import java.io.IOException;
 
@@ -11,24 +11,24 @@ import java.io.IOException;
  * indicating that a player has joined the game.
  */
 public class msgPlayerJoined extends SocketServerGenericMessage {
-    private GameModelImmutable gamemodel;
+    private ModelView gamemodel;
 
     /**
      * Constructor of the class.
      * @param gamemodel the immutable game model
      */
-    public msgPlayerJoined(GameModelImmutable gamemodel) {
+    public msgPlayerJoined(ModelView gamemodel) {
         this.gamemodel = gamemodel;
     }
 
     /**
      * Method to execute the corresponding action for the message.
-     * @param lis the game listener
+     * @param lis the game observer
      * @throws IOException if there is an I/O error
      * @throws InterruptedException if the execution is interrupted
      */
     @Override
-    public void execute(GameListener lis) throws IOException, InterruptedException {
+    public void execute(Listener lis) throws IOException, InterruptedException {
         lis.playerJoined(gamemodel);
     }
 }

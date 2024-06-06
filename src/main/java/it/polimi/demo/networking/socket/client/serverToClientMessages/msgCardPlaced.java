@@ -1,8 +1,8 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.model.ModelView;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 
 import java.rmi.RemoteException;
 
@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
  */
 public class msgCardPlaced extends SocketServerGenericMessage {
 
-    private GameModelImmutable gamemodel;
+    private ModelView gamemodel;
     private int x;
     private int y;
     private Orientation orientation;
@@ -22,7 +22,7 @@ public class msgCardPlaced extends SocketServerGenericMessage {
      * Constructor of the class.
      * @param gamemodel the immutable game model
      */
-    public msgCardPlaced(GameModelImmutable gamemodel, int x, int y, Orientation orientation) {
+    public msgCardPlaced(ModelView gamemodel, int x, int y, Orientation orientation) {
         this.x = x;
         this.y = y;
         this.orientation = orientation;
@@ -31,11 +31,11 @@ public class msgCardPlaced extends SocketServerGenericMessage {
 
     /**
      * Method to execute the corresponding action for the message.
-     * @param lis the game listener
+     * @param lis the game observer
      * @throws RemoteException if there is an error in remote communication
      */
     @Override
-    public void execute(GameListener lis) throws RemoteException {
+    public void execute(Listener lis) throws RemoteException {
         lis.cardPlaced(gamemodel, x, y, orientation);
     }
 }

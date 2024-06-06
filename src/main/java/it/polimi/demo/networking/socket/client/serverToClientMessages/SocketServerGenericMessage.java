@@ -1,6 +1,6 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.observer.Listener;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -13,10 +13,10 @@ public abstract class SocketServerGenericMessage implements Serializable {
 
     /**
      * Executes the corresponding action for the message.
-     * @param lis the game listener
+     * @param lis the game observer
      * @throws IOException if there is an IO exception
      * @throws InterruptedException if the execution is interrupted
      */
-    public abstract void execute(GameListener lis) throws IOException, InterruptedException;
+    public abstract void execute(Listener lis) throws IOException, InterruptedException;
 
 }

@@ -1,7 +1,7 @@
 package it.polimi.demo.controller;
 
 import it.polimi.demo.DefaultValues;
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.*;
 import it.polimi.demo.model.chat.Message;
@@ -17,12 +17,12 @@ import static it.polimi.demo.networking.PrintAsync.printAsync;
 
 public class GameController implements GameControllerInterface, Serializable, Runnable {
 
-    private GameModel model;
+    private Model model;
 
-    private final Map<GameListener, Heartbeat>  pings;
+    private final Map<Listener, Heartbeat>  pings;
 
     public GameController(int gameID, int numberOfPlayers, Player player) {
-        model = new GameModel(gameID, numberOfPlayers, player);
+        model = new Model(gameID, numberOfPlayers, player);
         pings = new HashMap<>();
         new Thread(this).start();
     }
@@ -52,8 +52,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     public void checkForDisconnections() {
         synchronized (pings) {
-            for (Map.Entry<GameListener, Heartbeat> entry : pings.entrySet()) {
-                GameListener listener = entry.getKey();
+            for (Map.Entry<Listener, Heartbeat> entry : pings.entrySet()) {
+                Listener listener = entry.getKey();
                 Heartbeat heartbeat = entry.getValue();
                 if (isHeartbeatExpired(heartbeat)) {
                     handleDisconnection(heartbeat, listener);
@@ -74,7 +74,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         return currentTime - lastBeatTime > DefaultValues.secondsToWaitReconnection;
     }
 
-    public void handleDisconnection(Heartbeat heartbeat, GameListener listener) {
+    public void handleDisconnection(Heartbeat heartbeat, Listener listener) {
         try {
             disconnectPlayer(heartbeat.getNick(), listener);
             printAsync("Disconnection detected by heartbeat of player: " + heartbeat.getNick() + " ");
@@ -95,10 +95,10 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * the player will appear to us as disconnected.
      *
      * @param nickname the player's nickname associated to the heartbeat
-     * @param me   the player's GameListener associated to the heartbeat
+     * @param me   the player's Listener associated to the heartbeat
      */
     @Override
-    public synchronized void addPing(String nickname, GameListener me) {
+    public synchronized void addPing(String nickname, Listener me) {
         synchronized (pings) {
             pings.put(me, new Heartbeat(System.currentTimeMillis(), nickname));
         }
@@ -111,7 +111,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @throws RemoteException if there is a connection error (RMI)
      */
     @Override
-    public void disconnectPlayer(String nick, GameListener lisOfClient) throws RemoteException {
+    public void disconnectPlayer(String nick, Listener lisOfClient) throws RemoteException {
         Player p = model.getPlayerEntity(nick);
         if (p != null) {
             removeListener(lisOfClient, p);
@@ -122,12 +122,12 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     /**
      * It removes a player by nickname @param nick from the game including the associated listeners
      *
-     * @param lis  GameListener to remove
+     * @param lis  Listener to remove
      * @param nick of the player to remove
      * @throws RemoteException
      */
     @Override
-    public synchronized void leave(GameListener lis, String nick) throws RemoteException {
+    public synchronized void leave(Listener lis, String nick) throws RemoteException {
         removeListener(lis, model.getPlayerEntity(nick));
         model.removePlayer(model.getPlayerEntity(nick));
     }
@@ -294,7 +294,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     /**
      * Draw a card from the deck in commonBoard. It also incorporates the logic of the game
-     * with respect to the game flow, since it calls (through myTurnIsFinished) the nextTurn method in GameModel
+     * with respect to the game flow, since it calls (through myTurnIsFinished) the nextTurn method in Model
      * @param player_nickname the nickname of the player
      * @param index the index of the card to draw
      */
@@ -314,22 +314,22 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 //---------------------------------listeners management--------------------------------------
 
     /**
-     * Add listener @param l to model listeners and player listeners
+     * Add observer @param l to model listeners and player listeners
      *
-     * @param l GameListener to add
+     * @param l Listener to add
      * @param p entity of the player
      */
-    public void addListener(GameListener l, Player p) {
+    public void addListener(Listener l, Player p) {
         model.addListener(l);
     }
 
     /**
-     * Remove the listener @param lis to model listeners and player listeners
+     * Remove the observer @param lis to model listeners and player listeners
      *
-     * @param lis GameListener to remove
+     * @param lis Listener to remove
      * @param p   entity of the player to remove
      */
-    public void removeListener(GameListener lis, Player p) {
+    public void removeListener(Listener lis, Player p) {
         model.removeListener(lis);
     }
 

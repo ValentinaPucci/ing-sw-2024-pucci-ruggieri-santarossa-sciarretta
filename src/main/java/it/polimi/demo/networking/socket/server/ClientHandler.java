@@ -43,7 +43,7 @@ public class ClientHandler extends Thread implements Serializable {
     private GameControllerInterface gameController;
 
     /**
-     * The GameListener of the ClientSocket for notifications
+     * The Listener of the ClientSocket for notifications
      */
     private GameListenersHandlerSocket gameListenersHandlerSocket;
 

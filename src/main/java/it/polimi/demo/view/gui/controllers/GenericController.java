@@ -1,25 +1,26 @@
 package it.polimi.demo.view.gui.controllers;
-import it.polimi.demo.view.flow.utilities.inputReaderGUI;
+
+import it.polimi.demo.view.flow.utilities.GuiReader;
 
 public abstract class GenericController {
 
-    private inputReaderGUI inputReaderGUI;
+    private GuiReader GuiReader;
 
     /**
      * Method to get the input reader GUI.
      * @return the input reader GUI
      */
-    public inputReaderGUI getInputReaderGUI() {
-        return inputReaderGUI;
+    public it.polimi.demo.view.flow.utilities.GuiReader getInputReaderGUI() {
+        return GuiReader;
     }
 
     /**
      * Method to set the input reader GUI.
-     * @param inputReaderGUI the input reader GUI
+     * @param GuiReader the input reader GUI
      */
-    public void setInputReaderGUI(inputReaderGUI inputReaderGUI) {
-        //System.out.println("setInputReaderGUIGeneric: "+ inputReaderGUI);
-        this.inputReaderGUI = inputReaderGUI;
+    public void setInputReaderGUI(GuiReader GuiReader) {
+        //System.out.println("setInputReaderGUIGeneric: "+ GuiReader);
+        this.GuiReader = GuiReader;
     }
 
 }

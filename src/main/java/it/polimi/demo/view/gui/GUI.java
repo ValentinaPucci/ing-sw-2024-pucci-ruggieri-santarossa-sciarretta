@@ -1,30 +1,28 @@
 package it.polimi.demo.view.gui;
 
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.view.flow.UI;
-import it.polimi.demo.view.flow.utilities.inputReaderGUI;
+import it.polimi.demo.view.flow.utilities.GuiReader;
 import it.polimi.demo.view.gui.controllers.LobbyController;
 import it.polimi.demo.view.gui.controllers.RunningController;
 import it.polimi.demo.view.gui.scene.SceneType;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.util.Duration;
 
 import java.util.ArrayList;
 
 public class GUI extends UI {
 
     private ApplicationGUI guiApplication;
-    private inputReaderGUI inputReaderGUI;
+    private GuiReader GuiReader;
     private boolean alreadyShowedPublisher = false; //to delete in tui
     private boolean alreadyShowedLobby = false;
 
     private String nickname;
 
-    public GUI(ApplicationGUI guiApplication, inputReaderGUI inputReaderGUI) {
+    public GUI(ApplicationGUI guiApplication, it.polimi.demo.view.flow.utilities.GuiReader GuiReader) {
         this.guiApplication = guiApplication;
-        this.inputReaderGUI = inputReaderGUI;
-        //System.out.println("GUI constructor: "+ this.inputReaderGUI);
+        this.GuiReader = GuiReader;
+        //System.out.println("GUI constructor: "+ this.GuiReader);
         nickname = null;
         init();
     }
@@ -40,24 +38,14 @@ public class GUI extends UI {
         Platform.runLater(r);
     }
 
-    /**
-     * The show method is used to show the GUI, and set the active scene to the publisher.
-     */
-    @Override
-    protected void show_publisher() {
-        alreadyShowedPublisher = true;
-    }
-
     @Override
     protected void show_menuOptions() {
         if (alreadyShowedPublisher) {
-            callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.inputReaderGUI));//So the controllers can add text to the buffer for the gameflow
+            callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.GuiReader));//So the controllers can add text to the buffer for the gameflow
             callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
             callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
         }
     }
-
-
 
     @Override
     protected void show_creatingNewGameMsg(String nickname) {
@@ -93,7 +81,7 @@ public class GUI extends UI {
      * @param model model where the game has started
      */
     @Override
-    protected void show_gameStarted(GameModelImmutable model) {
+    protected void show_gameStarted(ModelView model) {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.RUNNING));
         callPlatformRunLater(() -> this.guiApplication.showRunningModel(model, nickname));
     }
@@ -105,7 +93,7 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_nextTurn(GameModelImmutable model, String nickname) {
+    protected void show_nextTurn(ModelView model, String nickname) {
         if (!alreadyShowedLobby) {
             show_gameStarted(model);
             alreadyShowedLobby = true;
@@ -117,11 +105,11 @@ public class GUI extends UI {
     /**
      * this method show that the player is ready to start
      *
-     * @param gameModel     model where events happen
+     * @param gameModel     model where gameFacts happen
      * @param nickname player's nickname
      */
     @Override
-    protected void show_ReadyToStart(GameModelImmutable gameModel, String nickname) {
+    protected void show_ReadyToStart(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> this.guiApplication.disableBtnReadyToStart());
     }
 
@@ -137,12 +125,12 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_gameEnded(GameModelImmutable model) {
+    protected void show_gameEnded(ModelView model) {
 
     }
 
     @Override
-    protected void show_playerJoined(GameModelImmutable gameModel, String nick) {
+    protected void show_playerJoined(ModelView gameModel, String nick) {
         if (!alreadyShowedLobby) {
             this.nickname = nick;
             callPlatformRunLater(() -> ((LobbyController) this.guiApplication.getController(SceneType.LOBBY)).setNicknameLabel(nick));
@@ -158,23 +146,23 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_starterCards(GameModelImmutable gameModel) {
+    protected void show_starterCards(ModelView gameModel) {
 
     }
 
     @Override
-    protected void show_objectiveCards(GameModelImmutable gameModel) {
+    protected void show_objectiveCards(ModelView gameModel) {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableObjectiveCardsClick());
 
     }
 
     @Override
-    protected void show_personalBoard(String nick, GameModelImmutable gameModel) {
+    protected void show_personalBoard(String nick, ModelView gameModel) {
 
     }
 
     @Override
-    protected void show_commonBoard(GameModelImmutable gameModel) {
+    protected void show_commonBoard(ModelView gameModel) {
 
     }
 
@@ -184,17 +172,17 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_playerHand(GameModelImmutable gameModel) {
+    protected void show_playerHand(ModelView gameModel) {
 
     }
 
     @Override
-    protected void show_personalObjectiveCard(GameModelImmutable gameModel) {
+    protected void show_personalObjectiveCard(ModelView gameModel) {
 
     }
 
     @Override
-    protected void show_cardChosen(String nickname, GameModelImmutable model) {
+    protected void show_cardChosen(String nickname, ModelView model) {
 
     }
 
@@ -214,12 +202,12 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_commonObjectives(GameModelImmutable gameModel) {
+    protected void show_commonObjectives(ModelView gameModel) {
 
     }
 
     @Override
-    protected void show_messageSent(GameModelImmutable model, String nickname) {
+    protected void show_messageSent(ModelView model, String nickname) {
 
     }
 
@@ -261,7 +249,7 @@ public class GUI extends UI {
 
 
     /**
-     * This method add an important event to the list of important events, and show it
+     * This method add an important event to the list of important gameFacts, and show it
      * @param input the string of the important event to add
      */
     @Override
@@ -271,7 +259,7 @@ public class GUI extends UI {
     }
 
     /**
-     * This method reset the important events
+     * This method reset the important gameFacts
      */
     @Override
     protected void resetImportantEvents() {

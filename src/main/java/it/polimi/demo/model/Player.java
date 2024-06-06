@@ -29,7 +29,7 @@ public class Player implements PlayerIC, Serializable {
     private boolean is_connected;
     private boolean is_ready_to_start;
 
-    //private transient List<GameListener> listeners;
+    //private transient List<Listener> listeners;
 
     public Player(String nickname) {
         this.nickname = nickname;

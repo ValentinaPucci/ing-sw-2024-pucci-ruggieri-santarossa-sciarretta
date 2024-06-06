@@ -1,13 +1,6 @@
 package it.polimi.demo.Controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import it.polimi.demo.controller.GameController;
-import it.polimi.demo.model.GameModel;
-import it.polimi.demo.model.Player;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import it.polimi.demo.model.enumerations.GameStatus;
 /*
 public class GameControllerTest {
 
@@ -15,7 +8,7 @@ public class GameControllerTest {
 
     @BeforeEach
     public void setUp() {
-        GameModel gameModel = new GameModel();
+        Model gameModel = new Model();
         Player p = new Player("Player1");
         Integer id = gameModel.getGameId();
         //this.GameController = new GameController(id, 2, p);
@@ -25,11 +18,11 @@ public class GameControllerTest {
 //
 //    @Test
 //    public void getGameModelTest() {
-//        GameModel gameModel = new GameModel();
+//        Model gameModel = new Model();
 //        Player p = new Player("Player1");
 //        Integer id = gameModel.getGameId();
 //        //GameController = new GameController(gameModel);
-//        GameModel actualGameModel = (GameModel) GameController.getModel();
+//        Model actualGameModel = (Model) GameController.getModel();
 //        assertEquals(gameModel, actualGameModel);
 //    }
 

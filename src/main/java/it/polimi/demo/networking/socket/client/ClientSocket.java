@@ -4,12 +4,12 @@ import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.GameListenerHandlerClient;
+import it.polimi.demo.networking.ObserverManagerClient;
 import it.polimi.demo.networking.socket.client.gameControllerMessages.*;
 import it.polimi.demo.networking.socket.client.mainControllerMessages.*;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage;
-import it.polimi.demo.view.flow.CommonClientActions;
-import it.polimi.demo.view.flow.Flow;
+import it.polimi.demo.view.flow.ClientInterface;
+import it.polimi.demo.view.flow.Dynamics;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -17,14 +17,13 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.Socket;
 import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
 
 //TODO:Check transient fields
 
-public class ClientSocket extends Thread implements CommonClientActions, Serializable {
+public class ClientSocket extends Thread implements ClientInterface, Serializable {
 
     /**
      * This is the socket that represents the client
@@ -46,24 +45,24 @@ public class ClientSocket extends Thread implements CommonClientActions, Seriali
     /**
      * This is the gameListner we use to perform every action requested by the server
      */
-    private final GameListenerHandlerClient modelInvokedEvents;
+    private final ObserverManagerClient modelInvokedEvents;
 
     /**
      *
      */
-    // private final HeartbeatSender socketHeartbeat;
+    // private final PingSender socketHeartbeat;
 
     /**
      *
      */
-    private Flow flow;
+    private Dynamics dynamics;
 
-    public ClientSocket(Flow flow) {
-        this.flow = flow;
+    public ClientSocket(Dynamics dynamics) {
+        this.dynamics = dynamics;
         startConnection(DefaultValues.serverIp, DefaultValues.Default_port_Socket);
-        modelInvokedEvents =  new GameListenerHandlerClient(flow);
+        modelInvokedEvents =  new ObserverManagerClient(dynamics);
         this.start();
-        // socketHeartbeat = new HeartbeatSender(flow,this);
+        // socketHeartbeat = new PingSender(dynamics,this);
     }
 
     /**

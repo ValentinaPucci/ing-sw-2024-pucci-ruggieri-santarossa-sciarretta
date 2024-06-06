@@ -1,6 +1,6 @@
 package it.polimi.demo.networking.socket.client.gameControllerMessages;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
@@ -17,7 +17,7 @@ public class SocketClientMessageHeartbeat extends SocketClientGenericMessage {
     }
 
     @Override
-    public GameControllerInterface execute(GameListener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface execute(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
 

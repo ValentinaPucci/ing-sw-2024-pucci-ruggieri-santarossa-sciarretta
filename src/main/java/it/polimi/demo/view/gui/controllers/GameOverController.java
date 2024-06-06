@@ -1,12 +1,11 @@
 package it.polimi.demo.view.gui.controllers;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.interfaces.*;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.paint.Color;
 
 public class GameOverController extends GenericController{
 
@@ -25,7 +24,7 @@ public class GameOverController extends GenericController{
     @FXML
     private Label player3;
 
-     public void show(GameModelImmutable model) {
+     public void show(ModelView model) {
         player0.setVisible(false);
         player1.setVisible(false);
         player2.setVisible(false);

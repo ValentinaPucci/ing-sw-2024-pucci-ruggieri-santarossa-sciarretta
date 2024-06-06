@@ -2,7 +2,7 @@ package it.polimi.demo.main;
 
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.view.flow.ConnectionSelection;
-import it.polimi.demo.view.flow.GameFlow;
+import it.polimi.demo.view.flow.GameDynamics;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import javafx.application.Application;
 import org.fusesource.jansi.Ansi;
@@ -33,7 +33,7 @@ public class MainClient {
         printAsync("Starting the game!");
 
         if (selection == 1 || selection == 2) {
-            new GameFlow(conSel); // Start game with TUI
+            new GameDynamics(conSel); // Start game with TUI
         } else {
             Application.launch(ApplicationGUI.class, conSel.toString()); // Start game with GUI
         }

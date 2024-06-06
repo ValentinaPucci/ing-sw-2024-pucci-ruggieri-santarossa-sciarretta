@@ -1,5 +1,6 @@
 package it.polimi.demo.view.text;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
@@ -9,7 +10,6 @@ import org.fusesource.jansi.AnsiConsole;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.flow.UI;
 
@@ -74,55 +74,6 @@ public class TUI extends UI {
     }
 
     /**
-     * Shows the publisher's name
-     */
-    @Override
-    public void show_publisher() {
-        // this.resize();
-        clearScreen();
-        new PrintStream(System.out, true, System.console() != null
-                ? System.console().charset()
-                : Charset.defaultCharset()
-        ).println(ansi().cursor(1, 1).fg(YELLOW).a("""
-                                                                                                           \s
-                                                                                                           \s
-                  ,----..                                                                                  \s
-                 /   /   \\                                   ,--,                                          \s
-                |   :     :  __  ,-.                 ,---, ,--.'|    ,---.                                 \s
-                .   |  ;. /,' ,'/ /|             ,-+-. /  ||  |,    '   ,'\\                                \s
-                .   ; /--` '  | |' | ,--.--.    ,--.'|'   |`--'_   /   /   |                               \s
-                ;   | ;    |  |   ,'/       \\  |   |  ,"' |,' ,'| .   ; ,. :                               \s
-                |   : |    '  :  / .--.  .-. | |   | /  | |'  | | '   | |: :                               \s
-                .   | '___ |  | '   \\__\\/: . . |   | |  | ||  | : '   | .; :                               \s
-                '   ; : .'|;  : |   ," .--.; | |   | |  |/ '  : |_|   :    |                               \s
-                '   | '/  :|  , ;  /  /  ,.  | |   | |--'  |  | '.'\\   \\  /                                \s
-                |   :    /  ---'  ;  :   .'   \\|   |/      ;  :    ;`----'                                 \s
-                 \\   \\ .'         |  ,     .-./'---'       |  ,   /                                        \s
-                  `---`            `--`---'                 ---`-'                                         \s
-                  ,----..                                   ___                                            \s
-                 /   /   \\                                ,--.'|_    ,--,                                  \s
-                |   :     :  __  ,-.                      |  | :,' ,--.'|    ,---.        ,---,            \s
-                .   |  ;. /,' ,'/ /|                      :  : ' : |  |,    '   ,'\\   ,-+-. /  | .--.--.   \s
-                .   ; /--` '  | |' | ,---.     ,--.--.  .;__,'  /  `--'_   /   /   | ,--.'|'   |/  /    '  \s
-                ;   | ;    |  |   ,'/     \\   /       \\ |  |   |   ,' ,'| .   ; ,. :|   |  ,"' |  :  /`./  \s
-                |   : |    '  :  / /    /  | .--.  .-. |:__,'| :   '  | | '   | |: :|   | /  | |  :  ;_    \s
-                .   | '___ |  | ' .    ' / |  \\__\\/: . .  '  : |__ |  | : '   | .; :|   | |  | |\\  \\    `. \s
-                '   ; : .'|;  : | '   ;   /|  ," .--.; |  |  | '.'|'  : |_|   :    ||   | |  |/  `----.   \\\s
-                '   | '/  :|  , ; '   |  / | /  /  ,.  |  ;  :    ;|  | '.'\\   \\  / |   | |--'  /  /`--'  /\s
-                |   :    /  ---'  |   :    |;  :   .'   \\ |  ,   / ;  :    ;`----'  |   |/     '--'.     / \s
-                 \\   \\ .'          \\   \\  / |  ,     .-./  ---`-'  |  ,   /         '---'        `--'---'  \s
-                  `---`             `----'   `--`---'               ---`-'                                 \s
-                """).reset());
-
-        try {
-            Thread.sleep(DefaultValues.time_publisher_showing_seconds * 1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        this.show_titleCodexNaturalis();
-    }
-
-    /**
      * Shows the game title
      */
     public void show_titleCodexNaturalis() {
@@ -152,8 +103,9 @@ public class TUI extends UI {
      *
      * @param model where the game is ended
      */
+    // todo: check for correctness
     @Override
-    public void show_gameEnded(GameModelImmutable model) {
+    public void show_gameEnded(ModelView model) {
         clearScreen();
         // resize();
         show_titleCodexNaturalis();
@@ -204,7 +156,7 @@ public class TUI extends UI {
      * @param gameModel the model that has the player hand that needs to be shown
      */
     @Override
-    public void show_playerHand(GameModelImmutable gameModel) {
+    public void show_playerHand(ModelView gameModel) {
         List<ResourceCard> player_hand = gameModel.getPlayerEntity(nickname).getHand();
         for (ResourceCard c : player_hand) {
             if (c instanceof GoldCard) {
@@ -219,7 +171,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_objectiveCards(GameModelImmutable gameModel) {
+    public void show_objectiveCards(ModelView gameModel) {
         clearScreen();
         printAsync("First, we show you the two objective cards you can choose from: \n");
         List<ObjectiveCard> objectiveCards = gameModel.getObjectiveCards(nickname);
@@ -229,7 +181,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_starterCards(GameModelImmutable gameModel) {
+    public void show_starterCards(ModelView gameModel) {
         List<StarterCard> starterCards = gameModel.getStarterCards(nickname);
         TuiCardGraphics.showStarterCardFront(starterCards.get(0));
         TuiCardGraphics.showStarterCardBack(starterCards.get(1));
@@ -240,7 +192,7 @@ public class TUI extends UI {
      * @param model    the model in which the player grabbed the tiles
      */
     @Override
-    public void show_cardChosen(String nickname, GameModelImmutable model) {
+    public void show_cardChosen(String nickname, ModelView model) {
         if (model.getPlayerEntity(nickname).getChosenGameCard() instanceof GoldCard) {
             System.out.println("You have chosen the following Gold Card: \n");
             TuiCardGraphics.showGoldCard((GoldCard) model.getPlayerEntity(nickname).getChosenGameCard());
@@ -284,7 +236,7 @@ public class TUI extends UI {
      * @param model the model that has the common board to show
      */
     @Override
-    public void show_commonBoard(GameModelImmutable model) {
+    public void show_commonBoard(ModelView model) {
         clearScreen();
         TuiCommonBoardGraphics.showCommonBoard(model.getCommonBoard());
         clearScreen();
@@ -303,7 +255,7 @@ public class TUI extends UI {
      * @param model the model that has the personal board to show
      */
     @Override
-    public void show_personalBoard(String nickname, GameModelImmutable model) {
+    public void show_personalBoard(String nickname, ModelView model) {
         clearScreen();
         TuiPersonalBoardGraphics.showPersonalBoard(model.getPlayerEntity(nickname).getPersonalBoard());
         clearScreen();
@@ -313,12 +265,12 @@ public class TUI extends UI {
      * @param gameModel the model that has the common cards to show
      */
     @Override
-    public void show_commonObjectives(GameModelImmutable gameModel) {
+    public void show_commonObjectives(ModelView gameModel) {
 
     }
 
     @Override
-    public void show_personalObjectiveCard(GameModelImmutable gameModel) {
+    public void show_personalObjectiveCard(ModelView gameModel) {
         clearScreen();
         System.out.println("Your chosen objective card is: \n");
         TuiCardGraphics.showObjectiveCard(gameModel.getPlayerEntity(nickname).getChosenObjectiveCard());
@@ -326,11 +278,11 @@ public class TUI extends UI {
     }
 
     /**
-     * @param gameModel model where events happen
+     * @param gameModel model where gameFacts happen
      * @param nick      player's nickname
      */
     @Override
-    public void show_playerJoined(GameModelImmutable gameModel, String nick) {
+    public void show_playerJoined(ModelView gameModel, String nick) {
         clearScreen();
         show_titleCodexNaturalis();
         printAsync(ansi().cursor(10, 0).a("GameID: [" + gameModel.getGameId().toString() + "]\n").fg(DEFAULT));
@@ -360,7 +312,7 @@ public class TUI extends UI {
     }
 
     /**
-     * Shows the important events
+     * Shows the important gameFacts
      */
     public void show_important_events() {
 
@@ -398,7 +350,7 @@ public class TUI extends UI {
      *
      * @param model
      */
-    public void show_alwaysShowForAll(GameModelImmutable model) {
+    public void show_alwaysShowForAll(ModelView model) {
         this.clearScreen();
         //show_messages(model);
         show_important_events();
@@ -409,7 +361,7 @@ public class TUI extends UI {
      *
      * @param gameModel
      */
-    public void show_nextTurn(GameModelImmutable gameModel) {
+    public void show_nextTurn(ModelView gameModel) {
         printAsync(ansi().cursor(DefaultValues.row_nextTurn, 0).bold().a("Next turn! It's up to: "
                 + gameModel.getPlayersConnected().peek().getNickname()).boldOff());
     }
@@ -424,7 +376,7 @@ public class TUI extends UI {
     }
 
     /**
-     * Clears important events' list
+     * Clears important gameFacts' list
      */
     @Override
     public void resetImportantEvents() {
@@ -454,7 +406,7 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void show_nextTurn(GameModelImmutable model, String nickname) {
+    protected void show_nextTurn(ModelView model, String nickname) {
 
     }
 
@@ -474,7 +426,7 @@ public class TUI extends UI {
      * @param nickname the sender's nickname
      */
     @Override
-    public void show_messageSent(GameModelImmutable model, String nickname) {
+    public void show_messageSent(ModelView model, String nickname) {
         Message mess = model.getChat().getLastMessage();
         printAsync(ansi().cursor(DefaultValues.row_chat, DefaultValues.col_chat).a(mess.getSender().getNickname() + ": " + mess.getText()));
     }
@@ -485,12 +437,10 @@ public class TUI extends UI {
      * @param model model where the game has started
      */
     @Override
-    public void show_gameStarted(GameModelImmutable model) {
+    public void show_gameStarted(ModelView model) {
         this.clearScreen();
         this.show_titleCodexNaturalis();
-//        this.show_allPlayers(model);
         this.show_alwaysShowForAll(model);
-//        this.show_gameId(model);
     }
 
     /**
@@ -538,13 +488,12 @@ public class TUI extends UI {
     public void show_menuOptions() {
         this.clearScreen();
         this.show_titleCodexNaturalis();
-        printAsyncNoCursorReset(ansi().cursor(9, 0).a("""
+        printAsync(ansi().cursor(9, 0).a("""
                 > Select one option:
-                \t(c) Create a new Game
-                \t(j) Join to a random Game
-                \t(js) Join a specific Game by idGame
-                \t(x) Reconnect
-                \t(.) to leave
+                \tpress (c) to create a new game
+                \tpress (j) to join to a randomly an existent game
+                \tpress (js) to join to a specific game
+                \tpress (.) to leave
                 \t
                 \t -> Useful commands that can be used at any point in the game:
                 \t\t  type "/c [msg]" to send a public message!
@@ -576,7 +525,8 @@ public class TUI extends UI {
     @Override
     public void show_whichCardToPlaceMsg() {
         clearScreen();
-        printAsync(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a("\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
+        printAsync(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(
+                "\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
     }
 
     @Override
@@ -624,30 +574,8 @@ public class TUI extends UI {
         this.nickname = nickname;
     }
 
-    /**
-     * Messages that always need to be on screen
-     *
-     * @param model
-     * @param nick
-     */
-    public void show_alwaysShow(GameModelImmutable model, String nick) {
-        show_alwaysShowForAll(model);
-        //show_personalObjectiveCard(model.getPlayerEntity(nick));
-        if (!model.getPlayerEntity(nick).getHand().isEmpty())
-            show_playerHand(model);
-        else {
-            if (!model.getPlayersConnected().peek().getHand().isEmpty())
-                show_cardChosen(model.getPlayersConnected().peek().getNickname(), model);
-        }
-        show_personalBoard(nick, model);
-        show_nextTurn(model);
-        show_welcome(nick);
-        printAsync(ansi().cursor(DefaultValues.row_input, 0));
-    }
-
-
     @Override
-    public void show_ReadyToStart(GameModelImmutable gameModel, String nicknameofyou) {
+    public void show_ReadyToStart(ModelView gameModel, String nicknameofyou) {
     }
 
 }
