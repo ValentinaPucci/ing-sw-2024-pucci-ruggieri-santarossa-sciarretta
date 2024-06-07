@@ -92,7 +92,7 @@ public class ClientSocket extends Thread implements ClientInterface {
         }
     }
 
-
+//TODO: improvement
     /**
      * Start the Connection to the Socket Server
      *
@@ -100,50 +100,52 @@ public class ClientSocket extends Thread implements ClientInterface {
      * @param port of the Socket server to connect
      */
     private void startConnection(String ip, int port) {
-        IntStream.iterate(1, i -> i + 1)
-                .limit(DefaultValues.num_of_attempt_to_connect_toServer_before_giveup)
-                .forEach(attempt -> {
+        boolean retry = false;
+        int attempt = 1;
+        int i;
+
+        do {
+            try {
+                // New socket
+                clientSoc = new Socket(ip, port);
+                // Attach the output stream to the socket
+                ob_out = new ObjectOutputStream(clientSoc.getOutputStream());
+                // Attach the input stream to the socket
+                ob_in = new ObjectInputStream(clientSoc.getInputStream());
+                retry = false;
+            } catch (IOException e) {
+                if (!retry) {
+                    printAsync("[ERROR] CONNECTING TO SOCKET SERVER: \n\tClient RMI exception: " + e + "\n");
+                }
+                printAsyncNoLine("[#" + attempt + "]Waiting to reconnect to Socket Server on port: '" + port + "' with ip: '" + ip + "'");
+
+                i = 0;
+                while (i < DefaultValues.seconds_between_reconnection) {
                     try {
-                        // New socket
-                        clientSoc = new Socket(ip, port);
-
-                        // Attach the output stream to the socket
-                        ob_out = new ObjectOutputStream(clientSoc.getOutputStream());
-                        // Attach the input stream to the socket
-                        ob_in = new ObjectInputStream(clientSoc.getInputStream());
-                        // Break the stream if connection is successful
-                        //throw new ConnectionSuccessfulException();
-
-                    } catch (IOException e) {
-                        if (attempt == 1) {
-                            printAsync("[ERROR] CONNECTING TO SOCKET SERVER: \n\tClient RMI exception: " + e + "\n");
-                        }
-                        printAsyncNoLine("[#" + attempt + "]Waiting to reconnect to Socket Server on port: '" + port + "' with ip: '" + ip + "'");
-
-                        IntStream.range(0, DefaultValues.seconds_between_reconnection).forEach(i -> {
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                            printAsyncNoLine(".");
-                        });
-
-                        printAsyncNoLine("\n");
-
-                        if (attempt >= DefaultValues.num_of_attempt_to_connect_toServer_before_giveup) {
-                            printAsyncNoLine("Give up reconnection, too many attempts!");
-                            try {
-                                System.in.read();
-                            } catch (IOException ex) {
-                                throw new RuntimeException(ex);
-                            }
-                            System.exit(-1);
-                        }
+                        Thread.sleep(1000);
+                    } catch (InterruptedException ex) {
+                        throw new RuntimeException(ex);
                     }
-                });
+                    printAsyncNoLine(".");
+                    i++;
+                }
+                printAsyncNoLine("\n");
+
+                if (attempt >= DefaultValues.num_of_attempt_to_connect_toServer_before_giveup) {
+                    printAsyncNoLine("Give up reconnection, to many attempts!");
+                    try {
+                        System.in.read();
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    System.exit(-1);
+                }
+                retry = true;
+                attempt++;
+            }
+        } while (retry);
+
     }
-    // Custom exception to indicate successful connection
 
     /**
      * Close the connection
