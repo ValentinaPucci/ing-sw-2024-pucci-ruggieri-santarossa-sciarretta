@@ -18,17 +18,33 @@ public class SocketClientMsgChooseCard extends SocketClientGenericMessage implem
     private static final long serialVersionUID = 5796017918043405008L;
     private int which_card;
 
+    /**
+     * Constructor of the class.
+     * @param which_card the index of the card to choose
+     */
     public SocketClientMsgChooseCard(int which_card) {
         this.which_card = which_card;
         this.isMessageForMainController = false;
     }
 
-
+    /**
+     * Method to perform the corresponding action of the message.
+     * @param lis the game observer
+     * @param mainController the main controller interface
+     * @return
+     * @throws RemoteException
+     */
     @Override
     public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
 
+    /**
+     * Method to call chooseCardFromHand on the game controller.
+     * @param gameController the game controller interface
+     * @throws RemoteException
+     * @throws GameEndedException
+     */
     @Override
     public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
         gameController.chooseCardFromHand(gameController.getCurrentPlayer().getNickname(), which_card);

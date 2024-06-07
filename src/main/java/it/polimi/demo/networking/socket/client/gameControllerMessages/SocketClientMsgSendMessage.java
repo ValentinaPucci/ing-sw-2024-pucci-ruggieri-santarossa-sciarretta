@@ -19,19 +19,28 @@ public class SocketClientMsgSendMessage extends SocketClientGenericMessage imple
     private Message chat_msg;
     private String nick;
 
-
+    /**
+     * Constructor of the class.
+     * @param nick
+     * @param chat_msg
+     */
     public SocketClientMsgSendMessage(String nick, Message chat_msg) {
         this.nick = nick;
         this.chat_msg = chat_msg;
         this.isMessageForMainController = false;
     }
 
-
     @Override
     public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
 
+    /**
+     * Method to perform sendMessage of the chat on the game controller.
+     * @param gameController the game controller interface
+     * @throws RemoteException
+     * @throws GameEndedException
+     */
     @Override
     public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
         gameController.sendMessage(nick, chat_msg);

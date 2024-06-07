@@ -15,6 +15,10 @@ public class SocketClientMsgDrawCard extends SocketClientGenericMessage implemen
     private static final long serialVersionUID = 7272108078804819811L;
     private int index;
 
+    /**
+     * Constructor of the class.
+     * @param index
+     */
     public SocketClientMsgDrawCard(int index) {
          this.index = index;
          this.isMessageForMainController = false;
@@ -26,7 +30,12 @@ public class SocketClientMsgDrawCard extends SocketClientGenericMessage implemen
         return null;
     }
 
-
+    /**
+     * Method to perform drawCard on the game controller.
+     * @param gameController the game controller interface
+     * @throws RemoteException
+     * @throws GameEndedException
+     */
     @Override
     public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
         gameController.drawCard(gameController.getCurrentPlayer().getNickname(), index);

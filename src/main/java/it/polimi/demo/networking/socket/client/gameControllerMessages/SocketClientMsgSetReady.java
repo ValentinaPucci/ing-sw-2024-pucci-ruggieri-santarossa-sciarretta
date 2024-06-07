@@ -15,6 +15,9 @@ public class SocketClientMsgSetReady extends SocketClientGenericMessage implemen
     @Serial
     private static final long serialVersionUID = 3105139738605427270L;
 
+    /**
+     * Constructor of the class.
+     */
     public SocketClientMsgSetReady(String nick) {
         this.nick = nick;
         this.isMessageForMainController = false;
@@ -25,8 +28,11 @@ public class SocketClientMsgSetReady extends SocketClientGenericMessage implemen
     public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
-
-
+    /**
+     * Method to perform playerIsReadyToStart on the game controller.
+     * @param gameController the game controller interface
+     * @throws RemoteException
+     */
     @Override
     public void perform(GameControllerInterface gameController) throws RemoteException {
         gameController.playerIsReadyToStart(this.nick);

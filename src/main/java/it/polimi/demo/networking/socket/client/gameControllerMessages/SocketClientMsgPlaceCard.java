@@ -20,7 +20,7 @@ public class SocketClientMsgPlaceCard extends SocketClientGenericMessage impleme
     private Orientation orientation;
 
     /**
-     *
+     * Constructor of the class.
      * @param x
      * @param y
      * @param orientation
@@ -37,7 +37,12 @@ public class SocketClientMsgPlaceCard extends SocketClientGenericMessage impleme
         return null;
     }
 
-
+    /**
+     * Method to perform placeCard on the game controller.
+     * @param gameController the game controller interface
+     * @throws RemoteException
+     * @throws GameEndedException
+     */
     @Override
     public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
         gameController.placeCard(gameController.getCurrentPlayer().getNickname(), x, y, orientation);

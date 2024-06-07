@@ -17,6 +17,10 @@ public class SocketClientMsgPlaceStarterCard extends SocketClientGenericMessage 
     private static final long serialVersionUID = -1739537774448253366L;
     private Orientation orientation;
 
+    /**
+     * Constructor of the class.
+     * @param orientation
+     */
     public SocketClientMsgPlaceStarterCard(Orientation orientation) {
         this.orientation = orientation;
         this.isMessageForMainController = false;
@@ -27,6 +31,12 @@ public class SocketClientMsgPlaceStarterCard extends SocketClientGenericMessage 
         return null;
     }
 
+    /**
+     * Method to perform placeStarterCard on the game controller.
+     * @param gameController the game controller interface
+     * @throws RemoteException
+     * @throws GameEndedException
+     */
     @Override
     public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
         gameController.placeStarterCard(gameController.getCurrentPlayer().getNickname(), orientation);
