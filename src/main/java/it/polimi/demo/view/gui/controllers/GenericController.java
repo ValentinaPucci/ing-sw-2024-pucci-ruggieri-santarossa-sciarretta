@@ -10,7 +10,7 @@ public abstract class GenericController {
      * Method to get the input reader GUI.
      * @return the input reader GUI
      */
-    public it.polimi.demo.view.flow.utilities.GuiReader getInputReaderGUI() {
+    public GuiReader getInputReaderGUI() {
         return GuiReader;
     }
 

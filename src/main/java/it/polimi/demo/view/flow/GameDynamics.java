@@ -116,6 +116,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         }
     }
 
+
     private void handleFallbackEvent(Consumer<ModelFact> fallback) {
         ModelFact event = facts.pop();
         if (event != null) {

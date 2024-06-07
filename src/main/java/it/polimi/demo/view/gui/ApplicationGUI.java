@@ -30,6 +30,7 @@ import static it.polimi.demo.view.gui.scene.SceneType.*;
 
 
 public class ApplicationGUI extends Application {
+
     private Stage primaryStage;
     private StackPane root;
     private GameDynamics gameDynamics;
@@ -37,13 +38,9 @@ public class ApplicationGUI extends Application {
     private double widthOld, heightOld;
     private boolean resizing = true;
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-
     @Override
     public void start(Stage primaryStage) {
-        gameDynamics = new GameDynamics(this, ConnectionSelection.valueOf(getParameters().getUnnamed().get(0)));
+        gameDynamics = new GameDynamics(this, ConnectionSelection.valueOf(getParameters().getUnnamed().getFirst()));
         loadScenes();
 
         this.primaryStage = primaryStage;

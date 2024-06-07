@@ -13,16 +13,16 @@ import java.util.ArrayList;
 public class GUI extends UI {
 
     private ApplicationGUI guiApplication;
-    private GuiReader GuiReader;
+    private GuiReader gui_reader;
     private boolean alreadyShowedPublisher = false; //to delete in tui
     private boolean alreadyShowedLobby = false;
 
     private String nickname;
 
-    public GUI(ApplicationGUI guiApplication, it.polimi.demo.view.flow.utilities.GuiReader GuiReader) {
+    public GUI(ApplicationGUI guiApplication, GuiReader gui_reader) {
         this.guiApplication = guiApplication;
-        this.GuiReader = GuiReader;
-        //System.out.println("GUI constructor: "+ this.GuiReader);
+        this.gui_reader = gui_reader;
+        //System.out.println("GUI constructor: "+ this.gui_reader);
         nickname = null;
         init();
     }
@@ -40,11 +40,11 @@ public class GUI extends UI {
 
     @Override
     protected void show_menuOptions() {
-        if (alreadyShowedPublisher) {
-            callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.GuiReader));//So the controllers can add text to the buffer for the gameflow
+        //if (alreadyShowedPublisher) {
+            callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.gui_reader));//So the controllers can add text to the buffer for the gameflow
             callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
             callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
-        }
+        //}
     }
 
     @Override

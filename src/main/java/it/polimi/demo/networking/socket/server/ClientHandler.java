@@ -14,108 +14,81 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 
-
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
-/**
- * ClientHandler Class<br>
- * Handle all the incoming network requests that clients can require to create,join,leave or reconnect to a game<br>
- * by the Socket Network protocol
- */
+// todo: checked
 public class ClientHandler extends Thread implements Serializable {
-    /**
-     * Socket associated with the Client
-     */
-    private final transient Socket clientSocket;
-    /**
-     * ObjectInputStream in
-     */
+    private static final long serialVersionUID = 1L;
+
     private transient ObjectInputStream in;
-
-    /**
-     * ObjectOutputStream out
-     */
     private transient ObjectOutputStream out;
-
-    /**
-     * GameController associated with the game
-     */
     private GameControllerInterface gameController;
-
-    /**
-     * The Listener of the ClientSocket for notifications
-     */
     private GameListenersHandlerSocket gameListenersHandlerSocket;
-
-    /**
-     * Nickname of the SocketClient
-     */
     private String nickname = null;
-
     private final BlockingQueue<SocketClientGenericMessage> processingQueue = new LinkedBlockingQueue<>();
 
-    /**
-     * Handle all the network requests performed by a specific ClientSocket
-     *
-     * @param soc the socket to the client
-     * @throws IOException
-     */
     public ClientHandler(Socket soc) throws IOException {
-        this.clientSocket = soc;
         this.in = new ObjectInputStream(soc.getInputStream());
         this.out = new ObjectOutputStream(soc.getOutputStream());
-        gameListenersHandlerSocket = new GameListenersHandlerSocket(out);
+        this.gameListenersHandlerSocket = new GameListenersHandlerSocket(out);
     }
 
-    /**
-     * Stop the thread
-     */
     public void interruptThread() {
         this.interrupt();
     }
 
     @Override
-    public  void run() {
-        var th = new Thread(this::runGameLogic);
-        th.start();
-        try {
-            SocketClientGenericMessage temp;
-            while (!this.isInterrupted()) {
-                try {
-                    temp = (SocketClientGenericMessage) in.readObject();
-                    processingQueue.add(temp);
-            } catch (IOException | ClassNotFoundException e) {
-                    printAsync("ClientSocket dies because cannot communicate no more with the client");
-                    try {
-                        gameController.leave(gameListenersHandlerSocket, nickname);
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    return;
+    public void run() {
+        var gameLogicThread = new Thread(() -> {
+            try {
+                while (!Thread.currentThread().isInterrupted()) {
+                    processGameLogic();
                 }
+            } catch (RemoteException | GameEndedException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException ignored) {
+            }
+        });
+        gameLogicThread.start();
+
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                processClientMessage();
             }
         } finally {
-            th.interrupt();
+            gameLogicThread.interrupt();
         }
     }
 
-    private void runGameLogic() {
-        SocketClientGenericMessage temp;
+    private void processClientMessage() {
         try {
-            while (!this.isInterrupted()) {
-                temp = processingQueue.take();
-                if (temp.isMessageForMainController()) {
-                    gameController = temp.execute(gameListenersHandlerSocket, MainController.getControllerInstance());
-                    nickname = gameController != null ? temp.getNick() : null;
-                } else if (!temp.isHeartbeat()) {
-                        temp.execute(gameController);
-                }
-            }
-        } catch (RemoteException | GameEndedException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException ignored) {
+            var temp = (SocketClientGenericMessage) in.readObject();
+            processingQueue.add(temp);
+        } catch (IOException | ClassNotFoundException e) {
+            handleClientDisconnect();
+        }
+    }
 
+    private void processGameLogic() throws RemoteException, GameEndedException, InterruptedException {
+        var temp = processingQueue.take();
+        if (temp.isMessageForMainController()) {
+            gameController = temp.execute(gameListenersHandlerSocket, MainController.getControllerInstance());
+            nickname = gameController != null ? temp.getNick() : null;
+        } else if (!temp.isHeartbeat()) {
+            temp.execute(gameController);
+        }
+    }
+
+    private void handleClientDisconnect() {
+        printAsync("ClientSocket dies because cannot communicate no more with the client");
+        try {
+            if (gameController != null) {
+                gameController.leave(gameListenersHandlerSocket, nickname);
+            }
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
         }
     }
 }
+
 
