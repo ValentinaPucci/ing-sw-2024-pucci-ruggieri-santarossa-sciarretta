@@ -127,7 +127,6 @@ public abstract class UI {
 
     protected abstract void show_illegalMoveBecauseOf(String message);
 
-    //TODO: reimplement vale
     protected abstract void show_successfulMove();
 
     protected abstract void show_whereToDrawFrom();
