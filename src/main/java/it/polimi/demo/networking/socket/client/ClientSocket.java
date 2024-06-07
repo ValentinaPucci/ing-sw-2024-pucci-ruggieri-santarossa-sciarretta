@@ -25,9 +25,9 @@ import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
 public class ClientSocket extends Thread implements ClientInterface {
 
     /**
-     * This is the socket that represents the client
+     * This is the socket that corresponds to the client
      */
-    private transient Socket clientSoc;
+    private transient Socket ClientSocket;
 
     /**
      * This is the output stream
@@ -50,13 +50,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      * This is the game_id associated with the game
      */
     private int game_id;
-    /**
-     * This is the gameListner we use to perform every action requested by the server
-     */
-    private final ObserverManagerClient modelInvokedEvents;
-    /**
-     *
-     */
+    private final ObserverManagerClient modelEvents;
     private final transient PingSender socketHeartbeat;
     /**
      * This is the dynamics of the game
@@ -65,21 +59,20 @@ public class ClientSocket extends Thread implements ClientInterface {
 
     public ClientSocket(Dynamics dynamics) {
         this.dynamics = dynamics;
-        startConnection(DefaultValues.serverIp, DefaultValues.Default_port_Socket);
-        modelInvokedEvents =  new ObserverManagerClient(dynamics);
+        initiateConnection(DefaultValues.serverIp, DefaultValues.Default_port_Socket);
+        modelEvents =  new ObserverManagerClient(dynamics);
         this.start();
         socketHeartbeat = new PingSender(dynamics,this);
     }
 
     /**
-     * Reads all the incoming network traffic and execute the requested action
+     * Run for the ClientSocket, it reads the messages from the server and performs the action requested
      */
     public void run() {
         while (true) {
             try {
                 it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage msg = (SocketServerGenericMessage) ob_in.readObject();
-                msg.perform(modelInvokedEvents);
-
+                msg.perform(modelEvents);
             } catch (IOException | ClassNotFoundException | InterruptedException e) {
                 printAsync("[ERROR] Connection to server lost! " + e);
                 try {
@@ -92,47 +85,43 @@ public class ClientSocket extends Thread implements ClientInterface {
         }
     }
 
-//TODO: improvement
     /**
      * Start the Connection to the Socket Server
      *
-     * @param ip of the Socket server to connect
-     * @param port of the Socket server to connect
+     * @param serverIp of the Socket server to connect
+     * @param serverPort of the Socket server to connect
      */
-    private void startConnection(String ip, int port) {
-        boolean retry = false;
-        int attempt = 1;
-        int i;
+    private void initiateConnection(String serverIp, int serverPort) {
+        boolean connectionFailed;
+        int connectionAttempts = 0;
 
         do {
+            connectionFailed = false;
             try {
-                // New socket
-                clientSoc = new Socket(ip, port);
-                // Attach the output stream to the socket
-                ob_out = new ObjectOutputStream(clientSoc.getOutputStream());
-                // Attach the input stream to the socket
-                ob_in = new ObjectInputStream(clientSoc.getInputStream());
-                retry = false;
-            } catch (IOException e) {
-                if (!retry) {
-                    printAsync("[ERROR] CONNECTING TO SOCKET SERVER: \n\tClient RMI exception: " + e + "\n");
-                }
-                printAsyncNoLine("[#" + attempt + "]Waiting to reconnect to Socket Server on port: '" + port + "' with ip: '" + ip + "'");
+                // Establish new socket connection
+                ClientSocket = new Socket(serverIp, serverPort);
+                // Initialize output stream
+                ob_out = new ObjectOutputStream(ClientSocket.getOutputStream());
+                // Initialize input stream
+                ob_in = new ObjectInputStream(ClientSocket.getInputStream());
+            } catch (IOException ioException) {
+                connectionFailed = true;
+                connectionAttempts++;
+                printAsync("[ERROR] Failed to connect to the server: " + ioException + "\n");
+                printAsyncNoLine("[Attempt #" + connectionAttempts + "] Retrying connection to server at port: '" + serverPort + "' and IP: '" + serverIp + "'");
 
-                i = 0;
-                while (i < DefaultValues.seconds_between_reconnection) {
+                for (int i = 0; i < DefaultValues.seconds_between_reconnection; i++) {
                     try {
                         Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
+                    } catch (InterruptedException interruptedException) {
+                        throw new RuntimeException(interruptedException);
                     }
                     printAsyncNoLine(".");
-                    i++;
                 }
                 printAsyncNoLine("\n");
 
-                if (attempt >= DefaultValues.num_of_attempt_to_connect_toServer_before_giveup) {
-                    printAsyncNoLine("Give up reconnection, to many attempts!");
+                if (connectionAttempts >= DefaultValues.num_of_attempt_to_connect_toServer_before_giveup) {
+                    printAsyncNoLine("Aborting reconnection, too many failed attempts!");
                     try {
                         System.in.read();
                     } catch (IOException ex) {
@@ -140,11 +129,8 @@ public class ClientSocket extends Thread implements ClientInterface {
                     }
                     System.exit(-1);
                 }
-                retry = true;
-                attempt++;
             }
-        } while (retry);
-
+        } while (connectionFailed);
     }
 
     /**
@@ -155,7 +141,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     public void stopConnection() throws IOException {
         ob_in.close();
         ob_out.close();
-        clientSoc.close();
+        ClientSocket.close();
         if(socketHeartbeat.isAlive()) {
             socketHeartbeat.interrupt();
         }
