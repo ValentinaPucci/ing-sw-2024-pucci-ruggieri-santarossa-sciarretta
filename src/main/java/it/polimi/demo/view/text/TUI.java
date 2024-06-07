@@ -218,6 +218,11 @@ public class TUI extends UI {
     }
 
     @Override
+    protected void show_successfulMove() {
+
+    }
+
+    @Override
     public void show_whereToDrawFrom() {
         clearScreen();
         printAsync("""                       

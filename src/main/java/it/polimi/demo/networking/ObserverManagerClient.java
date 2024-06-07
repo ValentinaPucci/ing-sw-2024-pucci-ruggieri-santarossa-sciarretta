@@ -41,6 +41,11 @@ public class ObserverManagerClient implements Listener, Serializable {
     }
 
     @Override
+    public void successfulMove(ModelView model) throws RemoteException {
+        dynamics.successfulMove(model);
+    }
+
+    @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) throws RemoteException {
         dynamics.illegalMoveBecauseOf(model, reason_why);
     }

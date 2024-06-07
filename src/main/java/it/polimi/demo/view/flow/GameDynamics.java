@@ -630,10 +630,12 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         }
     }
 
-//    @Override
-//    public void successfulMove(ModelView modelView) throws RemoteException {
-//
-//    }
+    @Override
+    public void successfulMove(ModelView model) throws RemoteException {
+        if (model.getCurrentPlayerNickname().equals(nickname)) {
+            ui.show_successfulMove();
+        }
+    }
 
     @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) {

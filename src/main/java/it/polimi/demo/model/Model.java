@@ -465,7 +465,7 @@ public class Model implements Serializable {
                 }
                 else {
                     // remove the card from the player's hand
-                    //TODO: reimplement vale x gui listeners_handler.notify_successMove(this);
+                    listeners_handler.notify_successMove(this);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
@@ -487,7 +487,7 @@ public class Model implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    //TODO: reimplement vale x gui  listeners_handler.notify_successMove(this);
+                    listeners_handler.notify_successMove(this);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
@@ -524,7 +524,7 @@ public class Model implements Serializable {
                     listeners_handler.notify_illegalMove(this);
                 }
                 else {
-                    //TODO: reimplement vale x gui listeners_handler.notify_successMove(this);
+                    listeners_handler.notify_successMove(this);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
@@ -548,7 +548,7 @@ public class Model implements Serializable {
                 }
                 else {
                     // remove the card from the player's hand
-                    //TODO: reimplement vale x gui listeners_handler.notify_successMove(this);
+                    listeners_handler.notify_successMove(this);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
                     listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);

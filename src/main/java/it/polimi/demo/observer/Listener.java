@@ -23,6 +23,7 @@ public interface Listener extends Remote {
     void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException;
 
     void illegalMove(ModelView model) throws RemoteException;
+    void successfulMove(ModelView model) throws RemoteException;
 
     void illegalMoveBecauseOf(ModelView model, String reason_why) throws RemoteException;
 
@@ -55,6 +56,4 @@ public interface Listener extends Remote {
     void nextTurn(ModelView gamemodel) throws RemoteException;
 
     void playerDisconnected(ModelView gameModel, String nick) throws RemoteException;
-
-
 }

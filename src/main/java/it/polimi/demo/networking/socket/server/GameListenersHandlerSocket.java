@@ -244,6 +244,17 @@ public class GameListenersHandlerSocket implements Listener, Serializable {
     }
 
     @Override
+    public void successfulMove(ModelView model) throws RemoteException {
+        try {
+            //Else the object is not updated!!
+            out.writeObject(new msgSuccessfulMove(model));
+            finishSending();
+        } catch (IOException e) {
+
+        }
+    }
+
+    @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) throws RemoteException {
         try {
             //Else the object is not updated!!

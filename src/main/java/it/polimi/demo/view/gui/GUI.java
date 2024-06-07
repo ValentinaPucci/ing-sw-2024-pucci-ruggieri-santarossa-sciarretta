@@ -16,7 +16,6 @@ public class GUI extends UI {
 
     private ApplicationGUI guiApplication;
     private GuiReader GuiReader;
-    private boolean alreadyShowedPublisher = false; //to delete in tui
     private boolean alreadyShowedLobby = false;
 
     private String nickname;
@@ -24,7 +23,6 @@ public class GUI extends UI {
     public GUI(ApplicationGUI guiApplication, GuiReader GuiReader) {
         this.guiApplication = guiApplication;
         this.GuiReader = GuiReader;
-        //System.out.println("GUI constructor: "+ this.inputReaderGUI);
         nickname = null;
         init();
     }
@@ -42,11 +40,9 @@ public class GUI extends UI {
 
     @Override
     protected void show_menuOptions() {
-        if (alreadyShowedPublisher) {
-            callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.GuiReader));//So the controllers can add text to the buffer for the gameflow
-            callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
-            callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
-        }
+        callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.GuiReader));//So the controllers can add text to the buffer for the gameflow
+        callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
     }
 
 
@@ -209,10 +205,10 @@ public class GUI extends UI {
     }
 
     //TODO: reimplement vale
-//    @Override
-//    protected void show_successfulMove() {
-//        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove());
-//    }
+    @Override
+    protected void show_successfulMove() {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove());
+    }
 
     @Override
     protected void show_whereToDrawFrom() {
@@ -290,7 +286,6 @@ public class GUI extends UI {
     protected void resetImportantEvents() {
         this.importantEvents = new ArrayList<>();
         this.nickname = null;
-        alreadyShowedPublisher = true;
         alreadyShowedLobby = false;
     }
 
