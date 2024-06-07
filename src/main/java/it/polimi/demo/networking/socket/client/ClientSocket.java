@@ -111,9 +111,9 @@ public class ClientSocket extends Thread implements ClientInterface {
                         ob_out = new ObjectOutputStream(clientSoc.getOutputStream());
                         // Attach the input stream to the socket
                         ob_in = new ObjectInputStream(clientSoc.getInputStream());
-
                         // Break the stream if connection is successful
-                        throw new ConnectionSuccessfulException();
+                        //throw new ConnectionSuccessfulException();
+
                     } catch (IOException e) {
                         if (attempt == 1) {
                             printAsync("[ERROR] CONNECTING TO SOCKET SERVER: \n\tClient RMI exception: " + e + "\n");
