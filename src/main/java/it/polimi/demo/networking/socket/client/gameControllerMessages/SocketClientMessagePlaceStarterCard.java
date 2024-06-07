@@ -1,10 +1,10 @@
 package it.polimi.demo.networking.socket.client.gameControllerMessages;
 
-import it.polimi.demo.listener.GameListener;
+import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.rmi.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.rmi.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
 import java.io.Serializable;
@@ -19,20 +19,19 @@ public class SocketClientMessagePlaceStarterCard extends SocketClientGenericMess
     private Orientation orientation;
 
     public SocketClientMessagePlaceStarterCard(Orientation orientation) {
-
         this.orientation = orientation;
         this.isMessageForMainController = false;
     }
 
     /**
      * Method to execute the corresponding action for the message.
-     * @param lis the game listener
+     * @param lis the game observer
      * @param mainController the main controller of the application
      * @return the game controller interface
      * @throws RemoteException if there is an error in remote communication
      */
     @Override
-    public GameControllerInterface execute(GameListener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface execute(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
 

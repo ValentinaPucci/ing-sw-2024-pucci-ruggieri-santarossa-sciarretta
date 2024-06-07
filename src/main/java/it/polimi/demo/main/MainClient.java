@@ -4,7 +4,7 @@ import it.polimi.demo.view.gui.ApplicationGUI;
 import javafx.application.Application;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.view.flow.ConnectionSelection;
-import it.polimi.demo.view.flow.GameFlow;
+import it.polimi.demo.view.flow.GameDynamics;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -92,7 +92,7 @@ public class MainClient {
         if (selection == 1 || selection == 2) {
             // Starts the game with TUI
             // I can start directly here the GameFlow
-            new GameFlow(con_sel);
+            new GameDynamics(con_sel);
         } else {
             // Starts the game with GUI
             // For doing so, I need to start the Main of GUI (GameFlow needs to be started inside the thread of GUI)

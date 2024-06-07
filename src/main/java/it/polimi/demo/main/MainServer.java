@@ -4,64 +4,40 @@ import it.polimi.demo.DefaultValues;
 import it.polimi.demo.networking.rmi.RMIServer;
 import it.polimi.demo.networking.socket.server.Server;
 
-
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
-import static org.fusesource.jansi.Ansi.ansi;
-import static it.polimi.demo.networking.PrintAsync.printAsync;
-
+// todo: it is checked
 public class MainServer {
 
-    public static void main(String[] args) throws IOException {
-
-        String input;
-
-        do {
-            //clearCMD();
-            printAsync(ansi().cursor(1, 0).a("""
-                    Insert remote IP (leave empty for localhost)
-                    """));
-            input = new Scanner(System.in).nextLine();
-        } while (!input.equals("") && !isValidIP(input));
-        if (input.equals(""))
-            System.setProperty("java.rmi.server.hostname", DefaultValues.Remote_ip);
-        else{
-            DefaultValues.serverIp = input;
-            System.setProperty("java.rmi.server.hostname", input);
-        }
-
-        RMIServer.bind();
-
-        Server serverSOCKET = new Server();
-        serverSOCKET.start(DefaultValues.Default_port_Socket);
-
-    }
-
-    private static boolean isValidIP(String input) {
-        List<String> parsed;
-        parsed = Arrays.stream(input.split("\\.")).toList();
-        if (parsed.size() != 4) {
-            return false;
-        }
-        for (String part : parsed) {
+    public static void main(String[] args) {
+        String remoteIP = retrieveRemoteIP();
+        setupSystemProperty(remoteIP);
+        startServer(port -> {
             try {
-                Integer.parseInt(part);
-            } catch (NumberFormatException e) {
-                return false;
+                new Server().start(port);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        }
-        return true;
+        }, DefaultValues.Default_port_Socket);
+        startServer(port -> {
+            RMIServer.bind();
+        }, 0);
     }
 
-    private static void clearCMD() {
-        try {
-            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
-        } catch (IOException | InterruptedException e) {
-            printAsync("\033\143");   //for Mac
-        }
+    private static String retrieveRemoteIP() {
+        return new Scanner(System.in).nextLine();
     }
 
+    private static void setupSystemProperty(String remoteIP) {
+        System.setProperty("java.rmi.server.hostname", remoteIP.isEmpty() ? DefaultValues.Remote_ip : remoteIP);
+    }
+
+    private static void startServer(Consumer<Integer> serverStarter, int port) {
+        serverStarter.accept(port);
+    }
 }
+
+
+

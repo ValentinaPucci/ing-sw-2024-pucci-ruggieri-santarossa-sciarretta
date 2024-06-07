@@ -1,15 +1,15 @@
 package it.polimi.demo.networking.rmi;
 
-import it.polimi.demo.view.flow.Flow;
+import it.polimi.demo.view.flow.Dynamics;
 
 import java.util.TimerTask;
 
 public class TaskOnNetworkDisconnection extends TimerTask {
-    private Flow flow;
-    public TaskOnNetworkDisconnection(Flow flow){
-        this.flow = flow;
+    private Dynamics dynamics;
+    public TaskOnNetworkDisconnection(Dynamics dynamics){
+        this.dynamics = dynamics;
     }
     public void run() {
-        flow.noConnectionError();
+        dynamics.noConnectionError();
     }
 }

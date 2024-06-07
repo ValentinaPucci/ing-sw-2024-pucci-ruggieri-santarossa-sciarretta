@@ -1,6 +1,6 @@
 //package it.polimi.demo.Controller;
 //
-//import it.polimi.demo.listener.GameListener;
+//import it.polimi.demo.observer.Listener;
 //import it.polimi.demo.model.*;
 //import it.polimi.demo.*;
 //import it.polimi.demo.model.cards.gameCards.GoldCard;
@@ -30,7 +30,7 @@
 //    @Test
 //    public void createGameTest() throws RemoteException, GameEndedException {
 //        MainController mainController = new MainController();
-//        GameListener lis = new GameListener() {
+//        Listener lis = new Listener() {
 //            @Override
 //            public void modelChanged() throws RemoteException {
 //
@@ -251,7 +251,7 @@
 //    @Test
 //    public void joinFirstAvaibleGameTest() throws RemoteException {
 //        MainController mainController = new MainController();
-//        GameListener lis = new GameListener() {
+//        Listener lis = new Listener() {
 //            @Override
 //            public void modelChanged() throws RemoteException {
 //
@@ -311,7 +311,7 @@
 //    @Test
 //    public void joinGameTest() throws RemoteException{
 //        MainController mainController = new MainController();
-//        GameListener lis = new GameListener() {
+//        Listener lis = new Listener() {
 //            @Override
 //            public void modelChanged() throws RemoteException {
 //

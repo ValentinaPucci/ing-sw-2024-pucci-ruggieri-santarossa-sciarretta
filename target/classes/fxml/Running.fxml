@@ -31,19 +31,20 @@
                <Image url="@/Background.jpg" />
             </image>
          </ImageView>
-         <Pane fx:id="starterCardPane" layoutX="428.0" layoutY="571.0" prefHeight="66.0" prefWidth="97.0">
-            <children>
-               <ImageView fx:id="StarterCardImage" fitHeight="66.0" fitWidth="95.0" layoutX="-1.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true" />
-            </children></Pane>
-   
-         <Button fx:id="FlipStarter" layoutX="429.0" layoutY="522.0" mnemonicParsing="false" onAction="#flipStarterCard" prefHeight="30.0" prefWidth="94.0" text="FLIP STARTER">
-            <font>
-               <Font name="Luminari" size="8.0" />
-            </font>
-            <effect>
-               <ColorAdjust hue="0.17" saturation="0.3" />
-            </effect>
-         </Button>
+          <Pane fx:id="starterCardPane" layoutX="428.0" layoutY="571.0" prefHeight="66.0" prefWidth="97.0">
+              <children>
+                  <ImageView fx:id="StarterCardImage" fitHeight="66.0" fitWidth="95.0" layoutX="-1.0" layoutY="-1.0" onMouseClicked="#onStarterCardClicked" pickOnBounds="true" preserveRatio="true" />
+              </children>
+          </Pane>
+
+          <Button fx:id="FlipStarter" layoutX="429.0" layoutY="522.0" mnemonicParsing="false" onAction="#flipStarterCard" prefHeight="30.0" prefWidth="94.0" text="FLIP STARTER">
+              <font>
+                  <Font name="Luminari" size="8.0" />
+              </font>
+              <effect>
+                  <ColorAdjust hue="0.17" saturation="0.3" />
+              </effect>
+          </Button>
                <Button fx:id="FlipHand" layoutX="285.0" layoutY="523.0" mnemonicParsing="false" onAction="#flipCardHand" prefHeight="30.0" prefWidth="94.0" text="FLIP HAND">
                   <font>
                      <Font name="Luminari" size="8.0" />
@@ -93,45 +94,69 @@
                    <ImageView fx:id="bn29" fitHeight="35.0" fitWidth="35.0" layoutX="95.0" layoutY="73.0" />
                </children>
             </Pane>
-            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
-               <children>
-                  <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
-                    <content>
-                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="593.0" prefWidth="816.0" />
-                    </content>
-                  </ScrollPane>
-               </children>
-            </Pane>
-
 
             <Label layoutX="358.0" layoutY="13.0" text="Common Cards:" textFill="#4d0202">
                <font>
                   <Font name="Luminari" size="25.0" />
                </font>
             </Label>
-            <GridPane fx:id="commonCardsPane" hgap="10.0" layoutX="305.0" layoutY="59.0" prefHeight="210.0" prefWidth="300.0" vgap="10.0">
-               <columnConstraints>
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-               </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-               </rowConstraints>
-               <children>
-                  <ImageView fx:id="commonCard0" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="commonCard1" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
-                  <ImageView fx:id="commonCard2" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
-                  <ImageView fx:id="commonCard3" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                  <ImageView fx:id="commonCard4" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
-                  <ImageView fx:id="commonCard5" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                  <ImageView fx:id="commonCard6" fitHeight="65.0" fitWidth="88.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
-                  <ImageView fx:id="commonCard7" fitHeight="67.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                  <ImageView fx:id="commonCard8" fitHeight="64.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2" />
-               </children>
-            </GridPane>
+
+
+        <VBox fx:id="commonCardsVbox" layoutX="305.0" layoutY="59.0" prefHeight="210.0" prefWidth="300.0" spacing="10.0">
+            <children>
+                <HBox>
+                <Pane fx:id="commonCard1" onMouseClicked="#commonCard1Clicked">
+                    <children>
+                        <ImageView  fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true"/>
+                    </children>
+                </Pane>
+                <Pane  fx:id="commonCard2" onMouseClicked="#commonCard2Clicked">
+                    <children>
+                        <ImageView fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true"/>
+                    </children>
+                </Pane>
+                <Pane  fx:id="commonCard3" onMouseClicked="#commonCard3Clicked">
+                    <children>
+                        <ImageView fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true"/>
+                    </children>
+                </Pane>
+                </HBox>
+                <HBox>
+                <Pane fx:id="commonCard4" onMouseClicked="#commonCard4Clicked">
+                    <children>
+                        <ImageView  fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true"/>
+                    </children>
+                </Pane>
+                <Pane fx:id="commonCard5" onMouseClicked="#commonCard5Clicked">
+                    <children>
+                        <ImageView  fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true"/>
+                    </children>
+                </Pane>
+                <Pane fx:id="commonCard6" onMouseClicked="#commonCard6Clicked">
+                    <children>
+                        <ImageView  fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true"/>
+                    </children>
+                </Pane>
+                </HBox>
+                <HBox>
+                <Pane fx:id="commonCard7">
+                    <children>
+                        <ImageView  fitHeight="65.0" fitWidth="88.0" pickOnBounds="true" preserveRatio="true"/>
+                    </children>
+                </Pane>
+                <Pane fx:id="commonCard8">
+                    <children>
+                        <ImageView  fitHeight="67.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true"/>
+                    </children>
+                </Pane>
+                <Pane fx:id="commonCard9">
+                    <children>
+                        <ImageView  fitHeight="64.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true"/>
+                    </children>
+                </Pane>
+                </HBox>
+            </children>
+        </VBox>
 
 
             <Label layoutX="365.0" layoutY="286.0" text="Your objective:" textFill="#4d0202">
@@ -139,19 +164,20 @@
                   <Font name="Luminari" size="25.0" />
                </font>
             </Label>
-            <GridPane fx:id="personalObjectivesPane" hgap="10.0" layoutX="347.0" layoutY="351.0" prefHeight="59.0" prefWidth="211.0" vgap="10.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <ImageView fx:id="personalObjective0" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="personalObjective1" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
-               </children>
-            </GridPane>
+            <HBox fx:id="personalObjectivesPane" layoutX="347.0" layoutY="337.0" prefHeight="73.0" prefWidth="211.0" spacing="10.0">
+                <children>
+                    <Pane fx:id="personalObjective0Pane" onMouseClicked="#onPersonalObjective0Clicked">
+                        <children>
+                            <ImageView fx:id="personalObjective0" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" />
+                        </children>
+                    </Pane>
+                    <Pane fx:id="personalObjective1Pane" onMouseClicked="#onPersonalObjective1Clicked">
+                        <children>
+                            <ImageView fx:id="personalObjective1" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" />
+                        </children>
+                    </Pane>
+                </children>
+            </HBox>
 
 
             <Label layoutX="60.0" layoutY="515.0" prefHeight="41.0" prefWidth="225.0" text="Your card hand:" textFill="#4d0202">
@@ -159,21 +185,30 @@
                   <Font name="Luminari" size="25.0" />
                </font>
             </Label>
-            <GridPane fx:id="cardHandPane" hgap="10.0" layoutX="67.0" layoutY="571.0" prefHeight="65.0" prefWidth="318.0" vgap="10.0">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="114.10699462890625" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="113.29766845703125" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <ImageView fx:id="handCard0" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" />
-                  <ImageView fx:id="handCard1" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" />
-                  <ImageView fx:id="handCard2" fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" />
-               </children>
-            </GridPane>
+        <VBox fx:id="cardHandVBox" layoutX="67.0" layoutY="571.0" prefHeight="65.0" prefWidth="318.0" spacing="10.0">
+            <children>
+                <HBox spacing="10.0">
+                    <children>
+                        <Pane fx:id="handCard0" onMouseClicked="#onCardHand0Clicked">
+                            <children>
+                                <ImageView fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" />
+                            </children>
+                        </Pane>
+                        <Pane fx:id="handCard1" onMouseClicked="#onCardHand1Clicked">
+                            <children>
+                                <ImageView  fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" />
+                            </children>
+                        </Pane>
+                        <Pane fx:id="handCard2" onMouseClicked="#onCardHand2Clicked">
+                            <children>
+                                <ImageView  fitHeight="66.0" fitWidth="95.0" pickOnBounds="true" preserveRatio="true" />
+                            </children>
+                        </Pane>
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+
 
 
             <GridPane fx:id="otherPlayers" gridLinesVisible="true" layoutX="600.0" layoutY="693.0" prefHeight="131.0" prefWidth="347.0">
@@ -246,12 +281,24 @@
                                     </items>
                                 </ComboBox>
                                 <TextField fx:id="chatInput" prefHeight="26.0" prefWidth="218.0" />
-                                <Button onAction="#sendMessage" prefHeight="26.0" prefWidth="49.0" text="Send" />
+                                <Button onAction="#ActionSendMessage" prefHeight="26.0" prefWidth="49.0" text="Send" />
                             </children>
                         </HBox>
                     </children>
                 </VBox>
             </children>
         </Pane>
+
+        <!--PERSONAL BOARD-->
+        <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
+            <children>
+                <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
+                    <content>
+                        <AnchorPane fx:id="personalBoardAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
+                    </content>
+                </ScrollPane>
+            </children>
+        </Pane>
+
  </children>
 </AnchorPane>

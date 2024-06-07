@@ -1,7 +1,7 @@
 package it.polimi.demo.networking.socket.client.serverToClientMessages;
 
-import it.polimi.demo.listener.GameListener;
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.observer.Listener;
+import it.polimi.demo.model.ModelView;
 
 import java.rmi.RemoteException;
 
@@ -11,13 +11,13 @@ import java.rmi.RemoteException;
  * indicating that it is the next turn in the game.
  */
 public class msgNextTurn extends SocketServerGenericMessage {
-    private GameModelImmutable gamemodel;
+    private ModelView gamemodel;
 
     /**
      * Constructor of the class.
      * @param gamemodel the immutable game model
      */
-    public msgNextTurn(GameModelImmutable gamemodel) {
+    public msgNextTurn(ModelView gamemodel) {
         this.gamemodel = gamemodel;
     }
 
@@ -27,7 +27,7 @@ public class msgNextTurn extends SocketServerGenericMessage {
      * @throws RemoteException if there is an error in remote communication
      */
     @Override
-    public void execute(GameListener lis) throws RemoteException {
+    public void execute(Listener lis) throws RemoteException {
         lis.nextTurn(gamemodel);
     }
 }

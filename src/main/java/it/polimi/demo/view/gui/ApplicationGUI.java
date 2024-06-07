@@ -1,12 +1,12 @@
 package it.polimi.demo.view.gui;
 
-import it.polimi.demo.model.gameModelImmutable.GameModelImmutable;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.flow.ConnectionSelection;
-import it.polimi.demo.view.flow.GameFlow;
+import it.polimi.demo.view.flow.GameDynamics;
 import it.polimi.demo.view.gui.controllers.*;
 import it.polimi.demo.view.gui.scene.SceneType;
-import it.polimi.demo.view.flow.utilities.inputReaderGUI;
+import it.polimi.demo.view.flow.utilities.GuiReader;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -32,7 +32,7 @@ import static it.polimi.demo.view.gui.scene.SceneType.*;
 public class ApplicationGUI extends Application {
     private Stage primaryStage;
     private StackPane root;
-    private GameFlow gameFlow;
+    private GameDynamics gameDynamics;
     private ArrayList<SceneInfo> scenes;
     private double widthOld, heightOld;
     private boolean resizing = true;
@@ -43,12 +43,10 @@ public class ApplicationGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        gameFlow = new GameFlow(this, ConnectionSelection.valueOf(getParameters().getUnnamed().get(0)));
+        gameDynamics = new GameDynamics(this, ConnectionSelection.valueOf(getParameters().getUnnamed().getFirst()));
         loadScenes();
-
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Codex Naturalis");
-
         root = new StackPane();
     }
 
@@ -97,7 +95,6 @@ public class ApplicationGUI extends Application {
         resizing=true;
 
         InputStream logoStream = ApplicationGUI.class.getClassLoader().getResourceAsStream("logo.png");
-        System.out.println(logoStream); // Stampa per debug
         if (logoStream != null) {
             primaryStage.getIcons().add(new Image(logoStream));
         } else {
@@ -105,12 +102,11 @@ public class ApplicationGUI extends Application {
         }
     }
 
-    public void setInputReaderGUItoAllControllers(inputReaderGUI inputReaderGUI) {
+    public void setInputReaderGUItoAllControllers(GuiReader GuiReader) {
         loadScenes();
         for (SceneInfo s : scenes) {
-            s.setInputReaderGUI(inputReaderGUI);
+            s.setInputReaderGUI(GuiReader);
         }
-        System.out.println("setInputReaderGUItoAllControllers");
     }
 
     public void rescale(double width, double heigh) {
@@ -125,7 +121,7 @@ public class ApplicationGUI extends Application {
             widthOld = widthWindow;
             heightOld = heightWindow;
             Scale scale = new Scale(w, h, 0, 0);
-            //primaryStage.getScene().getRoot().getTransforms().add(scale);
+            primaryStage.getScene().getRoot().getTransforms().add(scale);
             primaryStage.getScene().lookup("#content").getTransforms().add(scale);
         }
     }
@@ -206,7 +202,7 @@ public class ApplicationGUI extends Application {
         panePlayerLobby.getChildren().add(stackPane);
     }
 
-    public void showPlayerToLobby(GameModelImmutable model) {
+    public void showPlayerToLobby(ModelView model) {
         hidePanesInLobby();
         int i = 0;
         for (PlayerIC p : model.getPlayersConnected()) {
@@ -222,13 +218,14 @@ public class ApplicationGUI extends Application {
     //---------------------------------RUNNING----------------------------------------------
 
 
-    public void changeTurn(GameModelImmutable model, String nickname) {
+    public void changeTurn(ModelView model, String nickname) {
+        System.out.println("CHANGE TURN");
         RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setPlayersPointsAndNicknames(model, nickname);
         controller.changeTurn(model, nickname);
     }
 
-    public void showRunningModel(GameModelImmutable model, String nickname) {
+    public void showRunningModel(ModelView model, String nickname) {
         RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setCardHand(model, nickname);
         controller.setStarterCardFront(model, nickname);
@@ -240,12 +237,12 @@ public class ApplicationGUI extends Application {
         //TODO: controller.setOthersPersonalBoard(model, nickname);
     }
 
-    public void showPlayerDrawnCard(GameModelImmutable model, String nickname) {
+    public void showPlayerDrawnCard(ModelView model, String nickname) {
         RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
         controller.setPlayerDrawnCard(model, nickname);
     }
 
-    public void showPlayerPlacedCard(GameModelImmutable model, String nickname) {
+    public void showPlayerPlacedCard(ModelView model, String nickname) {
         RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
         controller.setCardHand(model, nickname);
         //TODO: controller.setPersonalBoard(model, nickname);

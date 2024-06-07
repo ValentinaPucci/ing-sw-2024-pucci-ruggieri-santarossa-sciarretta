@@ -4,7 +4,7 @@ Firstly, we need to decide whether to start with *GameModel* class or with *Game
 
 Some of the major functionalities GameModel has to implement are the following:
 
-- Integration with the package *Listener*: the observer pattern is useful when dealing with the network, but it seems to be unnecessary at the moment.
+- Integration with the package *Listener*: the listener pattern is useful when dealing with the network, but it seems to be unnecessary at the moment.
 - Reference to *CommonBoard* class: trivially, where does the client pick a card in order to play? Obviously from a deck, which is in CommonBoard class.
 - Reference to a list of *Player*(s): why? because someone has to play the game (hence, we need a reference to the current playing player)! GameModel manages that list in the following way: adds/removes a player, reconnects/disconnects a player, checks if a player is ready to play, modifies the status of the game accordingly to the information contained in the list of players.
 - Reference to *GameStatus* (enumeration {WAIT, RUNNING, LASTROUND, SECONDLASTROUND, ENDED}): note that it is the player which influences the status and not vice-versa. Moreover, if the status is changing (i.e. the controller is setting a new status), we notify this change to all the listeners. As an example, consider a situation where the current player place a card into its personal board and reaches 20 points. By doing so, the game enters in the status SECONDLASTROUND (which is set by the controller).
@@ -17,7 +17,7 @@ What about the *GameController* class? Firstly we need a reference to *GameModel
 - GameController manage the players exactly in the same way as GameModel does. If all the players are ready to start the game (and they are enough), the GameController initializes the CommonBoard using the initializer already present in *commonBoard* class. Moreover, GameController extract out of random the first player to play (this passage is crucial for our game logic, it is the black placeholder!).
 - We also need a number of specific 'getters': the most important are getPlayerPosition, drawFromConcreteDeck, drawFromTable, getGameStatus...
 - A crucial method to insert is placeCard. Recall the GameController takes care of the game status, eventually updating it accordingly to the game dynamic. In this case, after the placement of a card, we could end up entering in the LASTROUND. This imply that the game status must be updated directly by GameController. In fact, GameController does not have an attribute for game status. Indeed, this makes sense if we think of a Controller as acting (and thus modifying) its relative model.
-- We need to implement the observer design pattern: GameController will contain methods like addListener and removeListener (calling the respective method in GameModel). However, we left this part aside for the moment.
+- We need to implement the listener design pattern: GameController will contain methods like addListener and removeListener (calling the respective method in GameModel). However, we left this part aside for the moment.
 
 Simultaneously, GameController implements GameControllerInterface, an interface belonging to the networking package, specifically inside *rmi* package. In this context, GameController can be seen as the implementation of GameControllerInterface needed by rmi. From this point of view, many of the previously mentioned methods are in fact ovveriding what is specified in GameControllerInterface.
 Before going on, look at lines 298 (to 311). The RMI client is in fact our physical player, and thus he is able to draw a card from a deck as well as place a card on his personal board. Hence, we need those methods inside the interface rmi uses to communicate with the model, i.e. GameControllerInterface.
@@ -62,15 +62,43 @@ We would like to implement this advanced functionality on our program. Namely, w
 - Manage the GameStatus! Implement GameFlow method correctly in the controller.
 
 # ToDo (11 may 2024)
-- check the real condition of gameFlow! For example, the game should enter in running status only when the cards are dealt to the players.
+- check the real condition of gameDynamics! For example, the game should enter in running status only when the cards are dealt to the players.
 
 # ToDo (17 may 2024)
 - we don't provide a list of possible placeable positions in the PersonalBoard, so we need a method that continuously asks the client a different set of coordinate on the PersonalBoard if the previous couple entered was an invalid position
 
-# ToDo (03 june 2024) x GUI based on TUI flow
+# ToDo (03 june 2024) x GUI based on TUI dynamics
 1. objective card to choose (1 / 2)
 2. starter card orientation (f / b)
 3. place starter card 
+
+# IDEAS x disable buttons / cards
+- In case of images -> I need to use the relative Pane
+
+- If I want them to be clickable: starterCardPane.setDisable(false); / FlipStarter.setDisable(false);
+- If I want to disable them: FlipStarter.setDisable(true); / starterCardPane.setDisable(true);
+- If I want to make them invisible: setVisible(false)
+
+  - If I want to disable all others cards in group:
+  
+        cardPanes = Arrays.asList(starterCardPane /*, otherPanes */);
+        buttons = Arrays.asList(FlipStarter /*, otherButtons */);
+  
+        // Initially, only the starter card and button are enabled
+
+        setComponentsDisable(cardPanes, true);
+        setComponentsDisable(buttons, true);
+
+        starterCardPane.setDisable(false);
+        FlipStarter.setDisable(false);
+
+        ...
+
+        private void setComponentsDisable(List<? extends javafx.scene.Node> components, boolean disable) {
+            for (javafx.scene.Node component : components) {
+                component.setDisable(disable);
+                }
+            }       
 
 # IDEAS FOR PERSONAL BOARD IN GUI (03 june 2024)
 - AnchorPane + ScrollPane (AnchorPane utilizzato per contenere le ImageView, AnchorPane all'interno dello ScrollPane per gestire lo scorrimento.)
@@ -169,20 +197,10 @@ da chat gpt 4:
     }
 
 
-Spiegazione del Codice:
-
-Definizione dell'Interfaccia Grafica:
-Creiamo un AnchorPane e un ScrollPane.
-Configuriamo il ScrollPane per adattarsi alle dimensioni dell'AnchorPane.
-
-Coordinate Valide:
-Definiamo una lista di coordinate valide (validCoordinates).
-Implementiamo un metodo isValidCoordinate per verificare se una coordinata cliccata è valida.
-
-Aggiunta di ImageView:
-Aggiungiamo un evento di clic all'AnchorPane.
-Se la coordinata cliccata è valida, aggiungiamo una nuova ImageView alle coordinate specifiche.
-
-Prossimi Passi:
-a. Aggiungere test per verificare se le coordinate sono corrette.
-b. Implementare la gestione delle immagini in modo più flessibile.
+COORDINATE SULL'ANCHOR PANE:
+- STARTERCARD: (296.5, 408)
+- POSIZIONI POSSIBILI STEP 2: NE(488.0, 306.0), SE(488.0, 343.0), SW(418.0, 346.0), NW(418.0, 306.0)
+-                                (80.0, 9.5)      (80.0, 46.5)       (10.0, 49.5)      (8.0, 10.5)
+- 
+- CORNER NW: (410.0, 298.0), (428.0, 298.0),  (428.0, 318.0), (410.0, 318.0)    --> deve mappare con (0,0) del model
+-             (2.0, 1.5)       (20.0, 1.5)       (20.0, 21.5)     (2.0, 21.5)
