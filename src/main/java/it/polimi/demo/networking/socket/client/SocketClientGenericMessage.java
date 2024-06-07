@@ -21,7 +21,7 @@ public abstract class SocketClientGenericMessage implements Serializable {
      * @return the game controller interface
      * @throws RemoteException if there is a remote exception
      */
-    public abstract GameControllerInterface execute(Listener lis, MainControllerInterface mainController) throws RemoteException;
+    public abstract GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException;
 
     /**
      * Executes the corresponding action for the message.
@@ -29,7 +29,7 @@ public abstract class SocketClientGenericMessage implements Serializable {
      * @throws RemoteException if there is a remote exception
      * @throws GameEndedException if the game has ended
      */
-    public abstract void execute(GameControllerInterface gameController) throws RemoteException, GameEndedException;
+    public abstract void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException;
 
     /**
      * Checks if the message is intended for the main controller.

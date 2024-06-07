@@ -6,25 +6,23 @@ import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
 import java.io.Serial;
-import java.io.Serializable;
 import java.rmi.RemoteException;
 
-
-public class SocketClientMessageJoinFirstAvailableGame extends SocketClientGenericMessage implements Serializable {
-
+public class SocketClientMsgLeaveGame extends SocketClientGenericMessage {
 
     @Serial
-    private static final long serialVersionUID = -5403664201604025015L;
+    private static final long serialVersionUID = 6214430342463902214L;
+    int game_id;
 
-    public SocketClientMessageJoinFirstAvailableGame(String nick) {
+    public SocketClientMsgLeaveGame(String nick, int game_id) {
+        this.game_id = game_id;
         this.nick = nick;
         this.isMessageForMainController = true;
     }
 
-
     @Override
     public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return mainController.joinFirstAvailableGame(lis, nick);
+        return mainController.leaveGame(lis, nick, game_id);
     }
 
 

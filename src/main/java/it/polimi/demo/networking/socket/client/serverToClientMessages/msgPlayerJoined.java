@@ -4,31 +4,19 @@ import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.ModelView;
 
 import java.io.IOException;
+import java.io.Serial;
 
-/**
- * msgPlayerJoined class.
- * Extends SocketServerGenericMessage and is used to send a message to the client
- * indicating that a player has joined the game.
- */
 public class msgPlayerJoined extends SocketServerGenericMessage {
+    @Serial
+    private static final long serialVersionUID = 8811857756384930907L;
     private ModelView gamemodel;
 
-    /**
-     * Constructor of the class.
-     * @param gamemodel the immutable game model
-     */
     public msgPlayerJoined(ModelView gamemodel) {
         this.gamemodel = gamemodel;
     }
 
-    /**
-     * Method to execute the corresponding action for the message.
-     * @param lis the game listener
-     * @throws IOException if there is an I/O error
-     * @throws InterruptedException if the execution is interrupted
-     */
     @Override
-    public void execute(Listener lis) throws IOException, InterruptedException {
+    public void perform(Listener lis) throws IOException, InterruptedException {
         lis.playerJoined(gamemodel);
     }
 }

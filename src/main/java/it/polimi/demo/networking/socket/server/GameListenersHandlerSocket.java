@@ -10,6 +10,7 @@ import it.polimi.demo.networking.socket.client.serverToClientMessages.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
@@ -19,8 +20,8 @@ import java.rmi.RemoteException;
  * It has a private ObjectOutputStream where it writes the data
  **/
 public class GameListenersHandlerSocket implements Listener, Serializable {
-
-
+    @Serial
+    private static final long serialVersionUID = -44724272240516582L;
     private final transient ObjectOutputStream out;
 
     /**

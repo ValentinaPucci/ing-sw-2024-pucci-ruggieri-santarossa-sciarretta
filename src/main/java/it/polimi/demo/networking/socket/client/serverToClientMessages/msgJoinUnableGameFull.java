@@ -4,34 +4,23 @@ import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.ModelView;
 
+import java.io.Serial;
 import java.rmi.RemoteException;
 
-/**
- * msgJoinUnableGameFull class.
- * Extends SocketServerGenericMessage and is used to send a message to the client
- * indicating that a player was unable to join the game because it is full.
- */
 public class msgJoinUnableGameFull extends SocketServerGenericMessage {
+    @Serial
+    private static final long serialVersionUID = -4670478946104542181L;
     private Player p;
     private ModelView gamemodel;
 
-    /**
-     * Constructor of the class.
-     * @param p the player who was unable to join the game
-     * @param gamemodel the immutable game model
-     */
+
     public msgJoinUnableGameFull(Player p, ModelView gamemodel) {
         this.p = p;
         this.gamemodel = gamemodel;
     }
 
-    /**
-     * Method to execute the corresponding action for the message.
-     * @param lis the game observer
-     * @throws RemoteException if there is an error in remote communication
-     */
     @Override
-    public void execute(Listener lis) throws RemoteException {
+    public void perform(Listener lis) throws RemoteException {
         // lis.JoinUnableGameFull(p,gamemodel);
     }
 }

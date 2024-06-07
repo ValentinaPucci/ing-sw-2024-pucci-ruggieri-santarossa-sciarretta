@@ -4,15 +4,14 @@ import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
 
+import java.io.Serial;
 import java.rmi.RemoteException;
 
-/**
- * msgGrabbedTile class.
- * Extends SocketServerGenericMessage and is used to send a message to the client
- * indicating that a tile has been grabbed from the playground.
- */
+
 public class msgCardPlaced extends SocketServerGenericMessage {
 
+    @Serial
+    private static final long serialVersionUID = 1646902891110952903L;
     private ModelView gamemodel;
     private int x;
     private int y;
@@ -29,13 +28,9 @@ public class msgCardPlaced extends SocketServerGenericMessage {
         this.gamemodel = gamemodel;
     }
 
-    /**
-     * Method to execute the corresponding action for the message.
-     * @param lis the game listener
-     * @throws RemoteException if there is an error in remote communication
-     */
+
     @Override
-    public void execute(Listener lis) throws RemoteException {
+    public void perform(Listener lis) throws RemoteException {
         lis.cardPlaced(gamemodel, x, y, orientation);
     }
 }
