@@ -3,34 +3,22 @@ package it.polimi.demo.networking.socket.client.serverToClientMessages;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.ModelView;
 
+import java.io.Serial;
 import java.rmi.RemoteException;
 
-/**
- * msgPlayerDisconnected class.
- * Extends SocketServerGenericMessage and is used to send a message to the client
- * indicating that a player has been disconnected from the game.
- */
 public class msgPlayerDisconnected extends SocketServerGenericMessage {
+    @Serial
+    private static final long serialVersionUID = 888520400066911096L;
     private String nick;
     private ModelView gameModel;
 
-    /**
-     * Constructor of the class.
-     * @param gameModel the immutable game model
-     * @param nick the nickname of the disconnected player
-     */
     public msgPlayerDisconnected(ModelView gameModel, String nick) {
         this.nick = nick;
         this.gameModel=gameModel;
     }
 
-    /**
-     * Method to execute the corresponding action for the message.
-     * @param lis the game listener
-     * @throws RemoteException if there is an error in remote communication
-     */
     @Override
-    public void execute(Listener lis) throws RemoteException {
+    public void perform(Listener lis) throws RemoteException {
         lis.playerDisconnected(gameModel,nick);
     }
 }

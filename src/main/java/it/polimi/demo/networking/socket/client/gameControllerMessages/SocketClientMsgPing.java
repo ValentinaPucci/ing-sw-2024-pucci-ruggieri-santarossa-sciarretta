@@ -6,23 +6,27 @@ import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 
+import java.io.Serial;
 import java.rmi.RemoteException;
 
-public class SocketClientMessageHeartbeat extends SocketClientGenericMessage {
+public class SocketClientMsgPing extends SocketClientGenericMessage {
 
-    public SocketClientMessageHeartbeat(String nick) {
+    @Serial
+    private static final long serialVersionUID = 6780458660694095047L;
+
+    public SocketClientMsgPing(String nick) {
         this.nick = nick;
         this.isMessageForMainController = false;
         this.isHeartbeat = true;
     }
 
     @Override
-    public GameControllerInterface execute(Listener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
 
     @Override
-    public void execute(GameControllerInterface gameController) throws RemoteException, GameEndedException {
+    public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
 
     }
 }

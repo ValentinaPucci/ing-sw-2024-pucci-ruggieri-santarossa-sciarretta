@@ -105,10 +105,10 @@ public class ClientHandler extends Thread implements Serializable {
             while (!this.isInterrupted()) {
                 temp = processingQueue.take();
                 if (temp.isMessageForMainController()) {
-                    gameController = temp.execute(gameListenersHandlerSocket, MainController.getControllerInstance());
+                    gameController = temp.perform(gameListenersHandlerSocket, MainController.getControllerInstance());
                     nickname = gameController != null ? temp.getNick() : null;
                 } else if (!temp.isHeartbeat()) {
-                        temp.execute(gameController);
+                        temp.perform(gameController);
                 }
             }
         } catch (RemoteException | GameEndedException e) {

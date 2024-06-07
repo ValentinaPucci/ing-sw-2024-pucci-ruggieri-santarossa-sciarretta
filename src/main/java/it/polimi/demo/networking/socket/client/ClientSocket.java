@@ -3,6 +3,7 @@ package it.polimi.demo.networking.socket.client;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
+import it.polimi.demo.model.exceptions.ConnectionSuccessfulException;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.ObserverManagerClient;
 import it.polimi.demo.networking.PingSender;
@@ -13,17 +14,13 @@ import it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServ
 import it.polimi.demo.view.flow.ClientInterface;
 import it.polimi.demo.view.flow.Dynamics;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
+import java.io.*;
+import java.util.stream.IntStream;
+
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
-
-//TODO:Check transient fields
 
 public class ClientSocket extends Thread implements ClientInterface {
 
@@ -45,8 +42,13 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     private String nickname;
 
+    /**
+     * This is the gameController associated with the game
+     */
     private GameControllerInterface gameController = null;
-
+    /**
+     * This is the game_id associated with the game
+     */
     private int game_id;
     /**
      * This is the gameListner we use to perform every action requested by the server
@@ -57,7 +59,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     private final transient PingSender socketHeartbeat;
     /**
-     *
+     * This is the dynamics of the game
      */
     private Dynamics dynamics;
 
@@ -76,7 +78,7 @@ public class ClientSocket extends Thread implements ClientInterface {
         while (true) {
             try {
                 it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage msg = (SocketServerGenericMessage) ob_in.readObject();
-                msg.execute(modelInvokedEvents);
+                msg.perform(modelInvokedEvents);
 
             } catch (IOException | ClassNotFoundException | InterruptedException e) {
                 printAsync("[ERROR] Connection to server lost! " + e);
@@ -98,53 +100,50 @@ public class ClientSocket extends Thread implements ClientInterface {
      * @param port of the Socket server to connect
      */
     private void startConnection(String ip, int port) {
-        boolean retry = false;
-        int attempt = 1;
-        int i;
-
-        do {
-            try {
-                // New socket
-                clientSoc = new Socket(ip, port);
-
-                // Attach the output stream to the socket
-                ob_out = new ObjectOutputStream(clientSoc.getOutputStream());
-                // Attach the input stream to the socket
-                ob_in = new ObjectInputStream(clientSoc.getInputStream());
-                retry = false;
-            } catch (IOException e) {
-                if (!retry) {
-                    printAsync("[ERROR] CONNECTING TO SOCKET SERVER: \n\tClient RMI exception: " + e + "\n");
-                }
-                printAsyncNoLine("[#" + attempt + "]Waiting to reconnect to Socket Server on port: '" + port + "' with ip: '" + ip + "'");
-
-                i = 0;
-                while (i < DefaultValues.seconds_between_reconnection) {
+        IntStream.iterate(1, i -> i + 1)
+                .limit(DefaultValues.num_of_attempt_to_connect_toServer_before_giveup)
+                .forEach(attempt -> {
                     try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    printAsyncNoLine(".");
-                    i++;
-                }
-                printAsyncNoLine("\n");
+                        // New socket
+                        clientSoc = new Socket(ip, port);
 
-                if (attempt >= DefaultValues.num_of_attempt_to_connect_toServer_before_giveup) {
-                    printAsyncNoLine("Give up reconnection, to many attempts!");
-                    try {
-                        System.in.read();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    System.exit(-1);
-                }
-                retry = true;
-                attempt++;
-            }
-        } while (retry);
+                        // Attach the output stream to the socket
+                        ob_out = new ObjectOutputStream(clientSoc.getOutputStream());
+                        // Attach the input stream to the socket
+                        ob_in = new ObjectInputStream(clientSoc.getInputStream());
 
+                        // Break the stream if connection is successful
+                        throw new ConnectionSuccessfulException();
+                    } catch (IOException e) {
+                        if (attempt == 1) {
+                            printAsync("[ERROR] CONNECTING TO SOCKET SERVER: \n\tClient RMI exception: " + e + "\n");
+                        }
+                        printAsyncNoLine("[#" + attempt + "]Waiting to reconnect to Socket Server on port: '" + port + "' with ip: '" + ip + "'");
+
+                        IntStream.range(0, DefaultValues.seconds_between_reconnection).forEach(i -> {
+                            try {
+                                Thread.sleep(1000);
+                            } catch (InterruptedException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            printAsyncNoLine(".");
+                        });
+
+                        printAsyncNoLine("\n");
+
+                        if (attempt >= DefaultValues.num_of_attempt_to_connect_toServer_before_giveup) {
+                            printAsyncNoLine("Give up reconnection, too many attempts!");
+                            try {
+                                System.in.read();
+                            } catch (IOException ex) {
+                                throw new RuntimeException(ex);
+                            }
+                            System.exit(-1);
+                        }
+                    }
+                });
     }
+    // Custom exception to indicate successful connection
 
     /**
      * Close the connection
@@ -160,87 +159,73 @@ public class ClientSocket extends Thread implements ClientInterface {
         }
     }
 
+    private void sendMessage(Object message) throws IOException {
+        ob_out.writeObject(message);
+        finishSending();
+    }
+
+
     @Override
-    public void createGame(String nickname, int num_of_players) throws IOException, InterruptedException, NotBoundException {
+    public void createGame(String nickname, int num_of_players) throws IOException {
         this.nickname = nickname;
-        System.out.println("Nickname in Client socket [out]: " + nickname);
-        ob_out.writeObject(new SocketClientMessageCreateGame(nickname, num_of_players));
-        finishSending();
-        if (!socketHeartbeat.isAlive()) {
-            socketHeartbeat.start();
-        }
+        sendMessage(new SocketClientMsgGameCreation(nickname, num_of_players));
+        startHeartbeat();
     }
 
     @Override
-    public void joinGame(String nick, int idGame) throws IOException, InterruptedException, NotBoundException {
+    public void joinGame(String nick, int idGame) throws IOException {
         nickname = nick;
-        ob_out.writeObject(new SocketClientMessageJoinGame(nick, idGame));
-        finishSending();
-        if(!socketHeartbeat.isAlive()) {
-            socketHeartbeat.start();
-        }
+        sendMessage(new SocketClientMsgJoinGame(nick, idGame));
+        startHeartbeat();
     }
 
     @Override
-    public void joinFirstAvailableGame(String nick) throws IOException, InterruptedException, NotBoundException {
+    public void joinFirstAvailableGame(String nick) throws IOException {
         nickname = nick;
-        ob_out.writeObject(new SocketClientMessageJoinFirstAvailableGame(nick));
-        finishSending();
-        if(!socketHeartbeat.isAlive()) {
-            socketHeartbeat.start();
-        }
+        sendMessage(new SocketClientMessageJoinFirstAvailableGame(nick));
+        startHeartbeat();
     }
 
     @Override
-    public void leave(String nick, int idGame) throws IOException, NotBoundException {
-        ob_out.writeObject(new SocketClientMessageLeave(nick, idGame));
-        finishSending();
-        nickname=null;
-        if(socketHeartbeat.isAlive()) {
-            socketHeartbeat.interrupt();
-        }
+    public void leave(String nick, int idGame) throws IOException {
+        sendMessage(new SocketClientMsgLeaveGame(nick, idGame));
+        nickname = null;
+        stopHeartbeat();
     }
 
     @Override
-    public void setAsReady() throws IOException, NotBoundException {
-        ob_out.writeObject(new SocketClientMessageSetReady(nickname));
-        finishSending();
+    public void setAsReady() throws IOException {
+        sendMessage(new SocketClientMsgSetReady(nickname));
     }
 
     @Override
-    public void placeStarterCard(Orientation orientation) throws IOException, GameEndedException, NotBoundException {
-        ob_out.writeObject(new SocketClientMessagePlaceStarterCard(orientation));
-        finishSending();
+    public void placeStarterCard(Orientation orientation) throws IOException, GameEndedException {
+        sendMessage(new SocketClientMsgPlaceStarterCard(orientation));
     }
 
     @Override
     public void chooseCard(int which_card) throws IOException {
-        ob_out.writeObject(new SocketClientMessageChooseCard(which_card));
-        finishSending();
+        sendMessage(new SocketClientMsgChooseCard(which_card));
     }
 
     @Override
     public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws IOException {
-        ob_out.writeObject(new SocketClientMessagePlaceCard(where_to_place_x, where_to_place_y, orientation));
-        finishSending();
+        sendMessage(new SocketClientMsgPlaceCard(where_to_place_x, where_to_place_y, orientation));
     }
 
     @Override
     public void drawCard(int index) throws IOException, GameEndedException {
-        ob_out.writeObject(new SocketClientMessageDrawCard(index));
-        finishSending();
+        sendMessage(new SocketClientMsgDrawCard(index));
     }
 
     @Override
-    public void sendMessage(String receiver, Message msg) throws IOException, NotBoundException {
-        ob_out.writeObject(new SocketClientMessageSendMessage(receiver,msg));
-        finishSending();
+    public void sendMessage(String receiver, Message msg) throws IOException {
+        sendMessage(new SocketClientMsgSendMessage(receiver, msg));
     }
 
-
     @Override
-    public void heartbeat() throws RemoteException {
-//        if (ob_out != null) {
+    public void heartbeat() {
+        //        if (ob_out != null) {
 //            try {
 //                ob_out.writeObject(new SocketClientMessageHeartBeat(nickname));
 //                finishSending();
@@ -248,6 +233,18 @@ public class ClientSocket extends Thread implements ClientInterface {
 //                printAsync("Connection lost to the server!! Impossible to send heartbeat...");
 //            }
 //        }
+    }
+
+    private void startHeartbeat() {
+        if (!socketHeartbeat.isAlive()) {
+            socketHeartbeat.start();
+        }
+    }
+
+    private void stopHeartbeat() {
+        if (socketHeartbeat.isAlive()) {
+            socketHeartbeat.interrupt();
+        }
     }
 
     /**
