@@ -30,16 +30,13 @@ import static it.polimi.demo.view.gui.scene.SceneType.*;
 
 
 public class ApplicationGUI extends Application {
+
     private Stage primaryStage;
     private StackPane root;
     private GameDynamics gameDynamics;
     private ArrayList<SceneInfo> scenes;
     private double widthOld, heightOld;
     private boolean resizing = true;
-
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     @Override
     public void start(Stage primaryStage) {

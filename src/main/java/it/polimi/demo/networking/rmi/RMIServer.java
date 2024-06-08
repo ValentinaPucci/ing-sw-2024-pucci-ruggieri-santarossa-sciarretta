@@ -9,7 +9,6 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -17,11 +16,6 @@ import java.rmi.server.UnicastRemoteObject;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
-/**
- * RMIServer Class<br>
- * Handle all the incoming network requests that clients can require to create,join,leave or reconnect to a game<br>
- * by the RMI Network protocol
- */
 public class RMIServer extends UnicastRemoteObject implements MainControllerInterface {
 
     private final MainControllerInterface mainController;
