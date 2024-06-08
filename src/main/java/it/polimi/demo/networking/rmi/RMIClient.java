@@ -40,11 +40,9 @@ public class RMIClient implements ClientInterface {
     private boolean initialized = false;
     private final ObserverManagerClient gameListenersHandler;
     private Registry registry;
-    private final Dynamics dynamics;
     private final PingSender rmiHeartbeat;
 
     public RMIClient(Dynamics dynamics) {
-        this.dynamics = dynamics;
         this.gameListenersHandler = new ObserverManagerClient(dynamics);
         this.rmiHeartbeat = new PingSender(dynamics, this);
         this.rmiHeartbeat.start();
