@@ -1,6 +1,7 @@
 package it.polimi.demo.controller;
 
 import it.polimi.demo.DefaultValues;
+import it.polimi.demo.networking.StaticPrinter;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.*;
@@ -12,114 +13,112 @@ import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import static it.polimi.demo.networking.PrintAsync.printAsync;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 
 public class GameController implements GameControllerInterface, Serializable, Runnable {
 
-    private Model model;
-
+    private final Model model;
     private final Map<Listener, Ping> pings;
 
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new Model(gameID, numberOfPlayers, player);
-        pings = new HashMap<>();
+        pings = new ConcurrentHashMap<>();
         new Thread(this).start();
     }
 
     //------------------------------------ disconnection handling-----------------------------------------------
 
     /**
-     * This method is called when the thread is started.
+     * This method is called when the thread is started. It continuously checks for disconnections
+     * of players by verifying the freshness of their heartbeats.
      */
     @Override
     public void run() {
-        while (!Thread.currentThread().isInterrupted()) {
-            if (model.getStatus() != GameStatus.WAIT) {
-                checkForDisconnections();
-            }
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
-
-    /**
-     * Check if a player is disconnected by checking the heartbeat freshness, if it is expired, the player is disconnected
-     * and handleDisconnection will deal with it.
-     */
-    public void checkForDisconnections() {
-        synchronized (pings) {
-            for (Map.Entry<Listener, Ping> entry : pings.entrySet()) {
-                Listener listener = entry.getKey();
-                Ping ping = entry.getValue();
-                if (isHeartbeatExpired(ping)) {
-                    handleDisconnection(ping, listener);
+        Runnable checkDisconnections = () -> {
+            while (!Thread.currentThread().isInterrupted()) {
+                if (model.getStatus() != GameStatus.WAIT) {
+                    checkForDisconnections();
+                }
+                try {
+                    Thread.sleep(250);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
-        }
+        };
+        new Thread(checkDisconnections).start();
     }
 
     /**
-     * It checks if the ping is expired.
-     * It returns true if the difference between the current time and the last ping time is greater than the timeout.
-     * @param ping the ping to check
-     * @return true if the ping is expired, false else
+     * Checks if any player is disconnected by verifying the freshness of their heartbeats.
+     * If a player's heartbeat is expired, handle their disconnection.
      */
-    private boolean isHeartbeatExpired(Ping ping) {
-        long currentTime = System.currentTimeMillis();
-        long lastBeatTime = ping.getPing();
-        return currentTime - lastBeatTime > DefaultValues.secondsToWaitReconnection;
+    public void checkForDisconnections() {
+        pings.entrySet().stream()
+                .filter(entry -> isPingFresh(entry.getValue()))
+                .toList()
+                .forEach(entry -> handleDisconnection(entry.getValue(), entry.getKey()));
     }
 
     /**
-     * Handle the disconnection of a player
+     * Determines if the given ping is expired based on the timeout.
+     *
+     * @param ping the ping to check
+     * @return true if the ping is expired, false otherwise
+     */
+    private boolean isPingFresh(Ping ping) {
+        return (System.currentTimeMillis() - ping.getPing()) > DefaultValues.secondsToWaitReconnection;
+    }
+
+    /**
+     * Handles the disconnection of a player by removing them and notifying the system.
+     *
      * @param ping the ping of the player
      * @param listener the listener of the player
      */
     public void handleDisconnection(Ping ping, Listener listener) {
-        try {
-            disconnectPlayer(ping.getNick(), listener);
-            printAsync("Disconnection detected by ping of player: " + ping.getNick() + " ");
-            MainController.getControllerInstance().deleteGame(this.getGameId());
-        } catch (RemoteException e) {
-            throw new RuntimeException(e);
+        disconnectPlayer(ping.getNick(), listener, this::removeAndNotify);
+    }
+
+    /**
+     * Adds a Ping to the list of heartbeats to monitor player connections.
+     *
+     * @param nickname the player's nickname associated with the heartbeat
+     * @param listener the player's Listener associated with the heartbeat
+     */
+    @Override
+    public void addPing(String nickname, Listener listener) {
+        pings.put(listener, new Ping(System.currentTimeMillis(), nickname));
+    }
+
+    /**
+     * Disconnects the player and performs a specified action during disconnection.
+     *
+     * @param nick the player's nickname
+     * @param listener the player's Listener
+     * @param disconnectAction the action to perform during disconnection
+     */
+    public void disconnectPlayer(String nick, Listener listener, BiConsumer<String, Listener> disconnectAction) {
+        Player player = model.getIdentityOfPlayer(nick);
+        if (player != null) {
+            disconnectAction.accept(nick, listener);
+            removeListener(listener);
         }
     }
 
     /**
-     * Add a Ping to the list of heartbeats.
-     * Remark: this method is quite fundamental for the right behavior of the game, since we expect
-     * to call it frequently to check if the players are still connected. In fact, looking at the run method,
-     * it is clear that if the heartbeat related to a certain player is not 'fresh' in some sense, then indeed
-     * the player will appear to us as disconnected.
+     * Removes a listener and notifies the system about the player's disconnection.
      *
-     * @param nickname the player's nickname associated to the heartbeat
-     * @param me   the player's Listener associated to the heartbeat
+     * @param nick the player's nickname
+     * @param listener the player's Listener
      */
-    @Override
-    public synchronized void addPing(String nickname, Listener me) {
-        synchronized (pings) {
-            pings.put(me, new Ping(System.currentTimeMillis(), nickname));
-        }
-    }
-
-    /**
-     * Disconnect the player, if the game is in status, the player is removed from the game
-     * If only one player is connected, a timer of  will be started
-     *
-     * @throws RemoteException if there is a connection error (RMI)
-     */
-    @Override
-    public void disconnectPlayer(String nick, Listener lis) throws RemoteException {
-        Player p = model.getPlayerEntity(nick);
-        if (p != null) {
-            removeListener(lis);
-            model.removePlayer(p);
-        }
+    private void removeAndNotify(String nick, Listener listener) {
+        removeListener(listener);
+        model.removePlayer(model.getIdentityOfPlayer(nick));
+        StaticPrinter.staticPrinter("Disconnection detected by ping of player: " + nick + " ");
+        model.setStatus(GameStatus.ENDED);
+        MainController.getControllerInstance().deleteGame(this.getGameId());
     }
 
     /**
@@ -132,7 +131,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     @Override
     public synchronized void leave(Listener lis, String nick) throws RemoteException {
         removeListener(lis);
-        model.removePlayer(model.getPlayerEntity(nick));
+        model.removePlayer(model.getIdentityOfPlayer(nick));
     }
 
     @Override
@@ -141,18 +140,20 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     //------------------------------------ management of players -----------------------------------------------
+
     /**
-     * Add player @param p to the Game
+     * Add a player to the game
      *
-     * @throws PlayerAlreadyConnectedException when in the game there is already another Player with the same nickname
-     * @throws MaxPlayersLimitException    when the game has already reached its full capability
+     * @param p the player to add
+     * @throws PlayerAlreadyConnectedException if the player is already connected
+     * @throws MaxPlayersLimitException if the maximum number of players is reached
      */
     public void addPlayer(Player p) throws PlayerAlreadyConnectedException, MaxPlayersLimitException {
-        this.model.addPlayer(p);
+        model.addPlayer(p);
     }
 
     /**
-     * @return the list of the players currently playing (online and offline)
+     * @return the list of the players
      */
     public List<Player> getPlayers() {
         return model.getAllPlayers();
@@ -183,10 +184,18 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         return model.getPlayersConnected().peek();
     }
 
+    /**
+     * Set the number of players to play
+     * @param numPlayersToPlay the number of players to play
+     */
     public void setNumPlayersToPlay(int numPlayersToPlay) {
         model.setNumPlayersToPlay(numPlayersToPlay);
     }
 
+    /**
+     * Get the number of players to play
+     * @return the number of players to play
+     */
     public int getNumPlayersToPlay() {
         return model.getNumPlayersToPlay();
     }
@@ -194,12 +203,13 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     // Section: Overrides
 
     /**
-     * Gets the player entity
+     * Gets the player identity from its nick
      * @param nickname the nickname of the player
-     * @return the player entity
+     * @return the player identity
      */
-    public Player getPlayerEntity(String nickname) {
-        return model.getPlayerEntity(nickname);
+    @Override
+    public Player getIdentityOfPlayer(String nickname) {
+        return model.getIdentityOfPlayer(nickname);
     }
 
     /**
@@ -220,7 +230,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     /**
      * @return the number of online players
-     * @throws RemoteException
+     * @throws RemoteException if there is an error
      */
     @Override
     public int getNumConnectedPlayers() throws RemoteException {
@@ -240,7 +250,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     @Override
     public synchronized void playerIsReadyToStart(String nickname) {
-        model.setPlayerAsReadyToStart(model.getPlayerEntity(nickname));
+        model.setPlayerAsReadyToStart(model.getIdentityOfPlayer(nickname));
     }
 
     /**
@@ -252,7 +262,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public void placeStarterCard(String nick, Orientation o) throws GameEndedException, RemoteException {
-        model.placeStarterCard(getPlayerEntity(nick), o);
+        model.placeStarterCard(getIdentityOfPlayer(nick), o);
     }
 
     /**
@@ -263,7 +273,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public void chooseCardFromHand(String nick, int which_card) throws RemoteException {
-        model.chooseCardFromHand(getPlayerEntity(nick), which_card);
+        model.chooseCardFromHand(getIdentityOfPlayer(nick), which_card);
     }
 
     /**
@@ -277,21 +287,21 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     @Override
     public void placeCard(String nick, int x, int y, Orientation orientation) throws RemoteException, GameEndedException {
 
-        if (!getConnectedPlayers().contains(getPlayerEntity(nick)))
+        if (!getConnectedPlayers().contains(getIdentityOfPlayer(nick)))
             throw new RemoteException("Player not connected");
-        else if (!isMyTurn(getPlayerEntity(nick).getNickname()))
+        else if (!isMyTurn(getIdentityOfPlayer(nick).getNickname()))
             throw new RemoteException("It's not your turn");
 
         if (orientation == Orientation.FRONT) {
-            if (getPlayerEntity(nick).getChosenGameCard() instanceof GoldCard) {
-                model.placeCard((GoldCard) getPlayerEntity(nick).getChosenGameCard(), getPlayerEntity(nick), x, y);
+            if (getIdentityOfPlayer(nick).getChosenGameCard() instanceof GoldCard) {
+                model.placeCard((GoldCard) getIdentityOfPlayer(nick).getChosenGameCard(), getIdentityOfPlayer(nick), x, y);
             }
             else {
-                model.placeCard(getPlayerEntity(nick).getChosenGameCard(), getPlayerEntity(nick), x, y);
+                model.placeCard(getIdentityOfPlayer(nick).getChosenGameCard(), getIdentityOfPlayer(nick), x, y);
             }
         } else {
             // does not matter whether the card is gold or resource only, the back is always resource!
-            model.placeCard(getPlayerEntity(nick).getChosenGameCard().getBack(), getPlayerEntity(nick), x, y);
+            model.placeCard(getIdentityOfPlayer(nick).getChosenGameCard().getBack(), getIdentityOfPlayer(nick), x, y);
         }
     }
 
@@ -303,7 +313,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public void drawCard(String player_nickname, int index) throws GameEndedException {
-        model.drawCard(getPlayerEntity(player_nickname), index);
+        model.drawCard(getIdentityOfPlayer(player_nickname), index);
     }
 
     /**
@@ -317,18 +327,16 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 //---------------------------------listeners management--------------------------------------
 
     /**
-     * Add observer @param l to model listeners and player listeners
-     *
-     * @param l Listener to add
+     * Add a listener
+     * @param l the listener to add
      */
     public void addListener(Listener l) {
         model.addListener(l);
     }
 
     /**
-     * Remove the observer @param lis to model listeners and player listeners
-     *
-     * @param lis Listener to remove
+     * Remove the listener
+     * @param lis the listener to remove
      */
     public void removeListener(Listener lis) {
         model.removeListener(lis);
@@ -337,9 +345,9 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     //-------------------------------chat management----------------------------
 
     /**
-     * Add a message to the chat list
-     *
-     * @param mess to add
+     * send a mex
+     * @param nick the nickname of the player
+     * @param mess the message to send
      * @throws RemoteException if there is an error
      */
     @Override

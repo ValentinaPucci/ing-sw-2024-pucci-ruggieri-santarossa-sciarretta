@@ -1,5 +1,6 @@
 package it.polimi.demo.networking.rmi;
 
+import it.polimi.demo.networking.StaticPrinter;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
@@ -21,15 +22,9 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.function.Consumer;
 
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
-import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
+import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
+import static it.polimi.demo.networking.StaticPrinter.staticPrinterNoNewLine;
 
-/**
- * RMIClient Class <br>
- * Handle all the network communications between RMIClient and RMIServer <br>
- * From the first connection, to the creation, joining, leaving, grabbing and positioning messages through the network<br>
- * by the RMI Network Protocol
- */
 public class RMIClient implements ClientInterface {
 
     private static MainControllerInterface asks;
@@ -56,37 +51,37 @@ public class RMIClient implements ClientInterface {
                 registry = LocateRegistry.getRegistry(DefaultValues.serverIp, DefaultValues.Default_port_RMI);
                 asks = (MainControllerInterface) registry.lookup(DefaultValues.Default_servername_RMI);
                 lis = (Listener) UnicastRemoteObject.exportObject(gameListenersHandler, 0);
-                printAsync("Client RMI ready");
+                StaticPrinter.staticPrinter("Client RMI ready");
                 return;
             } catch (Exception e) {
                 handleConnectionError(e, attempt++);
             }
         }
-        printAsyncNoLine("Give up!");
+        staticPrinterNoNewLine("Give up!");
         try { System.in.read(); } catch (IOException ex) { throw new RuntimeException(ex); }
         System.exit(-1);
     }
 
     private void handleConnectionError(Exception e, int attempt) {
-        if (attempt == 1) printAsync("[ERROR] CONNECTING TO RMI SERVER: \n\tClient RMI exception: " + e + "\n");
+        if (attempt == 1) StaticPrinter.staticPrinter("[ERROR] CONNECTING TO RMI SERVER: \n\tClient RMI exception: " + e + "\n");
         printRetryMessage(attempt);
         waitAndPrintDots(DefaultValues.seconds_between_reconnection);
     }
 
     private void printRetryMessage(int attempt) {
-        printAsyncNoLine("[#" + attempt + "]Waiting to reconnect to RMI Server on port: '" + DefaultValues.Default_port_RMI + "' with name: '" + DefaultValues.Default_servername_RMI + "'");
+        staticPrinterNoNewLine("[#" + attempt + "]Waiting to reconnect to RMI Server on port: '" + DefaultValues.Default_port_RMI + "' with name: '" + DefaultValues.Default_servername_RMI + "'");
     }
 
     private void waitAndPrintDots(int seconds) {
         try {
             for (int i = 0; i < seconds; i++) {
                 Thread.sleep(1000);
-                printAsyncNoLine(".");
+                staticPrinterNoNewLine(".");
             }
         } catch (InterruptedException ex) {
             throw new RuntimeException(ex);
         }
-        printAsyncNoLine("\n");
+        staticPrinterNoNewLine("\n");
     }
 
     private void withRegistry(Consumer<Registry> action) throws RemoteException, NotBoundException {
@@ -128,7 +123,7 @@ public class RMIClient implements ClientInterface {
     public void joinFirstAvailableGame(String nick) throws RemoteException, NotBoundException {
         withRegistry(reg -> {
             try {
-                controller = asks.joinFirstAvailableGame(lis, nick);
+                controller = asks.joinRandomly(lis, nick);
                 if (controller != null) {
                     nickname = nick;
                     game_id = controller.getGameId();

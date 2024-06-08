@@ -1,89 +1,75 @@
 package it.polimi.demo.main;
 
-import it.polimi.demo.DefaultValues;
+import it.polimi.demo.networking.StaticPrinter;
 import it.polimi.demo.view.flow.ConnectionSelection;
 import it.polimi.demo.view.flow.GameDynamics;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import javafx.application.Application;
-import org.fusesource.jansi.Ansi;
-
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
-import java.util.function.Predicate;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
-
-// todo: checked class
 public class MainClient {
 
     public static void main(String[] args) {
-        boolean debug = DefaultValues.DEBUG;
 
-        if (!debug) {
-            getValidInput("Insert remote IP (leave empty for localhost)", MainClient::isValidIP);
-            getValidInput("Insert your IP (leave empty for localhost)", MainClient::isValidIP);
+        promptForIP("Insert remote IP (leave empty for localhost): ");
+        promptForIP("Insert your IP (leave empty for localhost): ");
+
+        int con_selection = promptForSelection(
+                "Select option:\n1) Socket \n2) RMI \n");
+
+        ConnectionSelection conSel = con_selection == 1 ? ConnectionSelection.SOCKET : ConnectionSelection.RMI;
+
+        int ui_selection = promptForSelection(
+                "\nSelect option:\n1) TUI \n2) GUI \n");
+
+        if (ui_selection == 1) {
+            new GameDynamics(conSel);
         }
-
-        int selection = debug ? 2 : getValidSelection(
-                "Select option:\n\t(1) TUI + Socket\n\t(2) TUI + RMI\n\t\n\t(3) GUI + Socket\n\t(4) GUI + RMI",
-                MainClient::isValidSelection);
-
-        ConnectionSelection conSel = (selection == 1 || selection == 3) ? ConnectionSelection.SOCKET : ConnectionSelection.RMI;
-        printAsync("Starting the game!");
-
-        if (selection == 1 || selection == 2) {
-            new GameDynamics(conSel); // Start game with TUI
-        } else {
-            Application.launch(ApplicationGUI.class, conSel.toString()); // Start game with GUI
+        else {
+            Application.launch(ApplicationGUI.class);
         }
     }
 
-    private static String getValidInput(String message, Predicate<String> validator) {
+    private static void promptForIP(String message) {
         Scanner scanner = new Scanner(System.in);
-        String input;
-        do {
-            printAsync(Ansi.ansi().cursor(1, 0).a(message));
-            input = scanner.nextLine();
-            if (!input.isEmpty() && !validator.test(input)) {
-                printAsync("Not valid");
-            }
-        } while (!input.isEmpty() && !validator.test(input));
-        return input;
+        while (true) {
+            StaticPrinter.staticPrinter(message);
+            String input = scanner.nextLine();
+            if (input.isEmpty() || isValidIP(input)) break;
+            StaticPrinter.staticPrinter("Invalid IP. Try again.");
+        }
     }
 
-    private static int getValidSelection(String message, Predicate<Integer> validator) {
+    private static int promptForSelection(String s) {
         Scanner scanner = new Scanner(System.in);
-        int selection;
-        do {
-            printAsync(Ansi.ansi().cursor(1, 0).a(message));
-            selection = Arrays.stream(scanner.nextLine().split("\\s+"))
-                    .mapToInt(Integer::parseInt)
-                    .findFirst()
-                    .orElse(-1);
-            if (!validator.test(selection)) {
-                printAsync("Not valid");
+        while (true) {
+            StaticPrinter.staticPrinter(s);
+            try {
+                int selection = Integer.parseInt(scanner.nextLine().trim());
+                if (selection >= 1 && selection <= 2) return selection;
+            } catch (NumberFormatException e) {
+                StaticPrinter.staticPrinter("Invalid selection. Enter a number between 1 and 2.");
             }
-        } while (!validator.test(selection));
-        return selection;
+        }
     }
 
     private static boolean isValidIP(String input) {
-        List<String> parsed = Arrays.asList(input.split("\\."));
-        return parsed.size() == 4 && parsed.stream().allMatch(part -> {
+        String[] parts = input.split("\\.");
+        if (parts.length != 4) return false;
+        for (String part : parts) {
             try {
                 int value = Integer.parseInt(part);
-                return value >= 0 && value <= 255;
+                if (value < 0 || value > 255) return false;
             } catch (NumberFormatException e) {
                 return false;
             }
-        });
-    }
-
-    private static boolean isValidSelection(int selection) {
-        return selection >= 1 && selection <= 4;
+        }
+        return true;
     }
 }
+
+
+
 
 
 

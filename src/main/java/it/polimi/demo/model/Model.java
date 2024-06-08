@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
 
 
 public class Model implements Serializable {
@@ -31,10 +31,7 @@ public class Model implements Serializable {
     // the second one is used as a queue and let us know which player
     // is connected (and actively playing).
     private final LinkedList<Player> players_connected;
-
     private final Random random = new Random();
-
-    private Player initial_player;
     private CommonBoard common_board;
     private int gameId;
     private int num_required_players_to_start;
@@ -67,7 +64,6 @@ public class Model implements Serializable {
         players_connected = new LinkedList<>();
         common_board = new CommonBoard();
         num_required_players_to_start = numberOfPlayers;
-        initial_player = player;
         gameId = gameID;
         status = GameStatus.WAIT;
         chat = new Chat();
@@ -117,7 +113,6 @@ public class Model implements Serializable {
             extractFirstPlayerToPlay();
             initializeGame();
             setStatus(GameStatus.FIRST_ROUND);
-            System.out.println("FIRST_ROUND SET");
         }
     }
 
@@ -142,7 +137,7 @@ public class Model implements Serializable {
      * @param nick nickname of the player
      * @return player with the given nickname, or null if not found
      */
-    public Player getPlayerEntity(String nick) {
+    public Player getIdentityOfPlayer(String nick) {
         for (int i = 0; i < players_connected.size(); i++) {
             if (players_connected.get(i).getNickname().equals(nick)) {
                 return players_connected.get(i);
@@ -171,12 +166,12 @@ public class Model implements Serializable {
         String nickname = p.getNickname();
 
         if (nicknames.contains(nickname)) {
-            listeners_handler.notify_joinUnableNicknameAlreadyIn(getPlayerEntity(nickname));
+            listeners_handler.notify_joinUnableNicknameAlreadyIn(getIdentityOfPlayer(nickname));
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() >= num_required_players_to_start ||
                 aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
-            listeners_handler.notify_joinUnableGameFull(getPlayerEntity(nickname), this);
+            listeners_handler.notify_joinUnableGameFull(getIdentityOfPlayer(nickname), this);
             throw new MaxPlayersLimitException();
         }
         else {
@@ -193,21 +188,10 @@ public class Model implements Serializable {
      * @param p The nickname of the player to remove.
      */
     public void removePlayer(Player p) {
-
         players_connected.remove(p);
         aux_order_players.remove(p);
-
         listeners_handler.notify_playerLeft(this, p.getNickname());
-
-        if (this.status.equals(GameStatus.RUNNING)) {
-            if (players_connected.size() < 2) {
-                // todo: check this
-                // Not enough players to keep playing
-                // this.setStatus(GameStatus.ENDED);
-            }
-        }
     }
-
 
     //-------------------------chat and messages---------------------------------------------
 
@@ -261,37 +245,6 @@ public class Model implements Serializable {
         else {
             throw new IllegalArgumentException("Player not in the game!");
         }
-    }
-
-    /**
-     * It connects a player in the right place (by order), that had already joined the game,
-     * but was disconnected, so that the game will continue with the correct order of the game (aux_order_players).
-     * (It also cares about the limit case of the first element).
-     * @param p player to connect
-     */
-    // todo: check if it is correct
-    public void connectPlayerInOrder(Player p) {
-        // index of previous player in aux_order_players
-        Player q;
-        int index_to_add = -1;
-        if (!aux_order_players.contains(p)) {
-            throw new IllegalArgumentException("Trying to connect a player which is not in the game!");
-        }
-
-        int index = aux_order_players.indexOf(p) - 1;
-
-        if (index < 0)
-            q = aux_order_players.getLast();
-        else
-            q = aux_order_players.get(index);
-
-        for (Player s : players_connected) {
-            if (s.equals(q))
-                index_to_add = players_connected.indexOf(s) + 1;
-        }
-        if (index_to_add != -1)
-            players_connected.add(index_to_add , p);
-
     }
 
     //-------------------------managing status---------------------------------------------
@@ -377,7 +330,6 @@ public class Model implements Serializable {
      * - 1 gold card from the gold deck
      * - 2 secret objective cards from the objective deck
      */
-
     public void dealCards() {
         // Deal cards to players, recall that at this stage
         // aux_order_players and players_connected are the same
@@ -576,54 +528,93 @@ public class Model implements Serializable {
      *              6: Second Gold Card on the table
      * @throws IllegalArgumentException If the index is less than 1 or greater than 6.
      */
-
     public void drawCard(Player p, int index) throws GameEndedException {
+
+        // auxiliary variables for special cases at the end of the game
+        boolean illegal_draw = false;
+
+        if (common_board.getResourceConcreteDeck().isEmpty() &&
+                common_board.getGoldConcreteDeck().isEmpty() &&
+                !getStatus().equals(GameStatus.SECOND_LAST_ROUND)) {
+            setStatus(GameStatus.SECOND_LAST_ROUND);
+            if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
+                setStatus(GameStatus.LAST_ROUND);
+            }
+            return;
+        }
+
         switch (index) {
             case 1:
                 // Draw from Resource Deck
                 if (!common_board.getResourceConcreteDeck().isEmpty())
                     p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0));
-//                else
-//                    // todo: manage this exception
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Resource Deck is empty!");
+                }
                 break;
             case 2:
                 // Draw first Resource Card from table
-                p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0));
+                if (!common_board.getResourceConcreteDeck().isEmpty())
+                    p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0));
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Resource Table is empty!");
+                }
                 break;
             case 3:
                 // Draw second Resource Card from table
-                p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0));
+                if (!common_board.getResourceConcreteDeck().isEmpty())
+                    p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0));
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Resource Table is empty!");
+                }
                 break;
             case 4:
                 // Draw from Gold Deck
                 if (!common_board.getGoldConcreteDeck().isEmpty())
                     p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1));
-//                else
-//                    // todo: manage this exception
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Gold Deck is empty!");
+                }
                 break;
             case 5:
                 // Draw first Gold Card from table
-                p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1));
+                if (!common_board.getGoldConcreteDeck().isEmpty())
+                    p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1));
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Gold Table is empty!");
+                }
                 break;
             case 6:
                 // Draw second Gold Card from table
-                p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
+                if (!common_board.getGoldConcreteDeck().isEmpty())
+                    p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
+                else {
+                    illegal_draw = true;
+                    listeners_handler.notify_illegalMoveBecauseOf(this, "Gold Table is empty!");
+                }
                 break;
         }
-        listeners_handler.notify_cardDrawn(this, index);
-        // at the end of every player round, we check for her/his points
-        if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
-            setStatus(GameStatus.LAST_ROUND);
-        }
-        else if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
-            if (aux_order_players.getLast().equals(p)) {
+
+        if (!illegal_draw) {
+            listeners_handler.notify_cardDrawn(this, index);
+            // at the end of every player round, we check for her/his points
+            if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
                 setStatus(GameStatus.LAST_ROUND);
             }
-            else if (getStatus() == GameStatus.RUNNING)
-                setStatus(GameStatus.SECOND_LAST_ROUND);
+            else if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
+                if (aux_order_players.getLast().equals(p)) {
+                    setStatus(GameStatus.LAST_ROUND);
+                }
+                else if (getStatus() == GameStatus.RUNNING)
+                    setStatus(GameStatus.SECOND_LAST_ROUND);
+            }
+            nextTurn();
         }
-
-        nextTurn();
     }
 
     /**
@@ -672,6 +663,9 @@ public class Model implements Serializable {
      * It is called by getWinners() method.
      */
     public void declareWinners() {
+
+        List<Player> aux_final_scores_tie = new ArrayList<>();
+
         calculateFinalScores();
 
         // Sort players by final score in descending order
@@ -681,14 +675,42 @@ public class Model implements Serializable {
         // Get the maximum score
         int maxScore = orderedPlayers.getFirst().getFinalScore();
 
-        // Collect players with the maximum score as winners
-        winners.clear();
-        aux_order_players.stream()
-                .filter(player -> player.getFinalScore() == maxScore)
-                .forEach(winners::add);
+        // check for a tie
+        for (Player player : orderedPlayers) {
+            if (player.getFinalScore() == maxScore) {
+                aux_final_scores_tie.add(player);
+            }
+        }
+
+        if (aux_final_scores_tie.size() == 1) {
+            winners.addAll(orderedPlayers);
+        }
+        else {
+            // aux_final_scores_tie.size() >= 2
+            // another filtering:
+            aux_final_scores_tie.sort(Comparator.comparingInt(Player::scoreOnlyObjectiveCards).reversed());
+            StringBuilder aux = new StringBuilder(aux_final_scores_tie.getFirst().getNickname());
+            int counter = 0;
+            for (Player p : aux_final_scores_tie) {
+                if (p.scoreOnlyObjectiveCards() == aux_final_scores_tie.getFirst().scoreOnlyObjectiveCards()) {
+                    aux.append(p.getNickname());
+                    counter++;
+                }
+            }
+            winners.clear();
+            Player p_aux = new Player(aux.toString());
+            p_aux.setFinalScore(aux_final_scores_tie.getFirst().getFinalScore());
+            winners.add(p_aux);
+            for (int i = counter; i < orderedPlayers.size(); i++) {
+                winners.add(orderedPlayers.get(i));
+            }
+        }
 
         // Populate the leaderboard
-        orderedPlayers.forEach(player -> leaderboard.put(player, player.getFinalScore()));
+        leaderboard.clear(); // Clear the leaderboard before adding new entries
+        for (Player player : orderedPlayers) {
+            leaderboard.put(player, player.getFinalScore());
+        }
     }
 
 
@@ -715,43 +737,6 @@ public class Model implements Serializable {
         return this.common_board;
     }
 
-    /**
-     * Retrieves the concrete deck containing resource cards.
-     *
-     * @return The concrete deck of resource cards.
-     */
-    public ConcreteDeck getResourceDeck() {
-        return this.common_board.getResourceConcreteDeck();
-    }
-
-    /**
-     * Retrieves the concrete deck containing gold cards.
-     *
-     * @return The concrete deck of gold cards.
-     */
-    public ConcreteDeck getGoldDeck() {
-        return this.common_board.getGoldConcreteDeck();
-    }
-
-    /**
-     * Retrieves the concrete deck containing objective cards.
-     *
-     * @return The concrete deck of objective cards.
-     */
-    public ConcreteDeck getObjectiveDeck() {
-        return this.common_board.getObjectiveConcreteDeck();
-    }
-
-    /**
-     * Retrieves the concrete deck containing starter cards.
-     *
-     * @return The concrete deck of starter cards.
-     */
-    public ConcreteDeck getStarterDeck() {
-        return this.common_board.getStarterConcreteDeck();
-    }
-
-
     public void setErrorMessage(String error) {
 
     }
@@ -776,11 +761,11 @@ public class Model implements Serializable {
     // aux
 
     public List<StarterCard> getStarterCardsToChoose(String nickname) {
-        return getPlayerEntity(nickname).getStarterCardToChose();
+        return getIdentityOfPlayer(nickname).getStarterCardToChose();
     }
 
     public List<ObjectiveCard> getPersonalObjectiveCardsToChoose(String nickname) {
-        return getPlayerEntity(nickname).getSecretObjectiveCards();
+        return getIdentityOfPlayer(nickname).getSecretObjectiveCards();
     }
 }
 

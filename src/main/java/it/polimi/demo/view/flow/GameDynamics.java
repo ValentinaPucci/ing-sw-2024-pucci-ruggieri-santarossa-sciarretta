@@ -5,6 +5,7 @@ import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
+import it.polimi.demo.networking.StaticPrinter;
 import it.polimi.demo.networking.rmi.RMIClient;
 import it.polimi.demo.view.flow.utilities.*;
 import it.polimi.demo.view.flow.utilities.gameFacts.ModelFact;
@@ -23,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
 import static it.polimi.demo.view.flow.utilities.gameFacts.FactType.*;
 
 public class GameDynamics extends Dynamics implements Runnable, ClientInterface {
@@ -458,6 +459,8 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         String input;
         do {
             input = getProcessedData();
+            if (!List.of(validInputs).contains(input))
+                ui.show_genericMessage("Invalid input. Please enter a valid input.");
         } while (!List.of(validInputs).contains(input));
         return input;
     }
@@ -494,7 +497,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
             client_interface.createGame(nickname, num_of_players);
             System.out.println("Created game");
         } catch (IOException | InterruptedException | NotBoundException e) {
-            printAsync("Error in here, createGame gameFlow!");
+            StaticPrinter.staticPrinter("Error in here, createGame gameFlow!");
             noConnectionError();
         }
     }

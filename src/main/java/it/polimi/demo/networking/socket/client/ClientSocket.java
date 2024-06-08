@@ -5,6 +5,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.ObserverManagerClient;
+import it.polimi.demo.networking.StaticPrinter;
 import it.polimi.demo.networking.socket.client.gameControllerMessages.*;
 import it.polimi.demo.networking.socket.client.mainControllerMessages.*;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage;
@@ -19,8 +20,8 @@ import java.net.Socket;
 import java.rmi.NotBoundException;
 import java.util.stream.IntStream;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
-import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
+import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
+import static it.polimi.demo.networking.StaticPrinter.staticPrinterNoNewLine;
 
 public class ClientSocket extends Thread implements ClientInterface, Serializable {
     private static final long serialVersionUID = 1L;
@@ -54,7 +55,7 @@ public class ClientSocket extends Thread implements ClientInterface, Serializabl
                 .anyMatch(attempt -> tryToConnect(ipAddress, port, attempt));
 
         if (!connected) {
-            printAsyncNoLine("Giving up reconnection after too many attempts!");
+            staticPrinterNoNewLine("Giving up reconnection after too many attempts!");
             awaitExit();
         }
     }
@@ -67,17 +68,17 @@ public class ClientSocket extends Thread implements ClientInterface, Serializabl
             return true;
         } catch (IOException e) {
             if (attempt == 1) {
-                printAsync("[ERROR] CONNECTING TO SOCKET SERVER: \n\tClient exception: " + e + "\n");
+                StaticPrinter.staticPrinter("[ERROR] CONNECTING TO SOCKET SERVER: \n\tClient exception: " + e + "\n");
             }
-            printAsyncNoLine("[#" + attempt + "] Retrying connection to Socket Server at port: '" + port + "' with IP: '" + ipAddress + "'");
+            staticPrinterNoNewLine("[#" + attempt + "] Retrying connection to Socket Server at port: '" + port + "' with IP: '" + ipAddress + "'");
             pause(DefaultValues.seconds_between_reconnection);
-            printAsyncNoLine("\n");
+            staticPrinterNoNewLine("\n");
             return false;
         }
     }
 
     private void handleDisconnection(Exception e) {
-        printAsync("[ERROR] Connection to server lost! " + e);
+        StaticPrinter.staticPrinter("[ERROR] Connection to server lost! " + e);
         awaitExit();
         System.exit(-1);
     }
@@ -94,7 +95,7 @@ public class ClientSocket extends Thread implements ClientInterface, Serializabl
         IntStream.range(0, seconds).forEach(i -> {
             try {
                 Thread.sleep(1000);
-                printAsyncNoLine(".");
+                staticPrinterNoNewLine(".");
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }

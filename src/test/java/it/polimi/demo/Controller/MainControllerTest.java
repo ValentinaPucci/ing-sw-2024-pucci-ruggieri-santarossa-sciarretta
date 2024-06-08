@@ -301,7 +301,7 @@
 //        Player p2 = new Player("Player2");
 //        Player p3 = new Player("Player3");
 //        mainController.createGame(lis, "Player1", 2, 1);
-//        mainController.joinFirstAvailableGame(lis,  "Player2");
+//        mainController.joinRandomly(lis,  "Player2");
 //        assertEquals(2, mainController.getGames().get(1).getPlayers().size());
 //        // check if the player is set as connected
 //        assertEquals(2, mainController.getGames().get(1).getNumConnectedPlayers());

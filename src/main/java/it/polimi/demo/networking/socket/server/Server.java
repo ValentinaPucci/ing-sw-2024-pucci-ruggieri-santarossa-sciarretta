@@ -1,13 +1,15 @@
 package it.polimi.demo.networking.socket.server;
 
 
+import it.polimi.demo.networking.StaticPrinter;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
 
 /**
  * Server Class<br>
@@ -36,7 +38,7 @@ public class Server extends Thread implements Serializable {
             serverSocket = new ServerSocket(port);
             handler = new ArrayList<>();
             this.start();
-            printAsync("Server Socket ready");
+            StaticPrinter.staticPrinter("Server Socket ready");
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("[ERROR] STARTING SOCKET SERVER: \n\tServer RMI exception: " + e);
@@ -54,7 +56,7 @@ public class Server extends Thread implements Serializable {
                 handler.add(new ClientHandler(serverSocket.accept()));
                 handler.get(handler.size() - 1).start();
 
-                printAsync("[SOCKET] new connection accepted");
+                StaticPrinter.staticPrinter("[SOCKET] new connection accepted");
             }
         } catch (IOException e) {
             System.err.println("[ERROR] ACCEPTING WELCOME SOCKET CONNECTION: \n\tServer SOCKET exception: " + e);

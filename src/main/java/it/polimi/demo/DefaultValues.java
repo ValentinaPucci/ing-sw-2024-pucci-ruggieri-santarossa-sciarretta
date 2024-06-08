@@ -7,8 +7,6 @@ import java.io.Serializable;
  */
 public class DefaultValues implements Serializable {
 
-    public final static boolean DEBUG = false;
-
     public final static int MaxNumOfPlayer = 4;
     public final static int minNumOfPlayer = 2;
 

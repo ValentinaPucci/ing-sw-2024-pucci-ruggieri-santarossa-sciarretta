@@ -63,15 +63,15 @@ public class ModelTest {
     }
 
     @Test
-    public void testGetPlayerEntity() {
-        assertNull(model.getPlayerEntity("Player1"));
+    public void testGetIdentityOfPlayer() {
+        assertNull(model.getIdentityOfPlayer("Player1"));
         Player player1 = new Player("Player1");
         Player player2 = new Player("Player2");
         model.addPlayer(player1);
         model.addPlayer(player2);
-        assertEquals(model.getAllPlayers().getFirst(), model.getPlayerEntity("Player1"));
-        assertEquals(model.getAllPlayers().get(1), model.getPlayerEntity("Player2"));
-        assertNull(model.getPlayerEntity("UnknownPlayer"));
+        assertEquals(model.getAllPlayers().getFirst(), model.getIdentityOfPlayer("Player1"));
+        assertEquals(model.getAllPlayers().get(1), model.getIdentityOfPlayer("Player2"));
+        assertNull(model.getIdentityOfPlayer("UnknownPlayer"));
     }
 
     @Test

@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
 
 public class PingSender extends Thread implements Serializable {
 
@@ -26,7 +26,7 @@ public class PingSender extends Thread implements Serializable {
             try {
                 server.heartbeat();
             } catch (IOException e) {
-                printAsync("Connection to server lost! Impossible to send heartbeat...");
+                StaticPrinter.staticPrinter("Connection to server lost! Impossible to send heartbeat...");
             } catch (NotBoundException e) {
                 throw new RuntimeException(e);
             }

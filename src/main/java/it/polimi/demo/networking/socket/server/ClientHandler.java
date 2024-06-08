@@ -11,10 +11,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.exceptions.GameEndedException;
+import it.polimi.demo.networking.StaticPrinter;
 import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
 import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
 
 // todo: checked
 public class ClientHandler extends Thread implements Serializable {
@@ -80,7 +81,7 @@ public class ClientHandler extends Thread implements Serializable {
     }
 
     private void handleClientDisconnect() {
-        printAsync("ClientSocket dies because cannot communicate no more with the client");
+        StaticPrinter.staticPrinter("ClientSocket dies because cannot communicate no more with the client");
         try {
             if (gameController != null) {
                 gameController.leave(gameListenersHandlerSocket, nickname);

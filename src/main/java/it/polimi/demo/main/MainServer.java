@@ -6,38 +6,31 @@ import it.polimi.demo.networking.socket.server.Server;
 
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.function.Consumer;
 
-// todo: it is checked
 public class MainServer {
 
     public static void main(String[] args) {
-        String remoteIP = retrieveRemoteIP();
-        setupSystemProperty(remoteIP);
-        startServer(port -> {
-            try {
-                new Server().start(port);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }, DefaultValues.Default_port_Socket);
-        startServer(port -> {
-            RMIServer.bind();
-        }, 0);
-    }
 
-    private static String retrieveRemoteIP() {
-        return new Scanner(System.in).nextLine();
-    }
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter remote IP (empty for default):");
+        String remoteIP = scanner.nextLine();
 
-    private static void setupSystemProperty(String remoteIP) {
-        System.setProperty("java.rmi.server.hostname", remoteIP.isEmpty() ? DefaultValues.Remote_ip : remoteIP);
-    }
+        if (remoteIP.isEmpty()) {
+            remoteIP = DefaultValues.Remote_ip;
+        }
+        System.setProperty("java.rmi.server.hostname", remoteIP);
 
-    private static void startServer(Consumer<Integer> serverStarter, int port) {
-        serverStarter.accept(port);
+        // Here we start Socket Server
+        try {
+            new Server().start(DefaultValues.Default_port_Socket);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Here we start RMI Server
+        RMIServer.bind();
     }
 }
+
 
 
 

@@ -1,5 +1,6 @@
 package it.polimi.demo.networking.socket.client.mainControllerMessages;
 
+import it.polimi.demo.controller.GameController;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;

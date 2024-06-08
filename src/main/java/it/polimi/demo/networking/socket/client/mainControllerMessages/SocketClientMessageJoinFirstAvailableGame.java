@@ -24,7 +24,7 @@ public class SocketClientMessageJoinFirstAvailableGame extends SocketClientGener
 
     @Override
     public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return mainController.joinFirstAvailableGame(lis, nick);
+        return mainController.joinRandomly(lis, nick);
     }
 
 

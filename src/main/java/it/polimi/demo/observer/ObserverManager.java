@@ -5,44 +5,28 @@ import it.polimi.demo.model.Model;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.networking.StaticPrinter;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
 
-/**
- * The ListenersHandler class is responsible for managing a List of GameListener {@link Listener} <br>
- * and for notifying the view when a change occurs in the GameModel {@link Model}. <br>
- * When notifying an event, we need to pass the GameModelImmutable {@link ModelView} to the view to have access to the updated GameModel.
- */
 public class ObserverManager implements Serializable {
 
     private List<Listener> listeners;
 
-    /**
-     * The constructor of the class ObserverManager
-     */
     public ObserverManager() {
         listeners = new ArrayList<>();
     }
 
-    /**
-     * The addListener method adds a observer to the list of listeners
-     * @param obj is the observer to add
-     */
     public synchronized void addListener(Listener obj) {
         listeners.add(obj);
     }
 
-    /**
-     * The notify_playerJoined method is used to notify the listeners that a player has joined the game
-     * @param model is the game model
-     */
     public synchronized void notify_playerJoined(Model model) {
         List<Listener> toRemove = new ArrayList<>();
 
@@ -50,7 +34,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.playerJoined(new ModelView(model));
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_playerJoined");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_playerJoined");
                 toRemove.add(listener);
             }
         });
@@ -58,11 +42,6 @@ public class ObserverManager implements Serializable {
         listeners.removeAll(toRemove);
     }
 
-    /**
-     * The notify_joinUnableGameFull method is used to notify the listeners that a player has tried to join a full game
-     * @param p is the player that tried to join
-     * @param model is the game model
-     */
     public synchronized void notify_joinUnableGameFull(Player p, Model model) {
         List<Listener> toRemove = new ArrayList<>();
 
@@ -70,7 +49,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.joinUnableGameFull(p, new ModelView(model));
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_joinUnableGameFull");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_joinUnableGameFull");
                 toRemove.add(listener);
             }
         });
@@ -85,7 +64,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.joinUnableNicknameAlreadyIn(p);
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_joinUnableNicknameAlreadyIn");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_joinUnableNicknameAlreadyIn");
                 toRemove.add(listener);
             }
         });
@@ -100,7 +79,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.playerIsReadyToStart(new ModelView(model), nick);
             } catch (IOException e) {
-                printAsync("Disconnection detected - notify_PlayerIsReadyToStart");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_PlayerIsReadyToStart");
                 toRemove.add(listener);
             }
         });
@@ -114,7 +93,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.gameStarted(new ModelView(model));
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_GameStarted");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_GameStarted");
                 toRemove.add(listener);
             }
         });
@@ -129,7 +108,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.gameEnded(new ModelView(model));
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_GameEnded");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_GameEnded");
                 toRemove.add(listener);
             }
         });
@@ -144,7 +123,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.starterCardPlaced(new ModelView(model), o, nick);
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_starterCardPlaced");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_starterCardPlaced");
                 toRemove.add(listener);
             }
         });
@@ -159,7 +138,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.cardChosen(new ModelView(model), which_card);
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_cardChosen");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_cardChosen");
                 toRemove.add(listener);
             }
         });
@@ -174,7 +153,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.cardPlaced(new ModelView(model), where_to_place_x, where_to_place_y, o);
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_cardPlaced");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_cardPlaced");
                 toRemove.add(listener);
             }
         });
@@ -189,7 +168,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.illegalMove(new ModelView(model));
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_illegalMove");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_illegalMove");
                 toRemove.add(listener);
             }
         });
@@ -202,7 +181,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.illegalMoveBecauseOf(new ModelView(model), reason_why);
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_illegalMoveBecauseOf");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_illegalMoveBecauseOf");
                 toRemove.add(listener);
             }
         });
@@ -217,7 +196,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.cardDrawn(new ModelView(model), index);
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_cardDrawn");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_cardDrawn");
                 toRemove.add(listener);
             }
         });
@@ -232,7 +211,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.secondLastRound(new ModelView(model));
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_secondLastRound");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_secondLastRound");
                 toRemove.add(listener);
             }
         });
@@ -247,7 +226,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.lastRound(new ModelView(model));
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_lastRound");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_lastRound");
                 toRemove.add(listener);
             }
         });
@@ -262,7 +241,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.messageSent(new ModelView(model), nick, message);
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_messageSent");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_messageSent");
                 toRemove.add(listener);
             }
         });
@@ -277,7 +256,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.nextTurn(new ModelView(model));
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_nextTurn");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_nextTurn");
                 toRemove.add(listener);
             }
         });
@@ -292,7 +271,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.playerDisconnected(new ModelView(gamemodel), nick);
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_playerDisconnected");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_playerDisconnected");
                 toRemove.add(listener);
             }
         });
@@ -307,7 +286,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.playerLeft(new ModelView(model), nick);
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_playerLeft");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_playerLeft");
                 toRemove.add(listener);
             }
         });
@@ -330,7 +309,7 @@ public class ObserverManager implements Serializable {
             try {
                 listener.successfulMove(new ModelView(model));
             } catch (RemoteException e) {
-                printAsync("Disconnection detected - notify_playerLeft");
+                StaticPrinter.staticPrinter("Disconnection detected - notify_playerLeft");
                 toRemove.add(listener);
             }
         });
