@@ -1,25 +1,27 @@
 package it.polimi.demo.networking.socket.server;
 
-import it.polimi.demo.model.ModelView;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.networking.socket.client.serverToClientMessages.*;
 
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
 /**
- * This class is used to pass the Listener to the client via socket
+ * This class is used to pass the GameListener to the client via socket
  * {@link Listener}
  * It has a private ObjectOutputStream where it writes the data
  **/
 public class GameListenersHandlerSocket implements Listener, Serializable {
-
+    @Serial
+    private static final long serialVersionUID = -44724272240516582L;
     private final transient ObjectOutputStream out;
 
     /**
@@ -243,6 +245,17 @@ public class GameListenersHandlerSocket implements Listener, Serializable {
     }
 
     @Override
+    public void successfulMove(ModelView model) throws RemoteException {
+        try {
+            //Else the object is not updated!!
+            out.writeObject(new msgSuccessfulMove(model));
+            finishSending();
+        } catch (IOException e) {
+
+        }
+    }
+
+    @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) throws RemoteException {
         try {
             //Else the object is not updated!!
@@ -317,5 +330,6 @@ public class GameListenersHandlerSocket implements Listener, Serializable {
         out.flush();
         out.reset();
     }
+
 
 }

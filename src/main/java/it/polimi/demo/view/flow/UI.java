@@ -109,8 +109,9 @@ public abstract class UI {
      * Message that shows the player's hand
      *
      * @param gameModel the model that has the player hand that needs to be shown
+     * @param nickname
      */
-    protected abstract void show_playerHand(ModelView gameModel);
+    protected abstract void show_playerHand(ModelView gameModel, String nickname);
 
     protected abstract void show_personalObjectiveCard(ModelView gameModel);
 
@@ -125,6 +126,8 @@ public abstract class UI {
     protected abstract void show_illegalMove();
 
     protected abstract void show_illegalMoveBecauseOf(String message);
+
+    protected abstract void show_successfulMove();
 
     protected abstract void show_whereToDrawFrom();
 

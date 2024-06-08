@@ -8,9 +8,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 import static it.polimi.demo.view.text.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.ansi;
 
-// todo: to check
+/**
+ * InputReaderTUI class
+ * InputReaderTUI is the class that reads the input and add it to the buffer
+ */
 public class TuiReader extends Thread implements AbstractReader {
-
     private final LinkedBlockingQueue<String> buffer = new LinkedBlockingQueue<>();
 
     public TuiReader(){

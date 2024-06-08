@@ -63,7 +63,7 @@ public interface GameControllerInterface extends Remote {
     Player getCurrentPlayer() throws RemoteException;
 
 
-     void disconnectPlayer(String nick, Listener lisOfClient) throws RemoteException;
+    void disconnectPlayer(String nick, Listener lisOfClient) throws RemoteException;
 
     /**
      * Add a message to the chat list

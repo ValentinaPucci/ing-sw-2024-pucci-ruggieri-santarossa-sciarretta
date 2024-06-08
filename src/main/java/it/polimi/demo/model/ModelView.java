@@ -1,5 +1,7 @@
 package it.polimi.demo.model;
 
+import it.polimi.demo.model.Model;
+import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
@@ -15,7 +17,9 @@ public class ModelView implements Serializable {
     private final ArrayList<PlayerIC> aux_order_players;
     private final LinkedList<PlayerIC> players_connected;
     private final Integer gameId;
+    private final String initial_player_nickname;
     private final CommonBoard common_board;
+    private final int num_required_players_to_start;
     private final GameStatus actual_status;
     private final String current_player_nickname;
     // private final List<Player> winners;
@@ -28,7 +32,9 @@ public class ModelView implements Serializable {
         this.gameId = model.getGameId();
         this.aux_order_players = new ArrayList<>(model.getAllPlayers());
         this.players_connected = new LinkedList<>(model.getPlayersConnected());
+        this.initial_player_nickname = model.getAllPlayers().getFirst().getNickname();
         this.common_board = model.getCommonBoard();
+        this.num_required_players_to_start = model.getNumPlayersToPlay();
         this.actual_status = model.getStatus();
         this.current_player_nickname = model.getPlayersConnected().peek().getNickname();
         this.chat = model.getChat();

@@ -1,23 +1,24 @@
 package it.polimi.demo.observer;
 
-import it.polimi.demo.model.Model;
-import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.Model;
 import it.polimi.demo.model.enumerations.Orientation;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
-// todo: all methods are rewritten, but javadoc are to be completed
-
 /**
- * This class is used to handle the listeners of the game
+ * The ListenersHandler class is responsible for managing a List of GameListener {@link Listener} <br>
+ * and for notifying the view when a change occurs in the GameModel {@link Model}. <br>
+ * When notifying an event, we need to pass the GameModelImmutable {@link ModelView} to the view to have access to the updated GameModel.
  */
 public class ObserverManager implements Serializable {
 
@@ -322,4 +323,18 @@ public class ObserverManager implements Serializable {
         listeners.remove(lis);
     }
 
+    public void notify_successMove(Model model) {
+        List<Listener> toRemove = new ArrayList<>();
+
+        listeners.forEach(listener -> {
+            try {
+                listener.successfulMove(new ModelView(model));
+            } catch (RemoteException e) {
+                printAsync("Disconnection detected - notify_playerLeft");
+                toRemove.add(listener);
+            }
+        });
+
+        listeners.removeAll(toRemove);
+    }
 }

@@ -10,19 +10,19 @@ import javafx.application.Platform;
 
 import java.util.ArrayList;
 
+import static it.polimi.demo.view.text.PrintAsync.printAsync;
+
 public class GUI extends UI {
 
     private ApplicationGUI guiApplication;
-    private GuiReader gui_reader;
-    private boolean alreadyShowedPublisher = false; //to delete in tui
+    private GuiReader GuiReader;
     private boolean alreadyShowedLobby = false;
 
     private String nickname;
 
-    public GUI(ApplicationGUI guiApplication, GuiReader gui_reader) {
+    public GUI(ApplicationGUI guiApplication, GuiReader GuiReader) {
         this.guiApplication = guiApplication;
-        this.gui_reader = gui_reader;
-        //System.out.println("GUI constructor: "+ this.gui_reader);
+        this.GuiReader = GuiReader;
         nickname = null;
         init();
     }
@@ -40,12 +40,12 @@ public class GUI extends UI {
 
     @Override
     protected void show_menuOptions() {
-        //if (alreadyShowedPublisher) {
-            callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.gui_reader));//So the controllers can add text to the buffer for the gameflow
-            callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
-            callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
-        //}
+        callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.GuiReader));//So the controllers can add text to the buffer for the gameflow
+        callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
     }
+
+
 
     @Override
     protected void show_creatingNewGameMsg(String nickname) {
@@ -101,11 +101,17 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.changeTurn(model, nickname));
     }
 
+    //TODO x vale: reimplement
+//    @Override
+//    protected void show_updateCommonCards() {
+//
+//    }
+
 
     /**
      * this method show that the player is ready to start
      *
-     * @param gameModel     model where gameFacts happen
+     * @param gameModel     model where events happen
      * @param nickname player's nickname
      */
     @Override
@@ -163,17 +169,19 @@ public class GUI extends UI {
 
     @Override
     protected void show_commonBoard(ModelView gameModel) {
-
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel));
     }
 
     @Override
     protected void show_myTurnIsFinished() {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).myTurnIsFinished());
     }
 
     @Override
-    protected void show_playerHand(ModelView gameModel) {
-
+    protected void show_playerHand(ModelView gameModel, String nickname) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
     }
 
     @Override
@@ -187,8 +195,8 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_illegalMove() {
-
+    public void show_illegalMove() {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).illegalMove());
     }
 
     @Override
@@ -196,9 +204,15 @@ public class GUI extends UI {
 
     }
 
+    //TODO: reimplement vale
+    @Override
+    protected void show_successfulMove() {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove());
+    }
+
     @Override
     protected void show_whereToDrawFrom() {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
     }
 
     @Override
@@ -218,8 +232,9 @@ public class GUI extends UI {
 
     @Override
     public void show_whichCardToPlaceMsg() {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).whichCardToPlace());
     }
+
 
     @Override
     protected void show_NaNMsg() {
@@ -233,12 +248,18 @@ public class GUI extends UI {
 
     @Override
     protected void show_orientation(String message) {
-        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableStarterCardClick());
+        if(message.equals("Choose the orientation of the card to place")) {
+            //System.out.println("GUI: whichOrientationToPlace()");
+            callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).whichOrientationToPlace());
+        }
+        else if(message.equals("Choose the orientation of the starter card")){
+            callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableStarterCardClick());
+        }
+
     }
 
     @Override
     protected void show_genericMessage(String s) {
-
     }
 
     @Override
@@ -249,7 +270,7 @@ public class GUI extends UI {
 
 
     /**
-     * This method add an important event to the list of important gameFacts, and show it
+     * This method add an important event to the list of important events, and show it
      * @param input the string of the important event to add
      */
     @Override
@@ -259,13 +280,12 @@ public class GUI extends UI {
     }
 
     /**
-     * This method reset the important gameFacts
+     * This method reset the important events
      */
     @Override
     protected void resetImportantEvents() {
         this.importantEvents = new ArrayList<>();
         this.nickname = null;
-        alreadyShowedPublisher = true;
         alreadyShowedLobby = false;
     }
 

@@ -197,20 +197,10 @@ da chat gpt 4:
     }
 
 
-Spiegazione del Codice:
-
-Definizione dell'Interfaccia Grafica:
-Creiamo un AnchorPane e un ScrollPane.
-Configuriamo il ScrollPane per adattarsi alle dimensioni dell'AnchorPane.
-
-Coordinate Valide:
-Definiamo una lista di coordinate valide (validCoordinates).
-Implementiamo un metodo isValidCoordinate per verificare se una coordinata cliccata è valida.
-
-Aggiunta di ImageView:
-Aggiungiamo un evento di clic all'AnchorPane.
-Se la coordinata cliccata è valida, aggiungiamo una nuova ImageView alle coordinate specifiche.
-
-Prossimi Passi:
-a. Aggiungere test per verificare se le coordinate sono corrette.
-b. Implementare la gestione delle immagini in modo più flessibile.
+COORDINATE SULL'ANCHOR PANE:
+- STARTERCARD: (296.5, 408)
+- POSIZIONI POSSIBILI STEP 2: NE(488.0, 306.0), SE(488.0, 343.0), SW(418.0, 346.0), NW(418.0, 306.0)
+-                                (80.0, 9.5)      (80.0, 46.5)       (10.0, 49.5)      (8.0, 10.5)
+- 
+- CORNER NW: (410.0, 298.0), (428.0, 298.0),  (428.0, 318.0), (410.0, 318.0)    --> deve mappare con (0,0) del model
+-             (2.0, 1.5)       (20.0, 1.5)       (20.0, 21.5)     (2.0, 21.5)

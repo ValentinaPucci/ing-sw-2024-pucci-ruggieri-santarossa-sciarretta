@@ -1,5 +1,4 @@
 package it.polimi.demo.view.gui.controllers;
-
 import it.polimi.demo.view.flow.utilities.GuiReader;
 
 public abstract class GenericController {
@@ -19,7 +18,7 @@ public abstract class GenericController {
      * @param GuiReader the input reader GUI
      */
     public void setInputReaderGUI(GuiReader GuiReader) {
-        //System.out.println("setInputReaderGUIGeneric: "+ GuiReader);
+        //System.out.println("setInputReaderGUIGeneric: "+ inputReaderGUI);
         this.GuiReader = GuiReader;
     }
 

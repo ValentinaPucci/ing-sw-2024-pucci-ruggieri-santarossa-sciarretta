@@ -8,6 +8,10 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+/**
+ * IT IS THE SKELETON --> VIRTUAL VIEW
+ * This interface contains the events regarding the list of games
+ */
 public interface MainControllerInterface extends Remote {
 
     GameControllerInterface createGame(Listener lis, String nick, int num_players) throws RemoteException;
@@ -33,6 +37,5 @@ public interface MainControllerInterface extends Remote {
     GameControllerInterface leaveGame(Listener lis, String nick, int idGame) throws RemoteException;
 
     GameControllerInterface getGameController(int idGame) throws RemoteException;
-
 
 }

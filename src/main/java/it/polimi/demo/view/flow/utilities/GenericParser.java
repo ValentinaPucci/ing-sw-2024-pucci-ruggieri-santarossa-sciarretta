@@ -9,10 +9,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * A thread class that processes input commands from a queue and interacts with the game flow.
+ * InputParser class
+ * This class parses the input from the queue
  */
-// todo: checked
 public class GenericParser extends Thread {
+
 
     private final LinkedBlockingQueue<String> inputQueue;
     private final LinkedBlockingQueue<String> processedDataQueue;

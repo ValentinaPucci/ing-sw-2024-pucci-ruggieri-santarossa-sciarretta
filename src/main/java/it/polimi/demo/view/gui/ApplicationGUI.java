@@ -4,9 +4,9 @@ import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.flow.ConnectionSelection;
 import it.polimi.demo.view.flow.GameDynamics;
-import it.polimi.demo.view.flow.utilities.GuiReader;
 import it.polimi.demo.view.gui.controllers.*;
 import it.polimi.demo.view.gui.scene.SceneType;
+import it.polimi.demo.view.flow.utilities.GuiReader;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -42,10 +42,8 @@ public class ApplicationGUI extends Application {
     public void start(Stage primaryStage) {
         gameDynamics = new GameDynamics(this, ConnectionSelection.valueOf(getParameters().getUnnamed().getFirst()));
         loadScenes();
-
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Codex Naturalis");
-
         root = new StackPane();
     }
 
@@ -94,7 +92,6 @@ public class ApplicationGUI extends Application {
         resizing=true;
 
         InputStream logoStream = ApplicationGUI.class.getClassLoader().getResourceAsStream("logo.png");
-        System.out.println(logoStream); // Stampa per debug
         if (logoStream != null) {
             primaryStage.getIcons().add(new Image(logoStream));
         } else {
@@ -107,7 +104,6 @@ public class ApplicationGUI extends Application {
         for (SceneInfo s : scenes) {
             s.setInputReaderGUI(GuiReader);
         }
-        System.out.println("setInputReaderGUItoAllControllers");
     }
 
     public void rescale(double width, double heigh) {
@@ -122,7 +118,7 @@ public class ApplicationGUI extends Application {
             widthOld = widthWindow;
             heightOld = heightWindow;
             Scale scale = new Scale(w, h, 0, 0);
-            //primaryStage.getScene().getRoot().getTransforms().add(scale);
+            primaryStage.getScene().getRoot().getTransforms().add(scale);
             primaryStage.getScene().lookup("#content").getTransforms().add(scale);
         }
     }
@@ -259,7 +255,7 @@ public class ApplicationGUI extends Application {
 
 //TODO: understand what to do
 
-//    public void showMessages(ModelView model, String myNickname) {
+//    public void showMessages(GameModelImmutable model, String myNickname) {
 //        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
 //        controller.setMessage(model.getChat().getMsgs(), myNickname);
 //    }

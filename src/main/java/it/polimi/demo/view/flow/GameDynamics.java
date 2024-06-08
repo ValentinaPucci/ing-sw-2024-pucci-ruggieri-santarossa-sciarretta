@@ -239,7 +239,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
                 FactType.NEXT_TURN, () -> {
                     if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
                         ui.show_personalObjectiveCard(fact.getModel());
-                        ui.show_playerHand(fact.getModel());
+                        ui.show_playerHand(fact.getModel(), nickname);
                         askWhichCard();
                     }
                 },
@@ -260,7 +260,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
                 FactType.NEXT_TURN, () -> {
                     if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
                         ui.show_personalObjectiveCard(fact.getModel());
-                        ui.show_playerHand(fact.getModel());
+                        ui.show_playerHand(fact.getModel(), nickname);
                         askWhichCard();
                     }
                 },
@@ -509,6 +509,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         }
     }
 
+
     @Override
     public void joinGame(String nick, int game_id) {
         ui.show_joiningToGameIdMsg(game_id, nick);
@@ -631,6 +632,13 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
+    public void successfulMove(ModelView model) throws RemoteException {
+        if (model.getCurrentPlayerNickname().equals(nickname)) {
+            ui.show_successfulMove();
+        }
+    }
+
+    @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
             ui.show_illegalMoveBecauseOf(reason_why);
@@ -650,7 +658,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     public void nextTurn(ModelView gameModel) {
         if (!gameModel.getCurrentPlayerNickname().equals(nickname) &&
                 (gameModel.getStatus() == GameStatus.RUNNING ||
-                gameModel.getStatus() == GameStatus.SECOND_LAST_ROUND))
+                        gameModel.getStatus() == GameStatus.SECOND_LAST_ROUND))
             ui.show_myTurnIsFinished();
         facts.add(gameModel, FactType.NEXT_TURN);
         //I remove all the input that the user sends when It is not his turn
@@ -684,6 +692,11 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     public void joinUnableGameFull(Player wantedToJoin, ModelView gameModel) throws RemoteException {
         facts.add(null, JOIN_UNABLE_GAME_FULL);
     }
+
+//    @Override
+//    public void playerReconnected(ModelView gamemodel, String nickPlayerReconnected) throws RemoteException {
+//
+//    }
 
     @Override
     public void messageSent(ModelView gameModel, String nick, Message msg) {
@@ -737,6 +750,11 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
             ui.show_playerJoined(gameModel, nickname);
         }
     }
+
+//    @Override
+//    public void onlyOnePlayerConnected(ModelView gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
+//
+//    }
 
     @Override
     public void secondLastRound(ModelView gameModel) {

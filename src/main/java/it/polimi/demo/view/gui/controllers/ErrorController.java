@@ -1,9 +1,9 @@
 package it.polimi.demo.view.gui.controllers;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.MouseEvent;
 
 public class ErrorController extends GenericController {
 
@@ -19,7 +19,7 @@ public class ErrorController extends GenericController {
      * Method to control the action
      * @param e ActionEvent
      */
-    public void GoToMenu(ActionEvent e){
+    public void GoToMenu(MouseEvent e){
         if(!needToExitApp) {
             getInputReaderGUI().addTxt("a");
         }else{

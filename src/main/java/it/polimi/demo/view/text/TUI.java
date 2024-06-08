@@ -1,6 +1,5 @@
 package it.polimi.demo.view.text;
 
-import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
@@ -10,6 +9,7 @@ import org.fusesource.jansi.AnsiConsole;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.view.flow.UI;
 
@@ -156,7 +156,7 @@ public class TUI extends UI {
      * @param gameModel the model that has the player hand that needs to be shown
      */
     @Override
-    public void show_playerHand(ModelView gameModel) {
+    public void show_playerHand(ModelView gameModel, String nickname) {
         List<ResourceCard> player_hand = gameModel.getPlayerEntity(nickname).getHand();
         for (ResourceCard c : player_hand) {
             if (c instanceof GoldCard) {
@@ -215,6 +215,11 @@ public class TUI extends UI {
         clearScreen();
         printAsync("Illegal move! " + message + "\n");
         clearScreen();
+    }
+
+    @Override
+    protected void show_successfulMove() {
+
     }
 
     @Override

@@ -9,12 +9,12 @@ public class MenuController extends GenericController{
     @FXML
     public void CreateGame(ActionEvent event) {
         System.out.println("CreateGame: "+ event);
-        it.polimi.demo.view.flow.utilities.GuiReader reader = getInputReaderGUI();
+        GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             reader.addTxt("c");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
-            System.out.println("L'oggetto GuiReader è null.");
+            System.out.println("L'oggetto inputReaderGUI è null.");
         }
     }
 
@@ -25,7 +25,7 @@ public class MenuController extends GenericController{
             reader.addTxt("js");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
-            System.out.println("L'oggetto GuiReader è null.");
+            System.out.println("L'oggetto inputReaderGUI è null.");
         }
     }
 
@@ -36,7 +36,7 @@ public class MenuController extends GenericController{
             reader.addTxt("j");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
-            System.out.println("L'oggetto GuiReader è null.");
+            System.out.println("L'oggetto inputReaderGUI è null.");
         }
     }
 
@@ -47,7 +47,7 @@ public class MenuController extends GenericController{
             reader.addTxt("x");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
-            System.out.println("L'oggetto GuiReader è null.");
+            System.out.println("L'oggetto inputReaderGUI è null.");
         }
     }
 

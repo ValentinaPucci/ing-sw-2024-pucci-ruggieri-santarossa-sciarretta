@@ -3,7 +3,7 @@ package it.polimi.demo.networking.rmi;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.enumerations.Orientation;
+import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.ObserverManagerClient;
 import it.polimi.demo.networking.PingSender;
@@ -20,9 +20,16 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.function.Consumer;
 
+
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
 
+/**
+ * RMIClient Class <br>
+ * Handle all the network communications between RMIClient and RMIServer <br>
+ * From the first connection, to the creation, joining, leaving, grabbing and positioning messages through the network<br>
+ * by the RMI Network Protocol
+ */
 public class RMIClient implements ClientInterface {
 
     private static MainControllerInterface asks;
@@ -225,4 +232,3 @@ public class RMIClient implements ClientInterface {
         });
     }
 }
-

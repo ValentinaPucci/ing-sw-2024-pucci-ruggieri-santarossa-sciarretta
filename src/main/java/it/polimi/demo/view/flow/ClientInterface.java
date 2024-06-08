@@ -7,9 +7,9 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 
 public interface ClientInterface extends Serializable {
-
     void createGame(String nickname, int num_of_players) throws IOException, InterruptedException, NotBoundException;
 
     void joinGame(String nick, int idGame) throws IOException, InterruptedException, NotBoundException;
@@ -31,4 +31,5 @@ public interface ClientInterface extends Serializable {
     void sendMessage(String receiver, Message msg) throws IOException, NotBoundException;
 
     void heartbeat() throws IOException, NotBoundException;
+
 }

@@ -1,5 +1,7 @@
 package it.polimi.demo.controller;
 
+import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.DefaultValues;
 import it.polimi.demo.model.chat.Message;
@@ -7,8 +9,7 @@ import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.networking.remoteInterfaces.*;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -23,7 +24,6 @@ import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
  * Allowing players to create, join, reconnect, leave and delete games
  * Therefore, the MainController is unique across the app and thus implements the Singleton Pattern
  */
-// todo: from main controller down to all other classes javadocs must be checked
 public class MainController implements MainControllerInterface, Serializable {
 
     /**
