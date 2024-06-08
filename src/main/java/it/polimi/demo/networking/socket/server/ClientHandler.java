@@ -30,12 +30,12 @@ public class ClientHandler extends Thread implements Serializable {
     /**
      * ObjectInputStream in
      */
-    private transient ObjectInputStream in;
+    private transient ObjectInputStream ob_in;
 
     /**
      * ObjectOutputStream out
      */
-    private transient ObjectOutputStream out;
+    private transient ObjectOutputStream ob_out;
 
     /**
      * GameController associated with the game
@@ -57,14 +57,15 @@ public class ClientHandler extends Thread implements Serializable {
     /**
      * Handle all the network requests performed by a specific ClientSocket
      *
-     * @param soc the socket to the client
+     * @param socket the socket to the client
      * @throws IOException
      */
-    public ClientHandler(Socket soc) throws IOException {
-        this.clientSocket = soc;
-        this.in = new ObjectInputStream(soc.getInputStream());
-        this.out = new ObjectOutputStream(soc.getOutputStream());
-        gameListenersHandlerSocket = new GameListenersHandlerSocket(out);
+    public ClientHandler(Socket socket) throws IOException {
+        this.clientSocket = socket;
+        this.ob_in = new ObjectInputStream(socket.getInputStream());
+        this.ob_out = new ObjectOutputStream(socket.getOutputStream());
+
+        gameListenersHandlerSocket = new GameListenersHandlerSocket(ob_out);
     }
 
     /**
@@ -75,47 +76,50 @@ public class ClientHandler extends Thread implements Serializable {
     }
 
     @Override
-    public  void run() {
-        var th = new Thread(this::runGameLogic);
-        th.start();
+    public void run() {
+        Thread logicThread = new Thread(this::handleGameLogic);
+        logicThread.start();
         try {
-            SocketClientGenericMessage temp;
-            while (!this.isInterrupted()) {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    temp = (SocketClientGenericMessage) in.readObject();
-                    processingQueue.add(temp);
-            } catch (IOException | ClassNotFoundException e) {
-                    printAsync("ClientSocket dies because cannot communicate no more with the client");
-                    try {
-                        gameController.leave(gameListenersHandlerSocket, nickname);
-                    } catch (RemoteException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    SocketClientGenericMessage incomingMessage = (SocketClientGenericMessage) ob_in.readObject();
+                    processingQueue.add(incomingMessage);
+                } catch (IOException | ClassNotFoundException e) {
+                    System.out.println("Connection to client lost, unable to continue communication.");
+                    handleDisconnection();
                     return;
                 }
             }
         } finally {
-            th.interrupt();
+            logicThread.interrupt();
         }
     }
 
-    private void runGameLogic() {
-        SocketClientGenericMessage temp;
+    private void handleDisconnection() {
         try {
-            while (!this.isInterrupted()) {
-                temp = processingQueue.take();
-                if (temp.isMessageForMainController()) {
-                    gameController = temp.perform(gameListenersHandlerSocket, MainController.getControllerInstance());
-                    nickname = gameController != null ? temp.getNick() : null;
-                } else if (!temp.isHeartbeat()) {
-                        temp.perform(gameController);
+            gameController.leave(gameListenersHandlerSocket, nickname);
+        } catch (RemoteException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void handleGameLogic() {
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                SocketClientGenericMessage message = processingQueue.take();
+                if (message.isMessageForMainController()) {
+                    gameController = message.perform(gameListenersHandlerSocket, MainController.getControllerInstance());
+                    nickname = (gameController != null) ? message.getNick() : null;
+                } else if (!message.isHeartbeat()) {
+                    message.perform(gameController);
                 }
             }
         } catch (RemoteException | GameEndedException e) {
             throw new RuntimeException(e);
-        } catch (InterruptedException ignored) {
-
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
+
 }
 

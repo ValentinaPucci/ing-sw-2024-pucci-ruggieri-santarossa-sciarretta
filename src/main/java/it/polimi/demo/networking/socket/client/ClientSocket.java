@@ -134,7 +134,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     }
 
     /**
-     * Close the connection
+     * it closes the connection
      *
      * @throws IOException
      */
@@ -147,12 +147,25 @@ public class ClientSocket extends Thread implements ClientInterface {
         }
     }
 
+    /**
+     * Generic method used to send a message to the server
+     *
+     * @param message to send
+     * @throws IOException
+     */
     private void sendMessage(Object message) throws IOException {
         ob_out.writeObject(message);
-        finishSending();
+        
+        ob_out.flush();
+        ob_out.reset();
     }
 
-
+    /**
+     * Method used to call the createGame action
+     * @param nickname
+     * @param num_of_players
+     * @throws IOException
+     */
     @Override
     public void createGame(String nickname, int num_of_players) throws IOException {
         this.nickname = nickname;
@@ -160,6 +173,12 @@ public class ClientSocket extends Thread implements ClientInterface {
         startHeartbeat();
     }
 
+    /**
+     * Method used to call the joinGame action
+     * @param nick
+     * @param idGame
+     * @throws IOException
+     */
     @Override
     public void joinGame(String nick, int idGame) throws IOException {
         nickname = nick;
@@ -167,6 +186,11 @@ public class ClientSocket extends Thread implements ClientInterface {
         startHeartbeat();
     }
 
+    /**
+     * Method used to call the joinFirstAvailableGame action
+     * @param nick
+     * @throws IOException
+     */
     @Override
     public void joinFirstAvailableGame(String nick) throws IOException {
         nickname = nick;
@@ -174,6 +198,12 @@ public class ClientSocket extends Thread implements ClientInterface {
         startHeartbeat();
     }
 
+    /**
+     * Method used to call the leaveGame action
+     * @param nick
+     * @param idGame
+     * @throws IOException
+     */
     @Override
     public void leave(String nick, int idGame) throws IOException {
         sendMessage(new SocketClientMsgLeaveGame(nick, idGame));
@@ -181,31 +211,63 @@ public class ClientSocket extends Thread implements ClientInterface {
         stopHeartbeat();
     }
 
+    /**
+     * Method used to set the player as ready
+     * @throws IOException
+     */
     @Override
     public void setAsReady() throws IOException {
         sendMessage(new SocketClientMsgSetReady(nickname));
     }
 
+    /**
+     * Method used to place the starter card
+     * @param orientation
+     * @throws IOException
+     */
     @Override
     public void placeStarterCard(Orientation orientation) throws IOException, GameEndedException {
         sendMessage(new SocketClientMsgPlaceStarterCard(orientation));
     }
 
+    /**
+     * Method used to choose a card
+     * @param which_card
+     * @throws IOException
+     */
     @Override
     public void chooseCard(int which_card) throws IOException {
         sendMessage(new SocketClientMsgChooseCard(which_card));
     }
 
+    /**
+     * Method used to place a card
+     * @param where_to_place_x
+     * @param where_to_place_y
+     * @param orientation
+     * @throws IOException
+     */
     @Override
     public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws IOException {
         sendMessage(new SocketClientMsgPlaceCard(where_to_place_x, where_to_place_y, orientation));
     }
 
+    /**
+     * Method used to draw a card
+     * @param index
+     * @throws IOException
+     */
     @Override
     public void drawCard(int index) throws IOException, GameEndedException {
         sendMessage(new SocketClientMsgDrawCard(index));
     }
 
+    /**
+     * Method used to send a chat message
+     * @param receiver
+     * @param msg
+     * @throws IOException
+     */
     @Override
     public void sendMessage(String receiver, Message msg) throws IOException {
         sendMessage(new SocketClientMsgSendMessage(receiver, msg));
@@ -233,14 +295,5 @@ public class ClientSocket extends Thread implements ClientInterface {
         if (socketHeartbeat.isAlive()) {
             socketHeartbeat.interrupt();
         }
-    }
-
-    /**
-     * Makes sure the message has been sent
-     * @throws IOException
-     */
-    private void finishSending() throws IOException {
-        ob_out.flush();
-        ob_out.reset();
     }
 }
