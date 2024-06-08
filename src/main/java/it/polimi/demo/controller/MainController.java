@@ -81,7 +81,7 @@ public class MainController implements MainControllerInterface, Serializable {
         Player player = new Player(nickname);
         GameController game = new GameController(game_id, num_of_players, player);
         // Here we add the player to the 'statical' list of players
-        game.addListener(listener, player);
+        game.addListener(listener);
         game.addPlayer(player);
 
         games.put(game_id, game);
@@ -117,7 +117,7 @@ public class MainController implements MainControllerInterface, Serializable {
             return null;
         }
 
-        games.get(gameId).addListener(listener, player);
+        games.get(gameId).addListener(listener);
         games.get(gameId).addPlayer(player);
         System.out.println("\t>Game " + games.get(gameId).getGameId() + " player:\"" + nickname + "\" entered player");
         printRunningGames();
@@ -142,7 +142,7 @@ public class MainController implements MainControllerInterface, Serializable {
         if (firstAvailableGame.isPresent()) {
             GameController game = firstAvailableGame.get();
             Player player = new Player(nickname);
-            game.addListener(listener, player);
+            game.addListener(listener);
             game.addPlayer(player);
             System.out.println("\t>Game " + game.getGameId() + " player:\"" + nickname + "\" entered player");
             printRunningGames();

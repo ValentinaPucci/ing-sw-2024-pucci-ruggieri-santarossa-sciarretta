@@ -111,10 +111,10 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @throws RemoteException if there is a connection error (RMI)
      */
     @Override
-    public void disconnectPlayer(String nick, Listener lisOfClient) throws RemoteException {
+    public void disconnectPlayer(String nick, Listener lis) throws RemoteException {
         Player p = model.getPlayerEntity(nick);
         if (p != null) {
-            removeListener(lisOfClient, p);
+            removeListener(lis);
             model.removePlayer(p);
         }
     }
@@ -128,7 +128,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public synchronized void leave(Listener lis, String nick) throws RemoteException {
-        removeListener(lis, model.getPlayerEntity(nick));
+        removeListener(lis);
         model.removePlayer(model.getPlayerEntity(nick));
     }
 
@@ -317,9 +317,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * Add observer @param l to model listeners and player listeners
      *
      * @param l Listener to add
-     * @param p entity of the player
      */
-    public void addListener(Listener l, Player p) {
+    public void addListener(Listener l) {
         model.addListener(l);
     }
 
@@ -327,9 +326,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * Remove the observer @param lis to model listeners and player listeners
      *
      * @param lis Listener to remove
-     * @param p   entity of the player to remove
      */
-    public void removeListener(Listener lis, Player p) {
+    public void removeListener(Listener lis) {
         model.removeListener(lis);
     }
 
