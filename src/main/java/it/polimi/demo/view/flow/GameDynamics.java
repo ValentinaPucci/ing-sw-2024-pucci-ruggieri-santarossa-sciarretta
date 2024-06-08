@@ -693,11 +693,6 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         facts.add(null, JOIN_UNABLE_GAME_FULL);
     }
 
-//    @Override
-//    public void playerReconnected(ModelView gamemodel, String nickPlayerReconnected) throws RemoteException {
-//
-//    }
-
     @Override
     public void messageSent(ModelView gameModel, String nick, Message msg) {
         if (!msg.getSender().getNickname().equals(nickname)) {
@@ -713,7 +708,6 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
 
     @Override
     public void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
-        //System.out.println("[EVENT]: "+ wantedToJoin.getNickname() + " has already in");
         facts.add(null, JOIN_UNABLE_NICKNAME_ALREADY_IN);
     }
 
@@ -750,11 +744,6 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
             ui.show_playerJoined(gameModel, nickname);
         }
     }
-
-//    @Override
-//    public void onlyOnePlayerConnected(ModelView gameModel, int secondsToWaitUntilGameEnded) throws RemoteException {
-//
-//    }
 
     @Override
     public void secondLastRound(ModelView gameModel) {

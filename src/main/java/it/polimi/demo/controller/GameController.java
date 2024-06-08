@@ -12,6 +12,7 @@ import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
@@ -19,7 +20,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     private Model model;
 
-    private final Map<Listener, Heartbeat>  pings;
+    private final Map<Listener, Ping> pings;
 
     public GameController(int gameID, int numberOfPlayers, Player player) {
         model = new Model(gameID, numberOfPlayers, player);
@@ -52,36 +53,38 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     public void checkForDisconnections() {
         synchronized (pings) {
-            for (Map.Entry<Listener, Heartbeat> entry : pings.entrySet()) {
+            for (Map.Entry<Listener, Ping> entry : pings.entrySet()) {
                 Listener listener = entry.getKey();
-                Heartbeat heartbeat = entry.getValue();
-                if (isHeartbeatExpired(heartbeat)) {
-                    handleDisconnection(heartbeat, listener);
+                Ping ping = entry.getValue();
+                if (isHeartbeatExpired(ping)) {
+                    handleDisconnection(ping, listener);
                 }
             }
         }
     }
 
     /**
-     * It checks if the heartbeat is expired.
+     * It checks if the ping is expired.
      * It returns true if the difference between the current time and the last ping time is greater than the timeout.
-     * @param heartbeat the heartbeat to check
-     * @return true if the heartbeat is expired, false else
+     * @param ping the ping to check
+     * @return true if the ping is expired, false else
      */
-    private boolean isHeartbeatExpired(Heartbeat heartbeat) {
+    private boolean isHeartbeatExpired(Ping ping) {
         long currentTime = System.currentTimeMillis();
-        long lastBeatTime = heartbeat.getPing();
+        long lastBeatTime = ping.getPing();
         return currentTime - lastBeatTime > DefaultValues.secondsToWaitReconnection;
     }
 
-    public void handleDisconnection(Heartbeat heartbeat, Listener listener) {
+    /**
+     * Handle the disconnection of a player
+     * @param ping the ping of the player
+     * @param listener the listener of the player
+     */
+    public void handleDisconnection(Ping ping, Listener listener) {
         try {
-            disconnectPlayer(heartbeat.getNick(), listener);
-            printAsync("Disconnection detected by heartbeat of player: " + heartbeat.getNick() + " ");
-            if (this.getNumConnectedPlayers() < 2) {
-                printAsync("Game ended because only one player is connected");
-                MainController.getControllerInstance().deleteGame(this.getGameId());
-            }
+            disconnectPlayer(ping.getNick(), listener);
+            printAsync("Disconnection detected by ping of player: " + ping.getNick() + " ");
+            MainController.getControllerInstance().deleteGame(this.getGameId());
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -100,7 +103,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     @Override
     public synchronized void addPing(String nickname, Listener me) {
         synchronized (pings) {
-            pings.put(me, new Heartbeat(System.currentTimeMillis(), nickname));
+            pings.put(me, new Ping(System.currentTimeMillis(), nickname));
         }
     }
 

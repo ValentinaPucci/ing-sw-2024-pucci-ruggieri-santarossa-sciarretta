@@ -42,7 +42,7 @@ public class ClientSocket extends Thread implements ClientInterface, Serializabl
         while (true) {
             try {
                 SocketServerGenericMessage message = (SocketServerGenericMessage) inputStream.readObject();
-                message.execute(eventManager);
+                message.perform(eventManager);
             } catch (IOException | ClassNotFoundException | InterruptedException e) {
                 handleDisconnection(e);
             }
@@ -104,14 +104,14 @@ public class ClientSocket extends Thread implements ClientInterface, Serializabl
     @Override
     public void createGame(String nickname, int numberOfPlayers) throws IOException {
         this.userNickname = nickname;
-        outputStream.writeObject(new SocketClientMessageCreateGame(nickname, numberOfPlayers));
+        outputStream.writeObject(new SocketClientMsgGameCreation(nickname, numberOfPlayers));
         finishSending();
     }
 
     @Override
     public void joinGame(String nickname, int gameId) throws IOException {
         this.userNickname = nickname;
-        outputStream.writeObject(new SocketClientMessageJoinGame(nickname, gameId));
+        outputStream.writeObject(new SocketClientMsgJoinGame(nickname, gameId));
         finishSending();
     }
 
@@ -124,50 +124,50 @@ public class ClientSocket extends Thread implements ClientInterface, Serializabl
 
     @Override
     public void leave(String nickname, int gameId) throws IOException, NotBoundException {
-        outputStream.writeObject(new SocketClientMessageLeave(nickname, gameId));
+        outputStream.writeObject(new SocketClientMsgLeaveGame(nickname, gameId));
         finishSending();
         this.userNickname = null;
     }
 
     @Override
     public void setAsReady() throws IOException, NotBoundException {
-        outputStream.writeObject(new SocketClientMessageSetReady(userNickname));
+        outputStream.writeObject(new SocketClientMsgSetReady(userNickname));
         finishSending();
     }
 
     @Override
     public void placeStarterCard(Orientation orientation) throws IOException, GameEndedException, NotBoundException {
-        outputStream.writeObject(new SocketClientMessagePlaceStarterCard(orientation));
+        outputStream.writeObject(new SocketClientMsgPlaceStarterCard(orientation));
         finishSending();
     }
 
     @Override
     public void chooseCard(int cardIndex) throws IOException {
-        outputStream.writeObject(new SocketClientMessageChooseCard(cardIndex));
+        outputStream.writeObject(new SocketClientMsgChooseCard(cardIndex));
         finishSending();
     }
 
     @Override
     public void placeCard(int xCoordinate, int yCoordinate, Orientation orientation) throws IOException {
-        outputStream.writeObject(new SocketClientMessagePlaceCard(xCoordinate, yCoordinate, orientation));
+        outputStream.writeObject(new SocketClientMsgPlaceCard(xCoordinate, yCoordinate, orientation));
         finishSending();
     }
 
     @Override
     public void drawCard(int cardIndex) throws IOException, GameEndedException {
-        outputStream.writeObject(new SocketClientMessageDrawCard(cardIndex));
+        outputStream.writeObject(new SocketClientMsgDrawCard(cardIndex));
         finishSending();
     }
 
     @Override
     public void sendMessage(String receiver, Message message) throws IOException, NotBoundException {
-        outputStream.writeObject(new SocketClientMessageSendMessage(receiver, message));
+        outputStream.writeObject(new SocketClientMsgSendMessage(receiver, message));
         finishSending();
     }
 
     @Override
     public void heartbeat() {
-        // Heartbeat logic if needed
+        // Ping logic if needed
     }
 
     private void finishSending() throws IOException {

@@ -72,10 +72,10 @@ public class ClientHandler extends Thread implements Serializable {
     private void processGameLogic() throws RemoteException, GameEndedException, InterruptedException {
         var temp = processingQueue.take();
         if (temp.isMessageForMainController()) {
-            gameController = temp.execute(gameListenersHandlerSocket, MainController.getControllerInstance());
+            gameController = temp.perform(gameListenersHandlerSocket, MainController.getControllerInstance());
             nickname = gameController != null ? temp.getNick() : null;
         } else if (!temp.isHeartbeat()) {
-            temp.execute(gameController);
+            temp.perform(gameController);
         }
     }
 
