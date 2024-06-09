@@ -20,7 +20,7 @@ public class msgGameEnded extends SocketServerGenericMessage {
 
     @Override
     public void perform(Listener lis) throws RemoteException {
-        logMessage();
+        //logMessage();
         lis.gameEnded(gamemodel);
     }
 }

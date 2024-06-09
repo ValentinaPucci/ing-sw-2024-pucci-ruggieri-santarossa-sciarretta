@@ -32,7 +32,7 @@ public class msgCardPlaced extends SocketServerGenericMessage {
 
     @Override
     public void perform(Listener lis) throws RemoteException {
-        logMessage();
+
         lis.cardPlaced(gamemodel, x, y, orientation);
     }
 }

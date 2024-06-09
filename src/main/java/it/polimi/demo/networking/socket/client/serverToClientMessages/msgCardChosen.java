@@ -20,7 +20,6 @@ public class msgCardChosen extends  SocketServerGenericMessage {
 
     @Override
     public void perform(Listener lis) throws RemoteException {
-        logMessage();
         lis.cardChosen(gameModel, which_card);
     }
 

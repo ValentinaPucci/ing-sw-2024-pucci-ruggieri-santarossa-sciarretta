@@ -20,7 +20,7 @@ public class msgGameStarted extends SocketServerGenericMessage {
 
     @Override
     public void perform(Listener lis) throws RemoteException {
-        logMessage();
+        //logMessage();
         lis.gameStarted(model);
     }
 }

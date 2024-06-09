@@ -19,7 +19,7 @@ public class msgGenericErrorWhenEntryingGame extends SocketServerGenericMessage{
 
     @Override
     public void perform(Listener lis) throws RemoteException {
-        logMessage();
+        //logMessage();
         lis.genericErrorWhenEnteringGame(why);
     }
 }

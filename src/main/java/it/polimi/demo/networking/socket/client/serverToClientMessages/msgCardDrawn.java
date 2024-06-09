@@ -22,7 +22,6 @@ public class msgCardDrawn extends SocketServerGenericMessage {
 
     @Override
     public void perform(Listener lis) throws RemoteException {
-        logMessage();
         lis.cardDrawn(gameModel, index);
     }
 

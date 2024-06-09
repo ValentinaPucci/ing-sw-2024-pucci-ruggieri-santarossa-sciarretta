@@ -19,7 +19,7 @@ public class msgGameIdNotExists extends SocketServerGenericMessage {
 
     @Override
     public void perform(Listener lis) throws RemoteException {
-        logMessage();
+        //logMessage();
         lis.gameIdNotExists(gameid);
     }
 }

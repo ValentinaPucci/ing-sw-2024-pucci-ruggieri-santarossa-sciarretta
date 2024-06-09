@@ -18,7 +18,7 @@ public class msgIllegalMove extends SocketServerGenericMessage {
 
     @Override
     public void perform(Listener lis) throws RemoteException {
-        logMessage();
+        //logMessage();
         lis.illegalMove(gamemodel);
     }
 }
