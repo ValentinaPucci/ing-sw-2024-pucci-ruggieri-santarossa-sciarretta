@@ -1,6 +1,6 @@
 package it.polimi.demo.model;
 
-import it.polimi.demo.DefaultValues;
+import it.polimi.demo.Constants;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class ModelTest {
     @Test
     public void testGetBeginnerPlayer() {
         assertThrows(NoSuchElementException.class, ()-> model.getBeginnerPlayer());
-        addPlayersToGameModel(DefaultValues.minNumOfPlayer);
+        addPlayersToGameModel(Constants.minNumOfPlayer);
         assertNotNull(model.getBeginnerPlayer());
     }
 
@@ -63,15 +63,15 @@ public class ModelTest {
     }
 
     @Test
-    public void testGetPlayerEntity() {
-        assertNull(model.getPlayerEntity("Player1"));
+    public void testGetIdentityOfPlayer() {
+        assertNull(model.getIdentityOfPlayer("Player1"));
         Player player1 = new Player("Player1");
         Player player2 = new Player("Player2");
         model.addPlayer(player1);
         model.addPlayer(player2);
-        assertEquals(model.getAllPlayers().getFirst(), model.getPlayerEntity("Player1"));
-        assertEquals(model.getAllPlayers().get(1), model.getPlayerEntity("Player2"));
-        assertNull(model.getPlayerEntity("UnknownPlayer"));
+        assertEquals(model.getAllPlayers().getFirst(), model.getIdentityOfPlayer("Player1"));
+        assertEquals(model.getAllPlayers().get(1), model.getIdentityOfPlayer("Player2"));
+        assertNull(model.getIdentityOfPlayer("UnknownPlayer"));
     }
 
     @Test
@@ -82,7 +82,7 @@ public class ModelTest {
         model.addPlayer(player);
         assertEquals(1, model.getAllPlayers().size());
         assertTrue(model.getAllPlayers().contains(player));
-        // Attempt to add the same player again
+        // Attempt to offer the same player again
         assertThrows(PlayerAlreadyConnectedException.class, () -> model.addPlayer(player));
         //Add other players
         Player player2 = new Player("Player2");
@@ -111,15 +111,15 @@ public class ModelTest {
 
     @Test
     public void testRemovePlayer() {
-        addPlayersToGameModel(DefaultValues.minNumOfPlayer);
+        addPlayersToGameModel(Constants.minNumOfPlayer);
         Player playerToRemove = model.getAllPlayers().getFirst();
-        assertEquals(DefaultValues.minNumOfPlayer, model.getAllPlayers().size());
+        assertEquals(Constants.minNumOfPlayer, model.getAllPlayers().size());
         model.removePlayer(playerToRemove);
         assertFalse(model.getAllPlayers().contains(playerToRemove));
-        assertEquals(DefaultValues.minNumOfPlayer - 1, model.getAllPlayers().size());
+        assertEquals(Constants.minNumOfPlayer - 1, model.getAllPlayers().size());
     }
 
-    // Utility method to add a specific number of players to the game model
+    // Utility method to offer a specific number of players to the game model
     private void addPlayersToGameModel(int numPlayers) {
         for (int i = 0; i < numPlayers; i++) {
             model.addPlayer(new Player("Player" + i));

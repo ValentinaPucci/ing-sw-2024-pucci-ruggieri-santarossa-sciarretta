@@ -1,12 +1,12 @@
 package it.polimi.demo.view.gui;
 
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.model.interfaces.PlayerIC;
-import it.polimi.demo.view.flow.ConnectionSelection;
-import it.polimi.demo.view.flow.GameDynamics;
+import it.polimi.demo.model.Player;
+import it.polimi.demo.view.dynamic.ConnectionSelection;
+import it.polimi.demo.view.dynamic.GameDynamic;
 import it.polimi.demo.view.gui.controllers.*;
 import it.polimi.demo.view.gui.scene.SceneType;
-import it.polimi.demo.view.flow.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.GuiReader;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -33,14 +33,14 @@ public class ApplicationGUI extends Application {
 
     private Stage primaryStage;
     private StackPane root;
-    private GameDynamics gameDynamics;
+    private GameDynamic gameDynamics;
     private ArrayList<SceneInfo> scenes;
     private double widthOld, heightOld;
     private boolean resizing = true;
 
     @Override
     public void start(Stage primaryStage) {
-        gameDynamics = new GameDynamics(this, ConnectionSelection.valueOf(getParameters().getUnnamed().getFirst()));
+        gameDynamics = new GameDynamic(this, ConnectionSelection.valueOf(getParameters().getUnnamed().getFirst()));
         loadScenes();
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Codex Naturalis");
@@ -202,7 +202,7 @@ public class ApplicationGUI extends Application {
     public void showPlayerToLobby(ModelView model) {
         hidePanesInLobby();
         int i = 0;
-        for (PlayerIC p : model.getPlayersConnected()) {
+        for (Player p : model.getPlayersConnected()) {
             addLobbyPanePlayer(p.getNickname(), i, p.getReadyToStart());
             i++;
         }

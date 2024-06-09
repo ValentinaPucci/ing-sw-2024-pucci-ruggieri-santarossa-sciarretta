@@ -1,19 +1,16 @@
 package it.polimi.demo.model;
 
 import it.polimi.demo.model.cards.gameCards.GoldCard;
-import it.polimi.demo.model.interfaces.PlayerIC;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
-import it.polimi.demo.model.interfaces.ResourceCardIC;
-import javafx.scene.text.Text;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Player implements PlayerIC, Serializable {
+public class Player implements Serializable {
 
     private String nickname;
     private List<ResourceCard> card_hand;
@@ -47,7 +44,6 @@ public class Player implements PlayerIC, Serializable {
         this.is_ready_to_start = false;
     }
 
-    @Override
     public String getNickname() {
         return nickname;
     }
@@ -56,7 +52,7 @@ public class Player implements PlayerIC, Serializable {
         this.nickname = nickname;
     }
 
-    @Override
+    
     public PersonalBoard getPersonalBoard() {
         return personal_board;
     }
@@ -65,7 +61,7 @@ public class Player implements PlayerIC, Serializable {
         this.personal_board = personal_board;
     }
 
-    @Override
+    
     public ResourceCard getChosenGameCard() {
         return chosen_card;
     }
@@ -82,7 +78,7 @@ public class Player implements PlayerIC, Serializable {
         this.chosen_objective = chosen_objective;
     }
 
-    @Override
+    
     public StarterCard getStarterCard() {
         return starter_card;
     }
@@ -91,7 +87,7 @@ public class Player implements PlayerIC, Serializable {
         this.starter_card = starter_card;
     }
 
-    @Override
+    
     public ObjectiveCard getChosenObjectiveCard() {
         return chosen_objective;
     }
@@ -107,7 +103,7 @@ public class Player implements PlayerIC, Serializable {
      * @param objective1 objective 1
      * @param objective2 objective 2
      */
-    @Override
+    
     public void setSecretObjectives(ObjectiveCard objective1, ObjectiveCard objective2) {
         secret_objectives.add(objective1);
         secret_objectives.add(objective2);
@@ -120,7 +116,7 @@ public class Player implements PlayerIC, Serializable {
 
     public List<StarterCard> getStarterCardToChose() { return this.starter_card_to_chose;}
 
-    @Override
+    
     public int getScoreBoardPosition() {
         return score_board_position;
     }
@@ -129,7 +125,7 @@ public class Player implements PlayerIC, Serializable {
         this.score_board_position = score_board_position;
     }
 
-    @Override
+    
     public int getFinalScore() {
         return final_score;
     }
@@ -138,14 +134,14 @@ public class Player implements PlayerIC, Serializable {
         this.final_score = final_score;
     }
 
-    @Override
+    
     public void addToHand(ResourceCard card) {
         card_hand.add(card);
     }
 
     public List<ResourceCard> getCardHand() { return card_hand; }
 
-    @Override
+    
     public ArrayList<Integer> getCardHandIds(){
        ArrayList<Integer> cardHandIds = new ArrayList<>();
         for (ResourceCard resourceCard : card_hand) {
@@ -154,24 +150,24 @@ public class Player implements PlayerIC, Serializable {
        return cardHandIds;
     }
 
-    @Override
+    
     public void removeFromHand(ResourceCard card) {
         card_hand.remove(card);
     }
 
-    @Override
+    
     public void removeFromHand(GoldCard card) {card_hand.remove(card);}
 
     public List<ResourceCard> getHand() {
         return card_hand;
     }
 
-    @Override
-    public List<ResourceCardIC> getHandIC() {
+    
+    public List<ResourceCard> getHandIC() {
         return new ArrayList<>(card_hand);
     }
 
-    @Override
+    
     public boolean getReadyToStart() {
         return is_ready_to_start;
     }
@@ -184,7 +180,7 @@ public class Player implements PlayerIC, Serializable {
         this.is_ready_to_start = false;
     }
 
-    @Override
+    
     public boolean getIsConnected() {
         return is_connected;
     }
@@ -197,7 +193,7 @@ public class Player implements PlayerIC, Serializable {
         this.is_connected = false;
     }
 
-    @Override
+    
     public boolean equals(Object o) {
         if (o instanceof Player) {
             Player p = (Player) o;
@@ -222,18 +218,18 @@ public class Player implements PlayerIC, Serializable {
         return personal_board.getPoints();
     }
 
-    @Override
+    
     public ResourceCard getLastChosenCard() {
         return chosen_card;
     }
 
-    @Override
+    
     public boolean isLast() {
         //TODO: IMPLEMENT!
         return false;
     }
 
-    @Override
+    
     public Integer[] getSecretObjectiveCardsIds() {
         Integer[] personalObjectiveIds = new Integer[2];
         personalObjectiveIds[0] = getSecretObjectiveCards().getFirst().getId();

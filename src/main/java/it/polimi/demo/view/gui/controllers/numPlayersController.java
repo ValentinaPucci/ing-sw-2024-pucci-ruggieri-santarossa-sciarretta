@@ -1,6 +1,6 @@
 package it.polimi.demo.view.gui.controllers;
 
-import it.polimi.demo.view.flow.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.GuiReader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

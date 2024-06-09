@@ -1,6 +1,5 @@
 package it.polimi.demo.model.board;
 
-import it.polimi.demo.model.interfaces.CommonBoardIC;
 import it.polimi.demo.model.ConcreteDeck;
 import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
@@ -12,7 +11,7 @@ import java.util.List;
 
 //NB il giocatore iniziale (pedina nera) è il giocatore 0
 
-public class CommonBoard implements CommonBoardIC, Serializable {
+public class CommonBoard implements Serializable {
 
     private ConcreteDeck resource_concrete_deck; // resource_concrete_deck
     private ConcreteDeck gold_concrete_deck; // gold_concrete_deck
@@ -213,7 +212,6 @@ public class CommonBoard implements CommonBoardIC, Serializable {
 //     4: Gold Deck
 //     5: First Gold Card on the table
 //     6: Second Gold Card on the table
-    @Override
     //necessary for the GUI
     public Integer[] getCommonCardsId() {
         Integer[] cards = new Integer[9];

@@ -3,38 +3,37 @@ package it.polimi.demo.model;
 import java.io.Serializable;
 
 /**
- * Ping's class<br>
- * This class implements the method we used to ping the server<br>
- * to let him know that we are still connected (needed for rmi connection)<br>
+ * Class representing a ping message
  */
 public class Ping implements Serializable {
 
     private final Long ping;
-    private final String nick;
+    private final String nickname;
 
     /**
-     * Constructor
-     *
-     * @param ping
-     * @param nick
+     * Constructor for the Ping class
+     * @param ping the ping
+     * @param nick the nickname of the player pinging the server
      */
     public Ping(Long ping, String nick) {
         this.ping = ping;
-        this.nick = nick;
+        this.nickname = nick;
     }
 
     /**
-     * @return the heartbeat
+     * Getter for the ping
+     * @return the ping
      */
     public Long getPing() {
         return ping;
     }
 
     /**
-     * @return the nickname of the player pinging the server
+     * Getter for the nickname
+     * @return the nickname
      */
-    public String getNick() {
-        return nick;
+    public String getNickname() {
+        return nickname;
     }
 
 }

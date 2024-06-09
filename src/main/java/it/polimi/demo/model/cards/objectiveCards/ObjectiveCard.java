@@ -1,13 +1,12 @@
 package it.polimi.demo.model.cards.objectiveCards;
 
-import it.polimi.demo.model.interfaces.ObjectiveCardIC;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.enumerations.Orientation;
 
 import java.io.Serializable;
 
-public abstract class ObjectiveCard extends Card implements ObjectiveCardIC, Serializable {
+public abstract class ObjectiveCard extends Card implements Serializable {
     private int points;
 
     /**
