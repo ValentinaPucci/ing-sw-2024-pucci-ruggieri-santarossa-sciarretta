@@ -12,11 +12,13 @@ public class msgIllegalMove extends SocketServerGenericMessage {
     private ModelView gamemodel;
 
     public msgIllegalMove(ModelView gamemodel) {
+        super("Illegal Move");
         this.gamemodel = gamemodel;
     }
 
     @Override
     public void perform(Listener lis) throws RemoteException {
+        logMessage();
         lis.illegalMove(gamemodel);
     }
 }

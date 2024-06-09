@@ -15,6 +15,7 @@ public class msgMessageSent extends SocketServerGenericMessage {
     private ModelView gameModel;
 
     public msgMessageSent(ModelView gameModel, String nickname, Message msg) {
+        super("Message Sent");
         this.nick = nickname;
         this.gameModel = gameModel;
         this.msg = msg;

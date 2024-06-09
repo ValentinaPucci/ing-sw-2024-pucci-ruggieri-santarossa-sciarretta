@@ -12,6 +12,8 @@ public class msgSuccessfulMove extends SocketServerGenericMessage{
     private ModelView gamemodel;
 
     public msgSuccessfulMove(ModelView gamemodel) {
+
+        super("Successful Move");
         this.gamemodel = gamemodel;
     }
 

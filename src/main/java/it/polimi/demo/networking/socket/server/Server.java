@@ -17,7 +17,7 @@ public class Server extends Thread implements Serializable {
     /**
      * list of client handlers for each connection
      */
-    private List<ClientHandler> handlers;
+    private List<ClientConnection> handlers;
 
     /**
      * Constructor
@@ -50,8 +50,8 @@ public class Server extends Thread implements Serializable {
             while (!Thread.interrupted()) {
                 i++;
                 System.out.println(i);
-                ClientHandler ClientHandler = new ClientHandler(serverSocket.accept());
-                handlers.add(ClientHandler);
+                ClientConnection Client = new ClientConnection(serverSocket.accept());
+                handlers.add(Client);
                 handlers.get(handlers.size() - 1).start();
                 printAsync("[SOCKET] New client connection accepted");
             }

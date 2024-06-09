@@ -23,8 +23,8 @@ public class GameListenersHandlerSocket implements Listener, Serializable {
     private final transient ObjectOutputStream ob_out;
 
 
-    public GameListenersHandlerSocket(ObjectOutputStream o) {
-        ob_out = o;
+    public GameListenersHandlerSocket(ObjectOutputStream output) {
+        ob_out = output;
     }
 
     /**
@@ -32,13 +32,6 @@ public class GameListenersHandlerSocket implements Listener, Serializable {
      */
     private void writeObject(Object message) throws IOException {
         ob_out.writeObject(message);
-        completeSending();
-    }
-
-    /**
-     * This method is used to complete the sending of the message
-     */
-    private void completeSending () throws IOException{
         ob_out.flush();
         ob_out.reset();
     }

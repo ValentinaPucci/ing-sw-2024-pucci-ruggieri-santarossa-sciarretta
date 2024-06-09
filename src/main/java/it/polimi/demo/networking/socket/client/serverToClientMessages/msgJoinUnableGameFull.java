@@ -15,6 +15,7 @@ public class msgJoinUnableGameFull extends SocketServerGenericMessage {
 
 
     public msgJoinUnableGameFull(Player p, ModelView gamemodel) {
+        super("Join Unable Game Full");
         this.p = p;
         this.gamemodel = gamemodel;
     }

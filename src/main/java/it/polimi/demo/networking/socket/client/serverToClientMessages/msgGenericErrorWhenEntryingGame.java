@@ -12,11 +12,14 @@ public class msgGenericErrorWhenEntryingGame extends SocketServerGenericMessage{
     private String why;
 
     public msgGenericErrorWhenEntryingGame(String why) {
+
+        super("Generic Error When Entering Game");
         this.why=why;
     }
 
     @Override
     public void perform(Listener lis) throws RemoteException {
+        logMessage();
         lis.genericErrorWhenEnteringGame(why);
     }
 }

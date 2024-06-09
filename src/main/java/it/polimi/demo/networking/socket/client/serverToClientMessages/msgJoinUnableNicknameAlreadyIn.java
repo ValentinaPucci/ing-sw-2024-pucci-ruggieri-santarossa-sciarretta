@@ -14,6 +14,7 @@ public class msgJoinUnableNicknameAlreadyIn extends SocketServerGenericMessage {
     private Player wantedToJoin;
 
     public msgJoinUnableNicknameAlreadyIn(Player wantedToJoin) {
+        super("Join Unable Nickname Already In");
         this.wantedToJoin = wantedToJoin;
     }
 

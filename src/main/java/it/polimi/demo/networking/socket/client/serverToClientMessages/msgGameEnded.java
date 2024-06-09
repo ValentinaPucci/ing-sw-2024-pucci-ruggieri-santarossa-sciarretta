@@ -14,11 +14,13 @@ public class msgGameEnded extends SocketServerGenericMessage {
 
 
     public msgGameEnded(ModelView gamemodel) {
+        super("Game Ended");
         this.gamemodel = gamemodel;
     }
 
     @Override
     public void perform(Listener lis) throws RemoteException {
+        logMessage();
         lis.gameEnded(gamemodel);
     }
 }

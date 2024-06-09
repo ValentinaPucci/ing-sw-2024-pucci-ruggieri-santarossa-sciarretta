@@ -12,6 +12,7 @@ public class msgLastRound extends SocketServerGenericMessage {
     private ModelView gamemodel;
 
     public msgLastRound(ModelView gamemodel) {
+        super("Last Round");
         this.gamemodel = gamemodel;
     }
 

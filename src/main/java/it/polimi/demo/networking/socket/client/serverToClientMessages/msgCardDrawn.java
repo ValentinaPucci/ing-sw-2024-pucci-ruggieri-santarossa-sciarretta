@@ -15,12 +15,14 @@ public class msgCardDrawn extends SocketServerGenericMessage {
     private int index;
 
     public msgCardDrawn(ModelView gameModel, int index) {
+        super("Card drawn");
         this.gameModel = gameModel;
         this.index = index;
     }
 
     @Override
     public void perform(Listener lis) throws RemoteException {
+        logMessage();
         lis.cardDrawn(gameModel, index);
     }
 
