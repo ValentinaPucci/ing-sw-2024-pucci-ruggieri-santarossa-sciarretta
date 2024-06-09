@@ -14,6 +14,7 @@ public class msgStarterCardPlaced extends SocketServerGenericMessage{
     private Orientation orientation;
 
     public msgStarterCardPlaced(ModelView gameModel, Orientation orientation) {
+        super("Starter Card Placed");
         this.gameModel = gameModel;
         this.orientation = orientation;
     }

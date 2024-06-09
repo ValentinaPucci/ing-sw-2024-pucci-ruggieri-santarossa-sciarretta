@@ -13,11 +13,13 @@ public class msgGameIdNotExists extends SocketServerGenericMessage {
 
 
     public msgGameIdNotExists(int gameid) {
+        super("Game ID not exists");
         this.gameid = gameid;
     }
 
     @Override
     public void perform(Listener lis) throws RemoteException {
+        //logMessage();
         lis.gameIdNotExists(gameid);
     }
 }

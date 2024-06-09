@@ -27,11 +27,12 @@ public class SocketClientMsgSendMessage extends SocketClientGenericMessage imple
     public SocketClientMsgSendMessage(String nick, Message chat_msg) {
         this.nick = nick;
         this.chat_msg = chat_msg;
-        this.isMessageForMainController = false;
+
+        this.setMainControllerTarget(false);
     }
 
     @Override
-    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
 
@@ -42,7 +43,7 @@ public class SocketClientMsgSendMessage extends SocketClientGenericMessage imple
      * @throws GameEndedException
      */
     @Override
-    public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
+    public void performOnGameController(GameControllerInterface gameController) throws RemoteException, GameEndedException {
         gameController.sendMessage(nick, chat_msg);
     }
 }

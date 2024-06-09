@@ -22,6 +22,7 @@ public class msgCardPlaced extends SocketServerGenericMessage {
      * @param gamemodel the immutable game model
      */
     public msgCardPlaced(ModelView gamemodel, int x, int y, Orientation orientation) {
+        super("Card placed");
         this.x = x;
         this.y = y;
         this.orientation = orientation;
@@ -31,6 +32,7 @@ public class msgCardPlaced extends SocketServerGenericMessage {
 
     @Override
     public void perform(Listener lis) throws RemoteException {
+
         lis.cardPlaced(gamemodel, x, y, orientation);
     }
 }

@@ -12,16 +12,15 @@ public class msgGameStarted extends SocketServerGenericMessage {
     private static final long serialVersionUID = 6895920175638029792L;
     private ModelView model;
 
-    public msgGameStarted() {
-
-    }
 
     public msgGameStarted(ModelView model) {
+        super("Game Started");
         this.model = model;
     }
 
     @Override
     public void perform(Listener lis) throws RemoteException {
+        //logMessage();
         lis.gameStarted(model);
     }
 }

@@ -19,13 +19,13 @@ public class SocketClientMsgSetReady extends SocketClientGenericMessage implemen
      * Constructor of the class.
      */
     public SocketClientMsgSetReady(String nick) {
-        this.nick = nick;
-        this.isMessageForMainController = false;
+        this.setUserNickname(nick);
+        this.setMainControllerTarget(false);
     }
 
 
     @Override
-    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
     /**
@@ -34,7 +34,7 @@ public class SocketClientMsgSetReady extends SocketClientGenericMessage implemen
      * @throws RemoteException
      */
     @Override
-    public void perform(GameControllerInterface gameController) throws RemoteException {
-        gameController.playerIsReadyToStart(this.nick);
+    public void performOnGameController(GameControllerInterface gameController) throws RemoteException {
+        gameController.playerIsReadyToStart(this.getUserNickname());
     }
 }

@@ -13,6 +13,7 @@ public class msgPlayerDisconnected extends SocketServerGenericMessage {
     private ModelView gameModel;
 
     public msgPlayerDisconnected(ModelView gameModel, String nick) {
+        super("Player Disconnected");
         this.nick = nick;
         this.gameModel=gameModel;
     }

@@ -13,6 +13,7 @@ public class msgPlayerLeft extends SocketServerGenericMessage{
     private String nick;
 
     public msgPlayerLeft(ModelView gamemodel, String nick) {
+        super("Player Left");
         this.gamemodel = gamemodel;
         this.nick=nick;
     }

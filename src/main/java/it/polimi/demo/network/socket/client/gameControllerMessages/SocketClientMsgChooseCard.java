@@ -24,7 +24,7 @@ public class SocketClientMsgChooseCard extends SocketClientGenericMessage implem
      */
     public SocketClientMsgChooseCard(int which_card) {
         this.which_card = which_card;
-        this.isMessageForMainController = false;
+        this.setMainControllerTarget(false);
     }
 
     /**
@@ -35,7 +35,7 @@ public class SocketClientMsgChooseCard extends SocketClientGenericMessage implem
      * @throws RemoteException
      */
     @Override
-    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
 
@@ -46,7 +46,7 @@ public class SocketClientMsgChooseCard extends SocketClientGenericMessage implem
      * @throws GameEndedException
      */
     @Override
-    public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
+    public void performOnGameController(GameControllerInterface gameController) throws RemoteException {
         gameController.chooseCardFromHand(gameController.getCurrentPlayer().getNickname(), which_card);
     }
 }

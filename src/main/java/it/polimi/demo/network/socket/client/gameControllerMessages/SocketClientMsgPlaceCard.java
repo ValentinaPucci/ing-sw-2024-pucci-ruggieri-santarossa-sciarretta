@@ -29,11 +29,18 @@ public class SocketClientMsgPlaceCard extends SocketClientGenericMessage impleme
         this.x = x;
         this.y = y;
         this.orientation = orientation;
-        this.isMessageForMainController = false;
+        this.setMainControllerTarget(false);
     }
 
+    /**
+     * Only for implementation purposes.
+     * @param observer the game observer
+     * @param mainCtrlInterface the main controller interface
+     * @return
+     * @throws RemoteException
+     */
     @Override
-    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface performOnMainController(Listener observer, MainControllerInterface mainCtrlInterface) throws RemoteException {
         return null;
     }
 
@@ -44,7 +51,7 @@ public class SocketClientMsgPlaceCard extends SocketClientGenericMessage impleme
      * @throws GameEndedException
      */
     @Override
-    public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
+    public void performOnGameController(GameControllerInterface gameController) throws RemoteException, GameEndedException {
         gameController.placeCard(gameController.getCurrentPlayer().getNickname(), x, y, orientation);
     }
 }

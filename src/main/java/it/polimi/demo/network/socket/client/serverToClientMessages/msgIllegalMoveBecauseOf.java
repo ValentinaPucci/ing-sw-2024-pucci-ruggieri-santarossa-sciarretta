@@ -15,6 +15,7 @@ public class msgIllegalMoveBecauseOf extends SocketServerGenericMessage {
 
 
     public msgIllegalMoveBecauseOf(ModelView gamemodel, String message) {
+        super("Illegal Move Because Of");
         this.gamemodel = gamemodel;
         this.message = message;
     }

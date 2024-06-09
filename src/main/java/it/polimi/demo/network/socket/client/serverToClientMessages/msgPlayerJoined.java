@@ -12,6 +12,7 @@ public class msgPlayerJoined extends SocketServerGenericMessage {
     private ModelView gamemodel;
 
     public msgPlayerJoined(ModelView gamemodel) {
+        super("Player Joined");
         this.gamemodel = gamemodel;
     }
 

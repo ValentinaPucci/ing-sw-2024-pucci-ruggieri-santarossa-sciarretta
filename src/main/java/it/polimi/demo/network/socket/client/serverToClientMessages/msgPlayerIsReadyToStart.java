@@ -13,6 +13,7 @@ public class msgPlayerIsReadyToStart extends SocketServerGenericMessage {
     private String nick;
 
     public msgPlayerIsReadyToStart(ModelView model, String nick) {
+        super("Player is ready to start");
         this.model = model;
         this.nick = nick;
     }

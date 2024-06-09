@@ -17,6 +17,7 @@ public class msgNextTurn extends SocketServerGenericMessage {
      * @param gamemodel the immutable game model
      */
     public msgNextTurn(ModelView gamemodel) {
+        super("Next Turn");
         this.gamemodel = gamemodel;
     }
 

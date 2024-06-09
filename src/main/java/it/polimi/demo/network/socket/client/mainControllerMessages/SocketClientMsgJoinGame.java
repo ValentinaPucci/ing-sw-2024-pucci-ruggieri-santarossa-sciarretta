@@ -23,8 +23,9 @@ public class SocketClientMsgJoinGame extends SocketClientGenericMessage implemen
      */
     public SocketClientMsgJoinGame(String nick, int game_id) {
         this.game_id = game_id;
-        this.nick = nick;
-        this.isMessageForMainController = true;
+        this.setUserNickname(nick);
+        this.setMainControllerTarget(true);
+
     }
 
     /**
@@ -36,17 +37,18 @@ public class SocketClientMsgJoinGame extends SocketClientGenericMessage implemen
      * @throws RemoteException if there is a remote communication error
      */
     @Override
-    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return mainController.joinGame(lis, nick, game_id);
+    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
+        return mainController.joinGame(lis, this.getUserNickname(), game_id);
     }
 
     /**
-     * Not used for the message.
+     * Only for implementation purposes.
      * @param gameController the game controller interface
      * @throws RemoteException if there is a remote communication error
      */
     @Override
-    public void perform(GameControllerInterface gameController) throws RemoteException {
+    public void performOnGameController(GameControllerInterface gameController) throws RemoteException {
 
     }
+
 }
