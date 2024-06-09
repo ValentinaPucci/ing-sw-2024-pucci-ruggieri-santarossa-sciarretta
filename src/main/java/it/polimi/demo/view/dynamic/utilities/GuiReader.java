@@ -20,5 +20,4 @@ public class GuiReader implements AbstractReader {
     public synchronized void addTxt(String txt){
         buffer.add(txt);
     }
-
 }

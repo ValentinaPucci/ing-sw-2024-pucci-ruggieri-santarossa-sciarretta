@@ -26,7 +26,7 @@ public class MainClient {
             new GameDynamic(conSel);
         }
         else {
-            Application.launch(ApplicationGUI.class);
+            Application.launch(ApplicationGUI.class, conSel.toString());
         }
     }
 
