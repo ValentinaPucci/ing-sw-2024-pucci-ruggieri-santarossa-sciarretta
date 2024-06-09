@@ -1,6 +1,6 @@
 package it.polimi.demo.main;
 
-import it.polimi.demo.networking.StaticPrinter;
+import it.polimi.demo.network.StaticPrinter;
 import it.polimi.demo.view.flow.ConnectionSelection;
 import it.polimi.demo.view.flow.GameDynamics;
 import it.polimi.demo.view.gui.ApplicationGUI;

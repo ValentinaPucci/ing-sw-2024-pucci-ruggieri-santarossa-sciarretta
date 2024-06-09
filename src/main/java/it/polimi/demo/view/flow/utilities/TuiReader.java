@@ -1,6 +1,6 @@
 package it.polimi.demo.view.flow.utilities;
 
-import it.polimi.demo.DefaultValues;
+import it.polimi.demo.Constants;
 
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -26,7 +26,7 @@ public class TuiReader extends Thread implements AbstractReader {
             String s = scanner.nextLine();
             buffer.add(s);
             printAsync(ansi().cursorUpLine().a(" ".repeat(s.length())));
-            printAsync(ansi().cursor(DefaultValues.row_input + 1, 0));
+            printAsync(ansi().cursor(Constants.row_input + 1, 0));
         }
     }
 

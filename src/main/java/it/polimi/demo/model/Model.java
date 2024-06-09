@@ -1,7 +1,7 @@
 package it.polimi.demo.model;
 
 import it.polimi.demo.observer.ObserverManager;
-import it.polimi.demo.DefaultValues;
+import it.polimi.demo.Constants;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.board.PersonalBoard;
@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
+import static it.polimi.demo.network.StaticPrinter.staticPrinter;
 
 
 public class Model implements Serializable {
@@ -170,7 +170,7 @@ public class Model implements Serializable {
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() >= num_required_players_to_start ||
-                aux_order_players.size() >= DefaultValues.MaxNumOfPlayer) {
+                aux_order_players.size() >= Constants.MaxNumOfPlayer) {
             listeners_handler.notify_joinUnableGameFull(getIdentityOfPlayer(nickname), this);
             throw new MaxPlayersLimitException();
         }
@@ -606,7 +606,7 @@ public class Model implements Serializable {
             if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
                 setStatus(GameStatus.LAST_ROUND);
             }
-            else if (p.getCurrentPoints() >= DefaultValues.num_points_for_second_last_round) {
+            else if (p.getCurrentPoints() >= Constants.num_points_for_second_last_round) {
                 if (aux_order_players.getLast().equals(p)) {
                     setStatus(GameStatus.LAST_ROUND);
                 }

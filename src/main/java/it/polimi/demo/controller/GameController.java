@@ -1,14 +1,14 @@
 package it.polimi.demo.controller;
 
-import it.polimi.demo.DefaultValues;
-import it.polimi.demo.networking.StaticPrinter;
+import it.polimi.demo.Constants;
+import it.polimi.demo.network.StaticPrinter;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.*;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.network.interfaces.GameControllerInterface;
 
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -68,7 +68,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @return true if the ping is expired, false otherwise
      */
     private boolean isPingFresh(Ping ping) {
-        return (System.currentTimeMillis() - ping.getPing()) > DefaultValues.secondsToWaitReconnection;
+        return (System.currentTimeMillis() - ping.getPing()) > Constants.secondsToWaitReconnection;
     }
 
     /**

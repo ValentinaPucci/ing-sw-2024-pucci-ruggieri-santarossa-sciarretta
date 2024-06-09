@@ -1,0 +1,50 @@
+package it.polimi.demo.network.socket.client.gameControllerMessages;
+
+import it.polimi.demo.observer.Listener;
+import it.polimi.demo.model.enumerations.*;
+import it.polimi.demo.model.exceptions.GameEndedException;
+import it.polimi.demo.network.interfaces.GameControllerInterface;
+import it.polimi.demo.network.interfaces.MainControllerInterface;
+import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.rmi.RemoteException;
+
+
+public class SocketClientMsgPlaceCard extends SocketClientGenericMessage implements Serializable {
+    @Serial
+    private static final long serialVersionUID = -4335518806107022454L;
+    int x;
+    int y;
+    private Orientation orientation;
+
+    /**
+     * Constructor of the class.
+     * @param x
+     * @param y
+     * @param orientation
+     */
+    public SocketClientMsgPlaceCard(int x, int y, Orientation orientation) {
+        this.x = x;
+        this.y = y;
+        this.orientation = orientation;
+        this.isMessageForMainController = false;
+    }
+
+    @Override
+    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
+        return null;
+    }
+
+    /**
+     * Method to perform placeCard on the game controller.
+     * @param gameController the game controller interface
+     * @throws RemoteException
+     * @throws GameEndedException
+     */
+    @Override
+    public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
+        gameController.placeCard(gameController.getCurrentPlayer().getNickname(), x, y, orientation);
+    }
+}

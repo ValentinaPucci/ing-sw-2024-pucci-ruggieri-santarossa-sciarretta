@@ -5,15 +5,15 @@ import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.StaticPrinter;
-import it.polimi.demo.networking.rmi.RMIClient;
+import it.polimi.demo.network.StaticPrinter;
+import it.polimi.demo.network.rmi.RMIClient;
 import it.polimi.demo.view.flow.utilities.*;
 import it.polimi.demo.view.flow.utilities.gameFacts.ModelFact;
 import it.polimi.demo.view.flow.utilities.gameFacts.FactQueue;
 import it.polimi.demo.view.flow.utilities.gameFacts.FactType;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import it.polimi.demo.view.gui.GUI;
-import it.polimi.demo.networking.socket.client.ClientSocket;
+import it.polimi.demo.network.socket.client.ClientSocket;
 import it.polimi.demo.view.text.TUI;
 
 import java.io.IOException;
@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
+import static it.polimi.demo.network.StaticPrinter.staticPrinter;
 import static it.polimi.demo.view.flow.utilities.gameFacts.FactType.*;
 
 public class GameDynamics extends Dynamics implements Runnable, ClientInterface {
@@ -361,7 +361,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
 
     private boolean handleJoinGame() {
         askNickname();
-        joinFirstAvailableGame(nickname);
+        joinRandomly(nickname);
         return true;
     }
 
@@ -503,10 +503,10 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
-    public void joinFirstAvailableGame(String nick) {
+    public void joinRandomly(String nick) {
         ui.show_joiningFirstAvailableMsg(nick);
         try {
-            client_interface.joinFirstAvailableGame(nick);
+            client_interface.joinRandomly(nick);
         } catch (IOException | InterruptedException | NotBoundException e) {
             noConnectionError();
         }

@@ -1,9 +1,9 @@
 package it.polimi.demo.controller;
 
-import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
+import it.polimi.demo.network.interfaces.GameControllerInterface;
+import it.polimi.demo.network.interfaces.MainControllerInterface;
 import it.polimi.demo.observer.Listener;
-import it.polimi.demo.DefaultValues;
+import it.polimi.demo.Constants;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
@@ -132,7 +132,7 @@ public class MainController implements MainControllerInterface, Serializable {
     public synchronized GameControllerInterface joinRandomly(Listener listener, String nickname)
             throws RemoteException {
         Optional<GameController> av_game = games.values().stream()
-                .filter(game -> game.getStatus() == GameStatus.WAIT && game.getNumPlayers() < DefaultValues.MaxNumOfPlayer)
+                .filter(game -> game.getStatus() == GameStatus.WAIT && game.getNumPlayers() < Constants.MaxNumOfPlayer)
                 .findFirst();
         if (av_game.isPresent()) {
             GameController game = av_game.get();
@@ -264,7 +264,7 @@ public class MainController implements MainControllerInterface, Serializable {
      * @throws RemoteException if the connection fails
      */
     @Override
-    public synchronized GameControllerInterface leaveGame(Listener listener, String nickname, int gameId)
+    public synchronized void leaveGame(Listener listener, String nickname, int gameId)
             throws RemoteException {
         GameController game = games.get(gameId);
         if (game != null) {
@@ -272,9 +272,7 @@ public class MainController implements MainControllerInterface, Serializable {
             if (game.getConnectedPlayers().isEmpty()) {
                 deleteGame(gameId);
             }
-            return game;
         }
-        return null;
     }
 
     /**

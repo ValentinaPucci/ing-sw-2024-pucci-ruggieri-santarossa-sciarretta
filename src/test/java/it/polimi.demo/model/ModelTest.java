@@ -1,6 +1,6 @@
 package it.polimi.demo.model;
 
-import it.polimi.demo.DefaultValues;
+import it.polimi.demo.Constants;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,7 +27,7 @@ public class ModelTest {
     @Test
     public void testGetBeginnerPlayer() {
         assertThrows(NoSuchElementException.class, ()-> model.getBeginnerPlayer());
-        addPlayersToGameModel(DefaultValues.minNumOfPlayer);
+        addPlayersToGameModel(Constants.minNumOfPlayer);
         assertNotNull(model.getBeginnerPlayer());
     }
 
@@ -111,12 +111,12 @@ public class ModelTest {
 
     @Test
     public void testRemovePlayer() {
-        addPlayersToGameModel(DefaultValues.minNumOfPlayer);
+        addPlayersToGameModel(Constants.minNumOfPlayer);
         Player playerToRemove = model.getAllPlayers().getFirst();
-        assertEquals(DefaultValues.minNumOfPlayer, model.getAllPlayers().size());
+        assertEquals(Constants.minNumOfPlayer, model.getAllPlayers().size());
         model.removePlayer(playerToRemove);
         assertFalse(model.getAllPlayers().contains(playerToRemove));
-        assertEquals(DefaultValues.minNumOfPlayer - 1, model.getAllPlayers().size());
+        assertEquals(Constants.minNumOfPlayer - 1, model.getAllPlayers().size());
     }
 
     // Utility method to add a specific number of players to the game model

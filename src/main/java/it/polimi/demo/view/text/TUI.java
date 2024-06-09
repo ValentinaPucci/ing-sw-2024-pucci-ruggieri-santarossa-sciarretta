@@ -6,7 +6,7 @@ import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
-import it.polimi.demo.DefaultValues;
+import it.polimi.demo.Constants;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.ModelView;
@@ -53,7 +53,7 @@ public class TUI extends UI {
      */
     @Override
     public void addImportantEvent(String input) {
-        if (importantEvents.size() + 1 >= DefaultValues.maxnum_of_last_event_tobe_showed) {
+        if (importantEvents.size() + 1 >= Constants.maxnum_of_last_event_tobe_showed) {
             importantEvents.remove(0);
         }
         importantEvents.add(input);
@@ -112,7 +112,7 @@ public class TUI extends UI {
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()
-        ).println(ansi().cursor(DefaultValues.row_nextTurn, 0).fg(YELLOW).a("""
+        ).println(ansi().cursor(Constants.row_nextTurn, 0).fg(YELLOW).a("""
 
                 ░██████╗░░█████╗░███╗░░░███╗███████╗        ███████╗███╗░░██╗██████╗░███████╗██████╗░
                 ██╔════╝░██╔══██╗████╗░████║██╔════╝        ██╔════╝████╗░██║██╔══██╗██╔════╝██╔══██╗
@@ -126,7 +126,7 @@ public class TUI extends UI {
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
                 : Charset.defaultCharset()
-        ).println(ansi().cursor(DefaultValues.row_nextTurn + 10, 0).bg(CYAN).a("""
+        ).println(ansi().cursor(Constants.row_nextTurn + 10, 0).bg(CYAN).a("""
 
                 █     █▀▀▀  █▀▀█  █▀▀▄  █▀▀▀  █▀▀█    █▀▀█  █▀▀▀█  █▀▀█  █▀▀█  █▀▀▄
                 █     █▀▀▀  █▄▄█  █  █  █▀▀▀  █▄▄▀    █▀▀▄  █   █  █▄▄█  █▄▄▀  █  █
@@ -140,7 +140,7 @@ public class TUI extends UI {
         StringBuilder ris = new StringBuilder();
         for (Map.Entry<Player, Integer> entry : model.getLeaderBoard().entrySet()) {
             printAsync("");
-            ris.append(ansi().fg(WHITE).cursor(DefaultValues.row_leaderboard + i, DefaultValues.col_leaderboard)
+            ris.append(ansi().fg(WHITE).cursor(Constants.row_leaderboard + i, Constants.col_leaderboard)
                     .a("#" + classif + " "
                             + entry.getKey().getNickname() + ": "
                             + entry.getValue() + " points\n").fg(GREEN));
@@ -325,15 +325,15 @@ public class TUI extends UI {
         StringBuilder ris = new StringBuilder();
         int i = 0;
         int longestImportantEvent = importantEvents.stream().map(String::length).reduce(0, (a, b) -> a > b ? a : b);
-        ris.append(ansi().fg(GREEN).cursor(DefaultValues.row_important_events + i, DefaultValues.col_important_events - 1).bold().a("Latest Events: ").fg(DEFAULT).boldOff());
+        ris.append(ansi().fg(GREEN).cursor(Constants.row_important_events + i, Constants.col_important_events - 1).bold().a("Latest Events: ").fg(DEFAULT).boldOff());
         for (String s : importantEvents) {
-            ris.append(ansi().fg(WHITE).cursor(DefaultValues.row_important_events + 1 + i, DefaultValues.col_important_events).a(s).a(" ".repeat(longestImportantEvent - s.length())).fg(DEFAULT));
+            ris.append(ansi().fg(WHITE).cursor(Constants.row_important_events + 1 + i, Constants.col_important_events).a(s).a(" ".repeat(longestImportantEvent - s.length())).fg(DEFAULT));
             i++;
         }
         printAsync(ris);
         clearScreen();
 
-        printAsync(ansi().cursor(DefaultValues.row_input, 0));
+        printAsync(ansi().cursor(Constants.row_input, 0));
     }
 
 
@@ -367,7 +367,7 @@ public class TUI extends UI {
      * @param gameModel
      */
     public void show_nextTurn(ModelView gameModel) {
-        printAsync(ansi().cursor(DefaultValues.row_nextTurn, 0).bold().a("Next turn! It's up to: "
+        printAsync(ansi().cursor(Constants.row_nextTurn, 0).bold().a("Next turn! It's up to: "
                 + gameModel.getPlayersConnected().peek().getNickname()).boldOff());
     }
 
@@ -377,7 +377,7 @@ public class TUI extends UI {
      * @param nick
      */
     public void show_welcome(String nick) {
-        printAsync(ansi().cursor(DefaultValues.row_nextTurn + 1, 0).bold().a("Welcome " + nick).boldOff());
+        printAsync(ansi().cursor(Constants.row_nextTurn + 1, 0).bold().a("Welcome " + nick).boldOff());
     }
 
     /**
@@ -433,7 +433,7 @@ public class TUI extends UI {
     @Override
     public void show_messageSent(ModelView model, String nickname) {
         Message mess = model.getChat().getLastMessage();
-        printAsync(ansi().cursor(DefaultValues.row_chat, DefaultValues.col_chat).a(mess.getSender().getNickname() + ": " + mess.getText()));
+        printAsync(ansi().cursor(Constants.row_chat, Constants.col_chat).a(mess.getSender().getNickname() + ": " + mess.getText()));
     }
 
     /**
@@ -474,7 +474,7 @@ public class TUI extends UI {
     @Override
     public void show_insertNicknameMsg() {
         clearScreen();
-        printAsyncNoCursorReset(ansi().cursor(DefaultValues.row_gameID, 0).a("> Insert your nickname: "));
+        printAsyncNoCursorReset(ansi().cursor(Constants.row_gameID, 0).a("> Insert your nickname: "));
     }
 
     /**
@@ -483,7 +483,7 @@ public class TUI extends UI {
     @Override
     public void show_insertNumOfPlayersMsg() {
         clearScreen();
-        printAsyncNoCursorReset(ansi().cursor(DefaultValues.row_gameID, 0).a("> Choose the number of players for this game: "));
+        printAsyncNoCursorReset(ansi().cursor(Constants.row_gameID, 0).a("> Choose the number of players for this game: "));
     }
 
     /**

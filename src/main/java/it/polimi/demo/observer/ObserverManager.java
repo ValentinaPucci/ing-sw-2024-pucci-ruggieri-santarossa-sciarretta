@@ -5,7 +5,7 @@ import it.polimi.demo.model.Model;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.networking.StaticPrinter;
+import it.polimi.demo.network.StaticPrinter;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.demo.networking.StaticPrinter.staticPrinter;
+import static it.polimi.demo.network.StaticPrinter.staticPrinter;
 
 public class ObserverManager implements Serializable {
 
