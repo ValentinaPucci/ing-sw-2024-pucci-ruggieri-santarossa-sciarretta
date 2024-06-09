@@ -96,7 +96,7 @@ public class PersonalBoard implements Serializable {
     /**
      * Updates the count of mushrooms in the player's inventory by adding the specified amount.
      *
-     * @param mushrooms_placed The number of mushrooms to add to the inventory.
+     * @param mushrooms_placed The number of mushrooms to offer to the inventory.
      */
     public void updateMushrooms(int mushrooms_placed) {
         this.num_mushrooms += mushrooms_placed;
@@ -105,7 +105,7 @@ public class PersonalBoard implements Serializable {
     /**
      * Updates the count of leaves in the player's inventory by adding the specified amount.
      *
-     * @param leaves_placed The number of leaves to add to the inventory.
+     * @param leaves_placed The number of leaves to offer to the inventory.
      */
     public void updateLeaves(int leaves_placed) {
         this.num_leaves += leaves_placed;
@@ -114,7 +114,7 @@ public class PersonalBoard implements Serializable {
     /**
      * Updates the count of butterflies in the player's inventory by adding the specified amount.
      *
-     * @param butterflies_placed The number of butterflies to add to the inventory.
+     * @param butterflies_placed The number of butterflies to offer to the inventory.
      */
 
     public void updateButterflies(int butterflies_placed) {
@@ -124,7 +124,7 @@ public class PersonalBoard implements Serializable {
     /**
      * Updates the count of wolves in the player's inventory by adding the specified amount.
      *
-     * @param wolves_placed The number of wolves to add to the inventory.
+     * @param wolves_placed The number of wolves to offer to the inventory.
      */
     public void updateWolves(int wolves_placed) {
         this.num_wolves += wolves_placed;
@@ -133,7 +133,7 @@ public class PersonalBoard implements Serializable {
     /**
      * Updates the count of parchments in the player's inventory by adding the specified amount.
      *
-     * @param parchments_placed The number of parchments to add to the inventory.
+     * @param parchments_placed The number of parchments to offer to the inventory.
      */
     public void updateParchments(int parchments_placed) {
         this.num_parchments += parchments_placed;
@@ -142,7 +142,7 @@ public class PersonalBoard implements Serializable {
     /**
      * Updates the count of feathers in the player's inventory by adding the specified amount.
      *
-     * @param feathers_placed The number of feathers to add to the inventory.
+     * @param feathers_placed The number of feathers to offer to the inventory.
      */
     public void updateFeathers(int feathers_placed) {
         this.num_feathers += feathers_placed;
@@ -151,7 +151,7 @@ public class PersonalBoard implements Serializable {
     /**
      * Updates the count of potions in the player's inventory by adding the specified amount.
      *
-     * @param potions_placed The number of potions to add to the inventory.
+     * @param potions_placed The number of potions to offer to the inventory.
      */
     public void updatePotions(int potions_placed) {
         this.num_potions += potions_placed;

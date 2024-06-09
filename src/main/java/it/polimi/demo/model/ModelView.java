@@ -7,15 +7,14 @@ import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.chat.Chat;
 import it.polimi.demo.model.enumerations.GameStatus;
-import it.polimi.demo.model.interfaces.*;
 
 import java.io.Serializable;
 import java.util.*;
 
 public class ModelView implements Serializable {
 
-    private final ArrayList<PlayerIC> aux_order_players;
-    private final LinkedList<PlayerIC> players_connected;
+    private final ArrayList<Player> aux_order_players;
+    private final LinkedList<Player> players_connected;
     private final Integer gameId;
     private final String initial_player_nickname;
     private final CommonBoard common_board;
@@ -43,7 +42,7 @@ public class ModelView implements Serializable {
         this.objective_cards = new ArrayList<>(model.getPersonalObjectiveCardsToChoose(current_player_nickname));
     }
 
-    public ArrayList<PlayerIC> getAllPlayers(){
+    public ArrayList<Player> getAllPlayers(){
         return aux_order_players;
     }
 
@@ -60,7 +59,7 @@ public class ModelView implements Serializable {
     }
 
 
-    public LinkedList<PlayerIC> getPlayersConnected() {
+    public LinkedList<Player> getPlayersConnected() {
         return players_connected;
     }
 
@@ -68,8 +67,8 @@ public class ModelView implements Serializable {
         return common_board;
     }
 
-    public PlayerIC getPlayerEntity(String nickname) {
-        for (PlayerIC player : players_connected) {
+    public Player getPlayerEntity(String nickname) {
+        for (Player player : players_connected) {
             if (player.getNickname().equals(nickname)) {
                 return player;
             }
@@ -104,8 +103,8 @@ public class ModelView implements Serializable {
             return null;
     }
 
-    public List<PlayerIC> getClassification() {
-        players_connected.sort(Comparator.comparing(PlayerIC::getFinalScore,Comparator.reverseOrder()));
+    public List<Player> getClassification() {
+        players_connected.sort(Comparator.comparing(Player::getFinalScore,Comparator.reverseOrder()));
         return players_connected;
     }
 }

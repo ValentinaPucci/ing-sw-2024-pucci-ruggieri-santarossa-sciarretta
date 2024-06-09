@@ -1,43 +1,37 @@
 package it.polimi.demo.main;
 
-import it.polimi.demo.DefaultValues;
-import it.polimi.demo.networking.rmi.RMIServer;
-import it.polimi.demo.networking.socket.server.Server;
+import it.polimi.demo.Constants;
+import it.polimi.demo.network.rmi.RMIServer;
+import it.polimi.demo.network.socket.server.Server;
 
 import java.io.IOException;
+import java.rmi.RemoteException;
 import java.util.Scanner;
-import java.util.function.Consumer;
 
-// todo: it is checked
 public class MainServer {
 
-    public static void main(String[] args) {
-        String remoteIP = retrieveRemoteIP();
-        setupSystemProperty(remoteIP);
-        startServer(port -> {
-            try {
-                new Server().start(port);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }, DefaultValues.Default_port_Socket);
-        startServer(port -> {
-            RMIServer.bind();
-        }, 0);
-    }
+    public static void main(String[] args) throws RemoteException {
 
-    private static String retrieveRemoteIP() {
-        return new Scanner(System.in).nextLine();
-    }
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter remote IP (empty for default):");
+        String remoteIP = scanner.nextLine();
 
-    private static void setupSystemProperty(String remoteIP) {
-        System.setProperty("java.rmi.server.hostname", remoteIP.isEmpty() ? DefaultValues.Remote_ip : remoteIP);
-    }
+        if (remoteIP.isEmpty()) {
+            remoteIP = Constants.Remote_ip;
+        }
+        System.setProperty("java.rmi.server.hostname", remoteIP);
 
-    private static void startServer(Consumer<Integer> serverStarter, int port) {
-        serverStarter.accept(port);
+        // Here we start Socket Server
+        try {
+            new Server().start(Constants.Socket_port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Here we bind RMI Server
+        new RMIServer();
     }
 }
+
 
 
 

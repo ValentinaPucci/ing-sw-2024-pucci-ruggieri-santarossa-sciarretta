@@ -1,7 +1,7 @@
 package it.polimi.demo.view.text;
 
 import org.fusesource.jansi.Ansi;
-import it.polimi.demo.DefaultValues;
+import it.polimi.demo.Constants;
 
 import static org.fusesource.jansi.Ansi.ansi;
 
@@ -16,19 +16,19 @@ public class PrintAsync {
      * @param msg to print
      */
     public static void printAsync(Ansi msg){
-        new Thread(()->{System.out.println(msg); System.out.println(ansi().cursor(DefaultValues.row_input,0));}).start();
+        new Thread(()->{System.out.println(msg); System.out.println(ansi().cursor(Constants.row_input,0));}).start();
     }
     public static void printAsync(String msg){
-        new Thread(()->{System.out.println(msg);System.out.println(ansi().cursor(DefaultValues.row_input,0));}).start();
+        new Thread(()->{System.out.println(msg);System.out.println(ansi().cursor(Constants.row_input,0));}).start();
     }
     public static void printAsync(StringBuilder msg){
-        new Thread(()->{System.out.println(msg);System.out.println(ansi().cursor(DefaultValues.row_input,0));}).start();
+        new Thread(()->{System.out.println(msg);System.out.println(ansi().cursor(Constants.row_input,0));}).start();
     }
     public static void printAsyncNoLine(String msg){
-        new Thread(()->{System.out.print(msg);System.out.println(ansi().cursor(DefaultValues.row_input,0));}).start();
+        new Thread(()->{System.out.print(msg);System.out.println(ansi().cursor(Constants.row_input,0));}).start();
     }
     public static void printAsyncNoLine(Ansi msg){
-        new Thread(()->{System.out.print(msg);System.out.println(ansi().cursor(DefaultValues.row_input,0));}).start();
+        new Thread(()->{System.out.print(msg);System.out.println(ansi().cursor(Constants.row_input,0));}).start();
     }
     public static void printAsyncNoCursorReset(String msg){
         new Thread(()->{System.out.print(msg);}).start();
