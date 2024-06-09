@@ -1,8 +1,8 @@
-package it.polimi.demo.view.flow.utilities;
+package it.polimi.demo.view.dynamic.utilities;
 
+import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.interfaces.PlayerIC;
-import it.polimi.demo.view.flow.GameDynamics;
+import it.polimi.demo.view.dynamic.GameDynamic;
 
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
@@ -17,8 +17,8 @@ public class GenericParser extends Thread {
 
     private final LinkedBlockingQueue<String> inputQueue;
     private final LinkedBlockingQueue<String> processedDataQueue;
-    private final GameDynamics gameDynamics;
-    private PlayerIC currentPlayer = null;
+    private final GameDynamic gameDynamics;
+    private Player currentPlayer = null;
     private Integer currentGameId = null;
 
     // Updated regex patterns to ensure proper matching
@@ -29,9 +29,9 @@ public class GenericParser extends Thread {
      * Constructs a GenericParser instance.
      *
      * @param inputQueue the queue containing input commands
-     * @param gameDynamics   the game flow instance to interact with
+     * @param gameDynamics   the game dynamic instance to interact with
      */
-    public GenericParser(LinkedBlockingQueue<String> inputQueue, GameDynamics gameDynamics) {
+    public GenericParser(LinkedBlockingQueue<String> inputQueue, GameDynamic gameDynamics) {
         this.inputQueue = inputQueue;
         this.processedDataQueue = new LinkedBlockingQueue<>();
         this.gameDynamics = gameDynamics;
@@ -133,7 +133,7 @@ public class GenericParser extends Thread {
      *
      * @param player the player to set
      */
-    public void setPlayer(PlayerIC player) {
+    public void setPlayer(Player player) {
         this.currentPlayer = player;
     }
 

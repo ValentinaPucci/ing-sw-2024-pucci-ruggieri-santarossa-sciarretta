@@ -48,7 +48,7 @@ public abstract class SocketClientGenericMessage implements Serializable {
     }
 
     /**
-     * @return if it's a heartbeat message
+     * @return if it's a ping message
      */
     public boolean isHeartbeat() {
         return isHeartbeat;

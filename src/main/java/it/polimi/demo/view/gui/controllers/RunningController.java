@@ -1,9 +1,9 @@
 package it.polimi.demo.view.gui.controllers;
 
+import it.polimi.demo.model.Player;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.model.interfaces.PlayerIC;
-import it.polimi.demo.view.flow.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.GuiReader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -102,7 +102,7 @@ public class RunningController extends GenericController {
     @FXML
     private ComboBox<String> recipientComboBox;
     private int starterCard = 0;
-    private ArrayList<PlayerIC> players_list;
+    private ArrayList<Player> players_list;
 
     private List<Pane> cardPanes;
     private List<Button> buttons;
@@ -268,7 +268,7 @@ public class RunningController extends GenericController {
 
 
     public void setPlayersPointsAndNicknames(ModelView model, String nickname) {
-        ArrayList<PlayerIC> players_list = model.getAllPlayers();
+        ArrayList<Player> players_list = model.getAllPlayers();
         this.players_list = players_list;
 
         // Update recipient combo box
@@ -283,11 +283,11 @@ public class RunningController extends GenericController {
         }
 
         int j = 0;
-        for (PlayerIC player : players_list) {
+        for (Player player : players_list) {
             if (!player.getNickname().equals(nickname)) {
                 // Add player to recipient combo box
                 recipientComboBox.getItems().add(player.getNickname());
-                // Create and add player label
+                // Create and offer player label
                 Label playerLabel = new Label(player.getNickname());
                 playerLabel.setTextFill(Color.web("#4d0202"));
                 playerLabel.setAlignment(javafx.geometry.Pos.CENTER);
@@ -296,7 +296,7 @@ public class RunningController extends GenericController {
                 GridPane.setColumnIndex(playerLabel, 0);
                 otherPlayers.getChildren().add(playerLabel);
 
-                // Create and add points label
+                // Create and offer points label
                 Text pointsText = new Text(String.valueOf(player.getScoreBoardPosition()));
                 pointsText.setFill(Color.web("#4d0202"));
                 pointsText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
@@ -305,7 +305,7 @@ public class RunningController extends GenericController {
                 GridPane.setColumnIndex(pointsText, 1);
                 otherPlayers.getChildren().add(pointsText);
 
-                // Create and add button
+                // Create and offer button
                 Button goButton = new Button("GO");
                 goButton.setPrefHeight(26.0);
                 goButton.setPrefWidth(188.0);
@@ -324,7 +324,7 @@ public class RunningController extends GenericController {
         }
     }
 
-    private void showOthersPersonalBoard(PlayerIC player) {
+    private void showOthersPersonalBoard(Player player) {
         // TODO: Logica per mostrare la board personale degli altri giocatori
         System.out.println("Mostra board per " + player.getNickname());
     }
@@ -874,7 +874,7 @@ public class RunningController extends GenericController {
             } else {
                 chatArea.appendText("Me (to " + recipient + "): " + message + "\n");
                 getInputReaderGUI().addTxt("/cs " + recipientComboBox.getValue().toString() + " " + chatInput.getText());
-                for (PlayerIC player : players_list) {
+                for (Player player : players_list) {
                     if (player.getNickname().equals(recipient)) {
                         sendPrivateMessage(player, message);
                         break;
@@ -885,7 +885,7 @@ public class RunningController extends GenericController {
         }
     }
 
-    private void sendPrivateMessage(PlayerIC player, String message) {
+    private void sendPrivateMessage(Player player, String message) {
         // Logica per inviare un messaggio privato al giocatore
         // Questo potrebbe includere aggiornare la GUI del giocatore o inviare il messaggio attraverso la rete
         System.out.println("Messaggio privato a " + player.getNickname() + ": " + message);

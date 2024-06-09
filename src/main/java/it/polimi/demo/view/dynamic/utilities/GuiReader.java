@@ -1,10 +1,10 @@
-package it.polimi.demo.view.flow.utilities;
+package it.polimi.demo.view.dynamic.utilities;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * InputReaderGUI class
- * InputReaderGUI is the class that reads the input and add it to the buffer
+ * InputReaderGUI is the class that reads the input and offer it to the buffer
  */
 public class GuiReader implements AbstractReader {
     private final LinkedBlockingQueue<String> buffer;

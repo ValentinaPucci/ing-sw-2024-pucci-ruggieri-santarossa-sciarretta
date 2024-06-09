@@ -1,4 +1,4 @@
-package it.polimi.demo.view.flow;
+package it.polimi.demo.view.dynamic;
 
 import it.polimi.demo.model.ModelView;
 
@@ -179,7 +179,7 @@ public abstract class UI {
 
     /**
      * Shows message on important event added
-     * @param input the string of the important event to add
+     * @param input the string of the important event to offer
      */
     public abstract void addImportantEvent(String input);
 

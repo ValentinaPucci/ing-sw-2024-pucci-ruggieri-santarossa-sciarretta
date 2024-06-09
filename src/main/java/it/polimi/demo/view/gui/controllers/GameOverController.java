@@ -1,7 +1,7 @@
 package it.polimi.demo.view.gui.controllers;
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.model.interfaces.*;
 
+import it.polimi.demo.model.Player;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -34,7 +34,7 @@ public class GameOverController extends GenericController{
         int i=0;
         Label tmp = null;
 
-        for (PlayerIC p:model.getClassification()){
+        for (Player p:model.getClassification()){
             switch (i){
                 case 0-> tmp=player0;
                 case 1-> tmp=player1;

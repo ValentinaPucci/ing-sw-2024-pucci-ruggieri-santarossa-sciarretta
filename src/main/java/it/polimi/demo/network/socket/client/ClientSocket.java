@@ -9,8 +9,8 @@ import it.polimi.demo.network.StaticPrinter;
 import it.polimi.demo.network.socket.client.gameControllerMessages.*;
 import it.polimi.demo.network.socket.client.mainControllerMessages.*;
 import it.polimi.demo.network.socket.client.serverToClientMessages.SocketServerGenericMessage;
-import it.polimi.demo.view.flow.ClientInterface;
-import it.polimi.demo.view.flow.Dynamics;
+import it.polimi.demo.view.dynamic.ClientInterface;
+import it.polimi.demo.view.dynamic.Dynamic;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -32,8 +32,8 @@ public class ClientSocket extends Thread implements ClientInterface, Serializabl
     private String userNickname;
     private final ObserverManagerClient eventManager;
 
-    public ClientSocket(Dynamics clientDynamics) {
-        this.eventManager = new ObserverManagerClient(clientDynamics);
+    public ClientSocket(Dynamic clientDynamic) {
+        this.eventManager = new ObserverManagerClient(clientDynamic);
         initiateConnection(Constants.serverIp, Constants.Socket_port);
         this.start();
     }
@@ -167,7 +167,7 @@ public class ClientSocket extends Thread implements ClientInterface, Serializabl
     }
 
     @Override
-    public void heartbeat() {
+    public void ping() {
         // Ping logic if needed
     }
 

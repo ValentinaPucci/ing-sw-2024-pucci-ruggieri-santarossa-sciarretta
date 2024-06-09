@@ -1,4 +1,4 @@
-package it.polimi.demo.view.flow.utilities;
+package it.polimi.demo.view.dynamic.utilities;
 
 import it.polimi.demo.Constants;
 
@@ -10,7 +10,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 
 /**
  * InputReaderTUI class
- * InputReaderTUI is the class that reads the input and add it to the buffer
+ * InputReaderTUI is the class that reads the input and offer it to the buffer
  */
 public class TuiReader extends Thread implements AbstractReader {
     private final LinkedBlockingQueue<String> buffer = new LinkedBlockingQueue<>();

@@ -10,8 +10,7 @@ import it.polimi.demo.Constants;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.model.interfaces.PlayerIC;
-import it.polimi.demo.view.flow.UI;
+import it.polimi.demo.view.dynamic.UI;
 
 import java.io.IOException;
 import java.io.PrintStream;
@@ -49,7 +48,7 @@ public class TUI extends UI {
     }
 
     /**
-     * @param input the string of the important event to add
+     * @param input the string of the important event to offer
      */
     @Override
     public void addImportantEvent(String input) {
@@ -297,7 +296,7 @@ public class TUI extends UI {
 
         clearScreen();
         int i = 0;
-        for (PlayerIC p : gameModel.getPlayersConnected()) {
+        for (Player p : gameModel.getPlayersConnected()) {
             if (p.getReadyToStart()) {
                 ris.append(ansi().cursor(12 + i, 0)).append("[EVENT]: ").append(p.getNickname()).append(" is ready!\n");
             } else {
@@ -309,7 +308,7 @@ public class TUI extends UI {
         printAsyncNoCursorReset(ris);
 
         clearScreen();
-        for (PlayerIC p : gameModel.getPlayersConnected())
+        for (Player p : gameModel.getPlayersConnected())
             if (!p.getReadyToStart() && p.getNickname().equals(nick))
                 printAsync(ansi().cursor(17, 0).fg(WHITE).a("> When you are ready to start, enter (y): \n"));
         clearScreen();

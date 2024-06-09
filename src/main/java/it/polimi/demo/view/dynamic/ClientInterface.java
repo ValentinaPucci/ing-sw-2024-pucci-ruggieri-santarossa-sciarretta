@@ -1,4 +1,4 @@
-package it.polimi.demo.view.flow;
+package it.polimi.demo.view.dynamic;
 
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
@@ -29,6 +29,6 @@ public interface ClientInterface extends Serializable {
 
     void sendMessage(String receiver, Message msg) throws IOException, NotBoundException;
 
-    void heartbeat() throws IOException, NotBoundException;
+    void ping() throws IOException, NotBoundException;
 
 }

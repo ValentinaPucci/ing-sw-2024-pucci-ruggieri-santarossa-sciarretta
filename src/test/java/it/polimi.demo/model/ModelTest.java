@@ -82,7 +82,7 @@ public class ModelTest {
         model.addPlayer(player);
         assertEquals(1, model.getAllPlayers().size());
         assertTrue(model.getAllPlayers().contains(player));
-        // Attempt to add the same player again
+        // Attempt to offer the same player again
         assertThrows(PlayerAlreadyConnectedException.class, () -> model.addPlayer(player));
         //Add other players
         Player player2 = new Player("Player2");
@@ -119,7 +119,7 @@ public class ModelTest {
         assertEquals(Constants.minNumOfPlayer - 1, model.getAllPlayers().size());
     }
 
-    // Utility method to add a specific number of players to the game model
+    // Utility method to offer a specific number of players to the game model
     private void addPlayersToGameModel(int numPlayers) {
         for (int i = 0; i < numPlayers; i++) {
             model.addPlayer(new Player("Player" + i));

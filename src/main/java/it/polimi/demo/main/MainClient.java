@@ -1,8 +1,8 @@
 package it.polimi.demo.main;
 
 import it.polimi.demo.network.StaticPrinter;
-import it.polimi.demo.view.flow.ConnectionSelection;
-import it.polimi.demo.view.flow.GameDynamics;
+import it.polimi.demo.view.dynamic.ConnectionSelection;
+import it.polimi.demo.view.dynamic.GameDynamic;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import javafx.application.Application;
 import java.util.Scanner;
@@ -23,7 +23,7 @@ public class MainClient {
                 "\nSelect option:\n1) TUI \n2) GUI \n");
 
         if (ui_selection == 1) {
-            new GameDynamics(conSel);
+            new GameDynamic(conSel);
         }
         else {
             Application.launch(ApplicationGUI.class);

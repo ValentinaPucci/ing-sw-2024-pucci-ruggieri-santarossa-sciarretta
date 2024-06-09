@@ -1,7 +1,6 @@
 package it.polimi.demo.model.cards.gameCards;
 
 import it.polimi.demo.model.enumerations.Coordinate;
-import it.polimi.demo.model.interfaces.StarterCardIC;
 import it.polimi.demo.model.board.BoardCellCoordinate;
 import it.polimi.demo.model.board.Corner;
 import it.polimi.demo.model.cards.Card;

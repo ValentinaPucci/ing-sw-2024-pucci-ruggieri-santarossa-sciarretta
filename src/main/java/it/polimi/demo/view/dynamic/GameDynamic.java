@@ -1,4 +1,4 @@
-package it.polimi.demo.view.flow;
+package it.polimi.demo.view.dynamic;
 
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
@@ -7,31 +7,31 @@ import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.StaticPrinter;
 import it.polimi.demo.network.rmi.RMIClient;
-import it.polimi.demo.view.flow.utilities.*;
-import it.polimi.demo.view.flow.utilities.gameFacts.ModelFact;
-import it.polimi.demo.view.flow.utilities.gameFacts.FactQueue;
-import it.polimi.demo.view.flow.utilities.gameFacts.FactType;
+import it.polimi.demo.view.dynamic.utilities.*;
+import it.polimi.demo.view.dynamic.utilities.gameFacts.FactQueue;
+import it.polimi.demo.view.dynamic.utilities.gameFacts.FactType;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import it.polimi.demo.view.gui.GUI;
 import it.polimi.demo.network.socket.client.ClientSocket;
 import it.polimi.demo.view.text.TUI;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static it.polimi.demo.network.StaticPrinter.staticPrinter;
-import static it.polimi.demo.view.flow.utilities.gameFacts.FactType.*;
+import static it.polimi.demo.view.dynamic.utilities.gameFacts.FactType.*;
 
-public class GameDynamics extends Dynamics implements Runnable, ClientInterface {
+public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
+
+    @Serial
+    private static final long serialVersionUID = 2799386217881428924L;
 
     private String nickname;
-
-    private int game_id;
 
     private final FactQueue facts = new FactQueue();
 
@@ -43,51 +43,44 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
 
     protected AbstractReader abstract_reader;
 
-    protected List<String> relevant_facts;
+    public GameDynamic(ConnectionSelection connectionSelection) {
 
-    private boolean ended = false;
+        nickname = "";
 
-    public GameDynamics(ConnectionSelection connectionSelection) {
-        //Invoked for starting with TUI
         switch (connectionSelection) {
             case SOCKET -> client_interface = new ClientSocket(this);
             case RMI -> client_interface = new RMIClient(this);
         }
-        ui = new TUI();
 
-        relevant_facts = new ArrayList<>();
-        nickname = "";
-        // Thread for reading the input (TUI)
         this.abstract_reader = new TuiReader();
-        // We bind generic_parser and abstract_reader
+        ui = new TUI();
         this.generic_parser = new GenericParser(this.abstract_reader.getBuffer(), this);
 
         new Thread(this).start();
     }
 
-    public GameDynamics(ApplicationGUI guiApplication, ConnectionSelection connectionSelection) {
-        //Invoked for starting with GUI
+    public GameDynamic(ApplicationGUI guiApplication, ConnectionSelection connectionSelection) {
+
+        nickname = "";
+
         switch (connectionSelection) {
             case SOCKET -> client_interface = new ClientSocket(this);
             case RMI -> client_interface = new RMIClient(this);
         }
 
         this.abstract_reader = new GuiReader(); //GuiReader@5184ffd2
-
         ui = new GUI(guiApplication, (GuiReader) abstract_reader); //GuiReader@5184ffd2
-        relevant_facts = new ArrayList<>();
-        nickname = "";
-
         this.generic_parser = new GenericParser(this.abstract_reader.getBuffer(), this); //GuiReader@5184ffd2
+
         new Thread(this).start();
     }
 
     @Override
     public void run() {
 
-        facts.add(null, APP_MENU);
+        facts.offer(null, LOBBY_INFO);
 
-        Map<GameStatus, Consumer<ModelFact>> statusHandlers = Map.of(
+        Map<GameStatus, Consumer<HashMap<ModelView, FactType>>> statusHandlers = Map.of(
                 GameStatus.WAIT, this::safeStatusWait,
                 GameStatus.FIRST_ROUND, this::safeStatusFirstRound,
                 GameStatus.RUNNING, this::safeStatusRunning,
@@ -96,96 +89,111 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
                 GameStatus.ENDED, this::statusEnded
         );
 
-        while (!Thread.interrupted()) {
-            if (facts.isJoined()) {
-                handleEvent(statusHandlers);
-            } else {
-                handleFallbackEvent(this::safeStatusNotInAGame);
-            }
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
+        while (!Thread.currentThread().isInterrupted()) {
+            Runnable event =
+                    facts.isToHandle() ? () -> handleEvent(statusHandlers)
+                            : () -> handleFallbackEvent(this::safeStatusNotInAGame);
+            event.run();
+            try { Thread.sleep(200); }
+            catch (InterruptedException e) {
+                Thread.currentThread().interrupt(); // Preserve interrupt status
                 throw new RuntimeException(e);
             }
         }
+
     }
 
-    private void handleEvent(Map<GameStatus, Consumer<ModelFact>> handlers) {
-        ModelFact event = facts.pop();
-        if (event != null) {
-            handlers.getOrDefault(event.getModel().getStatus(), this::doNothing).accept(event);
+    private void handleEvent(Map<GameStatus, Consumer<HashMap<ModelView, FactType>>> handlers) {
+
+        HashMap<ModelView, FactType> map = facts.poll();
+
+        if (map == null) {
+            return;
+        }
+        if (map.containsKey(null)) {
+            return;
+        }
+
+        ModelView model_view = map.keySet().iterator().next();
+
+        if (model_view != null) {
+            handlers.getOrDefault(model_view.getStatus(), this::doNothing).accept(map);
         }
     }
 
+    private void handleFallbackEvent(Consumer<HashMap<ModelView, FactType>> fallback) {
 
-    private void handleFallbackEvent(Consumer<ModelFact> fallback) {
-        ModelFact event = facts.pop();
-        if (event != null) {
-            fallback.accept(event);
+        HashMap<ModelView, FactType> map = facts.poll();
+
+        if (map != null) {
+            fallback.accept(map);
         }
     }
 
-    private void safeStatusWait(ModelFact event) {
+    private void safeStatusWait(HashMap<ModelView, FactType> map) {
         try {
-            statusWait(event);
+            statusWait(map);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void safeStatusFirstRound(ModelFact event) {
+    private void safeStatusFirstRound(HashMap<ModelView, FactType> map) {
         try {
-            statusFirstRound(event);
+            statusFirstRound(map);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void safeStatusRunning(ModelFact event) {
+    private void safeStatusRunning(HashMap<ModelView, FactType> map) {
         try {
-            statusRunning(event);
+            statusRunning(map);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void safeStatusLastRound(ModelFact event) {
+    private void safeStatusLastRound(HashMap<ModelView, FactType> map) {
         try {
-            statusLastRound(event);
+            statusLastRound(map);
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void safeStatusNotInAGame(ModelFact event) {
-        statusNotInAGame(event);
+    private void safeStatusNotInAGame(HashMap<ModelView, FactType> map) {
+        statusNotInAGame(map);
     }
 
-    private void doNothing(ModelFact event) {
+    private void doNothing(HashMap<ModelView, FactType> map) {
         // No action required for undefined statuses
     }
 
-    // GameDynamics
+    // GameDynamic
 
-    private void statusNotInAGame(ModelFact fact) {
+    private void statusNotInAGame(HashMap<ModelView, FactType> map) {
+
+        FactType type = map.values().iterator().next();
+
         Map<FactType, Runnable> actions = Map.of(
-                FactType.APP_MENU, () -> {
+                FactType.LOBBY_INFO, () -> {
                     boolean selectionOk;
                     do {
                         selectionOk = askSelectGame();
                     } while (!selectionOk);
                 },
-                FactType.JOIN_UNABLE_NICKNAME_ALREADY_IN, () -> {
+                FactType.ALREADY_USED_NICKNAME, () -> {
                     nickname = null;
-                    facts.add(null, FactType.APP_MENU);
+                    facts.offer(null, FactType.LOBBY_INFO);
                     ui.addImportantEvent("WARNING> Nickname already used!");
                 },
-                FactType.JOIN_UNABLE_GAME_FULL, () -> {
+                FactType.FULL_GAME, () -> {
                     nickname = null;
-                    facts.add(null, FactType.APP_MENU);
+                    facts.offer(null, FactType.LOBBY_INFO);
                     ui.addImportantEvent("WARNING> Game is Full!");
                 },
-                FactType.GENERIC_ERROR_WHEN_ENTERING_GAME, () -> {
+                FactType.GENERIC_ERROR, () -> {
                     nickname = null;
                     ui.show_returnToMenuMsg();
                     try {
@@ -193,86 +201,106 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    facts.add(null, FactType.APP_MENU);
+                    facts.offer(null, FactType.LOBBY_INFO);
                 }
         );
 
-        actions.getOrDefault(fact.getType(), () -> {}).run();
+        actions.getOrDefault(type, () -> {}).run();
     }
 
-    private void statusWait(ModelFact fact) throws IOException, InterruptedException {
+    private void statusWait(HashMap<ModelView, FactType> map) throws IOException, InterruptedException {
+
+        ModelView model = map.keySet().iterator().next();
+        FactType type = map.values().iterator().next();
+
         Map<FactType, Runnable> actions = Map.of(
                 FactType.PLAYER_JOINED, () -> {
-                    String nickLastPlayer = fact.getModel().getPlayersConnected().getLast().getNickname();
+                    String nickLastPlayer = model.getPlayersConnected().getLast().getNickname();
                     if (nickLastPlayer.equals(nickname)) {
-                        ui.show_playerJoined(fact.getModel(), nickname);
+                        ui.show_playerJoined(model, nickname);
                         askReadyToStart();
                     }
                 }
         );
 
-        actions.getOrDefault(fact.getType(), () -> {}).run();
+        actions.getOrDefault(type, () -> {}).run();
     }
 
-    private void statusFirstRound(ModelFact fact) throws IOException, InterruptedException {
+    private void statusFirstRound(HashMap<ModelView, FactType> map) throws IOException, InterruptedException {
+
+        ModelView model = map.keySet().iterator().next();
+        FactType type = map.values().iterator().next();
+
         Map<FactType, Runnable> actions = Map.of(
                 FactType.GAME_STARTED, () -> {
-                    ui.show_gameStarted(fact.getModel());
-                    this.generic_parser.setPlayer(fact.getModel().getPlayerEntity(nickname));
-                    this.generic_parser.setGameId(fact.getModel().getGameId());
+                    ui.show_gameStarted(model);
+                    this.generic_parser.setPlayer(model.getPlayerEntity(nickname));
+                    this.generic_parser.setGameId(model.getGameId());
                 },
                 FactType.NEXT_TURN, () -> {
-                    ui.show_nextTurn(fact.getModel(), nickname);
-                    if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
-                        ui.show_objectiveCards(fact.getModel());
+                    ui.show_nextTurn(model, nickname);
+                    if (model.getCurrentPlayerNickname().equals(nickname)) {
+                        ui.show_objectiveCards(model);
                         askWhichObjectiveCard();
-                        ui.show_starterCards(fact.getModel());
+                        ui.show_starterCards(model);
                         askStarterCardOrientationAndPlace();
                     }
                 }
         );
 
-        actions.getOrDefault(fact.getType(), () -> {}).run();
+        actions.getOrDefault(type, () -> {}).run();
     }
 
-    private void statusRunning(ModelFact fact) throws IOException, InterruptedException {
+    private void statusRunning(HashMap<ModelView, FactType> map) throws IOException, InterruptedException {
+
+        ModelView model = map.keySet().iterator().next();
+        FactType type = map.values().iterator().next();
+
         Map<FactType, Runnable> actions = Map.of(
                 FactType.NEXT_TURN, () -> {
-                    if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
-                        ui.show_personalObjectiveCard(fact.getModel());
-                        ui.show_playerHand(fact.getModel(), nickname);
+                    if (model.getCurrentPlayerNickname().equals(nickname)) {
+                        ui.show_personalObjectiveCard(model);
+                        ui.show_playerHand(model, nickname);
                         askWhichCard();
                     }
                 },
-                FactType.ASK_WHICH_ORIENTATION, () -> handleOrientationOrIllegalMove(fact),
-                FactType.ILLEGAL_MOVE, () -> handleOrientationOrIllegalMove(fact),
+                FactType.ASK_WHICH_ORIENTATION, () -> handleOrientationOrIllegalMove(map),
+                FactType.ILLEGAL_MOVE, () -> handleOrientationOrIllegalMove(map),
                 FactType.CARD_PLACED, () -> {
-                    if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
+                    if (model.getCurrentPlayerNickname().equals(nickname)) {
                         askWhereToDrawFrom();
                     }
                 }
         );
 
-        actions.getOrDefault(fact.getType(), () -> {}).run();
+        actions.getOrDefault(type, () -> {}).run();
     }
 
-    private void statusLastRound(ModelFact fact) throws IOException, InterruptedException {
+    private void statusLastRound(HashMap<ModelView, FactType> map) throws IOException, InterruptedException {
+
+        ModelView model = map.keySet().iterator().next();
+        FactType type = map.values().iterator().next();
+
         Map<FactType, Runnable> actions = Map.of(
                 FactType.NEXT_TURN, () -> {
-                    if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
-                        ui.show_personalObjectiveCard(fact.getModel());
-                        ui.show_playerHand(fact.getModel(), nickname);
+                    if (model.getCurrentPlayerNickname().equals(nickname)) {
+                        ui.show_personalObjectiveCard(model);
+                        ui.show_playerHand(model, nickname);
                         askWhichCard();
                     }
                 },
-                FactType.ASK_WHICH_ORIENTATION, () -> handleOrientationOrIllegalMove(fact),
-                FactType.ILLEGAL_MOVE, () -> handleOrientationOrIllegalMove(fact)
+                FactType.ASK_WHICH_ORIENTATION, () -> handleOrientationOrIllegalMove(map),
+                FactType.ILLEGAL_MOVE, () -> handleOrientationOrIllegalMove(map)
         );
 
-        actions.getOrDefault(fact.getType(), () -> {}).run();
+        actions.getOrDefault(type, () -> {}).run();
     }
 
-    private void statusEnded(ModelFact fact) {
+    private void statusEnded(HashMap<ModelView, FactType> map) {
+
+        ModelView model = map.keySet().iterator().next();
+        FactType type = map.values().iterator().next();
+
         Map<FactType, Runnable> actions = Map.of(
                 FactType.GAME_ENDED, () -> {
                     ui.show_returnToMenuMsg();
@@ -282,37 +310,30 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    this.leave(nickname, fact.getModel().getGameId());
+                    this.leave(nickname, model.getGameId());
                     this.youLeft();
                 }
         );
 
-        actions.getOrDefault(fact.getType(), () -> {}).run();
+        actions.getOrDefault(type, () -> {}).run();
     }
 
-    private void handleOrientationOrIllegalMove(ModelFact fact) {
-        if (fact.getModel().getCurrentPlayerNickname().equals(nickname)) {
-            ui.show_cardChosen(nickname, fact.getModel());
+    private void handleOrientationOrIllegalMove(HashMap<ModelView, FactType> map) {
+
+        ModelView model = map.keySet().iterator().next();
+
+        if (model.getCurrentPlayerNickname().equals(nickname)) {
+            ui.show_cardChosen(nickname, model);
             askGameCardOrientationAndPlace();
         }
     }
 
-
     public void youLeft() {
-        ended = true;
         ui.resetImportantEvents();
-        facts.add(null, APP_MENU);
+        facts.offer(null, LOBBY_INFO);
 
         this.generic_parser.setPlayer(null);
         this.generic_parser.setGameId(null);
-    }
-
-    public boolean isEnded() {
-        return ended;
-    }
-
-    public void setEnded(boolean ended) {
-        this.ended = ended;
     }
 
     /*===============ASK METHODS===============*/
@@ -368,7 +389,6 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     private boolean handleJoinSpecificGame() {
         Integer gameId = askGameId();
         if (gameId == -1) return false;
-        this.game_id = gameId;
         askNickname();
         joinGame(nickname, gameId);
         return true;
@@ -447,6 +467,8 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         }
     }
 
+    // real getter from the buffer
+
     private String getProcessedData() {
         try {
             return this.generic_parser.getProcessedDataQueue().take();
@@ -484,7 +506,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         }
     }
 
-    /*============ Methods that the client can request to the server ============*/
+    // Client --------> Server
 
     public void noConnectionError() {
         ui.show_noConnectionError();
@@ -533,8 +555,6 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
             throw new RuntimeException(e);
         }
     }
-
-    //-----------------------------RUNNING METHODS-----------------------------------------
 
     @Override
     public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
@@ -596,11 +616,11 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     }
 
     @Override
-    public void heartbeat() {
+    public void ping() {
 
     }
 
-    /*============ Server event received ============*/
+    // Server --------> Client
 
     @Override
     public void starterCardPlaced(ModelView model, Orientation orientation, String nick) {
@@ -611,7 +631,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
     @Override
     public void cardChosen(ModelView model, int which_card) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
-            facts.add(model, ASK_WHICH_ORIENTATION);
+            facts.offer(model, ASK_WHICH_ORIENTATION);
         }
     }
 
@@ -620,7 +640,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         if (model.getCurrentPlayerNickname().equals(nickname)) {
             ui.show_personalBoard(nickname, model);
             ui.show_commonBoard(model);
-            facts.add(model, CARD_PLACED);
+            facts.offer(model, CARD_PLACED);
         }
     }
 
@@ -630,7 +650,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
             ui.show_illegalMove();
             ui.show_genericMessage("Here we show you again your personal board:");
             ui.show_personalBoard(nickname, model);
-            facts.add(model, ILLEGAL_MOVE);
+            facts.offer(model, ILLEGAL_MOVE);
         }
     }
 
@@ -646,7 +666,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         if (model.getCurrentPlayerNickname().equals(nickname)) {
             ui.show_illegalMoveBecauseOf(reason_why);
             ui.show_personalBoard(nickname, model);
-            facts.add(model, ILLEGAL_MOVE);
+            facts.offer(model, ILLEGAL_MOVE);
         }
     }
 
@@ -663,17 +683,13 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
                 (gameModel.getStatus() == GameStatus.RUNNING ||
                         gameModel.getStatus() == GameStatus.SECOND_LAST_ROUND))
             ui.show_myTurnIsFinished();
-        facts.add(gameModel, FactType.NEXT_TURN);
-        //I remove all the input that the user sends when It is not his turn
+        facts.offer(gameModel, FactType.NEXT_TURN);
         this.generic_parser.getProcessedDataQueue().clear();
     }
 
     @Override
     public void playerJoined(ModelView gameModel) {
-        // shared.setLastModelReceived(gameModel);
-        game_id = gameModel.getGameId();
-        facts.add(gameModel, FactType.PLAYER_JOINED);
-        //Print also here because: If a player is in askReadyToStart is blocked and cannot showPlayerJoined by watching the gameFacts
+        facts.offer(gameModel, FactType.PLAYER_JOINED);
         ui.show_playerJoined(gameModel, nickname);
     }
 
@@ -683,7 +699,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
         if (nick.equals(nickname)) {
             ui.show_ReadyToStart(gameModel, nickname);
         }
-        facts.add(gameModel, PLAYER_IS_READY_TO_START);
+        facts.offer(gameModel, PLAYER_IS_READY_TO_START);
     }
 
     @Override
@@ -693,7 +709,7 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
 
     @Override
     public void joinUnableGameFull(Player wantedToJoin, ModelView gameModel) throws RemoteException {
-        facts.add(null, JOIN_UNABLE_GAME_FULL);
+        facts.offer(null, FULL_GAME);
     }
 
     @Override
@@ -711,31 +727,30 @@ public class GameDynamics extends Dynamics implements Runnable, ClientInterface 
 
     @Override
     public void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
-        facts.add(null, JOIN_UNABLE_NICKNAME_ALREADY_IN);
+        facts.offer(null, ALREADY_USED_NICKNAME);
     }
 
     @Override
     public void gameIdNotExists(int gameid) throws RemoteException {
         ui.show_noAvailableGamesToJoin("No currently game available with the following GameID: " + gameid);
-        facts.add(null, GENERIC_ERROR_WHEN_ENTERING_GAME);
+        facts.offer(null, GENERIC_ERROR);
     }
 
     @Override
     public void genericErrorWhenEnteringGame(String why) throws RemoteException {
         ui.show_noAvailableGamesToJoin(why);
-        facts.add(null, GENERIC_ERROR_WHEN_ENTERING_GAME);
+        facts.offer(null, GENERIC_ERROR);
     }
 
     @Override
     public void gameStarted(ModelView gameModel) {
         ui.addImportantEvent("All players are connected, the game will start soon!");
-        facts.add(gameModel, FactType.GAME_STARTED);
+        facts.offer(gameModel, FactType.GAME_STARTED);
     }
 
     @Override
     public void gameEnded(ModelView gameModel) {
-        ended = true;
-        facts.add(gameModel, FactType.GAME_ENDED);
+        facts.offer(gameModel, FactType.GAME_ENDED);
         ui.show_gameEnded(gameModel);
     }
 

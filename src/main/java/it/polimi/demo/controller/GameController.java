@@ -21,8 +21,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     private final Model model;
     private final Map<Listener, Ping> pings;
 
-    public GameController(int gameID, int numberOfPlayers, Player player) {
-        model = new Model(gameID, numberOfPlayers, player);
+    public GameController(int gameID, int numberOfPlayers) {
+        model = new Model(gameID, numberOfPlayers);
         pings = new ConcurrentHashMap<>();
         new Thread(this).start();
     }
@@ -52,7 +52,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     /**
      * Checks if any player is disconnected by verifying the freshness of their heartbeats.
-     * If a player's heartbeat is expired, handle their disconnection.
+     * If a player's ping is expired, handle their disconnection.
      */
     public void checkForDisconnections() {
         pings.entrySet().stream()
@@ -78,14 +78,14 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param listener the listener of the player
      */
     public void handleDisconnection(Ping ping, Listener listener) {
-        disconnectPlayer(ping.getNick(), listener, this::removeAndNotify);
+        disconnectPlayer(ping.getNickname(), listener, this::removeAndNotify);
     }
 
     /**
      * Adds a Ping to the list of heartbeats to monitor player connections.
      *
-     * @param nickname the player's nickname associated with the heartbeat
-     * @param listener the player's Listener associated with the heartbeat
+     * @param nickname the player's nickname associated with the ping
+     * @param listener the player's Listener associated with the ping
      */
     @Override
     public void addPing(String nickname, Listener listener) {
@@ -144,7 +144,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     /**
      * Add a player to the game
      *
-     * @param p the player to add
+     * @param p the player to offer
      * @throws PlayerAlreadyConnectedException if the player is already connected
      * @throws MaxPlayersLimitException if the maximum number of players is reached
      */
@@ -307,7 +307,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     /**
      * Draw a card from the deck in commonBoard. It also incorporates the logic of the game
-     * with respect to the game flow, since it calls (through myTurnIsFinished) the nextTurn method in Model
+     * with respect to the game dynamic, since it calls (through myTurnIsFinished) the nextTurn method in Model
      * @param player_nickname the nickname of the player
      * @param index the index of the card to draw
      */
@@ -328,7 +328,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     /**
      * Add a listener
-     * @param l the listener to add
+     * @param l the listener to offer
      */
     public void addListener(Listener l) {
         model.addListener(l);

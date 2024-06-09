@@ -1,14 +1,13 @@
 package it.polimi.demo.model.cards.gameCards;
 
 import it.polimi.demo.model.enumerations.Coordinate;
-import it.polimi.demo.model.interfaces.ResourceCardIC;
 import it.polimi.demo.model.board.BoardCellCoordinate;
 import it.polimi.demo.model.board.Corner;
 import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.enumerations.Color;
 import it.polimi.demo.model.enumerations.Orientation;
 
-public class ResourceCard extends Card implements ResourceCardIC {
+public class ResourceCard extends Card {
 
     public int points;
     public Color color;
@@ -127,13 +126,10 @@ public class ResourceCard extends Card implements ResourceCardIC {
         return card;
     }
 
-
-    @Override
     public Color getColor() {
         return this.color;
     }
 
-    @Override
     public int getPoints() {
         return this.points;
     }

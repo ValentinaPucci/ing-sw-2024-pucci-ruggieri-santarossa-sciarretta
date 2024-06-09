@@ -20,9 +20,6 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static it.polimi.demo.network.StaticPrinter.staticPrinter;
-
-
 public class Model implements Serializable {
 
     // the first list let us keep the order of players. It is immutable!!
@@ -43,23 +40,21 @@ public class Model implements Serializable {
     /**
      * Listener handler that handles the listeners
      */
-    private ObserverManager listeners_handler;
+    private ObserverManager observers;
 
     public Model() {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
         common_board = new CommonBoard();
-        Random random = new Random();
-        gameId = random.nextInt(1000000);
+        gameId = -1;
         num_required_players_to_start = -1; // invalid value on purpose
         status = GameStatus.WAIT;
-        chat = new Chat();
         winners = new ArrayList<>();
         leaderboard = new HashMap<>();
-        listeners_handler = new ObserverManager();
+        observers = new ObserverManager();
     }
 
-    public Model(int gameID, int numberOfPlayers, Player player) {
+    public Model(int gameID, int numberOfPlayers) {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
         common_board = new CommonBoard();
@@ -69,7 +64,7 @@ public class Model implements Serializable {
         chat = new Chat();
         winners = new ArrayList<>();
         leaderboard = new HashMap<>();
-        listeners_handler = new ObserverManager();
+        observers = new ObserverManager();
     }
 
     //------------------------------------methods for players-----------------------
@@ -108,7 +103,7 @@ public class Model implements Serializable {
      */
     public synchronized void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
-        listeners_handler.notify_PlayerIsReadyToStart(this, p.getNickname());
+        observers.notify_PlayerIsReadyToStart(this, p.getNickname());
         if (arePlayersReadyToStartAndEnough()) {
             extractFirstPlayerToPlay();
             initializeGame();
@@ -158,7 +153,7 @@ public class Model implements Serializable {
      * Adds a new player to the game. Recall that if a player was previously playing,
      * then we are able to retrieve him/her from the auxiliary ordered list.
      * Thus, this method is meant as an adder of new players, not as an adder of disconnected players.
-     * Statical add.
+     * Statical offer.
      */
     public void addPlayer(Player p) {
 
@@ -166,18 +161,18 @@ public class Model implements Serializable {
         String nickname = p.getNickname();
 
         if (nicknames.contains(nickname)) {
-            listeners_handler.notify_joinUnableNicknameAlreadyIn(getIdentityOfPlayer(nickname));
+            observers.notify_joinUnableNicknameAlreadyIn(getIdentityOfPlayer(nickname));
             throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() >= num_required_players_to_start ||
                 aux_order_players.size() >= Constants.MaxNumOfPlayer) {
-            listeners_handler.notify_joinUnableGameFull(getIdentityOfPlayer(nickname), this);
+            observers.notify_joinUnableGameFull(getIdentityOfPlayer(nickname), this);
             throw new MaxPlayersLimitException();
         }
         else {
             aux_order_players.add(p);
             players_connected.offer(p);
-            listeners_handler.notify_playerJoined(this);
+            observers.notify_playerJoined(this);
         }
     }
 
@@ -190,7 +185,7 @@ public class Model implements Serializable {
     public void removePlayer(Player p) {
         players_connected.remove(p);
         aux_order_players.remove(p);
-        listeners_handler.notify_playerLeft(this, p.getNickname());
+        observers.notify_playerLeft(this, p.getNickname());
     }
 
     //-------------------------chat and messages---------------------------------------------
@@ -212,7 +207,7 @@ public class Model implements Serializable {
      */
     public void sendMessage(String nick, Message message) throws ActionPerformedByAPlayerNotPlayingException {
         chat.addMessage(message);
-        listeners_handler.notify_messageSent(this, nick, message);
+        observers.notify_messageSent(this, nick, message);
     }
 
     //-------------------------connection/disconnection management---------------------------------------------
@@ -225,7 +220,7 @@ public class Model implements Serializable {
 
         if (players_connected.contains(p)) {
             p.setAsNotConnected();
-            listeners_handler.notify_playerDisconnected(this, p.getNickname());
+            observers.notify_playerDisconnected(this, p.getNickname());
             p.setAsNotReadyToStart();
             players_connected.remove(p);
         }
@@ -234,7 +229,7 @@ public class Model implements Serializable {
     /**
      * It requires player.isConnected() == true.
      * Add the player, that is connected, to the players_connected list, notify that the player is connected.
-     * If the player is already connected, it throws exception. Dynamical add (connection).
+     * If the player is already connected, it throws exception. Dynamical offer (connection).
      * @param p player to set as connected.
      */
     public void setPlayerAsConnected(Player p) {
@@ -280,20 +275,20 @@ public class Model implements Serializable {
 
         switch (status) {
             case FIRST_ROUND -> {
-                listeners_handler.notify_GameStarted(this);
-                listeners_handler.notify_nextTurn(this);
+                observers.notify_GameStarted(this);
+                observers.notify_nextTurn(this);
             }
 
             case SECOND_LAST_ROUND -> {
-                listeners_handler.notify_secondLastRound(this);
+                observers.notify_secondLastRound(this);
             }
 
             case LAST_ROUND -> {
-                listeners_handler.notify_lastRound(this);
+                observers.notify_lastRound(this);
             }
 
             case ENDED -> {
-                listeners_handler.notify_GameEnded(this);
+                observers.notify_GameEnded(this);
             }
         }
     }
@@ -318,7 +313,7 @@ public class Model implements Serializable {
                 p.setChosenGameCard((GoldCard) p.getHand().get(which_card));
             else
                 p.setChosenGameCard(p.getHand().get(which_card));
-            listeners_handler.notify_cardChosen(this, which_card);
+            observers.notify_cardChosen(this, which_card);
         }
     }
 
@@ -377,6 +372,12 @@ public class Model implements Serializable {
         }
     }
 
+    /**
+     * Place the starter card of the player p on the board.
+     * @param p The player who is placing the starter card.
+     * @param o The orientation of the starter card.
+     * @throws GameEndedException If the game has already ended.
+     */
     public void placeStarterCard(Player p, Orientation o) throws GameEndedException {
 
         PersonalBoard personal_board = p.getPersonalBoard();
@@ -393,11 +394,18 @@ public class Model implements Serializable {
                 .toList()
                 .size() == players_connected.size())
             setStatus(GameStatus.RUNNING);
-        listeners_handler.notify_starterCardPlaced(this, o, p.getNickname());
+        observers.notify_starterCardPlaced(this, o, p.getNickname());
         nextTurn();
     }
 
-    // for resource cards
+    /**
+     * Place a ** Resource ** card on the board.
+     * @param card_chosen The card to place.
+     * @param p The player who is placing the card.
+     * @param x The x-coordinate of the cell where the card is to be placed.
+     * @param y The y-coordinate of the cell where the card is to be placed.
+     * @throws GameEndedException If the game has already ended.
+     */
     public void placeCard(ResourceCard card_chosen, Player p, int x, int y) throws GameEndedException {
 
         PersonalBoard personal_board = p.getPersonalBoard();
@@ -405,7 +413,7 @@ public class Model implements Serializable {
         boolean admissible_move;
 
         if (!personal_board.board[x][y].is_full) {
-            listeners_handler.notify_illegalMove(this);
+            observers.notify_illegalMove(this);
         }
         else {
             if (250 <= x && x <= 251 && 250 <= y && y <= 251) {
@@ -413,14 +421,14 @@ public class Model implements Serializable {
                 Coordinate coord = already_placed_card.getCoordinateAt(x, y);
                 admissible_move = personal_board.placeCardAt(already_placed_card, card_chosen, coord);
                 if (!admissible_move) {
-                    listeners_handler.notify_illegalMove(this);
+                    observers.notify_illegalMove(this);
                 }
                 else {
                     // remove the card from the player's hand
-                    listeners_handler.notify_successMove(this);
+                    observers.notify_successMove(this);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
-                    listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
+                    observers.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
                             getWinners();
@@ -436,14 +444,14 @@ public class Model implements Serializable {
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 admissible_move = personal_board.placeCardAt(already_placed_card, card_chosen, coord);
                 if (!admissible_move) {
-                    listeners_handler.notify_illegalMove(this);
+                    observers.notify_illegalMove(this);
                 }
                 else {
-                    listeners_handler.notify_successMove(this);
+                    observers.notify_successMove(this);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
-                    listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
+                    observers.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
                             getWinners();
@@ -457,7 +465,14 @@ public class Model implements Serializable {
         }
     }
 
-    // for gold card
+    /**
+     * Place a ** Gold ** card on the board.
+     * @param card_chosen The card to place.
+     * @param p The player who is placing the card.
+     * @param x The x-coordinate of the cell where the card is to be placed.
+     * @param y The y-coordinate of the cell where the card is to be placed.
+     * @throws GameEndedException If the game has already ended.
+     */
     public void placeCard(GoldCard card_chosen, Player p, int x, int y) throws GameEndedException {
 
         PersonalBoard personal_board = p.getPersonalBoard();
@@ -465,7 +480,7 @@ public class Model implements Serializable {
         boolean admissible_move;
 
         if (!personal_board.board[x][y].is_full) {
-            listeners_handler.notify_illegalMove(this);
+            observers.notify_illegalMove(this);
         }
         else {
             if (250 <= x && x <= 251 && 250 <= y && y <= 251) {
@@ -473,14 +488,14 @@ public class Model implements Serializable {
                 Coordinate coord = already_placed_card.getCoordinateAt(x, y);
                 admissible_move = personal_board.placeCardAt(already_placed_card, card_chosen, coord);
                 if (!admissible_move) {
-                    listeners_handler.notify_illegalMove(this);
+                    observers.notify_illegalMove(this);
                 }
                 else {
-                    listeners_handler.notify_successMove(this);
+                    observers.notify_successMove(this);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
-                    listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
+                    observers.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
                             getWinners();
@@ -496,14 +511,14 @@ public class Model implements Serializable {
                 Coordinate coord = personal_board.board[x][y].getCornerFromCell().getCoordinate();
                 admissible_move = personal_board.placeCardAt(already_placed_card, card_chosen, coord);
                 if (!admissible_move) {
-                    listeners_handler.notify_illegalMove(this);
+                    observers.notify_illegalMove(this);
                 }
                 else {
                     // remove the card from the player's hand
-                    listeners_handler.notify_successMove(this);
+                    observers.notify_successMove(this);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
-                    listeners_handler.notify_cardPlaced(this, x, y, card_chosen.orientation);
+                    observers.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
                             getWinners();
@@ -550,7 +565,7 @@ public class Model implements Serializable {
                     p.getHand().add((ResourceCard) common_board.drawFromConcreteDeck(0));
                 else {
                     illegal_draw = true;
-                    listeners_handler.notify_illegalMoveBecauseOf(this, "Resource Deck is empty!");
+                    observers.notify_illegalMoveBecauseOf(this, "Resource Deck is empty!");
                 }
                 break;
             case 2:
@@ -559,7 +574,7 @@ public class Model implements Serializable {
                     p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0));
                 else {
                     illegal_draw = true;
-                    listeners_handler.notify_illegalMoveBecauseOf(this, "Resource Table is empty!");
+                    observers.notify_illegalMoveBecauseOf(this, "Resource Table is empty!");
                 }
                 break;
             case 3:
@@ -568,7 +583,7 @@ public class Model implements Serializable {
                     p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0));
                 else {
                     illegal_draw = true;
-                    listeners_handler.notify_illegalMoveBecauseOf(this, "Resource Table is empty!");
+                    observers.notify_illegalMoveBecauseOf(this, "Resource Table is empty!");
                 }
                 break;
             case 4:
@@ -577,7 +592,7 @@ public class Model implements Serializable {
                     p.getHand().add((GoldCard) common_board.drawFromConcreteDeck(1));
                 else {
                     illegal_draw = true;
-                    listeners_handler.notify_illegalMoveBecauseOf(this, "Gold Deck is empty!");
+                    observers.notify_illegalMoveBecauseOf(this, "Gold Deck is empty!");
                 }
                 break;
             case 5:
@@ -586,7 +601,7 @@ public class Model implements Serializable {
                     p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1));
                 else {
                     illegal_draw = true;
-                    listeners_handler.notify_illegalMoveBecauseOf(this, "Gold Table is empty!");
+                    observers.notify_illegalMoveBecauseOf(this, "Gold Table is empty!");
                 }
                 break;
             case 6:
@@ -595,13 +610,13 @@ public class Model implements Serializable {
                     p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
                 else {
                     illegal_draw = true;
-                    listeners_handler.notify_illegalMoveBecauseOf(this, "Gold Table is empty!");
+                    observers.notify_illegalMoveBecauseOf(this, "Gold Table is empty!");
                 }
                 break;
         }
 
         if (!illegal_draw) {
-            listeners_handler.notify_cardDrawn(this, index);
+            observers.notify_cardDrawn(this, index);
             // at the end of every player round, we check for her/his points
             if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
                 setStatus(GameStatus.LAST_ROUND);
@@ -638,7 +653,7 @@ public class Model implements Serializable {
         Player q = players_connected.poll();
         players_connected.offer(q);
 
-        listeners_handler.notify_nextTurn(this);
+        observers.notify_nextTurn(this);
     }
 
     /**
@@ -662,6 +677,7 @@ public class Model implements Serializable {
      * Updates the leaderboard and the list of winners accordingly.
      * It is called by getWinners() method.
      */
+    // todo: adjust this method. In case of tie, it is ok!
     public void declareWinners() {
 
         List<Player> aux_final_scores_tie = new ArrayList<>();
@@ -747,7 +763,7 @@ public class Model implements Serializable {
      * @param obj adds the listener to the list
      */
     public void addListener(Listener obj) {
-        listeners_handler.addListener(obj);
+        observers.addListener(obj);
     }
 
 
@@ -755,15 +771,25 @@ public class Model implements Serializable {
      * @param lis removes listener from list
      */
     public void removeListener(Listener lis) {
-        listeners_handler.removeListener(lis);
+        observers.removeListener(lis);
     }
 
     // aux
 
+    /**
+     * getter for the starter cards to choose
+     * @param nickname of the player
+     * @return the list of starter cards to choose
+     */
     public List<StarterCard> getStarterCardsToChoose(String nickname) {
         return getIdentityOfPlayer(nickname).getStarterCardToChose();
     }
 
+    /**
+     * getter for the personal objective cards to choose
+     * @param nickname of the player
+     * @return the list of personal objective cards to choose
+     */
     public List<ObjectiveCard> getPersonalObjectiveCardsToChoose(String nickname) {
         return getIdentityOfPlayer(nickname).getSecretObjectiveCards();
     }

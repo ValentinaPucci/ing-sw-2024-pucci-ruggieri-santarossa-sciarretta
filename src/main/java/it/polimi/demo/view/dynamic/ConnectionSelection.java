@@ -1,4 +1,4 @@
-package it.polimi.demo.view.flow;
+package it.polimi.demo.view.dynamic;
 
 public enum ConnectionSelection {
     RMI, SOCKET

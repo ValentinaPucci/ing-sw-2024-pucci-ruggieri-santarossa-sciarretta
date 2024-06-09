@@ -1,8 +1,8 @@
 package it.polimi.demo.view.gui;
 
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.view.flow.UI;
-import it.polimi.demo.view.flow.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.UI;
+import it.polimi.demo.view.dynamic.utilities.GuiReader;
 import it.polimi.demo.view.gui.controllers.LobbyController;
 import it.polimi.demo.view.gui.controllers.RunningController;
 import it.polimi.demo.view.gui.scene.SceneType;
@@ -40,7 +40,7 @@ public class GUI extends UI {
 
     @Override
     protected void show_menuOptions() {
-        callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.GuiReader));//So the controllers can add text to the buffer for the gameflow
+        callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.GuiReader));//So the controllers can offer text to the buffer for the gameflow
         callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
     }
@@ -270,8 +270,8 @@ public class GUI extends UI {
 
 
     /**
-     * This method add an important event to the list of important events, and show it
-     * @param input the string of the important event to add
+     * This method offer an important event to the list of important events, and show it
+     * @param input the string of the important event to offer
      */
     @Override
     public void addImportantEvent(String input) {

@@ -49,7 +49,7 @@ public class MainController implements MainControllerInterface, Serializable {
     }
 
     /**
-     * Auxiliary method to add a player to a game.
+     * Auxiliary method to offer a player to a game.
      *
      * @param g the game
      * @param p the player
@@ -81,7 +81,7 @@ public class MainController implements MainControllerInterface, Serializable {
             game_id = Collections.max(games.keySet()) + 1;
 
         Player player = new Player(nickname);
-        GameController game = new GameController(game_id, num_of_players, player);
+        GameController game = new GameController(game_id, num_of_players);
         aux_adder(game, player, listener);
         games.put(game_id, game);
         games.get(game_id).setNumPlayersToPlay(num_of_players);
