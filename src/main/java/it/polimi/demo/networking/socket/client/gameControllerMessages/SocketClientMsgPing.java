@@ -15,18 +15,18 @@ public class SocketClientMsgPing extends SocketClientGenericMessage {
     private static final long serialVersionUID = 6780458660694095047L;
 
     public SocketClientMsgPing(String nick) {
-        this.nick = nick;
-        this.isMessageForMainController = false;
-        this.isHeartbeat = true;
+        this.setUserNickname(nick);
+        this.setMainControllerTarget(false);
+        this.setHeartbeatMessage(false);
     }
 
     @Override
-    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
 
     @Override
-    public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
-
+    public void performOnGameController(GameControllerInterface gameController) throws RemoteException, GameEndedException {
+        // Do nothing
     }
 }

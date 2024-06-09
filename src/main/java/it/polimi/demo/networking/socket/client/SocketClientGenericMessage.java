@@ -5,53 +5,72 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
 public abstract class SocketClientGenericMessage implements Serializable {
 
-    public String nick;
-    protected boolean isMessageForMainController;
-    protected boolean isHeartbeat = false;
+    @Serial
+    private static final long serialVersionUID = -5886817470118365739L;
+    private String nickname;
+    // The main controller target is the main controller if true, the message is for the MainController
+    // and not for the gameController
+    private boolean isMainControllerTarget;
+    private boolean heartbeatMessage = false;
 
     /**
-     * Executes the corresponding action for the message.
-     * @param lis the game observer
-     * @param mainController the main controller interface
-     * @return the game controller interface
-     * @throws RemoteException if there is a remote exception
+     * Processes the message with the main controller and observer.
+     * @param observer the game observer
+     * @param mainCtrlInterface the main controller interface
+     * @return the game controller interface after processing the message
+     * @throws RemoteException in case of remote communication issues
      */
-    public abstract GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException;
+    public abstract GameControllerInterface performOnMainController(Listener observer, MainControllerInterface mainCtrlInterface) throws RemoteException;
 
     /**
-     * Executes the corresponding action for the message.
-     * @param gameController the game controller interface
-     * @throws RemoteException if there is a remote exception
+     * Processes the message with the game controller.
+     * @param gameCtrlInterface the game controller interface
+     * @throws RemoteException in case of remote communication issues
      * @throws GameEndedException if the game has ended
      */
-    public abstract void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException;
+    public abstract void performOnGameController(GameControllerInterface gameCtrlInterface) throws RemoteException, GameEndedException;
 
     /**
-     * Checks if the message is intended for the main controller.
-     * @return true if the message is intended for the main controller, false otherwise
+     * Checks if the message is aimed at the main controller.
+     * @return true if the message is for the main controller, false otherwise
      */
-    public boolean isMessageForMainController() {
-        return isMessageForMainController;
+    public boolean isMainControllerTarget() {
+        return isMainControllerTarget;
     }
 
     /**
-     * Returns the nickname associated with the message.
-     * @return the nickname
+     * Retrieves the user's nickname associated with the message.
+     * @return the user's nickname
      */
-    public String getNick() {
-        return nick;
+    public String getUserNickname() {
+        return nickname;
     }
 
     /**
-     * @return if it's a heartbeat message
+     * Determines if the message is a heartbeat signal.
+     * @return true if it is a heartbeat message, false otherwise
      */
-    public boolean isHeartbeat() {
-        return isHeartbeat;
+    public boolean isHeartbeatMessage() {
+        return heartbeatMessage;
+    }
+
+    // Setters for the private fields
+    public void setUserNickname(String userNickname) {
+        this.nickname= userNickname;
+    }
+
+    public void setMainControllerTarget(boolean mainControllerTarget) {
+        this.isMainControllerTarget = mainControllerTarget;
+    }
+
+    public void setHeartbeatMessage(boolean heartbeatMessage) {
+        this.heartbeatMessage = heartbeatMessage;
     }
 
 }

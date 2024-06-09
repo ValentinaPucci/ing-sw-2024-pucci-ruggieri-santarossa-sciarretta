@@ -12,24 +12,27 @@ import java.rmi.RemoteException;
 
 public class SocketClientMessageJoinFirstAvailableGame extends SocketClientGenericMessage implements Serializable {
 
-
     @Serial
     private static final long serialVersionUID = -5403664201604025015L;
 
     public SocketClientMessageJoinFirstAvailableGame(String nick) {
-        this.nick = nick;
-        this.isMessageForMainController = true;
+        this.setUserNickname(nick);
+        this.setMainControllerTarget(true);
     }
 
 
     @Override
-    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return mainController.joinFirstAvailableGame(lis, nick);
+    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
+        return mainController.joinFirstAvailableGame(lis, this.getUserNickname());
     }
 
-
+    /**
+     * Just for implementation purposes
+     * @param mainController the game controller interface
+     * @throws RemoteException
+     */
     @Override
-    public void perform(GameControllerInterface mainController) throws RemoteException {
+    public void performOnGameController(GameControllerInterface mainController) throws RemoteException {
 
     }
 }

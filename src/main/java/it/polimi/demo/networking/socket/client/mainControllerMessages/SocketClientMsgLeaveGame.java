@@ -16,18 +16,22 @@ public class SocketClientMsgLeaveGame extends SocketClientGenericMessage {
 
     public SocketClientMsgLeaveGame(String nick, int game_id) {
         this.game_id = game_id;
-        this.nick = nick;
-        this.isMessageForMainController = true;
+        this.setUserNickname(nick);
+        this.setMainControllerTarget(true);
     }
 
     @Override
-    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return mainController.leaveGame(lis, nick, game_id);
+    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
+        return mainController.leaveGame(lis, this.getUserNickname(), game_id);
     }
 
-
+    /**
+     * Only for implementation purposes
+     * @param mainController the game controller interface
+     * @throws RemoteException
+     */
     @Override
-    public void perform(GameControllerInterface mainController) throws RemoteException {
+    public void performOnGameController(GameControllerInterface mainController) throws RemoteException {
 
     }
 }

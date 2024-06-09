@@ -16,21 +16,27 @@ import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
 
 import static it.polimi.demo.networking.PrintAsync.printAsync;
 
-// todo: checked
 public class ClientHandler extends Thread implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
-    private transient ObjectInputStream in;
-    private transient ObjectOutputStream out;
+    /**
+     *  input
+     */
+    private transient ObjectInputStream ob_in;
+    /**
+     * output
+     */
+    private transient ObjectOutputStream ob_out;
     private GameControllerInterface gameController;
     private GameListenersHandlerSocket gameListenersHandlerSocket;
     private String nickname = null;
     private final BlockingQueue<SocketClientGenericMessage> processingQueue = new LinkedBlockingQueue<>();
 
     public ClientHandler(Socket soc) throws IOException {
-        this.in = new ObjectInputStream(soc.getInputStream());
-        this.out = new ObjectOutputStream(soc.getOutputStream());
-        this.gameListenersHandlerSocket = new GameListenersHandlerSocket(out);
+        this.ob_in = new ObjectInputStream(soc.getInputStream());
+        this.ob_out = new ObjectOutputStream(soc.getOutputStream());
+        this.gameListenersHandlerSocket = new GameListenersHandlerSocket(ob_out);
     }
 
     public void interruptThread() {
@@ -62,7 +68,7 @@ public class ClientHandler extends Thread implements Serializable {
 
     private void processClientMessage() {
         try {
-            var temp = (SocketClientGenericMessage) in.readObject();
+            var temp = (SocketClientGenericMessage) ob_in.readObject();
             processingQueue.add(temp);
         } catch (IOException | ClassNotFoundException e) {
             handleClientDisconnect();
@@ -71,11 +77,11 @@ public class ClientHandler extends Thread implements Serializable {
 
     private void processGameLogic() throws RemoteException, GameEndedException, InterruptedException {
         var temp = processingQueue.take();
-        if (temp.isMessageForMainController()) {
-            gameController = temp.perform(gameListenersHandlerSocket, MainController.getControllerInstance());
-            nickname = gameController != null ? temp.getNick() : null;
-        } else if (!temp.isHeartbeat()) {
-            temp.perform(gameController);
+        if (temp.isMainControllerTarget()) {
+            gameController = temp.performOnMainController(gameListenersHandlerSocket, MainController.getControllerInstance());
+            nickname = gameController != null ? temp.getUserNickname() : null;
+        } else if (!temp.isHeartbeatMessage()) {
+            temp.performOnGameController(gameController);
         }
     }
 

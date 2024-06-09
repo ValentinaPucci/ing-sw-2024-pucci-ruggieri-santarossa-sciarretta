@@ -21,12 +21,11 @@ public class SocketClientMsgDrawCard extends SocketClientGenericMessage implemen
      */
     public SocketClientMsgDrawCard(int index) {
          this.index = index;
-         this.isMessageForMainController = false;
+         this.setMainControllerTarget(false);
     }
 
-
     @Override
-    public GameControllerInterface perform(Listener lis, MainControllerInterface mainController) throws RemoteException {
+    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return null;
     }
 
@@ -37,7 +36,7 @@ public class SocketClientMsgDrawCard extends SocketClientGenericMessage implemen
      * @throws GameEndedException
      */
     @Override
-    public void perform(GameControllerInterface gameController) throws RemoteException, GameEndedException {
+    public void performOnGameController(GameControllerInterface gameController) throws RemoteException, GameEndedException {
         gameController.drawCard(gameController.getCurrentPlayer().getNickname(), index);
     }
 }
