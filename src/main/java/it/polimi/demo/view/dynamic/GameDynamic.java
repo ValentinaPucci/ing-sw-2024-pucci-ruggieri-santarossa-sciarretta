@@ -28,9 +28,6 @@ import static it.polimi.demo.view.dynamic.utilities.gameFacts.FactType.*;
 
 public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
-    @Serial
-    private static final long serialVersionUID = 2799386217881428924L;
-
     private String nickname;
 
     private final FactQueue facts = new FactQueue();
