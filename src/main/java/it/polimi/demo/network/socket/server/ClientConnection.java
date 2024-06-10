@@ -1,9 +1,9 @@
-package it.polimi.demo.networking.socket.server;
+package it.polimi.demo.network.socket.server;
 
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
-import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
+import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
+import it.polimi.demo.network.interfaces.GameControllerInterface;
 
 import java.io.*;
 import java.net.Socket;
@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
+import static it.polimi.demo.view.text.PrintAsync.printAsync;
 
 public class ClientConnection extends Thread implements Serializable {
 

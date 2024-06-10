@@ -1,4 +1,4 @@
-package it.polimi.demo.networking.socket.server;
+package it.polimi.demo.network.socket.server;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -6,8 +6,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
-
+import static it.polimi.demo.view.text.PrintAsync.printAsync;
 public class Server extends Thread implements Serializable {
     /**
      * Socket that represents the Server

@@ -1,23 +1,25 @@
-package it.polimi.demo.networking.socket.client;
+package it.polimi.demo.network.socket.client;
 
-import it.polimi.demo.DefaultValues;
+import it.polimi.demo.Constants;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.networking.ObserverManagerClient;
-import it.polimi.demo.networking.PingSender;
-import it.polimi.demo.networking.socket.client.gameControllerMessages.*;
-import it.polimi.demo.networking.socket.client.mainControllerMessages.*;
-import it.polimi.demo.networking.socket.client.serverToClientMessages.SocketServerGenericMessage;
-import it.polimi.demo.view.flow.ClientInterface;
-import it.polimi.demo.view.flow.Dynamics;
+import it.polimi.demo.network.ObserverManagerClient;
+import it.polimi.demo.network.PingSender;
+import it.polimi.demo.network.socket.client.gameControllerMessages.*;
+import it.polimi.demo.network.socket.client.mainControllerMessages.*;
+import it.polimi.demo.network.socket.client.serverToClientMessages.SocketServerGenericMessage;
+import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMessageJoinFirstAvailableGame;
+import it.polimi.demo.view.dynamic.ClientInterface;
+import it.polimi.demo.view.dynamic.Dynamic;
 
 import java.net.Socket;
 import java.io.*;
+import java.rmi.NotBoundException;
 
-import static it.polimi.demo.networking.PrintAsync.printAsync;
-import static it.polimi.demo.networking.PrintAsync.printAsyncNoLine;
+import static it.polimi.demo.view.text.PrintAsync.printAsync;
+import static it.polimi.demo.view.text.PrintAsync.printAsyncNoLine;
 
 public class ClientSocket extends Thread implements ClientInterface {
 
@@ -27,12 +29,12 @@ public class ClientSocket extends Thread implements ClientInterface {
     private String nickname;
     private final ObserverManagerClient modelEvents;
     private final transient PingSender socketHeartbeat;
-    private Dynamics dynamics;
+    private Dynamic dynamics;
 
-    public ClientSocket(Dynamics dynamics) {
+    public ClientSocket(Dynamic dynamics) {
         this.dynamics = dynamics;
         modelEvents = new ObserverManagerClient(dynamics);
-        initiateConnection(DefaultValues.serverIp, DefaultValues.Default_port_Socket);
+        initiateConnection(Constants.serverIp, Constants.Socket_port);
         this.start();
         socketHeartbeat = new PingSender(dynamics, this);
     }
@@ -98,7 +100,7 @@ public class ClientSocket extends Thread implements ClientInterface {
                 printAsync("[ERROR] Failed to connect to the server: " + ioException + "\n");
                 printAsyncNoLine("[Attempt #" + connectionAttempts + "] Retrying connection to server at port: '" + serverPort + "' and IP: '" + serverIp + "'");
 
-                for (int i = 0; i < DefaultValues.seconds_between_reconnection; i++) {
+                for (int i = 0; i < Constants.seconds_between_reconnection; i++) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException interruptedException) {
@@ -108,7 +110,7 @@ public class ClientSocket extends Thread implements ClientInterface {
                 }
                 printAsyncNoLine("\n");
 
-                if (connectionAttempts >= DefaultValues.num_of_attempt_to_connect_toServer_before_giveup) {
+                if (connectionAttempts >= Constants.num_of_attempt_to_connect_toServer_before_giveup) {
                     printAsyncNoLine("Aborting reconnection, too many failed attempts!");
                     try {
                         System.in.read();
@@ -143,7 +145,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     }
 
     @Override
-    public void joinFirstAvailableGame(String nick) throws IOException {
+    public void joinRandomly(String nick) throws IOException, InterruptedException, NotBoundException {
         nickname = nick;
         sendMessage(new SocketClientMessageJoinFirstAvailableGame(nick));
         startHeartbeat();
@@ -187,7 +189,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     }
 
     @Override
-    public void heartbeat() {
+    public void ping() throws IOException, NotBoundException {
         //        if (ob_out != null) {
 //            try {
 //                ob_out.writeObject(new SocketClientMessageHeartBeat(nickname));
@@ -196,6 +198,7 @@ public class ClientSocket extends Thread implements ClientInterface {
 //                printAsync("Connection lost to the server!! Impossible to send heartbeat...");
 //            }
 //        }
+
     }
 
     private void startHeartbeat() {

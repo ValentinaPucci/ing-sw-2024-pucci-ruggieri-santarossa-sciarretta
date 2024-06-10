@@ -1,12 +1,13 @@
-package it.polimi.demo.networking.socket.client.mainControllerMessages;
+package it.polimi.demo.network.socket.client.mainControllerMessages;
 
 import it.polimi.demo.observer.Listener;
-import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
-import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
+import it.polimi.demo.network.interfaces.GameControllerInterface;
+import it.polimi.demo.network.interfaces.MainControllerInterface;
+import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
 
 import java.io.Serial;
 import java.rmi.RemoteException;
+//TODO: Check if it works
 
 public class SocketClientMsgLeaveGame extends SocketClientGenericMessage {
 
@@ -22,7 +23,8 @@ public class SocketClientMsgLeaveGame extends SocketClientGenericMessage {
 
     @Override
     public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return mainController.leaveGame(lis, this.getUserNickname(), game_id);
+        mainController.leaveGame(lis, getUserNickname(), game_id);
+        return mainController.getGameController(game_id);
     }
 
     /**

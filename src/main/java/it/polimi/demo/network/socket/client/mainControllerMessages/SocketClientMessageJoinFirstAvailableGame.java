@@ -1,9 +1,9 @@
-package it.polimi.demo.networking.socket.client.mainControllerMessages;
+package it.polimi.demo.network.socket.client.mainControllerMessages;
 
 import it.polimi.demo.observer.Listener;
-import it.polimi.demo.networking.remoteInterfaces.GameControllerInterface;
-import it.polimi.demo.networking.remoteInterfaces.MainControllerInterface;
-import it.polimi.demo.networking.socket.client.SocketClientGenericMessage;
+import it.polimi.demo.network.interfaces.GameControllerInterface;
+import it.polimi.demo.network.interfaces.MainControllerInterface;
+import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -23,7 +23,7 @@ public class SocketClientMessageJoinFirstAvailableGame extends SocketClientGener
 
     @Override
     public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return mainController.joinFirstAvailableGame(lis, this.getUserNickname());
+        return mainController.joinRandomly(lis, this.getUserNickname());
     }
 
     /**
