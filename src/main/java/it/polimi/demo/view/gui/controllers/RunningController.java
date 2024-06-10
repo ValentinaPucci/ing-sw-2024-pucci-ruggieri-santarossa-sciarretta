@@ -53,6 +53,9 @@ public class RunningController extends GenericController {
     @FXML public Pane commonCard7;
     @FXML public Pane commonCard8;
     @FXML public Pane commonCard9;
+    @FXML public AnchorPane personalBoardPlayer1;
+    @FXML public AnchorPane personalBoardPlayer2;
+    @FXML public AnchorPane personalBoardPlayer3;
 
     @FXML private AnchorPane mainAnchor;
     @FXML public ImageView personalObjective0;
@@ -240,6 +243,10 @@ public class RunningController extends GenericController {
 
         personalBoardAnchorPane.setOnMouseClicked(this::handleMouseClick);
 
+        personalBoardAnchorPane.setVisible(true);
+        personalBoardPlayer1.setVisible(false);
+        personalBoardPlayer2.setVisible(false);
+        personalBoardPlayer3.setVisible(false);
 
     }
 
@@ -326,9 +333,31 @@ public class RunningController extends GenericController {
         }
     }
 
-    private void showOthersPersonalBoard(Player player) {
-        // TODO: Logica per mostrare la board personale degli altri giocatori
-        System.out.println("Mostra board per " + player.getNickname());
+    public void showOthersPersonalBoard(Player player) {
+        // Hide all boards first
+        personalBoardPlayer1.setVisible(false);
+        personalBoardPlayer2.setVisible(false);
+        personalBoardPlayer3.setVisible(false);
+        personalBoardAnchorPane.setVisible(false);
+
+        // Show the correct board based on the player's index or name
+        switch (player.getNickname()) {
+            case "Player1":
+                personalBoardAnchorPane.setVisible(false);
+                personalBoardPlayer1.setVisible(true);
+                break;
+            case "Player2":
+                personalBoardAnchorPane.setVisible(false);
+                personalBoardPlayer2.setVisible(true);
+                break;
+            case "Player3":
+                personalBoardAnchorPane.setVisible(false);
+                personalBoardPlayer3.setVisible(true);
+                break;
+            default:
+                break;
+        }
+
     }
 
     // Method to set an image to one of the common card ImageViews
@@ -854,6 +883,8 @@ public class RunningController extends GenericController {
         setMsgToShow("Posizione valida!", true);
     }
 
+
+
     //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
 
 
@@ -897,6 +928,14 @@ public class RunningController extends GenericController {
         } else {
             labelMessage.setTextFill(Color.RED);
         }
+    }
+
+    @FXML
+    private void hideAllPersonalBoards() {
+        personalBoardPlayer1.setVisible(false);
+        personalBoardPlayer2.setVisible(false);
+        personalBoardPlayer3.setVisible(false);
+        personalBoardAnchorPane.setVisible(true);
     }
 }
 
