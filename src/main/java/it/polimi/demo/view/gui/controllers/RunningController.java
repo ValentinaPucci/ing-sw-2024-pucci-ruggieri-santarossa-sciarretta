@@ -1,6 +1,8 @@
 package it.polimi.demo.view.gui.controllers;
 
+import it.polimi.demo.model.Model;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.view.dynamic.utilities.GuiReader;
@@ -874,21 +876,15 @@ public class RunningController extends GenericController {
             } else {
                 chatArea.appendText("Me (to " + recipient + "): " + message + "\n");
                 getInputReaderGUI().addTxt("/cs " + recipientComboBox.getValue().toString() + " " + chatInput.getText());
-                for (Player player : players_list) {
-                    if (player.getNickname().equals(recipient)) {
-                        sendPrivateMessage(player, message);
-                        break;
-                    }
-                }
             }
             chatInput.clear();
         }
     }
 
-    private void sendPrivateMessage(Player player, String message) {
-        // Logica per inviare un messaggio privato al giocatore
-        // Questo potrebbe includere aggiornare la GUI del giocatore o inviare il messaggio attraverso la rete
-        System.out.println("Messaggio privato a " + player.getNickname() + ": " + message);
+
+    public void updateChat(ModelView model, String sender) {
+        Message message = model.getChat().getLastMessage();
+        chatArea.appendText(sender + ": " + message.getText() + "\n");
     }
 
 

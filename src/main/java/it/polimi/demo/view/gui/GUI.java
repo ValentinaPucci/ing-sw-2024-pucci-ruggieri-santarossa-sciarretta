@@ -207,7 +207,6 @@ public class GUI extends UI {
 
     }
 
-    //TODO: reimplement vale
     @Override
     protected void show_successfulMove() {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove());
@@ -223,10 +222,7 @@ public class GUI extends UI {
 
     }
 
-    @Override
-    protected void show_messageSent(ModelView model, String nickname) {
 
-    }
 
     @Override
     public void show_whichObjectiveToChooseMsg() {
@@ -301,6 +297,10 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.showError("Connection to server lost!"));
     }
 
-
+    //-----------------------chat-----------------------
+    @Override
+    protected void show_messageSent(ModelView gameModel, String nickname) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).updateChat(gameModel, nickname));
+    }
 
 }
