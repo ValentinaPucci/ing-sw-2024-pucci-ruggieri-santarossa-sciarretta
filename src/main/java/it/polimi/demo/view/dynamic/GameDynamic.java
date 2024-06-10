@@ -670,7 +670,7 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
     @Override
     public void cardDrawn(ModelView model, int index) {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
-
+            ui.show_cardDrawn(model, nickname);
         }
     }
 

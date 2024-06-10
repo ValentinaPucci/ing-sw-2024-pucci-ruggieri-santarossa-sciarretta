@@ -414,6 +414,11 @@ public class TUI extends UI {
 
     }
 
+    @Override
+    protected void show_cardDrawn(ModelView model, String nickname) {
+
+    }
+
     /**
      * Asks the player to pick a direction
      */

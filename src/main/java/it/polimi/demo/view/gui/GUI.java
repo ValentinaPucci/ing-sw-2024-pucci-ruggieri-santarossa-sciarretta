@@ -101,11 +101,7 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.changeTurn(model, nickname));
     }
 
-    //TODO x vale: reimplement
-//    @Override
-//    protected void show_updateCommonCards() {
-//
-//    }
+
 
 
     /**
@@ -182,6 +178,13 @@ public class GUI extends UI {
     protected void show_playerHand(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
+    }
+
+
+    @Override
+    protected void show_cardDrawn(ModelView gameModel, String nickname) {
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
     }
 
     @Override
