@@ -199,4 +199,6 @@ public abstract class UI {
     protected abstract void show_nextTurn(ModelView model, String nickname);
 
     protected abstract void show_cardDrawn(ModelView model,String nickname);
+
+    protected abstract void show_othersPersonalBoard(ModelView modelView, int playerIndex);
 }

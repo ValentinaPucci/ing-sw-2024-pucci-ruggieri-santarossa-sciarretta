@@ -2,6 +2,7 @@ package it.polimi.demo.view.gui.controllers;
 
 import it.polimi.demo.model.Model;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
@@ -23,13 +24,9 @@ import java.util.Objects;
 
 public class RunningController extends GenericController {
     @FXML public Label myPoints;
-    @FXML public Text p2Points;
-    @FXML public Text p1Points;
-    @FXML public Text p3Points;
     @FXML public Label playerLabel1;
     @FXML public Label playerLabel2;
     @FXML public Label playerLabel3;
-    public ArrayList<Text> othersPoints = new ArrayList<>();
     public ArrayList<Label> othersNicknames = new ArrayList<>();
     @FXML public GridPane otherPlayers;
     @FXML public ImageView StarterCardImage;
@@ -56,12 +53,12 @@ public class RunningController extends GenericController {
     @FXML public AnchorPane personalBoardPlayer1;
     @FXML public AnchorPane personalBoardPlayer2;
     @FXML public AnchorPane personalBoardPlayer3;
+    @FXML public AnchorPane personalBoardPlayer4;
 
     @FXML private AnchorPane mainAnchor;
     @FXML public ImageView personalObjective0;
     @FXML public ImageView personalObjective1;
-    //@FXML public GridPane commonCardsPane;
-    //@FXML public GridPane cardHandPane;
+
     @FXML private Pane scoreBoardPane;
     private Orientation cardHandOrientation;
     private Orientation starterCardOrientation;
@@ -108,21 +105,15 @@ public class RunningController extends GenericController {
     private ComboBox<String> recipientComboBox;
     private int starterCard = 0;
     private ArrayList<Player> players_list;
-
     private List<Pane> cardPanes;
     private List<Button> buttons;
     private Mapper mapper = new Mapper();
-
     private int chosenCard = 0;
-
     double chosenX = 0;
     double chosenY = 0;
-
     int cardIndex = 0;
     int commonIndex = 0;
-
     ArrayList<Integer> personalObjectiveIds = new ArrayList<>();
-
     public void initialize() {
 
         personalObjectivesBox = new HBox();
@@ -229,10 +220,6 @@ public class RunningController extends GenericController {
         cardHand.add(0);
         cardHand.add(0);
 
-        othersPoints.add(p1Points);
-        othersPoints.add(p2Points);
-        othersPoints.add(p3Points);
-
         othersNicknames.add(playerLabel1);
         othersNicknames.add(playerLabel2);
         othersNicknames.add(playerLabel3);
@@ -247,6 +234,7 @@ public class RunningController extends GenericController {
         personalBoardPlayer1.setVisible(false);
         personalBoardPlayer2.setVisible(false);
         personalBoardPlayer3.setVisible(false);
+        personalBoardPlayer4.setVisible(false);
 
     }
 
@@ -305,25 +293,16 @@ public class RunningController extends GenericController {
                 GridPane.setColumnIndex(playerLabel, 0);
                 otherPlayers.getChildren().add(playerLabel);
 
-                // Create and offer points label
-                Text pointsText = new Text(String.valueOf(player.getScoreBoardPosition()));
-                pointsText.setFill(Color.web("#4d0202"));
-                pointsText.setTextAlignment(javafx.scene.text.TextAlignment.CENTER);
-                pointsText.setFont(javafx.scene.text.Font.font("Luminari", 19));
-                GridPane.setRowIndex(pointsText, j + 1);
-                GridPane.setColumnIndex(pointsText, 1);
-                otherPlayers.getChildren().add(pointsText);
-
                 // Create and offer button
                 Button goButton = new Button("GO");
                 goButton.setPrefHeight(26.0);
                 goButton.setPrefWidth(188.0);
                 goButton.setEffect(new javafx.scene.effect.ColorAdjust(0.17, 0.3, 0.0, 0.0));
                 goButton.setOnAction((ActionEvent event) -> {
-                    showOthersPersonalBoard(player);
+                    showOthersPersonalBoard(getPlayerIndex(players_list, player.getNickname()));
                 });
                 GridPane.setRowIndex(goButton, j + 1);
-                GridPane.setColumnIndex(goButton, 2);
+                GridPane.setColumnIndex(goButton, 1);
                 otherPlayers.getChildren().add(goButton);
 
                 // Add row constraints
@@ -333,29 +312,68 @@ public class RunningController extends GenericController {
         }
     }
 
-    public void showOthersPersonalBoard(Player player) {
+    public int getPlayerIndex(ArrayList<Player> players_list, String nickname) {
+        for (int i = 0; i < players_list.size(); i++) {
+            if (players_list.get(i).getNickname().equals(nickname)) {
+                return i;
+            }
+        }
+        return -1; // Restituisce -1 se il player non è trovato
+    }
+
+    public void setOthersPersonalBoard(PersonalBoard personalBoard, int player_index) {
         // Hide all boards first
         personalBoardPlayer1.setVisible(false);
         personalBoardPlayer2.setVisible(false);
         personalBoardPlayer3.setVisible(false);
+        personalBoardPlayer4.setVisible(false);
         personalBoardAnchorPane.setVisible(false);
 
-        // Show the correct board based on the player's index or name
-        switch (player.getNickname()) {
-            case "Player1":
+        // Show the correct board based on the player's index
+        switch (player_index) {
+            case 0:
                 personalBoardAnchorPane.setVisible(false);
                 personalBoardPlayer1.setVisible(true);
                 break;
-            case "Player2":
+            case 1:
                 personalBoardAnchorPane.setVisible(false);
                 personalBoardPlayer2.setVisible(true);
                 break;
-            case "Player3":
+            case 2:
                 personalBoardAnchorPane.setVisible(false);
                 personalBoardPlayer3.setVisible(true);
                 break;
+            case 3:
+                personalBoardAnchorPane.setVisible(false);
+                personalBoardPlayer4.setVisible(true);
+                break;
             default:
                 break;
+        }
+    }
+
+    public void showOthersPersonalBoard(int index) {
+        GuiReader reader = getInputReaderGUI();
+        if (reader != null) {
+            // Show the correct board based on the player's index or name
+            switch (index) {
+                case 0:
+                    reader.addTxt("/pb0");
+                    break;
+                case 1:
+                    reader.addTxt("/pb1");
+                    break;
+                case 2:
+                    reader.addTxt("/pb2");
+                    break;
+                case 3:
+                    reader.addTxt("/pb3");
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
         }
 
     }
@@ -935,8 +953,11 @@ public class RunningController extends GenericController {
         personalBoardPlayer1.setVisible(false);
         personalBoardPlayer2.setVisible(false);
         personalBoardPlayer3.setVisible(false);
+        personalBoardPlayer3.setVisible(false);
         personalBoardAnchorPane.setVisible(true);
     }
+
+
 }
 
 

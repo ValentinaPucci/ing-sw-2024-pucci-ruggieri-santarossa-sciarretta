@@ -232,6 +232,11 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
         primary_controller.sendMessage(lis, nick, message, idGame);
     }
 
+    @Override
+    public void showOthersPersonalBoard(Listener lis, String nickname, int playerIndex, int idGame) throws RemoteException {
+        primary_controller.showOthersPersonalBoard(lis, nickname, playerIndex, idGame);
+    }
+
     /**
      * Adds a ping to the game.
      *

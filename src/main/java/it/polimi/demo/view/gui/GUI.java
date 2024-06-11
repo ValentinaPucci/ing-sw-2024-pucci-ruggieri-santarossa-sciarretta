@@ -188,6 +188,12 @@ public class GUI extends UI {
     }
 
     @Override
+    protected void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setOthersPersonalBoard(modelView.getAllPlayers().get(playerIndex).getPersonalBoard(), playerIndex));
+
+    }
+
+    @Override
     protected void show_personalObjectiveCard(ModelView gameModel) {
 
     }

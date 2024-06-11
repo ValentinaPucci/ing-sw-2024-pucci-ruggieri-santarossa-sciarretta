@@ -1,5 +1,6 @@
 package it.polimi.demo.observer;
 
+import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.Model;
 import it.polimi.demo.model.enumerations.Orientation;
@@ -152,6 +153,22 @@ public class ObserverManager implements Serializable {
         listeners.forEach(listener -> {
             try {
                 listener.cardPlaced(new ModelView(model), where_to_place_x, where_to_place_y, o);
+            } catch (RemoteException e) {
+                StaticPrinter.staticPrinter("Disconnection detected - notify_cardPlaced");
+                toRemove.add(listener);
+            }
+        });
+
+        listeners.removeAll(toRemove);
+    }
+
+
+    public void notify_showOthersPersonalBoard(Model model, int player_index, String playerNickname) {
+        List<Listener> toRemove = new ArrayList<>();
+
+        listeners.forEach(listener -> {
+            try {
+                listener.showOthersPersonalBoard(new ModelView(model), playerNickname, player_index);
             } catch (RemoteException e) {
                 StaticPrinter.staticPrinter("Disconnection detected - notify_cardPlaced");
                 toRemove.add(listener);
@@ -316,4 +333,5 @@ public class ObserverManager implements Serializable {
 
         listeners.removeAll(toRemove);
     }
+
 }

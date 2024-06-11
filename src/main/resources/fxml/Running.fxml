@@ -54,15 +54,9 @@
                   </effect>
                </Button>
    
-           <Button fx:id="hideAllButton" layoutX="965.0" layoutY="743.0" onAction="#hideAllPersonalBoards" prefHeight="30.0" prefWidth="68.0" text="HIDE ALL">
-              <font>
-                  <Font name="Luminari" size="10.0" />
-              </font>
-              <effect>
-                  <ColorAdjust hue="0.17" saturation="0.3" />
-              </effect>
-          </Button>
-         </Pane>
+
+
+        <!-- Score Board -->
          <Pane fx:id="scoreBoardPane" layoutX="24.0" layoutY="22.0" prefHeight="452.0" prefWidth="222.0">
                <children>
                   <ImageView fx:id="scoreBoardImage" fitHeight="460.0" fitWidth="242.0" layoutX="-2.0" layoutY="-1.0" pickOnBounds="true" preserveRatio="true">
@@ -109,7 +103,7 @@
                </font>
             </Label>
 
-
+    <!-- Common Cards -->
         <VBox fx:id="commonCardsVbox" layoutX="305.0" layoutY="59.0" prefHeight="210.0" prefWidth="300.0" spacing="10.0">
             <children>
                 <HBox>
@@ -166,7 +160,7 @@
             </children>
         </VBox>
 
-
+            <!-- Personal Objectives -->
             <Label layoutX="365.0" layoutY="286.0" text="Your objective:" textFill="#4d0202">
                <font>
                   <Font name="Luminari" size="25.0" />
@@ -187,7 +181,7 @@
                 </children>
             </HBox>
 
-
+            <!-- Card Hand -->
             <Label layoutX="60.0" layoutY="515.0" prefHeight="41.0" prefWidth="225.0" text="Your card hand:" textFill="#4d0202">
                <font>
                   <Font name="Luminari" size="25.0" />
@@ -306,6 +300,16 @@
             <children>
                 <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
                     <content>
+                        <AnchorPane fx:id="personalBoardPlayer4" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
+                    </content>
+                </ScrollPane>
+            </children>
+        </Pane>
+
+        <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
+            <children>
+                <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
+                    <content>
                         <AnchorPane fx:id="personalBoardAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
                     </content>
                 </ScrollPane>
@@ -334,6 +338,17 @@
                 </Text>
             </children>
         </GridPane>
+
+
+          <Button fx:id="hideAllButton" layoutX="965.0" layoutY="743.0" onAction="#hideAllPersonalBoards" prefHeight="30.0" prefWidth="68.0" text="HIDE ALL">
+              <font>
+                  <Font name="Luminari" size="10.0" />
+              </font>
+              <effect>
+                  <ColorAdjust hue="0.17" saturation="0.3" />
+              </effect>
+          </Button>
+      </Pane>
 
  </children>
 </AnchorPane>

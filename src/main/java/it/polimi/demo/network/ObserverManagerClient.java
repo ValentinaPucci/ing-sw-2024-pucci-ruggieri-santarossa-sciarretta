@@ -111,6 +111,11 @@ public class ObserverManagerClient implements Listener, Serializable {
     }
 
     @Override
+    public void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException {
+        dynamic.showOthersPersonalBoard(modelView, playerNickname, playerIndex);
+    }
+
+    @Override
     public void secondLastRound(ModelView gamemodel) throws RemoteException {
         dynamic.secondLastRound(gamemodel);
     }

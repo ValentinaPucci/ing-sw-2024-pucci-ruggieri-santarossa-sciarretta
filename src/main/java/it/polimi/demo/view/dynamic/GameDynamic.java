@@ -16,7 +16,6 @@ import it.polimi.demo.network.socket.client.ClientSocket;
 import it.polimi.demo.view.text.TUI;
 
 import java.io.IOException;
-import java.io.Serial;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
@@ -604,6 +603,15 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
     }
 
     @Override
+    public void showOthersPersonalBoard(int player_index) {
+        try {
+            client_interface.showOthersPersonalBoard(player_index);
+        } catch (IOException | NotBoundException e) {
+            noConnectionError();
+        }
+    }
+
+    @Override
     public void leave(String nick, int idGame) {
         try {
             client_interface.leave(nick, idGame);
@@ -755,6 +763,20 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
         if (gameModel.getStatus().equals(GameStatus.WAIT)) {
             ui.show_playerJoined(gameModel, nickname);
+        }
+    }
+
+    @Override
+    public void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException {
+        //se sono chi ha chiesto di vedere le personal board
+        if(modelView.getAllPlayers().size() > playerIndex) {
+            if (this.nickname.equals(playerNickname)) {
+                ui.show_othersPersonalBoard(modelView, playerIndex);
+            }
+        }else{
+            if (this.nickname.equals(playerNickname)) {
+                ui.show_genericMessage("Player index out of bounds");
+            }
         }
     }
 

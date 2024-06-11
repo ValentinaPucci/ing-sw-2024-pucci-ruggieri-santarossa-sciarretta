@@ -729,6 +729,13 @@ public class Model implements Serializable {
         }
     }
 
+    public void showOthersPersonalBoard(String playerNickname, int playerIndex) {
+        if(this.getAllPlayers().size() <= playerIndex)
+            observers.notify_illegalMoveBecauseOf(this, "Player index out of bounds");
+        else
+            observers.notify_showOthersPersonalBoard(this, playerIndex, playerNickname);
+    }
+
 
     public Map<Player, Integer> getLeaderboard() {
         return leaderboard;
@@ -793,5 +800,7 @@ public class Model implements Serializable {
     public List<ObjectiveCard> getPersonalObjectiveCardsToChoose(String nickname) {
         return getIdentityOfPlayer(nickname).getSecretObjectiveCards();
     }
+
+
 }
 

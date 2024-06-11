@@ -56,4 +56,6 @@ public interface Listener extends Remote {
     void nextTurn(ModelView gamemodel) throws RemoteException;
 
     void playerDisconnected(ModelView gameModel, String nick) throws RemoteException;
+
+    void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException;
 }

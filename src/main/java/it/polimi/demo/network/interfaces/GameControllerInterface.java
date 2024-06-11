@@ -32,6 +32,7 @@ public interface GameControllerInterface extends Remote {
     Player getCurrentPlayer() throws RemoteException;
 
     void sendMessage(String nick, Message mess) throws RemoteException;
+    void showOthersPersonalBoard(String player_nickname, int playerIndex) throws RemoteException;
 
     int getNumConnectedPlayers() throws RemoteException;
 

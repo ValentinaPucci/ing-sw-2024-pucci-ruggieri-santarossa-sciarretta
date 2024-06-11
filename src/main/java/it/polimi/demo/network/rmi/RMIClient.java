@@ -186,6 +186,8 @@ public class RMIClient implements ClientInterface {
         });
     }
 
+
+
     /**
      * Sets the player as ready for the game.
      *
@@ -293,6 +295,17 @@ public class RMIClient implements ClientInterface {
         withRegistry(reg -> {
             try {
                 asks.sendMessage(lis, nick, msg, game_id);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        });
+    }
+
+    @Override
+    public void showOthersPersonalBoard(int player_index) throws NotBoundException, RemoteException {
+        withRegistry(reg -> {
+            try {
+                asks.showOthersPersonalBoard(lis, nickname, player_index, game_id);
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
