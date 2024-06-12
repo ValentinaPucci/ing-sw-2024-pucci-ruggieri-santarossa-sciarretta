@@ -1,6 +1,6 @@
 package it.polimi.demo.view.gui;
 
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
 import it.polimi.demo.view.gui.controllers.GenericController;
 import it.polimi.demo.view.gui.scene.SceneType;
 import javafx.scene.Scene;

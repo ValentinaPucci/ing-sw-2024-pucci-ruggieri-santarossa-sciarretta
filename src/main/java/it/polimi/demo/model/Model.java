@@ -431,7 +431,7 @@ public class Model implements Serializable {
                     observers.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
-                            getWinners();
+                            declareWinners();
                             setStatus(GameStatus.ENDED);
                         }
                         else
@@ -454,7 +454,7 @@ public class Model implements Serializable {
                     observers.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
-                            getWinners();
+                            declareWinners();
                             setStatus(GameStatus.ENDED);
                         }
                         else
@@ -498,7 +498,7 @@ public class Model implements Serializable {
                     observers.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
-                            getWinners();
+                            declareWinners();
                             setStatus(GameStatus.ENDED);
                         }
                         else
@@ -521,7 +521,7 @@ public class Model implements Serializable {
                     observers.notify_cardPlaced(this, x, y, card_chosen.orientation);
                     if (getStatus() == GameStatus.LAST_ROUND) {
                         if (aux_order_players.getLast().equals(p)) {
-                            getWinners();
+                            declareWinners();
                             setStatus(GameStatus.ENDED);
                         }
                         else
@@ -699,7 +699,11 @@ public class Model implements Serializable {
         }
 
         if (aux_final_scores_tie.size() == 1) {
-            winners.addAll(orderedPlayers);
+            leaderboard.clear(); // Clear the leaderboard before adding new entries
+            for (Player player : orderedPlayers) {
+                leaderboard.put(player, player.getFinalScore());
+            }
+            return;
         }
         else {
             // aux_final_scores_tie.size() >= 2
@@ -739,16 +743,6 @@ public class Model implements Serializable {
 
     public Map<Player, Integer> getLeaderboard() {
         return leaderboard;
-    }
-
-    /**
-     * Retrieves the winner(s) of the game.
-     *
-     * @return A list of Player objects representing the winner(s).
-     */
-    public List<Player> getWinners() {
-        declareWinners();
-        return winners;
     }
 
     /**

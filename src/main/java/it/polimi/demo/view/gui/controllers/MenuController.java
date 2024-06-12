@@ -1,6 +1,6 @@
 package it.polimi.demo.view.gui.controllers;
 
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -11,7 +11,7 @@ public class MenuController extends GenericController{
         System.out.println("CreateGame: "+ event);
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("c");
+            reader.getBuffer().add("c");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
             System.out.println("L'oggetto inputReaderGUI è null.");
@@ -22,7 +22,7 @@ public class MenuController extends GenericController{
     public void JoinGame(ActionEvent event) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("js");
+            reader.getBuffer().add("js");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
             System.out.println("L'oggetto inputReaderGUI è null.");
@@ -33,7 +33,7 @@ public class MenuController extends GenericController{
     public void RandomGame(ActionEvent event) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("j");
+            reader.getBuffer().add("j");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
             System.out.println("L'oggetto inputReaderGUI è null.");
@@ -44,7 +44,7 @@ public class MenuController extends GenericController{
     public void Reconnect(ActionEvent event) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("x");
+            reader.getBuffer().add("x");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
             System.out.println("L'oggetto inputReaderGUI è null.");

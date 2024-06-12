@@ -12,7 +12,7 @@ import it.polimi.demo.network.socket.client.mainControllerMessages.*;
 import it.polimi.demo.network.socket.client.serverToClientMessages.SocketServerGenericMessage;
 import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMessageJoinFirstAvailableGame;
 import it.polimi.demo.view.dynamic.ClientInterface;
-import it.polimi.demo.view.dynamic.Dynamic;
+import it.polimi.demo.view.dynamic.GameDynamic;
 
 import java.net.Socket;
 import java.io.*;
@@ -29,9 +29,9 @@ public class ClientSocket extends Thread implements ClientInterface {
     private String nickname;
     private final ObserverManagerClient modelEvents;
     private final transient PingSender socketHeartbeat;
-    private Dynamic dynamics;
+    private GameDynamic dynamics;
 
-    public ClientSocket(Dynamic dynamics) {
+    public ClientSocket(GameDynamic dynamics) {
         this.dynamics = dynamics;
         modelEvents = new ObserverManagerClient(dynamics);
         initiateConnection(Constants.serverIp, Constants.Socket_port);

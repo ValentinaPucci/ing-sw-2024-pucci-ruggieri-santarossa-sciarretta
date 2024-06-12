@@ -1,6 +1,6 @@
 package it.polimi.demo.view.gui.controllers;
 
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -20,7 +20,7 @@ public class numPlayersController extends GenericController {
     public void twoPLayers(ActionEvent actionEvent) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("2");
+            reader.getBuffer().add("2");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -30,7 +30,7 @@ public class numPlayersController extends GenericController {
     public void threePLayers(ActionEvent actionEvent) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("3");
+            reader.getBuffer().add("3");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -39,7 +39,7 @@ public class numPlayersController extends GenericController {
     public void fourPLayers(ActionEvent actionEvent) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("4");
+            reader.getBuffer().add("4");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }

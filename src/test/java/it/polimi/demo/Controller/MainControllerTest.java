@@ -22,75 +22,20 @@
 //import static org.junit.jupiter.api.Assertions.*;
 //
 ///**
-// * Now we need to use p.setchosenCard(chosen_card) before every place card.
+// * Now we need to use p.setChosenCard(chosen_card) before every place card.
 // */
 //
 //public class MainControllerTest {
 //
 //    @Test
 //    public void createGameTest() throws RemoteException, GameEndedException {
-//        MainController mainController = new MainController();
-//        Listener lis = new Listener() {
-//            @Override
-//            public void modelChanged() throws RemoteException {
+//        MainController mainController = MainController.getControllerInstance();
 //
-//            }
-//
-//            @Override
-//            public void nextTurn() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void printModel() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void gameEnded() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void genericGameStatus() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void gameStarted() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void playerJoinedGame() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void gameUnavailable() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void newGame() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void removedGame() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void updatedGame() throws RemoteException {
-//
-//            }
-//        };
 //        Player p = new Player("Player1");
 //        Player p2 = new Player("Player2");
 //        Player p3 = new Player("Player3");
 //
-//        mainController.createGame(lis, "Player1", 2, 1);
+//        mainController.createGame(, "Player1", 2, 1);
 //        mainController.getGames().get(1).addPlayer(p2.getNickname());
 //        mainController.getGames().get(1).setPlayerAsConnected(p2);
 ////        mainController.getGames().get(1).addPlayer(p3.getNickname());
@@ -251,52 +196,6 @@
 //    @Test
 //    public void joinFirstAvaibleGameTest() throws RemoteException {
 //        MainController mainController = new MainController();
-//        Listener lis = new Listener() {
-//            @Override
-//            public void modelChanged() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void gameEnded() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void genericGameStatus() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void gameStarted() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void playerJoinedGame() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void gameUnavailable() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void newGame() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void removedGame() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void updatedGame() throws RemoteException {
-//
-//            }
-//        };
 //        Player p = new Player("Player1");
 //        Player p2 = new Player("Player2");
 //        Player p3 = new Player("Player3");
@@ -311,52 +210,6 @@
 //    @Test
 //    public void joinGameTest() throws RemoteException{
 //        MainController mainController = new MainController();
-//        Listener lis = new Listener() {
-//            @Override
-//            public void modelChanged() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void gameEnded() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void genericGameStatus() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void gameStarted() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void playerJoinedGame() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void gameUnavailable() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void newGame() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void removedGame() throws RemoteException {
-//
-//            }
-//
-//            @Override
-//            public void updatedGame() throws RemoteException {
-//
-//            }
-//        };
 //        Player p = new Player("Player1");
 //        Player p2 = new Player("Player2");
 //        Player p3 = new Player("Player3");

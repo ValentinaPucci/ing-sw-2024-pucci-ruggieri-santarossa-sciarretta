@@ -58,7 +58,7 @@ public class GameOverController extends GenericController{
 
     @FXML
     void goToMenu(ActionEvent event) {
-        getInputReaderGUI().addTxt("a");
+        getInputReaderGUI().getBuffer().add("a");
     }
 
 }

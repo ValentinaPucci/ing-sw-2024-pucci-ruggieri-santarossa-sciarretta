@@ -3,7 +3,7 @@ package it.polimi.demo.view.gui;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.view.dynamic.UI;
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
 import it.polimi.demo.view.gui.controllers.LobbyController;
 import it.polimi.demo.view.gui.controllers.RunningController;
 import it.polimi.demo.view.gui.scene.SceneType;
@@ -243,12 +243,12 @@ public class GUI extends UI {
 
 
     @Override
-    protected void show_NaNMsg() {
+    protected void show_invalidInput() {
 
     }
 
     @Override
-    protected void show_returnToMenuMsg() {
+    protected void show_menu() {
 
     }
 
