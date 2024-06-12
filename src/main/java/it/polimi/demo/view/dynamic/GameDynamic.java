@@ -660,9 +660,9 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
     }
 
     @Override
-    public void successfulMove(ModelView model) throws RemoteException {
+    public void successfulMove(ModelView model, Coordinate coord) throws RemoteException {
         if (model.getCurrentPlayerNickname().equals(nickname)) {
-            ui.show_successfulMove();
+            ui.show_successfulMove(coord);
         }
     }
 

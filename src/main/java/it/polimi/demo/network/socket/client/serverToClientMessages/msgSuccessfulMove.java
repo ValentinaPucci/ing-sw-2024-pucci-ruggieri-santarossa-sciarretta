@@ -1,5 +1,6 @@
 package it.polimi.demo.network.socket.client.serverToClientMessages;
 
+import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.ModelView;
 
@@ -10,17 +11,19 @@ public class msgSuccessfulMove extends SocketServerGenericMessage{
     @Serial
     private static final long serialVersionUID = -7118073750567528012L;
     private ModelView gamemodel;
+    private Coordinate coord;
 
-    public msgSuccessfulMove(ModelView gamemodel) {
+    public msgSuccessfulMove(ModelView gamemodel, Coordinate coord) {
 
         super("Successful Move");
         this.gamemodel = gamemodel;
+        this.coord = coord;
     }
 
 
     //todo vale reimplement
     @Override
     public void perform(Listener lis) throws RemoteException {
-//        lis.successfulMove(gamemodel);
+       lis.successfulMove(gamemodel, coord);
     }
 }

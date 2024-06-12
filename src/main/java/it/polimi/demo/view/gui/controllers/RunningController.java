@@ -4,6 +4,7 @@ import it.polimi.demo.model.Model;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.chat.Message;
+import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.view.dynamic.utilities.GuiReader;
@@ -108,6 +109,8 @@ public class RunningController extends GenericController {
     private List<Pane> cardPanes;
     private List<Button> buttons;
     private Mapper mapper = new Mapper();
+
+    private InverseMapper inverseMapper = new InverseMapper();
     private int chosenCard = 0;
     double chosenX = 0;
     double chosenY = 0;
@@ -434,7 +437,7 @@ public class RunningController extends GenericController {
 
     public void setStarterCardFront(ModelView model, String nickname) {
         this.starterCard = model.getPlayerEntity(nickname).getStarterCardToChose().getFirst().getId();
-        String imagePath = "/images/cards/cards_front/" + String.format("%03d", starterCard) + ".png";
+        String imagePath = "/images/cards/cards_back/" + String.format("%03d", starterCard) + ".png";
         ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
         imageView.setFitWidth(90); // Imposta la larghezza desiderata
         imageView.setFitHeight(65); // Imposta l'altezza desiderata
@@ -443,7 +446,7 @@ public class RunningController extends GenericController {
     }
 
     public void setStarterCardFront() {
-        String imagePath = "/images/cards/cards_front/"+ String.format("%03d", starterCard) + ".png"; // Aggiungi l'id della carta al percorso
+        String imagePath = "/images/cards/cards_back/"+ String.format("%03d", starterCard) + ".png"; // Aggiungi l'id della carta al percorso
         ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
         imageView.setFitWidth(90); // Imposta la larghezza desiderata
         imageView.setFitHeight(65);; // Imposta l'altezza desiderata
@@ -452,7 +455,7 @@ public class RunningController extends GenericController {
     }
 
     public void setStarterCardBack() {
-        String imagePath = "/images/cards/cards_back/" + String.format("%03d", starterCard) + ".png";
+        String imagePath = "/images/cards/cards_front/" + String.format("%03d", starterCard) + ".png";
         ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
         imageView.setFitWidth(90); // Imposta la larghezza desiderata
         imageView.setFitHeight(65); // Imposta l'altezza desiderata
@@ -709,9 +712,9 @@ public class RunningController extends GenericController {
         // Posiziona la carta iniziale al centro
         String formattedCardId = String.format("%03d", starterCard);
         if(starterCardOrientation == Orientation.FRONT){
-            imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
-        }else if(starterCardOrientation == Orientation.BACK){
             imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
+        }else if(starterCardOrientation == Orientation.BACK){
+            imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
         } else {
             System.out.println("Orientation non valida.");
             return;
@@ -787,7 +790,7 @@ public class RunningController extends GenericController {
     }
 
 
-    private void reallyPlaceCard(double clickX, double clickY) {
+    private void reallyPlaceCard(double clickX, double clickY, Coordinate coord) {
         String imagePath;
         String formattedCardId = String.format("%03d", chosenCard);
         if(cardHandOrientation == Orientation.FRONT){
@@ -801,8 +804,32 @@ public class RunningController extends GenericController {
         ImageView CardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
         CardPic.setFitWidth(90); // Imposta la larghezza desiderata
         CardPic.setFitHeight(65); // Imposta l'altezza desiderata
-        CardPic.setLayoutX(clickX);
-        CardPic.setLayoutY(clickY);
+
+        int[] result = mapper.getMappedPosition(clickX, clickY);
+
+        switch (coord) {
+            case NE -> result[0] = result[0] - 1;
+            case NW -> {
+                result[0] = result[0] - 1;
+                result[1] = result[1] - 1;
+            }
+            case SW -> result[1] = result[1] - 1;
+            case SE -> {
+                // it's correct
+            }
+        }
+        System.out.println("coordinate selezionate result: (" + result[0] + ", " + result[1] + ")");
+
+        String resultString = String.format("%d,%d", result[0], result[1]);
+        System.out.println(resultString);
+
+        int[] position = inverseMapper.getInverseMappedPosition(resultString);
+        System.out.println("coordinate selezionate position: (" + position[0] + ", " + position[1] + ")");
+
+
+        CardPic.setLayoutX((double)position[0]);
+        CardPic.setLayoutY((double)position[1]);
+
         personalBoardAnchorPane.getChildren().add(CardPic);
         setMsgToShow("Card placed", true);
         removeFromHand(cardIndex);
@@ -896,8 +923,8 @@ public class RunningController extends GenericController {
     }
 
 
-    public void successfulMove() {
-        reallyPlaceCard(mapper.getMinCorner(chosenX,chosenY)[0], (mapper.getMinCorner(chosenX,chosenY)[1]));
+    public void successfulMove(Coordinate coord) {
+        reallyPlaceCard(mapper.getMinCorner(chosenX,chosenY)[0], (mapper.getMinCorner(chosenX,chosenY)[1]), coord);
         setMsgToShow("Posizione valida!", true);
     }
 

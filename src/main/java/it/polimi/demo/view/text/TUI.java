@@ -4,6 +4,7 @@ import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
+import it.polimi.demo.model.enumerations.Coordinate;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import it.polimi.demo.Constants;
@@ -218,7 +219,7 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void show_successfulMove() {
+    protected void show_successfulMove(Coordinate coord) {
 
     }
 
