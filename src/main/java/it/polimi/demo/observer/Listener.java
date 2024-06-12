@@ -2,6 +2,7 @@ package it.polimi.demo.observer;
 
 import it.polimi.demo.model.chat.Message;
 
+import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
@@ -23,7 +24,7 @@ public interface Listener extends Remote {
     void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException;
 
     void illegalMove(ModelView model) throws RemoteException;
-    void successfulMove(ModelView model) throws RemoteException;
+    void successfulMove(ModelView model, Coordinate coord) throws RemoteException;
 
     void illegalMoveBecauseOf(ModelView model, String reason_why) throws RemoteException;
 
@@ -56,4 +57,6 @@ public interface Listener extends Remote {
     void nextTurn(ModelView gamemodel) throws RemoteException;
 
     void playerDisconnected(ModelView gameModel, String nick) throws RemoteException;
+
+    void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException;
 }

@@ -28,10 +28,13 @@ public interface MainControllerInterface extends Remote {
 
     void sendMessage(Listener modelInvokedEvents, String nick, Message message, int idGame) throws RemoteException;
 
+    void showOthersPersonalBoard(Listener modelInvokedEvents, String nickname, int playerIndex, int gameId) throws RemoteException;
+
     void addPing(Listener modelInvokedEvents, String nick, int idGame) throws RemoteException;
 
     void leaveGame(Listener lis, String nick, int idGame) throws RemoteException;
 
     GameControllerInterface getGameController(int idGame) throws RemoteException;
+
 
 }

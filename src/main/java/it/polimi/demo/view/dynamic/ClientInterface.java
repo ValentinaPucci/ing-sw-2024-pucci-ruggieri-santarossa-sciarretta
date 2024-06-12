@@ -15,6 +15,8 @@ public interface ClientInterface extends Serializable {
 
     void joinRandomly(String nick) throws IOException, InterruptedException, NotBoundException;
 
+    void showOthersPersonalBoard(int player_index) throws IOException, NotBoundException;
+
     void leave(String nick, int idGame) throws IOException, NotBoundException;
 
     void setAsReady() throws IOException, NotBoundException;

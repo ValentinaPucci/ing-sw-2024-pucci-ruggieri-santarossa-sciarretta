@@ -4,6 +4,7 @@ import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
+import it.polimi.demo.model.enumerations.Coordinate;
 import org.fusesource.jansi.Ansi;
 import org.fusesource.jansi.AnsiConsole;
 import it.polimi.demo.Constants;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static it.polimi.demo.view.text.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.Color.*;
 import static org.fusesource.jansi.Ansi.ansi;
 import static it.polimi.demo.view.text.PrintAsync.*;
@@ -217,7 +219,7 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void show_successfulMove() {
+    protected void show_successfulMove(Coordinate coord) {
 
     }
 
@@ -262,6 +264,14 @@ public class TUI extends UI {
     public void show_personalBoard(String nickname, ModelView model) {
         clearScreen();
         TuiPersonalBoardGraphics.showPersonalBoard(model.getPlayerEntity(nickname).getPersonalBoard());
+        clearScreen();
+    }
+
+    @Override
+    protected void show_othersPersonalBoard(ModelView model, int playerIndex) {
+        clearScreen();
+        if(model.getAllPlayers().size() > playerIndex)
+            TuiPersonalBoardGraphics.showPersonalBoard(model.getAllPlayers().get(playerIndex).getPersonalBoard());
         clearScreen();
     }
 
@@ -411,6 +421,11 @@ public class TUI extends UI {
 
     @Override
     protected void show_nextTurn(ModelView model, String nickname) {
+
+    }
+
+    @Override
+    protected void show_cardDrawn(ModelView model, String nickname) {
 
     }
 

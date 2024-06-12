@@ -41,8 +41,8 @@ public class ObserverManagerClient implements Listener, Serializable {
     }
 
     @Override
-    public void successfulMove(ModelView model) throws RemoteException {
-        dynamic.successfulMove(model);
+    public void successfulMove(ModelView model, Coordinate coord) throws RemoteException {
+        dynamic.successfulMove(model, coord);
     }
 
     @Override
@@ -108,6 +108,11 @@ public class ObserverManagerClient implements Listener, Serializable {
     @Override
     public void playerDisconnected(ModelView gameModel, String nick) throws RemoteException {
         dynamic.playerDisconnected(gameModel, nick);
+    }
+
+    @Override
+    public void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException {
+        dynamic.showOthersPersonalBoard(modelView, playerNickname, playerIndex);
     }
 
     @Override

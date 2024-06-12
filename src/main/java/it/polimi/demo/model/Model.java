@@ -425,7 +425,7 @@ public class Model implements Serializable {
                 }
                 else {
                     // remove the card from the player's hand
-                    observers.notify_successMove(this);
+                    observers.notify_successMove(this, coord);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
                     observers.notify_cardPlaced(this, x, y, card_chosen.orientation);
@@ -447,7 +447,7 @@ public class Model implements Serializable {
                     observers.notify_illegalMove(this);
                 }
                 else {
-                    observers.notify_successMove(this);
+                    observers.notify_successMove(this, coord);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
@@ -491,7 +491,7 @@ public class Model implements Serializable {
                     observers.notify_illegalMove(this);
                 }
                 else {
-                    observers.notify_successMove(this);
+                    observers.notify_successMove(this, coord);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
@@ -515,7 +515,7 @@ public class Model implements Serializable {
                 }
                 else {
                     // remove the card from the player's hand
-                    observers.notify_successMove(this);
+                    observers.notify_successMove(this, coord);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
                     observers.notify_cardPlaced(this, x, y, card_chosen.orientation);
@@ -729,6 +729,13 @@ public class Model implements Serializable {
         }
     }
 
+    public void showOthersPersonalBoard(String playerNickname, int playerIndex) {
+        if(this.getAllPlayers().size() <= playerIndex)
+            observers.notify_illegalMoveBecauseOf(this, "Player index out of bounds");
+        else
+            observers.notify_showOthersPersonalBoard(this, playerIndex, playerNickname);
+    }
+
 
     public Map<Player, Integer> getLeaderboard() {
         return leaderboard;
@@ -793,5 +800,7 @@ public class Model implements Serializable {
     public List<ObjectiveCard> getPersonalObjectiveCardsToChoose(String nickname) {
         return getIdentityOfPlayer(nickname).getSecretObjectiveCards();
     }
+
+
 }
 

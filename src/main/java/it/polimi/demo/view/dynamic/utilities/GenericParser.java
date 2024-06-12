@@ -8,6 +8,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static it.polimi.demo.view.text.TuiPersonalBoardGraphics.showPersonalBoard;
+
 /**
  * InputParser class
  * This class parses the input from the queue
@@ -64,11 +66,26 @@ public class GenericParser extends Thread {
             handlePrivateMessage(s);
         } else if (s.startsWith("/c")) {
             handlePublicMessage(s);
+        } else if (s.startsWith("/pb0")) {
+            showOthersPersonalBoard(0);
+        } else if (s.startsWith("/pb1")) {
+            showOthersPersonalBoard(1);
+        } else if (s.startsWith("/pb2")) {
+            showOthersPersonalBoard(2);
+        } else if (s.startsWith("/pb3")) {
+            showOthersPersonalBoard(3);
         } else if (s.startsWith("/quit") || s.startsWith("/leave")) {
             handleQuit();
         } else {
             processedDataQueue.add(s);
         }
+    }
+
+    private void showOthersPersonalBoard(int player_index) {
+        if (currentPlayer == null) {
+            return;
+        }
+        gameDynamics.showOthersPersonalBoard(player_index);
     }
 
     /**

@@ -7,8 +7,8 @@ public class Constants implements Serializable {
     public final static int MaxNumOfPlayer = 4;
     public final static int minNumOfPlayer = 2;
 
-    public final static int RMI_port = 4331;
-    public final static int Socket_port = 4332;
+    public final static int RMI_port = 4333;
+    public final static int Socket_port = 4334;
 
     public final static String RMI_server_name = "CodexNaturalis";
     public static String serverIp = "127.0.0.1";
