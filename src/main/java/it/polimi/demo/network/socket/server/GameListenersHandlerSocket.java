@@ -176,9 +176,9 @@ public class GameListenersHandlerSocket implements Listener, Serializable {
     }
 
     @Override
-    public void successfulMove(ModelView gamemodel) throws RemoteException {
+    public void successfulMove(ModelView gamemodel, Coordinate coord) throws RemoteException {
         try {
-            writeObject(new msgSuccessfulMove(gamemodel));
+            writeObject(new msgSuccessfulMove (gamemodel, coord));
         } catch (IOException e) {
 
         }

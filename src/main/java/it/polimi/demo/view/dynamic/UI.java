@@ -1,6 +1,7 @@
 package it.polimi.demo.view.dynamic;
 
 import it.polimi.demo.model.ModelView;
+import it.polimi.demo.model.enumerations.Coordinate;
 
 import java.util.List;
 
@@ -127,7 +128,7 @@ public abstract class UI {
 
     protected abstract void show_illegalMoveBecauseOf(String message);
 
-    protected abstract void show_successfulMove();
+    protected abstract void show_successfulMove(Coordinate coord);
 
     protected abstract void show_whereToDrawFrom();
 

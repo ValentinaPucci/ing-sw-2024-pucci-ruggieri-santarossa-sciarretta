@@ -41,8 +41,8 @@ public class ObserverManagerClient implements Listener, Serializable {
     }
 
     @Override
-    public void successfulMove(ModelView model) throws RemoteException {
-        dynamic.successfulMove(model);
+    public void successfulMove(ModelView model, Coordinate coord) throws RemoteException {
+        dynamic.successfulMove(model, coord);
     }
 
     @Override

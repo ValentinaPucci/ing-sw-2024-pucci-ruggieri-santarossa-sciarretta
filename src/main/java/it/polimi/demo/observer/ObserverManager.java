@@ -3,6 +3,7 @@ package it.polimi.demo.observer;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.Model;
+import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
@@ -319,12 +320,12 @@ public class ObserverManager implements Serializable {
         listeners.remove(lis);
     }
 
-    public void notify_successMove(Model model) {
+    public void notify_successMove(Model model, Coordinate coord) {
         List<Listener> toRemove = new ArrayList<>();
 
         listeners.forEach(listener -> {
             try {
-                listener.successfulMove(new ModelView(model));
+                listener.successfulMove(new ModelView(model), coord);
             } catch (RemoteException e) {
                 StaticPrinter.staticPrinter("Disconnection detected - notify_playerLeft");
                 toRemove.add(listener);

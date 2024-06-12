@@ -1,6 +1,7 @@
 package it.polimi.demo.view.gui;
 
 import it.polimi.demo.model.ModelView;
+import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.view.dynamic.UI;
 import it.polimi.demo.view.dynamic.utilities.GuiReader;
 import it.polimi.demo.view.gui.controllers.LobbyController;
@@ -214,8 +215,8 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_successfulMove() {
-        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove());
+    protected void show_successfulMove(Coordinate coord) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove(coord));
     }
 
     @Override
