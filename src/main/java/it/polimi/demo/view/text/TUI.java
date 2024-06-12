@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static it.polimi.demo.view.text.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.Color.*;
 import static org.fusesource.jansi.Ansi.ansi;
 import static it.polimi.demo.view.text.PrintAsync.*;
@@ -265,6 +266,14 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    @Override
+    protected void show_othersPersonalBoard(ModelView model, int playerIndex) {
+        clearScreen();
+        if(model.getAllPlayers().size() > playerIndex)
+            TuiPersonalBoardGraphics.showPersonalBoard(model.getAllPlayers().get(playerIndex).getPersonalBoard());
+        clearScreen();
+    }
+
     /**
      * @param gameModel the model that has the common cards to show
      */
@@ -411,6 +420,11 @@ public class TUI extends UI {
 
     @Override
     protected void show_nextTurn(ModelView model, String nickname) {
+
+    }
+
+    @Override
+    protected void show_cardDrawn(ModelView model, String nickname) {
 
     }
 

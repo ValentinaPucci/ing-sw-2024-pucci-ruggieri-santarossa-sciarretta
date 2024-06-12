@@ -276,6 +276,12 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         model.chooseCardFromHand(getIdentityOfPlayer(nick), which_card);
     }
 
+
+    @Override
+    public void showOthersPersonalBoard(String player_nickname,int playerIndex) throws RemoteException {
+        model.showOthersPersonalBoard(player_nickname, playerIndex);
+    }
+
     /**
      * Place a card in the common board
      *
@@ -354,6 +360,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     public synchronized void sendMessage(String nick, Message mess) throws RemoteException {
         model.sendMessage(nick, mess);
     }
+
 }
 
 

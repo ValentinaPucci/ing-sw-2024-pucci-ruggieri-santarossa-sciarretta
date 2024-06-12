@@ -101,11 +101,7 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.changeTurn(model, nickname));
     }
 
-    //TODO x vale: reimplement
-//    @Override
-//    protected void show_updateCommonCards() {
-//
-//    }
+
 
 
     /**
@@ -184,6 +180,19 @@ public class GUI extends UI {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
     }
 
+
+    @Override
+    protected void show_cardDrawn(ModelView gameModel, String nickname) {
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
+    }
+
+    @Override
+    protected void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setOthersPersonalBoard(modelView.getAllPlayers().get(playerIndex).getPersonalBoard(), playerIndex));
+
+    }
+
     @Override
     protected void show_personalObjectiveCard(ModelView gameModel) {
 
@@ -204,7 +213,6 @@ public class GUI extends UI {
 
     }
 
-    //TODO: reimplement vale
     @Override
     protected void show_successfulMove() {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove());
@@ -220,10 +228,7 @@ public class GUI extends UI {
 
     }
 
-    @Override
-    protected void show_messageSent(ModelView model, String nickname) {
 
-    }
 
     @Override
     public void show_whichObjectiveToChooseMsg() {
@@ -298,6 +303,10 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.showError("Connection to server lost!"));
     }
 
-
+    //-----------------------chat-----------------------
+    @Override
+    protected void show_messageSent(ModelView gameModel, String nickname) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).updateChat(gameModel, nickname));
+    }
 
 }

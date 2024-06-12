@@ -239,6 +239,13 @@ public class MainController implements MainControllerInterface, Serializable {
         games.get(gameId).sendMessage(nickname, message);
     }
 
+    @Override
+    public void showOthersPersonalBoard(Listener listener, String nickname, int playerIndex, int gameId)
+            throws RemoteException {
+        games.get(gameId).showOthersPersonalBoard(nickname, playerIndex);
+    }
+
+
     /**
      * Adds a ping for a player to check connectivity.
      *

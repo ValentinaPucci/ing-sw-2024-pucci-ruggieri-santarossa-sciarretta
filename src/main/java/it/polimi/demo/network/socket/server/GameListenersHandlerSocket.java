@@ -55,6 +55,8 @@ public class GameListenersHandlerSocket implements Listener, Serializable {
 
     }
 
+
+
     @Override
     public void cardDrawn(ModelView model, int index) throws RemoteException {
         try {
@@ -222,6 +224,15 @@ public class GameListenersHandlerSocket implements Listener, Serializable {
     public void messageSent(ModelView gameModel, String nickname, Message message) throws RemoteException {
         try {
             writeObject(new msgMessageSent(gameModel, nickname, message));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException {
+        try {
+            writeObject(new msgShowOthersPersonalBoards(modelView, playerNickname, playerIndex));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

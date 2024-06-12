@@ -151,6 +151,8 @@ public class ClientSocket extends Thread implements ClientInterface {
         startHeartbeat();
     }
 
+
+
     @Override
     public void leave(String nick, int idGame) throws IOException {
         sendMessage(new SocketClientMsgLeaveGame(nick, idGame));
@@ -181,6 +183,11 @@ public class ClientSocket extends Thread implements ClientInterface {
     @Override
     public void drawCard(int index) throws IOException, GameEndedException {
         sendMessage(new SocketClientMsgDrawCard(index));
+    }
+
+    @Override
+    public void showOthersPersonalBoard(int player_index) throws IOException {
+        sendMessage(new SocketClientMsgShowOthersPersonalBoard(nickname, player_index));
     }
 
     @Override
