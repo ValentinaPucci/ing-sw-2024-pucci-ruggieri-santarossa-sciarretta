@@ -20,6 +20,7 @@ import java.rmi.NotBoundException;
 
 import static it.polimi.demo.view.text.PrintAsync.printAsync;
 import static it.polimi.demo.view.text.PrintAsync.printAsyncNoLine;
+//import static it.polimi.demo.network.StaticPrinter;
 
 public class ClientSocket extends Thread implements ClientInterface {
 
