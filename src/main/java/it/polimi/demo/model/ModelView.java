@@ -8,20 +8,21 @@ import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.chat.Chat;
 import it.polimi.demo.model.enumerations.GameStatus;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 
 public class ModelView implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 7726507870920841215L;
+
     private final ArrayList<Player> aux_order_players;
     private final LinkedList<Player> players_connected;
     private final Integer gameId;
-    private final String initial_player_nickname;
     private final CommonBoard common_board;
-    private final int num_required_players_to_start;
     private final GameStatus actual_status;
     private final String current_player_nickname;
-    // private final List<Player> winners;
     private final Map<Player, Integer> leaderboard;
     private final Chat chat;
     private final List<StarterCard> starter_cards;
@@ -31,9 +32,7 @@ public class ModelView implements Serializable {
         this.gameId = model.getGameId();
         this.aux_order_players = new ArrayList<>(model.getAllPlayers());
         this.players_connected = new LinkedList<>(model.getPlayersConnected());
-        this.initial_player_nickname = model.getAllPlayers().getFirst().getNickname();
         this.common_board = model.getCommonBoard();
-        this.num_required_players_to_start = model.getNumPlayersToPlay();
         this.actual_status = model.getStatus();
         this.current_player_nickname = model.getPlayersConnected().peek().getNickname();
         this.chat = model.getChat();

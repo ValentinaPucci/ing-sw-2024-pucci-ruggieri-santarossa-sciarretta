@@ -1,5 +1,5 @@
 package it.polimi.demo.view.gui.controllers;
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
 
 public abstract class GenericController {
 

@@ -1,20 +1,18 @@
 package it.polimi.demo.network;
 
 import it.polimi.demo.view.dynamic.ClientInterface;
-import it.polimi.demo.view.dynamic.Dynamic;
+import it.polimi.demo.view.dynamic.GameDynamic;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 
-import static it.polimi.demo.network.StaticPrinter.staticPrinter;
-
 public class PingSender extends Thread implements Serializable {
 
-    private Dynamic dynamic;
+    private GameDynamic dynamic;
     private ClientInterface server;
 
-    public PingSender(Dynamic dynamic, ClientInterface server) {
+    public PingSender(GameDynamic dynamic, ClientInterface server) {
         this.dynamic = dynamic;
         this.server = server;
     }

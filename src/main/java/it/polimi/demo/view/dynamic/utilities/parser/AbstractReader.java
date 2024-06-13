@@ -1,4 +1,4 @@
-package it.polimi.demo.view.dynamic.utilities;
+package it.polimi.demo.view.dynamic.utilities.parser;
 
 import java.util.concurrent.LinkedBlockingQueue;
 

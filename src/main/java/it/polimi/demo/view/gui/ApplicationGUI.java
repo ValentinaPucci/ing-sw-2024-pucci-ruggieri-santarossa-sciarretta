@@ -2,11 +2,11 @@ package it.polimi.demo.view.gui;
 
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.view.dynamic.ConnectionSelection;
+import it.polimi.demo.view.dynamic.TypeConnection;
 import it.polimi.demo.view.dynamic.GameDynamic;
 import it.polimi.demo.view.gui.controllers.*;
 import it.polimi.demo.view.gui.scene.SceneType;
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -40,7 +40,7 @@ public class ApplicationGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        gameDynamics = new GameDynamic(this, ConnectionSelection.valueOf(getParameters().getUnnamed().getFirst()));
+        gameDynamics = new GameDynamic(this, TypeConnection.valueOf(getParameters().getUnnamed().getFirst()));
         loadScenes();
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Codex Naturalis");

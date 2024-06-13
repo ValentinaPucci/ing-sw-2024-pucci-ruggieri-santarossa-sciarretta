@@ -232,6 +232,14 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
         primary_controller.sendMessage(lis, nick, message, idGame);
     }
 
+    /**
+     * Shows the personal board of the player in the game.
+     * @param lis the listener for game events
+     * @param nickname the nickname of the player
+     * @param playerIndex the index of the player
+     * @param idGame the ID of the game
+     * @throws RemoteException if the personal board cannot be shown
+     */
     @Override
     public void showOthersPersonalBoard(Listener lis, String nickname, int playerIndex, int idGame) throws RemoteException {
         primary_controller.showOthersPersonalBoard(lis, nickname, playerIndex, idGame);

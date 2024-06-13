@@ -1,7 +1,7 @@
 package it.polimi.demo.main;
 
 import it.polimi.demo.network.StaticPrinter;
-import it.polimi.demo.view.dynamic.ConnectionSelection;
+import it.polimi.demo.view.dynamic.TypeConnection;
 import it.polimi.demo.view.dynamic.GameDynamic;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import javafx.application.Application;
@@ -14,19 +14,19 @@ public class MainClient {
         promptForIP("Insert remote IP (leave empty for localhost): ");
         promptForIP("Insert your IP (leave empty for localhost): ");
 
-        int con_selection = promptForSelection(
+        int connection_selection = promptForSelection(
                 "Select option:\n1) Socket \n2) RMI \n");
 
-        ConnectionSelection conSel = con_selection == 1 ? ConnectionSelection.SOCKET : ConnectionSelection.RMI;
+        TypeConnection connection = connection_selection == 1 ? TypeConnection.SOCKET : TypeConnection.RMI;
 
         int ui_selection = promptForSelection(
                 "\nSelect option:\n1) TUI \n2) GUI \n");
 
         if (ui_selection == 1) {
-            new GameDynamic(conSel);
+            new GameDynamic(connection);
         }
         else {
-            Application.launch(ApplicationGUI.class, conSel.toString());
+            Application.launch(ApplicationGUI.class, connection.toString());
         }
     }
 

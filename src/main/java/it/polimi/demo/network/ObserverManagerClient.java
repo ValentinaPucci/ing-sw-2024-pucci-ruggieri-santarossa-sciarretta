@@ -5,7 +5,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.view.dynamic.Dynamic;
+import it.polimi.demo.view.dynamic.GameDynamic;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -14,9 +14,9 @@ import java.rmi.RemoteException;
 public class ObserverManagerClient implements Listener, Serializable {
 
 
-    private Dynamic dynamic;
+    private GameDynamic dynamic;
 
-    public ObserverManagerClient(Dynamic gui) {
+    public ObserverManagerClient(GameDynamic gui) {
         this.dynamic = gui;
     }
 

@@ -1,13 +1,12 @@
 package it.polimi.demo.view.gui.controllers;
 
-import it.polimi.demo.model.Model;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -16,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -361,16 +359,16 @@ public class RunningController extends GenericController {
             // Show the correct board based on the player's index or name
             switch (index) {
                 case 0:
-                    reader.addTxt("/pb0");
+                    reader.getBuffer().add("/pb0");
                     break;
                 case 1:
-                    reader.addTxt("/pb1");
+                    reader.getBuffer().add("/pb1");
                     break;
                 case 2:
-                    reader.addTxt("/pb2");
+                    reader.getBuffer().add("/pb2");
                     break;
                 case 3:
-                    reader.addTxt("/pb3");
+                    reader.getBuffer().add("/pb3");
                     break;
                 default:
                     break;
@@ -557,7 +555,7 @@ public class RunningController extends GenericController {
 
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("2");
+            reader.getBuffer().add("2");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -569,7 +567,7 @@ public class RunningController extends GenericController {
         flipPersonalObjective(personalObjectiveIds.get(1), 1);
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("1");
+            reader.getBuffer().add("1");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -590,9 +588,9 @@ public class RunningController extends GenericController {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             if(starterCardOrientation == Orientation.FRONT)
-                reader.addTxt("f");
+                reader.getBuffer().add("f");
             else if(starterCardOrientation == Orientation.BACK)
-                reader.addTxt("b");
+                reader.getBuffer().add("b");
             else
                 System.out.println("Orientation non valida.");
         } else {
@@ -611,16 +609,16 @@ public class RunningController extends GenericController {
 
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("1");
+            reader.getBuffer().add("1");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
 
         if (reader != null) {
             if(cardHandOrientation == Orientation.FRONT)
-                reader.addTxt("f");
+                reader.getBuffer().add("f");
             else if(cardHandOrientation == Orientation.BACK)
-                reader.addTxt("b");
+                reader.getBuffer().add("b");
             else
                 System.out.println("Orientation non valida.");
         } else {
@@ -640,16 +638,16 @@ public class RunningController extends GenericController {
 
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("2");
+            reader.getBuffer().add("2");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
 
         if (reader != null) {
             if(cardHandOrientation == Orientation.FRONT)
-                reader.addTxt("f");
+                reader.getBuffer().add("f");
             else if(cardHandOrientation == Orientation.BACK)
-                reader.addTxt("b");
+                reader.getBuffer().add("b");
             else
                 System.out.println("Orientation non valida.");
         } else {
@@ -669,16 +667,16 @@ public class RunningController extends GenericController {
 
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("3");
+            reader.getBuffer().add("3");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
 
         if (reader != null) {
             if(cardHandOrientation == Orientation.FRONT)
-                reader.addTxt("f");
+                reader.getBuffer().add("f");
             else if(cardHandOrientation == Orientation.BACK)
-                reader.addTxt("b");
+                reader.getBuffer().add("b");
             else
                 System.out.println("Orientation non valida.");
         } else {
@@ -738,9 +736,9 @@ public class RunningController extends GenericController {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
             if(cardHandOrientation == Orientation.FRONT)
-                reader.addTxt("f");
+                reader.getBuffer().add("f");
             else if(cardHandOrientation == Orientation.BACK)
-                reader.addTxt("b");
+                reader.getBuffer().add("b");
             else
                 System.out.println("Orientation non valida.");
         } else {
@@ -779,8 +777,8 @@ public class RunningController extends GenericController {
             GuiReader reader = getInputReaderGUI();
             if (reader != null) {
                 //System.out.println("(x,y): " + result[0] + ", " + result[1]);
-                reader.addTxt(String.valueOf(result[0]));
-                reader.addTxt(String.valueOf(result[1]));
+                reader.getBuffer().add(String.valueOf(result[0]));
+                reader.getBuffer().add(String.valueOf(result[1]));
             } else {
                 System.out.println("L'oggetto inputReaderGUI è null.");
             }
@@ -854,7 +852,7 @@ public class RunningController extends GenericController {
     public void commonCard1Clicked(MouseEvent mouseEvent) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("2");
+            reader.getBuffer().add("2");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -865,7 +863,7 @@ public class RunningController extends GenericController {
     public void commonCard2Clicked(MouseEvent mouseEvent) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("2");
+            reader.getBuffer().add("2");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -876,7 +874,7 @@ public class RunningController extends GenericController {
     public void commonCard3Clicked(MouseEvent mouseEvent) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("3");
+            reader.getBuffer().add("3");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -887,7 +885,7 @@ public class RunningController extends GenericController {
     public void commonCard4Clicked(MouseEvent mouseEvent) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("4");
+            reader.getBuffer().add("4");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -898,7 +896,7 @@ public class RunningController extends GenericController {
     public void commonCard5Clicked(MouseEvent mouseEvent) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("5");
+            reader.getBuffer().add("5");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -909,7 +907,7 @@ public class RunningController extends GenericController {
     public void commonCard6Clicked(MouseEvent mouseEvent) {
         GuiReader reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("6");
+            reader.getBuffer().add("6");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -947,11 +945,11 @@ public class RunningController extends GenericController {
         String recipient = recipientComboBox.getValue();
         if (!message.trim().isEmpty()) {
             if ("Everyone".equals(recipient)) {
-                getInputReaderGUI().addTxt("/c " + chatInput.getText());
+                getInputReaderGUI().getBuffer().add("/c " + chatInput.getText());
                 chatArea.appendText("Me (to everyone): " + message + "\n");
             } else {
                 chatArea.appendText("Me (to " + recipient + "): " + message + "\n");
-                getInputReaderGUI().addTxt("/cs " + recipientComboBox.getValue().toString() + " " + chatInput.getText());
+                getInputReaderGUI().getBuffer().add("/cs " + recipientComboBox.getValue().toString() + " " + chatInput.getText());
             }
             chatInput.clear();
         }
