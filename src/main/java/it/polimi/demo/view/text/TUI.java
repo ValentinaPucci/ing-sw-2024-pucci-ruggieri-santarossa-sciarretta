@@ -108,7 +108,6 @@ public class TUI extends UI {
     @Override
     public void show_gameEnded(ModelView model) {
         clearScreen();
-        // resize();
         show_titleCodexNaturalis();
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
@@ -466,7 +465,7 @@ public class TUI extends UI {
      * Tells the player to return to the main menu
      */
     @Override
-    public void show_returnToMenuMsg() {
+    public void show_menu() {
         printAsync("\nPress any key to return to the menu");
     }
 
@@ -512,7 +511,6 @@ public class TUI extends UI {
                 \tpress (c) to create a new game
                 \tpress (j) to join to a randomly an existent game
                 \tpress (js) to join to a specific game
-                \tpress (.) to leave
                 \t
                 \t -> Useful commands that can be used at any point in the game:
                 \t\t  type "/c [msg]" to send a public message!
@@ -527,15 +525,15 @@ public class TUI extends UI {
     @Override
     public void show_inputGameIdMsg() {
         clearScreen();
-        printAsyncNoCursorReset("> Input the GameId ('.' to leave): ");
+        printAsyncNoCursorReset("> Input the GameId: ");
     }
 
     /**
      * Generic error message
      */
     @Override
-    public void show_NaNMsg() {
-        printAsync("> NaN");
+    public void show_invalidInput() {
+        printAsync("[WARNING]: invalid input");
     }
 
     /**

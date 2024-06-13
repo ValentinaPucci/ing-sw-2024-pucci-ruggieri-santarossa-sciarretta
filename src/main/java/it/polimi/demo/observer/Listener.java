@@ -12,9 +12,6 @@ import java.io.IOException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-/**
- * This interface is used to notify the socket about the changes in the game
- */
 public interface Listener extends Remote {
 
     void starterCardPlaced(ModelView model, Orientation orientation, String nick) throws RemoteException;
@@ -24,6 +21,7 @@ public interface Listener extends Remote {
     void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException;
 
     void illegalMove(ModelView model) throws RemoteException;
+
     void successfulMove(ModelView model, Coordinate coord) throws RemoteException;
 
     void illegalMoveBecauseOf(ModelView model, String reason_why) throws RemoteException;

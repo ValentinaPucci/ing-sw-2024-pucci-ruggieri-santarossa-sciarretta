@@ -1,5 +1,5 @@
 package it.polimi.demo.view.dynamic;
 
-public enum ConnectionSelection {
+public enum TypeConnection {
     RMI, SOCKET
 }

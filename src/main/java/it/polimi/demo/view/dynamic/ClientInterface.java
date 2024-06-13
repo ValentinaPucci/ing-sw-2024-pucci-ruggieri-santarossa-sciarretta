@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.rmi.NotBoundException;
 
 public interface ClientInterface extends Serializable {
+
     void createGame(String nickname, int num_of_players) throws IOException, InterruptedException, NotBoundException;
 
     void joinGame(String nick, int idGame) throws IOException, InterruptedException, NotBoundException;
@@ -32,5 +33,4 @@ public interface ClientInterface extends Serializable {
     void sendMessage(String receiver, Message msg) throws IOException, NotBoundException;
 
     void ping() throws IOException, NotBoundException;
-
 }
