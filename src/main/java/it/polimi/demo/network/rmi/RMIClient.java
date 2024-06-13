@@ -81,12 +81,10 @@ public class RMIClient implements ClientInterface {
 
     /**
      * Constructor that initializes the RMIClient.
-     *
-     * @param dynamic the dynamic instance used for managing game state
      */
     public RMIClient(GameDynamic dynamic) {
         this.gameListenersHandler = new ObserverManagerClient(dynamic);
-        this.ping = new PingSender(dynamic, this);
+        this.ping = new PingSender(this);
         this.ping.start();
         initialize();
     }

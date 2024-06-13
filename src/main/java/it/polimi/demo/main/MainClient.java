@@ -9,25 +9,23 @@ import java.util.Scanner;
 
 public class MainClient {
 
-    public static void main(String[] args) {
+    public static void main(String... args) {
 
         promptForIP("Insert remote IP (leave empty for localhost): ");
         promptForIP("Insert your IP (leave empty for localhost): ");
 
-        int connection_selection = promptForSelection(
-                "Select option:\n1) Socket \n2) RMI \n");
+        int connection_selection = promptForSelection("Select option:\n1) Socket \n2) RMI \n");
 
         TypeConnection connection = connection_selection == 1 ? TypeConnection.SOCKET : TypeConnection.RMI;
 
-        int ui_selection = promptForSelection(
-                "\nSelect option:\n1) TUI \n2) GUI \n");
+        int ui_selection = promptForSelection("\nSelect option:\n1) TUI \n2) GUI \n");
 
-        if (ui_selection == 1) {
-            new GameDynamic(connection);
-        }
-        else {
-            Application.launch(ApplicationGUI.class, connection.toString());
-        }
+        Runnable action_2 = (ui_selection == 1)
+                ? () -> new GameDynamic(connection)
+                : () -> Application.launch(ApplicationGUI.class, connection.toString());
+
+        action_2.run();
+
     }
 
     private static void promptForIP(String message) {

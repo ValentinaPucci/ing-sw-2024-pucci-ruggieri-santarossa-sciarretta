@@ -16,7 +16,6 @@ public class Player implements Serializable {
     private List<ResourceCard> card_hand;
     private PersonalBoard personal_board;
     private List<ObjectiveCard> secret_objectives;
-
     private List<StarterCard> starter_card_to_chose;
     private ObjectiveCard chosen_objective;
     private StarterCard starter_card;
@@ -78,7 +77,6 @@ public class Player implements Serializable {
         this.starter_card = starter_card;
     }
 
-    
     public ObjectiveCard getChosenObjectiveCard() {
         return chosen_objective;
     }
@@ -87,14 +85,12 @@ public class Player implements Serializable {
         return secret_objectives ;
     }
 
-
     /**
      * set the secret objective at the start of the game. Then, the player
      * decides which one to keep (only one secret objective is admissible)
      * @param objective1 objective 1
      * @param objective2 objective 2
      */
-    
     public void setSecretObjectives(ObjectiveCard objective1, ObjectiveCard objective2) {
         secret_objectives.add(objective1);
         secret_objectives.add(objective2);

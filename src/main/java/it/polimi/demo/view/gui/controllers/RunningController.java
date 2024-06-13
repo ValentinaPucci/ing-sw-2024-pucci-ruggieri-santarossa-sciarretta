@@ -958,7 +958,7 @@ public class RunningController extends GenericController {
 
     public void updateChat(ModelView model, String sender) {
         Message message = model.getChat().getLastMessage();
-        chatArea.appendText(sender + ": " + message.getText() + "\n");
+        chatArea.appendText(sender + ": " + message.text() + "\n");
     }
 
 

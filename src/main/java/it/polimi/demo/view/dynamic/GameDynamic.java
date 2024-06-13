@@ -40,7 +40,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
     private final UI ui;
 
-    private String nickname = "";
+    private String nickname;
     private final FactQueue facts = new FactQueue();
     private ClientInterface client_interface;
 
@@ -585,56 +585,57 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void ping() {}
 
-    // Server --------> Client
-    
-    public boolean amI(ModelView model) {
+    private boolean amI(ModelView model) {
         return model.getCurrentPlayerNickname().equals(nickname);
+    }
+
+    private void ifAmI(ModelView model, Consumer<ModelView> action) {
+        if (amI(model)) {
+            action.accept(model);
+        }
     }
 
     @Override
     public void starterCardPlaced(ModelView model, Orientation orientation, String nick) {
-        if (amI(model))
-            ui.show_personalBoard(nickname, model);
+        ifAmI(model, m -> ui.show_personalBoard(nickname, m));
     }
 
     @Override
     public void cardChosen(ModelView model, int which_card) {
-        if (amI(model))
-            facts.offer(model, ASK_WHICH_ORIENTATION);
+        ifAmI(model, m -> facts.offer(m, FactType.ASK_WHICH_ORIENTATION));
     }
 
     @Override
     public void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
-        if (amI(model)) {
-            ui.show_personalBoard(nickname, model);
-            ui.show_commonBoard(model);
-            facts.offer(model, CARD_PLACED);
-        }
+        ifAmI(model, m -> {
+            ui.show_personalBoard(nickname, m);
+            ui.show_commonBoard(m);
+            facts.offer(m, FactType.CARD_PLACED);
+        });
     }
 
     @Override
     public void illegalMove(ModelView model) {
-        if (amI(model)) {
+        ifAmI(model, m -> {
             ui.show_illegalMove();
             ui.show_genericMessage("Here we show you again your personal board:");
-            ui.show_personalBoard(nickname, model);
-            facts.offer(model, ILLEGAL_MOVE);
-        }
+            ui.show_personalBoard(nickname, m);
+            facts.offer(m, FactType.ILLEGAL_MOVE);
+        });
     }
 
     @Override
     public void successfulMove(ModelView model, Coordinate coord) throws RemoteException {
-        if (amI(model))
-            ui.show_successfulMove(coord);
+        ifAmI(model, m -> ui.show_successfulMove(coord));
     }
 
     @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) {
-        if (amI(model)) {
+        ifAmI(model, m -> {
             ui.show_illegalMoveBecauseOf(reason_why);
-            ui.show_personalBoard(nickname, model);
-            facts.offer(model, ILLEGAL_MOVE);
-        }
+            ui.show_personalBoard(nickname, m);
+            facts.offer(m, FactType.ILLEGAL_MOVE);
+        });
     }
 
     @Override
@@ -644,10 +645,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
     @Override
     public void nextTurn(ModelView model) {
-        if (!amI(model) &&
-                (model.getStatus() == GameStatus.RUNNING ||
-                        model.getStatus() == GameStatus.SECOND_LAST_ROUND))
+        if (!amI(model) && (model.getStatus() == GameStatus.RUNNING || model.getStatus() == GameStatus.SECOND_LAST_ROUND)) {
             ui.show_myTurnIsFinished();
+        }
         facts.offer(model, FactType.NEXT_TURN);
         generic_parser.getProcessed_data_queue().clear();
     }
@@ -661,9 +661,10 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void playerIsReadyToStart(ModelView gameModel, String nick) throws IOException {
         ui.show_playerJoined(gameModel, nickname);
-        if (nick.equals(nickname))
+        if (nick.equals(nickname)) {
             ui.show_ReadyToStart(gameModel, nickname);
-        facts.offer(gameModel, PLAYER_IS_READY_TO_START);
+        }
+        facts.offer(gameModel, FactType.PLAYER_IS_READY_TO_START);
     }
 
     @Override
@@ -673,37 +674,31 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
     @Override
     public void joinUnableGameFull(Player wantedToJoin, ModelView gameModel) throws RemoteException {
-        facts.offer(null, FULL_GAME);
+        facts.offer(null, FactType.FULL_GAME);
     }
 
     @Override
     public void messageSent(ModelView gameModel, String nick, Message msg) {
-        if (!msg.getSender().getNickname().equals(nickname)) {
-            if (nickname.equals(nick)) {
-                // async
-                ui.show_messageSent(gameModel, nick);
-            } else if (nick.equals("all")) {
-                // async
-                ui.show_messageSent(gameModel, nick);
-            }
+        if (!msg.sender().getNickname().equals(nickname) && (nickname.equals(nick) || "all".equals(nick))) {
+            ui.show_messageSent(gameModel, nick);
         }
     }
 
     @Override
     public void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
-        facts.offer(null, ALREADY_USED_NICKNAME);
+        facts.offer(null, FactType.ALREADY_USED_NICKNAME);
     }
 
     @Override
     public void gameIdNotExists(int gameid) throws RemoteException {
         ui.show_noAvailableGamesToJoin("No currently game available with the following GameID: " + gameid);
-        facts.offer(null, GENERIC_ERROR);
+        facts.offer(null, FactType.GENERIC_ERROR);
     }
 
     @Override
     public void genericErrorWhenEnteringGame(String why) throws RemoteException {
         ui.show_noAvailableGamesToJoin(why);
-        facts.offer(null, GENERIC_ERROR);
+        facts.offer(null, FactType.GENERIC_ERROR);
     }
 
     @Override
@@ -725,13 +720,10 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
     @Override
     public void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException {
-        if (modelView.getAllPlayers().size() > playerIndex) {
-            if (this.nickname.equals(playerNickname))
-                ui.show_othersPersonalBoard(modelView, playerIndex);
-        }
-        else {
-            if (this.nickname.equals(playerNickname))
-                ui.show_genericMessage("Player index out of bounds");
+        if (modelView.getAllPlayers().size() > playerIndex && this.nickname.equals(playerNickname)) {
+            ui.show_othersPersonalBoard(modelView, playerIndex);
+        } else if (this.nickname.equals(playerNickname)) {
+            ui.show_genericMessage("Player index out of bounds");
         }
     }
 

@@ -446,7 +446,7 @@ public class TUI extends UI {
     @Override
     public void show_messageSent(ModelView model, String nickname) {
         Message mess = model.getChat().getLastMessage();
-        printAsync(ansi().cursor(Constants.row_chat, Constants.col_chat).a(mess.getSender().getNickname() + ": " + mess.getText()));
+        printAsync(ansi().cursor(Constants.row_chat, Constants.col_chat).a(mess.sender().getNickname() + ": " + mess.text()));
     }
 
     /**

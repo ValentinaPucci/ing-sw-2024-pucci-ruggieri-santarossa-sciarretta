@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class MainServer {
 
-    public static void main(String[] args) throws RemoteException {
+    public static void main(String... args) throws RemoteException {
 
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter remote IP (empty for default):");

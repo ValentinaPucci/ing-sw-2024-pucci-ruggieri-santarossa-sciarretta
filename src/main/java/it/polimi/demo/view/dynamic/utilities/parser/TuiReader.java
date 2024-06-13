@@ -7,13 +7,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class TuiReader extends Thread implements AbstractReader {
 
     private final LinkedBlockingQueue<String> buffer = new LinkedBlockingQueue<>();
+    public LinkedBlockingQueue<String> getBuffer() { return buffer; }
 
-    public LinkedBlockingQueue<String> getBuffer(){
-        return buffer;
-    }
-
-    public TuiReader() {
-        this.start();
+    {
+        start();
     }
 
     @Override
