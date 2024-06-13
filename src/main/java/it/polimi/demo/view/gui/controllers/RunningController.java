@@ -728,7 +728,9 @@ public class RunningController extends GenericController {
     public void whichCardToPlace() {
         cardHandVBox.setDisable(false);
         cardHandVBox.setMouseTransparent(false);
-        cardPanes.forEach(pane -> pane.setDisable(false));
+        handCard0.setDisable(false);
+        handCard1.setDisable(false);
+        handCard2.setDisable(false);
         setMsgToShow("Choose a card to place from your hand: ", true);
     }
 
