@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
 
 public class GenericParser extends Thread {
 
-
     private final LinkedBlockingQueue<String> input_queue;
     private final LinkedBlockingQueue<String> processed_data_queue;
     private final GameDynamic game_dyn;
@@ -32,6 +31,25 @@ public class GenericParser extends Thread {
         this.processed_data_queue = new LinkedBlockingQueue<>();
         this.game_dyn = game_dyn;
         this.start();
+    }
+
+    /**
+     * binds the player to parser
+     * @param id game id
+     * @param p the player to bind
+     */
+    public void bindPlayerToParser(Integer id, Player p) {
+        current_game_id = id;
+        current_player = p;
+    }
+
+    /**
+     * Gets the queue of processed data.
+     *
+     * @return the queue of processed data
+     */
+    public LinkedBlockingQueue<String> getProcessed_data_queue() {
+        return processed_data_queue;
     }
 
     /**
@@ -100,7 +118,8 @@ public class GenericParser extends Thread {
             String receiver = matcher.group(1);
             String messageContent = matcher.group(2);
             game_dyn.sendMessage(receiver, new Message(messageContent, current_player));
-        } else {
+        }
+        else {
             System.err.println("Private message command format is incorrect: " + command);
         }
     }
@@ -118,7 +137,8 @@ public class GenericParser extends Thread {
         if (matcher.matches()) {
             String messageContent = matcher.group(1);
             game_dyn.sendMessage("all", new Message(messageContent, current_player));
-        } else {
+        }
+        else {
             System.err.println("Public message command format is incorrect: " + command);
         }
     }
@@ -132,25 +152,6 @@ public class GenericParser extends Thread {
             game_dyn.youLeft();
         }
         System.exit(1);
-    }
-
-    /**
-     * binds the player to parser
-     * @param id game id
-     * @param p the player to bind
-     */
-    public void bindPlayerToParser(Integer id, Player p) {
-        current_game_id = id;
-        current_player = p;
-    }
-
-    /**
-     * Gets the queue of processed data.
-     *
-     * @return the queue of processed data
-     */
-    public LinkedBlockingQueue<String> getProcessed_data_queue() {
-        return processed_data_queue;
     }
 }
 

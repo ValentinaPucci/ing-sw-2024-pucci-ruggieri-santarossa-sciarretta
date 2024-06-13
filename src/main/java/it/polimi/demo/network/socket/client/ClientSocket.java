@@ -29,14 +29,12 @@ public class ClientSocket extends Thread implements ClientInterface {
     private String nickname;
     private final ObserverManagerClient modelEvents;
     private final transient PingSender socketHeartbeat;
-    private GameDynamic dynamics;
 
     public ClientSocket(GameDynamic dynamics) {
-        this.dynamics = dynamics;
         modelEvents = new ObserverManagerClient(dynamics);
         initiateConnection(Constants.serverIp, Constants.Socket_port);
         this.start();
-        socketHeartbeat = new PingSender(dynamics, this);
+        socketHeartbeat = new PingSender(this);
     }
 
     public void run() {

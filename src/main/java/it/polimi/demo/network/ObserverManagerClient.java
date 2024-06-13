@@ -8,12 +8,14 @@ import it.polimi.demo.model.Player;
 import it.polimi.demo.view.dynamic.GameDynamic;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
 public class ObserverManagerClient implements Listener, Serializable {
 
-
+    @Serial
+    private static final long serialVersionUID = -5070962929563880709L;
     private GameDynamic dynamic;
 
     public ObserverManagerClient(GameDynamic gui) {
@@ -128,6 +130,5 @@ public class ObserverManagerClient implements Listener, Serializable {
     @Override
     public void messageSent(ModelView gameModel, String nickname, Message message) throws RemoteException {
         dynamic.messageSent(gameModel, nickname, message);
-
     }
 }
