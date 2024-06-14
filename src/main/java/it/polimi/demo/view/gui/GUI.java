@@ -11,8 +11,6 @@ import javafx.application.Platform;
 
 import java.util.ArrayList;
 
-import static it.polimi.demo.view.text.PrintAsync.printAsync;
-
 public class GUI extends UI {
 
     private ApplicationGUI guiApplication;

@@ -5,7 +5,7 @@ import it.polimi.demo.Constants;
 import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static it.polimi.demo.view.text.PrintAsync.printAsync;
+import static it.polimi.demo.network.StaticPrinter.staticPrinter;
 import static org.fusesource.jansi.Ansi.ansi;
 
 /**
@@ -25,8 +25,8 @@ public class TuiReader extends Thread implements AbstractReader {
         while (!this.isInterrupted()) {
             String s = scanner.nextLine();
             buffer.add(s);
-            printAsync(ansi().cursorUpLine().a(" ".repeat(s.length())));
-            printAsync(ansi().cursor(Constants.row_input + 1, 0));
+            staticPrinter(ansi().cursorUpLine().a(" ".repeat(s.length())));
+            staticPrinter(ansi().cursor(Constants.row_input + 1, 0));
         }
     }
 
