@@ -14,7 +14,7 @@ import it.polimi.demo.view.dynamic.utilities.QueueParser;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import it.polimi.demo.view.gui.GUI;
 import it.polimi.demo.network.socket.client.ClientSocket;
-import it.polimi.demo.view.text.PrintAsync;
+import it.polimi.demo.view.text.StaticPrinterTUI;
 import it.polimi.demo.view.text.TUI;
 
 import java.io.IOException;
@@ -68,7 +68,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                         if (scanner.hasNextLine()) {
                             String input = scanner.nextLine();
                             reader_queue.add(input);
-                            PrintAsync.printAsync("\033[1A\033[2K");
+                            StaticPrinterTUI.print("\033[1A\033[2K");
                         }
                     }
                 } catch (Exception e) {

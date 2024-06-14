@@ -60,8 +60,5 @@ public class StaticPrinter {
     public static void staticPrinterNoNewLine(String msg) {
         executor.submit(() -> LOGGER.log(Level.INFO, "{0}", msg));
     }
-    public static void staticPrinterTui(String msg){
-        new Thread(()->{System.out.print(msg);}).start();
-    }
 
 }
