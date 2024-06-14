@@ -1,6 +1,6 @@
 package it.polimi.demo.view.gui.controllers;
 
-import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.liveBuffer.ReaderQueue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -9,7 +9,7 @@ public class MenuController extends GenericController{
     @FXML
     public void CreateGame(ActionEvent event) {
         System.out.println("CreateGame: "+ event);
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("c");
         } else {
@@ -20,7 +20,7 @@ public class MenuController extends GenericController{
 
     @FXML
     public void JoinGame(ActionEvent event) {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("js");
         } else {
@@ -31,7 +31,7 @@ public class MenuController extends GenericController{
 
     @FXML
     public void RandomGame(ActionEvent event) {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("j");
         } else {
@@ -42,7 +42,7 @@ public class MenuController extends GenericController{
 
     @FXML
     public void Reconnect(ActionEvent event) {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("x");
         } else {

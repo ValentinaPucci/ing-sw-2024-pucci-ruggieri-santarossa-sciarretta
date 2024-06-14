@@ -6,7 +6,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.liveBuffer.ReaderQueue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -354,7 +354,7 @@ public class RunningController extends GenericController {
     }
 
     public void showOthersPersonalBoard(int index) {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             // Show the correct board based on the player's index or name
             switch (index) {
@@ -553,7 +553,7 @@ public class RunningController extends GenericController {
         setMsgToShow("personalObjective0 clicked" , true);
         flipPersonalObjective(personalObjectiveIds.getFirst(), 0);
 
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("2");
         } else {
@@ -565,7 +565,7 @@ public class RunningController extends GenericController {
     public void onPersonalObjective0Clicked(MouseEvent event) {
         setMsgToShow("personalObjective1 clicked" , true);
         flipPersonalObjective(personalObjectiveIds.get(1), 1);
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("1");
         } else {
@@ -585,7 +585,7 @@ public class RunningController extends GenericController {
         FlipStarter.setVisible(false);
         StarterCardImage.setVisible(false);
 
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             if(starterCardOrientation == Orientation.FRONT)
                 reader.getBuffer().add("f");
@@ -607,7 +607,7 @@ public class RunningController extends GenericController {
         }
         cardHandVBox.setDisable(true);
 
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("1");
         } else {
@@ -636,7 +636,7 @@ public class RunningController extends GenericController {
         }
         cardHandVBox.setDisable(true);
 
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("2");
         } else {
@@ -665,7 +665,7 @@ public class RunningController extends GenericController {
         }
         cardHandVBox.setDisable(true);
 
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("3");
         } else {
@@ -735,7 +735,7 @@ public class RunningController extends GenericController {
     }
 
     public void whichOrientationToPlace() {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             if(cardHandOrientation == Orientation.FRONT)
                 reader.getBuffer().add("f");
@@ -776,7 +776,7 @@ public class RunningController extends GenericController {
 
         if (result != null) {
             System.out.println("coordinate selezionate: (" + result[0] + ", " + result[1] + ")");
-            GuiReader reader = getInputReaderGUI();
+            ReaderQueue reader = getInputReaderGUI();
             if (reader != null) {
                 //System.out.println("(x,y): " + result[0] + ", " + result[1]);
                 reader.getBuffer().add(String.valueOf(result[0]));
@@ -852,7 +852,7 @@ public class RunningController extends GenericController {
 
     @FXML
     public void commonCard1Clicked(MouseEvent mouseEvent) {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("2");
         } else {
@@ -863,7 +863,7 @@ public class RunningController extends GenericController {
     }
     @FXML
     public void commonCard2Clicked(MouseEvent mouseEvent) {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("2");
         } else {
@@ -874,7 +874,7 @@ public class RunningController extends GenericController {
     }
     @FXML
     public void commonCard3Clicked(MouseEvent mouseEvent) {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("3");
         } else {
@@ -885,7 +885,7 @@ public class RunningController extends GenericController {
     }
     @FXML
     public void commonCard4Clicked(MouseEvent mouseEvent) {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("4");
         } else {
@@ -896,7 +896,7 @@ public class RunningController extends GenericController {
     }
     @FXML
     public void commonCard5Clicked(MouseEvent mouseEvent) {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("5");
         } else {
@@ -907,7 +907,7 @@ public class RunningController extends GenericController {
     }
     @FXML
     public void commonCard6Clicked(MouseEvent mouseEvent) {
-        GuiReader reader = getInputReaderGUI();
+        ReaderQueue reader = getInputReaderGUI();
         if (reader != null) {
             reader.getBuffer().add("6");
         } else {

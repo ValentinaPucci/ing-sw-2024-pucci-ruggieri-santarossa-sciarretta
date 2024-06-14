@@ -9,13 +9,12 @@ import it.polimi.demo.network.rmi.RMIClient;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.view.dynamic.utilities.gameFacts.FactQueue;
 import it.polimi.demo.view.dynamic.utilities.gameFacts.FactType;
-import it.polimi.demo.view.dynamic.utilities.parser.AbstractReader;
-import it.polimi.demo.view.dynamic.utilities.parser.GenericParser;
-import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
-import it.polimi.demo.view.dynamic.utilities.parser.TuiReader;
+import it.polimi.demo.view.dynamic.utilities.liveBuffer.QueueParser;
+import it.polimi.demo.view.dynamic.utilities.liveBuffer.ReaderQueue;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import it.polimi.demo.view.gui.GUI;
 import it.polimi.demo.network.socket.client.ClientSocket;
+import it.polimi.demo.view.text.PrintAsync;
 import it.polimi.demo.view.text.TUI;
 
 import java.io.IOException;
@@ -25,6 +24,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.function.Consumer;
 
 import static it.polimi.demo.view.dynamic.utilities.gameFacts.FactType.*;
@@ -35,8 +35,8 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     private static final long serialVersionUID = 3620482106619487368L;
 
     // buffers and parsers
-    protected GenericParser generic_parser;
-    protected AbstractReader abstract_reader;
+    protected ReaderQueue reader;
+    protected QueueParser parser;
 
     private final UI ui;
 
@@ -53,19 +53,33 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     public GameDynamic(ApplicationGUI guiApplication, TypeConnection selection) {
         this(selection, guiApplication);
     }
-    
-    private GameDynamic(TypeConnection selection, ApplicationGUI guiApplication) {
-        
+
+    public GameDynamic(TypeConnection selection, ApplicationGUI guiApplication) {
+
         startConnection(selection);
-        
+        reader = new ReaderQueue();
+
         if (guiApplication == null) {
-            abstract_reader = new TuiReader();
+            // TUI
+            new Thread(() -> {
+                try (Scanner scanner = new Scanner(System.in)) {
+                    while (!Thread.currentThread().isInterrupted()) {
+                        if (scanner.hasNextLine()) {
+                            String input = scanner.nextLine();
+                            reader.getBuffer().add(input);
+                            PrintAsync.printAsync("\033[1A\033[2K");
+                        }
+                    }
+                } catch (Exception e) {
+                    // Handle other unexpected exceptions if necessary
+                    e.printStackTrace();
+                }
+            }).start();
             ui = new TUI();
         } else {
-            abstract_reader = new GuiReader();
-            ui = new GUI(guiApplication, (GuiReader) abstract_reader);
+            ui = new GUI(guiApplication, reader);
         }
-        generic_parser = new GenericParser(abstract_reader.getBuffer(), this);
+        parser = new QueueParser(reader.getBuffer(), this);
         new Thread(this).start();
     }
 
@@ -228,7 +242,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         Map<FactType, Runnable> actions = Map.of(
                 FactType.GAME_STARTED, () -> {
                     ui.show_gameStarted(model);
-                    generic_parser.bindPlayerToParser(model.getGameId(), model.getPlayerEntity(nickname));
+                    parser.bindPlayerToParser(model.getGameId(), model.getPlayerEntity(nickname));
                 },
                 FactType.NEXT_TURN, () -> {
                     ui.show_nextTurn(model, nickname);
@@ -297,7 +311,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         Map<FactType, Runnable> actions = Map.of(
                 FactType.GAME_ENDED, () -> {
                     ui.show_menu();
-                    generic_parser.getProcessed_data_queue().clear();
+                    parser.getProcessed_data_queue().clear();
                     updateParser();
                     leave(nickname, model.getGameId());
                     youLeft();
@@ -309,7 +323,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     
     private void updateParser() {
         try {
-            generic_parser.getProcessed_data_queue().take();
+            parser.getProcessed_data_queue().take();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -328,7 +342,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     public void youLeft() {
         ui.resetImportantEvents();
         facts.offer(null, LOBBY_INFO);
-        generic_parser.bindPlayerToParser(null, null);
+        parser.bindPlayerToParser(null, null);
     }
 
     /*===============ASK METHODS===============*/
@@ -466,7 +480,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
     private String getProcessedData() {
         try {
-            return this.generic_parser.getProcessed_data_queue().take();
+            return this.parser.getProcessed_data_queue().take();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -649,7 +663,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
             ui.show_myTurnIsFinished();
         }
         facts.offer(model, FactType.NEXT_TURN);
-        generic_parser.getProcessed_data_queue().clear();
+        parser.getProcessed_data_queue().clear();
     }
 
     @Override

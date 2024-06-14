@@ -1,6 +1,6 @@
 package it.polimi.demo.view.gui;
 
-import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
+import it.polimi.demo.view.dynamic.utilities.liveBuffer.ReaderQueue;
 import it.polimi.demo.view.gui.controllers.GenericController;
 import it.polimi.demo.view.gui.scene.SceneType;
 import javafx.scene.Scene;
@@ -44,9 +44,9 @@ public class SceneInfo {
 
     /**
      * Method to set the input reader GUI.
-     * @param GuiReader the input reader GUI {@link GuiReader}
+     * @param GuiReader the input reader GUI
      */
-    public void setInputReaderGUI(GuiReader GuiReader){
+    public void setInputReaderGUI(ReaderQueue GuiReader){
         //System.out.println("setInputReaderGUI: "+ inputReaderGUI);
         if(genericController!=null) {
             genericController.setInputReaderGUI(GuiReader);
