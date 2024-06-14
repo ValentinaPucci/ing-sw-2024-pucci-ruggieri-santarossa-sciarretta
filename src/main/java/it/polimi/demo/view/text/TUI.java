@@ -182,9 +182,11 @@ public class TUI extends UI {
 
     @Override
     public void show_starterCards(ModelView gameModel) {
+        clearScreen();
         List<StarterCard> starterCards = gameModel.getStarterCards(nickname);
         TuiCardGraphics.showStarterCardFront(starterCards.get(0));
         TuiCardGraphics.showStarterCardBack(starterCards.get(1));
+        clearScreen();
     }
 
     /**
@@ -193,6 +195,7 @@ public class TUI extends UI {
      */
     @Override
     public void show_cardChosen(String nickname, ModelView model) {
+        clearScreen();
         if (model.getPlayerEntity(nickname).getChosenGameCard() instanceof GoldCard) {
             System.out.println("You have chosen the following Gold Card: \n");
             TuiCardGraphics.showGoldCard((GoldCard) model.getPlayerEntity(nickname).getChosenGameCard());
@@ -201,6 +204,7 @@ public class TUI extends UI {
             System.out.println("You have chosen the following Resource Card: \n");
             TuiCardGraphics.showResourceCard(model.getPlayerEntity(nickname).getChosenGameCard());
         }
+        clearScreen();
     }
 
     @Override
@@ -274,9 +278,6 @@ public class TUI extends UI {
         clearScreen();
     }
 
-    /**
-     * @param gameModel the model that has the common cards to show
-     */
     @Override
     public void show_commonObjectives(ModelView gameModel) {
 
@@ -290,10 +291,6 @@ public class TUI extends UI {
         clearScreen();
     }
 
-    /**
-     * @param gameModel model where gameFacts happen
-     * @param nick      player's nickname
-     */
     @Override
     public void show_playerJoined(ModelView gameModel, String nick) {
         clearScreen();
@@ -359,36 +356,6 @@ public class TUI extends UI {
     }
 
     /**
-     * Stuff that always needs to be visible
-     *
-     * @param model
-     */
-    public void show_alwaysShowForAll(ModelView model) {
-        this.clearScreen();
-        //show_messages(model);
-        show_important_events();
-    }
-
-    /**
-     * Shows the next player
-     *
-     * @param gameModel
-     */
-    public void show_nextTurn(ModelView gameModel) {
-        printAsync(ansi().cursor(Constants.row_nextTurn, 0).bold().a("Next turn! It's up to: "
-                + gameModel.getPlayersConnected().peek().getNickname()).boldOff());
-    }
-
-    /**
-     * Shows a welcome message
-     *
-     * @param nick
-     */
-    public void show_welcome(String nick) {
-        printAsync(ansi().cursor(Constants.row_nextTurn + 1, 0).bold().a("Welcome " + nick).boldOff());
-    }
-
-    /**
      * Clears important gameFacts' list
      */
     @Override
@@ -405,11 +372,6 @@ public class TUI extends UI {
         this.clearScreen();
         printAsync(ansi().fg(WHITE).bg(RED).bold().a("CONNECTION TO SERVER LOST!")
                 .boldOff().fg(DEFAULT).bgDefault());
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         System.exit(-1);
     }
 
@@ -456,9 +418,9 @@ public class TUI extends UI {
      */
     @Override
     public void show_gameStarted(ModelView model) {
-        this.clearScreen();
-        this.show_titleCodexNaturalis();
-        this.show_alwaysShowForAll(model);
+        clearScreen();
+        show_titleCodexNaturalis();
+        show_important_events();
     }
 
     /**
@@ -592,7 +554,8 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_ReadyToStart(ModelView gameModel, String nicknameofyou) {
+    public void show_ReadyToStart(ModelView gameModel, String s) {
+
     }
 
 }

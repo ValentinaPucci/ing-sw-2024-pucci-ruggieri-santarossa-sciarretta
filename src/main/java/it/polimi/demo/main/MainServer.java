@@ -1,32 +1,27 @@
 package it.polimi.demo.main;
 
 import it.polimi.demo.Constants;
+import it.polimi.demo.main.utils.BoolAdd;
+import it.polimi.demo.main.utils.StaticPromptValidator;
 import it.polimi.demo.network.rmi.RMIServer;
 import it.polimi.demo.network.socket.server.Server;
 
 import java.io.IOException;
-import java.rmi.RemoteException;
-import java.util.Scanner;
 
 public class MainServer {
 
-    public static void main(String... args) throws RemoteException {
+    public static void main(String... args) throws IOException {
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Enter remote IP (empty for default):");
-        String remoteIP = scanner.nextLine();
-
-        if (remoteIP.isEmpty()) {
-            remoteIP = Constants.Remote_ip;
+        BoolAdd remoteIP = StaticPromptValidator.promptForIP("Insert remote IP (leave empty for localhost): ");
+        if (remoteIP.isNotEmpty()) {
+            Constants.serverIp = remoteIP.add();
+            System.setProperty("java.rmi.server.hostname", remoteIP.add());
         }
-        System.setProperty("java.rmi.server.hostname", remoteIP);
+        else
+            System.setProperty("java.rmi.server.hostname", Constants.Remote_ip);
 
         // Here we start Socket Server
-        try {
-            new Server().start(Constants.Socket_port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        new Server().start(Constants.Socket_port);
         // Here we bind RMI Server
         new RMIServer();
     }
