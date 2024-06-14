@@ -68,7 +68,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @return true if the ping is expired, false otherwise
      */
     private boolean isPingFresh(Ping ping) {
-        return (System.currentTimeMillis() - ping.getPing()) > Constants.secondsToWaitReconnection;
+        return (System.currentTimeMillis() - ping.ping()) > Constants.secondsToWaitReconnection;
     }
 
     /**
@@ -78,7 +78,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param listener the listener of the player
      */
     public void handleDisconnection(Ping ping, Listener listener) {
-        disconnectPlayer(ping.getNickname(), listener, this::removeAndNotify);
+        disconnectPlayer(ping.nickname(), listener, this::removeAndNotify);
     }
 
     /**

@@ -132,3 +132,5 @@ public class ObserverManagerClient implements Listener, Serializable {
         dynamic.messageSent(model, nickname, message);
     }
 }
+
+
