@@ -6,7 +6,9 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.demo.view.text.PrintAsync.printAsync;
+import static it.polimi.demo.network.StaticPrinter.staticPrinter;
+import static it.polimi.demo.network.StaticPrinter.staticPrinterNoNewLine;
+
 public class Server extends Thread implements Serializable {
     /**
      * Socket that represents the Server
@@ -34,7 +36,7 @@ public class Server extends Thread implements Serializable {
         try {
             serverSocket = new ServerSocket(server_port);
             this.start();
-            printAsync("Server Socket READY");
+            staticPrinter("Server Socket READY");
         } catch (IOException e) {
             System.err.println("[ERROR] Initializing server socket: " + e.getMessage());
             throw e;
@@ -52,7 +54,7 @@ public class Server extends Thread implements Serializable {
                 ClientConnection Client = new ClientConnection(serverSocket.accept());
                 handlers.add(Client);
                 handlers.get(handlers.size() - 1).start();
-                printAsync("[SOCKET] New client connection accepted");
+                staticPrinter("[SOCKET] New client connection accepted");
             }
         } catch (IOException e) { System.err.println("[ERROR] Accepting client connection: \n\t" + e.getMessage());}
 

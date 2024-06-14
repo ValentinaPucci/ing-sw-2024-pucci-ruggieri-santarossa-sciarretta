@@ -11,7 +11,9 @@ import java.rmi.RemoteException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static it.polimi.demo.view.text.PrintAsync.printAsync;
+import static it.polimi.demo.network.StaticPrinter.staticPrinter;
+import static it.polimi.demo.network.StaticPrinter.staticPrinterNoNewLine;
+
 
 public class ClientConnection extends Thread implements Serializable {
 
@@ -35,7 +37,7 @@ public class ClientConnection extends Thread implements Serializable {
         try {
             socket.close();
         } catch (IOException e) {
-            printAsync("Error closing socket: " + e.getMessage());
+            staticPrinter("Error closing socket: " + e.getMessage());
         }
     }
 
@@ -90,19 +92,19 @@ public class ClientConnection extends Thread implements Serializable {
                     message.performOnGameController(controller);
                 }
             } catch (RemoteException | GameEndedException e) {
-                printAsync("Error handling game logic: " + e.getMessage());
+                staticPrinter("Error handling game logic: " + e.getMessage());
             }
         }
     }
 
     private void disconnectClient() {
-        printAsync("ClientSocket disconnected due to communication failure");
+        staticPrinter("ClientSocket disconnected due to communication failure");
         try {
             if (controller != null) {
                 controller.leave(new GameListenersHandlerSocket(outputStream), userNickname);
             }
         } catch (RemoteException e) {
-            printAsync("Error during disconnection: " + e.getMessage());
+            staticPrinter("Error during disconnection: " + e.getMessage());
         }
     }
 }
