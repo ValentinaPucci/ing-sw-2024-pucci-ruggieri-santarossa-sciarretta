@@ -3,25 +3,24 @@ package it.polimi.demo.view.gui;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.view.dynamic.UI;
-import it.polimi.demo.view.dynamic.utilities.liveBuffer.ReaderQueue;
+
 import it.polimi.demo.view.gui.controllers.LobbyController;
 import it.polimi.demo.view.gui.controllers.RunningController;
 import it.polimi.demo.view.gui.scene.SceneType;
 import javafx.application.Platform;
 
 import java.util.ArrayList;
-
-import static it.polimi.demo.view.text.PrintAsync.printAsync;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class GUI extends UI {
 
     private ApplicationGUI guiApplication;
-    private ReaderQueue GuiReader;
+    private LinkedBlockingQueue<String> GuiReader;
     private boolean alreadyShowedLobby = false;
 
     private String nickname;
 
-    public GUI(ApplicationGUI guiApplication, ReaderQueue GuiReader) {
+    public GUI(ApplicationGUI guiApplication, LinkedBlockingQueue<String> GuiReader) {
         this.guiApplication = guiApplication;
         this.GuiReader = GuiReader;
         nickname = null;

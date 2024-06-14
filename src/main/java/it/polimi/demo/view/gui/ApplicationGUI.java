@@ -2,9 +2,8 @@ package it.polimi.demo.view.gui;
 
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.view.dynamic.TypeConnection;
+import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.GameDynamic;
-import it.polimi.demo.view.dynamic.utilities.liveBuffer.ReaderQueue;
 import it.polimi.demo.view.gui.controllers.*;
 import it.polimi.demo.view.gui.scene.SceneType;
 
@@ -24,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static it.polimi.demo.view.gui.scene.SceneType.*;
 
@@ -99,7 +99,7 @@ public class ApplicationGUI extends Application {
         }
     }
 
-    public void setInputReaderGUItoAllControllers(ReaderQueue GuiReader) {
+    public void setInputReaderGUItoAllControllers(LinkedBlockingQueue<String> GuiReader) {
         loadScenes();
         for (SceneInfo s : scenes) {
             s.setInputReaderGUI(GuiReader);

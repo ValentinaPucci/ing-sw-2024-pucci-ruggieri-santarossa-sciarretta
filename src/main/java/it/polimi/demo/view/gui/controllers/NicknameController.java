@@ -12,7 +12,7 @@ public class NicknameController extends GenericController {
     @FXML
     void enter(ActionEvent event) {
         if(!nickname.getText().isEmpty()) {
-            getInputReaderGUI().getBuffer().add(nickname.getText());
+            getInputReaderGUI().add(nickname.getText());
         }
     }
 
