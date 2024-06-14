@@ -1,17 +1,18 @@
 package it.polimi.demo.view.gui.controllers;
 
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class MenuController extends GenericController{
 
     @FXML
     public void CreateGame(ActionEvent event) {
         System.out.println("CreateGame: "+ event);
-        GuiReader reader = getInputReaderGUI();
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("c");
+            reader.add("c");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
             System.out.println("L'oggetto inputReaderGUI è null.");
@@ -20,9 +21,9 @@ public class MenuController extends GenericController{
 
     @FXML
     public void JoinGame(ActionEvent event) {
-        GuiReader reader = getInputReaderGUI();
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("js");
+            reader.add("js");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
             System.out.println("L'oggetto inputReaderGUI è null.");
@@ -31,9 +32,9 @@ public class MenuController extends GenericController{
 
     @FXML
     public void RandomGame(ActionEvent event) {
-        GuiReader reader = getInputReaderGUI();
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("j");
+            reader.add("j");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
             System.out.println("L'oggetto inputReaderGUI è null.");
@@ -42,9 +43,9 @@ public class MenuController extends GenericController{
 
     @FXML
     public void Reconnect(ActionEvent event) {
-        GuiReader reader = getInputReaderGUI();
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("x");
+            reader.add("x");
         } else {
             // Gestione del caso in cui getInputReaderGUI() restituisce null
             System.out.println("L'oggetto inputReaderGUI è null.");

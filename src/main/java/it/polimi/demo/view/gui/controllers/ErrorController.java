@@ -21,7 +21,7 @@ public class ErrorController extends GenericController {
      */
     public void GoToMenu(MouseEvent e){
         if(!needToExitApp) {
-            getInputReaderGUI().addTxt("a");
+            getInputReaderGUI().add("a");
         }else{
             System.exit(-1);
         }

@@ -1,23 +1,24 @@
 package it.polimi.demo.view.gui.controllers;
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
+
+import java.util.concurrent.LinkedBlockingQueue;
 
 public abstract class GenericController {
 
-    private GuiReader GuiReader;
+    private LinkedBlockingQueue<String> GuiReader;
 
     /**
-     * Method to get the input reader GUI.
-     * @return the input reader GUI
+     * Method to get the input reader_queue GUI.
+     * @return the input reader_queue GUI
      */
-    public GuiReader getInputReaderGUI() {
+    public LinkedBlockingQueue<String> getInputReaderGUI() {
         return GuiReader;
     }
 
     /**
-     * Method to set the input reader GUI.
-     * @param GuiReader the input reader GUI
+     * Method to set the input reader_queue GUI.
+     * @param GuiReader the input reader_queue GUI
      */
-    public void setInputReaderGUI(GuiReader GuiReader) {
+    public void setInputReaderGUI(LinkedBlockingQueue<String> GuiReader) {
         //System.out.println("setInputReaderGUIGeneric: "+ inputReaderGUI);
         this.GuiReader = GuiReader;
     }

@@ -5,70 +5,89 @@ import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.network.StaticPrinter;
 import it.polimi.demo.network.rmi.RMIClient;
-import it.polimi.demo.view.dynamic.utilities.*;
+import it.polimi.demo.observer.Listener;
+import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.utilities.gameFacts.FactQueue;
 import it.polimi.demo.view.dynamic.utilities.gameFacts.FactType;
+import it.polimi.demo.view.dynamic.utilities.QueueParser;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import it.polimi.demo.view.gui.GUI;
 import it.polimi.demo.network.socket.client.ClientSocket;
+import it.polimi.demo.view.text.PrintAsync;
 import it.polimi.demo.view.text.TUI;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 import static it.polimi.demo.view.dynamic.utilities.gameFacts.FactType.*;
 
-public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
+public class GameDynamic implements Listener, Runnable, ClientInterface {
 
-    private String nickname;
+    @Serial
+    private static final long serialVersionUID = 3620482106619487368L;
 
-    private final FactQueue facts = new FactQueue();
-
-    private ClientInterface client_interface;
+    // buffers and parsers
+    protected LinkedBlockingQueue<String> reader_queue;
+    protected QueueParser parser;
 
     private final UI ui;
 
-    protected GenericParser generic_parser;
+    private String nickname;
+    private final FactQueue facts = new FactQueue();
+    private ClientInterface client_interface;
 
-    protected AbstractReader abstract_reader;
+    // Constructor for TUI
+    public GameDynamic(TypeConnection selection) {
+        this(selection, null);
+    }
 
-    public GameDynamic(ConnectionSelection connectionSelection) {
+    // Constructor for GUI
+    public GameDynamic(ApplicationGUI guiApplication, TypeConnection selection) {
+        this(selection, guiApplication);
+    }
 
-        nickname = "";
+    public GameDynamic(TypeConnection selection, ApplicationGUI guiApplication) {
 
-        switch (connectionSelection) {
-            case SOCKET -> client_interface = new ClientSocket(this);
-            case RMI -> client_interface = new RMIClient(this);
+        startConnection(selection);
+        reader_queue = new LinkedBlockingQueue<>();
+
+        if (guiApplication == null) {
+            // TUI
+            new Thread(() -> {
+                try (Scanner scanner = new Scanner(System.in)) {
+                    while (!Thread.currentThread().isInterrupted()) {
+                        if (scanner.hasNextLine()) {
+                            String input = scanner.nextLine();
+                            reader_queue.add(input);
+                            PrintAsync.printAsync("\033[1A\033[2K");
+                        }
+                    }
+                } catch (Exception e) {
+                    // Handle other unexpected exceptions if necessary
+                    e.printStackTrace();
+                }
+            }).start();
+            ui = new TUI();
+        } else {
+            ui = new GUI(guiApplication, reader_queue);
         }
-
-        this.abstract_reader = new TuiReader();
-        ui = new TUI();
-        this.generic_parser = new GenericParser(this.abstract_reader.getBuffer(), this);
-
+        parser = new QueueParser(reader_queue, this);
         new Thread(this).start();
     }
 
-    public GameDynamic(ApplicationGUI guiApplication, ConnectionSelection connectionSelection) {
-
-        nickname = "";
-
-        switch (connectionSelection) {
-            case SOCKET -> client_interface = new ClientSocket(this);
-            case RMI -> client_interface = new RMIClient(this);
-        }
-
-        this.abstract_reader = new GuiReader(); //GuiReader@5184ffd2
-        ui = new GUI(guiApplication, (GuiReader) abstract_reader); //GuiReader@5184ffd2
-        this.generic_parser = new GenericParser(this.abstract_reader.getBuffer(), this); //GuiReader@5184ffd2
-
-        new Thread(this).start();
+    public void startConnection(TypeConnection selection) {
+        client_interface = (selection == TypeConnection.RMI) 
+                ? new RMIClient(this) 
+                : new ClientSocket(this);
     }
 
     @Override
@@ -76,6 +95,7 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
         facts.offer(null, LOBBY_INFO);
 
+        // In - game handler
         Map<GameStatus, Consumer<HashMap<ModelView, FactType>>> statusHandlers = Map.of(
                 GameStatus.WAIT, this::safeStatusWait,
                 GameStatus.FIRST_ROUND, this::safeStatusFirstRound,
@@ -85,9 +105,10 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
                 GameStatus.ENDED, this::statusEnded
         );
 
+        // Out - game handler
         while (!Thread.currentThread().isInterrupted()) {
-            Runnable event =
-                    facts.isToHandle() ? () -> handleEvent(statusHandlers)
+            Runnable event = facts.isToHandle() 
+                            ? () -> handleEvent(statusHandlers)
                             : () -> handleFallbackEvent(this::safeStatusNotInAGame);
             event.run();
             try { Thread.sleep(200); }
@@ -103,27 +124,23 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
         HashMap<ModelView, FactType> map = facts.poll();
 
-        if (map == null) {
+        if (map == null || map.containsKey(null) ) 
             return;
-        }
-        if (map.containsKey(null)) {
-            return;
-        }
-
+        
+        // Here we take the only model_view associated to the given fact
         ModelView model_view = map.keySet().iterator().next();
 
-        if (model_view != null) {
+        if (model_view != null) 
             handlers.getOrDefault(model_view.getStatus(), this::doNothing).accept(map);
-        }
     }
 
     private void handleFallbackEvent(Consumer<HashMap<ModelView, FactType>> fallback) {
 
         HashMap<ModelView, FactType> map = facts.poll();
 
-        if (map != null) {
+        if (map != null) 
             fallback.accept(map);
-        }
+        
     }
 
     private void safeStatusWait(HashMap<ModelView, FactType> map) {
@@ -172,6 +189,13 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
         FactType type = map.values().iterator().next();
 
+        // Helper method to handle common nickname and fact operations
+        Consumer<String> handleNicknameAndOffer = (s) -> {
+            nickname = null;
+            facts.offer(null, FactType.LOBBY_INFO);
+            ui.addImportantEvent(s);
+        };
+
         Map<FactType, Runnable> actions = Map.of(
                 FactType.LOBBY_INFO, () -> {
                     boolean selectionOk;
@@ -179,30 +203,19 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
                         selectionOk = askSelectGame();
                     } while (!selectionOk);
                 },
-                FactType.ALREADY_USED_NICKNAME, () -> {
-                    nickname = null;
-                    facts.offer(null, FactType.LOBBY_INFO);
-                    ui.addImportantEvent("WARNING> Nickname already used!");
-                },
-                FactType.FULL_GAME, () -> {
-                    nickname = null;
-                    facts.offer(null, FactType.LOBBY_INFO);
-                    ui.addImportantEvent("WARNING> Game is Full!");
-                },
+                FactType.ALREADY_USED_NICKNAME, () -> handleNicknameAndOffer.accept("[WARNING]: Already used nickname!"),
+                FactType.FULL_GAME, () -> handleNicknameAndOffer.accept("[WARNING] Full game!"),
                 FactType.GENERIC_ERROR, () -> {
+                    ui.show_menu();
+                    updateParser();
                     nickname = null;
-                    ui.show_returnToMenuMsg();
-                    try {
-                        this.generic_parser.getProcessedDataQueue().take();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
                     facts.offer(null, FactType.LOBBY_INFO);
                 }
         );
 
         actions.getOrDefault(type, () -> {}).run();
     }
+
 
     private void statusWait(HashMap<ModelView, FactType> map) throws IOException, InterruptedException {
 
@@ -230,12 +243,11 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
         Map<FactType, Runnable> actions = Map.of(
                 FactType.GAME_STARTED, () -> {
                     ui.show_gameStarted(model);
-                    this.generic_parser.setPlayer(model.getPlayerEntity(nickname));
-                    this.generic_parser.setGameId(model.getGameId());
+                    parser.bindPlayerToParser(model.getGameId(), model.getPlayerEntity(nickname));
                 },
                 FactType.NEXT_TURN, () -> {
                     ui.show_nextTurn(model, nickname);
-                    if (model.getCurrentPlayerNickname().equals(nickname)) {
+                    if (amI(model)) {
                         ui.show_objectiveCards(model);
                         askWhichObjectiveCard();
                         ui.show_starterCards(model);
@@ -254,7 +266,7 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
         Map<FactType, Runnable> actions = Map.of(
                 FactType.NEXT_TURN, () -> {
-                    if (model.getCurrentPlayerNickname().equals(nickname)) {
+                    if (amI(model)) {
                         ui.show_personalObjectiveCard(model);
                         ui.show_playerHand(model, nickname);
                         askWhichCard();
@@ -263,7 +275,7 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
                 FactType.ASK_WHICH_ORIENTATION, () -> handleOrientationOrIllegalMove(map),
                 FactType.ILLEGAL_MOVE, () -> handleOrientationOrIllegalMove(map),
                 FactType.CARD_PLACED, () -> {
-                    if (model.getCurrentPlayerNickname().equals(nickname)) {
+                    if (amI(model)) {
                         askWhereToDrawFrom();
                     }
                 }
@@ -279,7 +291,7 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
         Map<FactType, Runnable> actions = Map.of(
                 FactType.NEXT_TURN, () -> {
-                    if (model.getCurrentPlayerNickname().equals(nickname)) {
+                    if (amI(model)) {
                         ui.show_personalObjectiveCard(model);
                         ui.show_playerHand(model, nickname);
                         askWhichCard();
@@ -299,26 +311,30 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
         Map<FactType, Runnable> actions = Map.of(
                 FactType.GAME_ENDED, () -> {
-                    ui.show_returnToMenuMsg();
-                    this.generic_parser.getProcessedDataQueue().clear();
-                    try {
-                        this.generic_parser.getProcessedDataQueue().take();
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                    this.leave(nickname, model.getGameId());
-                    this.youLeft();
+                    ui.show_menu();
+                    parser.getProcessed_data_queue().clear();
+                    updateParser();
+                    leave(nickname, model.getGameId());
+                    youLeft();
                 }
         );
 
         actions.getOrDefault(type, () -> {}).run();
+    }
+    
+    private void updateParser() {
+        try {
+            parser.getProcessed_data_queue().take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void handleOrientationOrIllegalMove(HashMap<ModelView, FactType> map) {
 
         ModelView model = map.keySet().iterator().next();
 
-        if (model.getCurrentPlayerNickname().equals(nickname)) {
+        if (amI(model)) {
             ui.show_cardChosen(nickname, model);
             askGameCardOrientationAndPlace();
         }
@@ -327,9 +343,7 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
     public void youLeft() {
         ui.resetImportantEvents();
         facts.offer(null, LOBBY_INFO);
-
-        this.generic_parser.setPlayer(null);
-        this.generic_parser.setGameId(null);
+        parser.bindPlayerToParser(null, null);
     }
 
     /*===============ASK METHODS===============*/
@@ -346,10 +360,9 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
             ui.show_insertNumOfPlayersMsg();
             try {
                 String temp = getProcessedData();
-                if (temp.equals(".")) return -1;
                 num_of_players = Integer.parseInt(temp);
             } catch (NumberFormatException e) {
-                ui.show_NaNMsg();
+                ui.show_invalidInput();
             }
         }
         return num_of_players;
@@ -370,7 +383,8 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
     private boolean handleCreateGame() {
         Integer num_players = askNumOfPlayers();
-        if (num_players < 2 || num_players > 4) return false;
+        if (num_players < 2 || num_players > 4)
+            return false;
         askNickname();
         createGame(nickname, num_players);
         return true;
@@ -384,7 +398,8 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
     private boolean handleJoinSpecificGame() {
         Integer gameId = askGameId();
-        if (gameId == -1) return false;
+        if (gameId == -1)
+            return false;
         askNickname();
         joinGame(nickname, gameId);
         return true;
@@ -396,10 +411,9 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
             ui.show_inputGameIdMsg();
             try {
                 String temp = getProcessedData();
-                if (temp.equals(".")) return -1;
                 gameId = Integer.parseInt(temp);
             } catch (NumberFormatException e) {
-                ui.show_NaNMsg();
+                ui.show_invalidInput();
             }
         }
         return gameId;
@@ -463,11 +477,11 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
         }
     }
 
-    // real getter from the buffer
+    // real getters from the buffer
 
     private String getProcessedData() {
         try {
-            return this.generic_parser.getProcessedDataQueue().take();
+            return this.parser.getProcessed_data_queue().take();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -486,7 +500,8 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
     private int getValidatedCoordinate(String coordinate) {
         String input;
         do {
-            ui.show_genericMessage("Choose the ** " + coordinate + " ** coordinates where to place the card (insert a number between -250 and 250)");
+            ui.show_genericMessage("Choose the ** " + coordinate +
+                    " ** coordinates where to place the card (insert a number between -250 and 250)");
             input = getProcessedData();
         } while (!isCoordinateValid(input));
         return Integer.parseInt(input.trim());
@@ -508,171 +523,134 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
         ui.show_noConnectionError();
     }
 
+    // Helper method for handling common try-catch structure
+    private void handleAction(Action action) {
+        try {
+            action.execute();
+        } catch (IOException | InterruptedException | NotBoundException e) {
+            noConnectionError();
+        } catch (GameEndedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @FunctionalInterface
+    private interface Action {
+        void execute() throws IOException, InterruptedException, NotBoundException, GameEndedException;
+    }
+
     @Override
     public void createGame(String nickname, int num_of_players) {
         ui.show_creatingNewGameMsg(nickname);
-        try {
-            client_interface.createGame(nickname, num_of_players);
-            System.out.println("Created game");
-        } catch (IOException | InterruptedException | NotBoundException e) {
-            StaticPrinter.staticPrinter("Error in here, createGame gameFlow!");
-            noConnectionError();
-        }
+        handleAction(() -> client_interface.createGame(nickname, num_of_players));
     }
 
     @Override
     public void joinRandomly(String nick) {
         ui.show_joiningFirstAvailableMsg(nick);
-        try {
-            client_interface.joinRandomly(nick);
-        } catch (IOException | InterruptedException | NotBoundException e) {
-            noConnectionError();
-        }
+        handleAction(() -> client_interface.joinRandomly(nick));
     }
-
 
     @Override
     public void joinGame(String nick, int game_id) {
         ui.show_joiningToGameIdMsg(game_id, nick);
-        try {
-            client_interface.joinGame(nick, game_id);
-        } catch (IOException | InterruptedException | NotBoundException e) {
-            noConnectionError();
-        }
+        handleAction(() -> client_interface.joinGame(nick, game_id));
     }
 
     @Override
     public void setAsReady() {
-        try {
-            client_interface.setAsReady();
-        } catch (IOException e) {
-            noConnectionError();
-        } catch (NotBoundException e) {
-            throw new RuntimeException(e);
-        }
+        handleAction(() -> client_interface.setAsReady());
     }
 
     @Override
     public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
-        try {
-            client_interface.placeStarterCard(orientation);
-        } catch (GameEndedException | NotBoundException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        handleAction(() -> client_interface.placeStarterCard(orientation));
     }
 
     @Override
     public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
-        try {
-            client_interface.placeCard(where_to_place_x, where_to_place_y, orientation);
-        } catch (GameEndedException | NotBoundException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        handleAction(() -> client_interface.placeCard(where_to_place_x, where_to_place_y, orientation));
     }
-
 
     @Override
     public void chooseCard(int which_card) throws RemoteException {
-        try {
-            client_interface.chooseCard(which_card);
-        } catch (GameEndedException | NotBoundException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        handleAction(() -> client_interface.chooseCard(which_card));
     }
 
     @Override
     public void drawCard(int index) throws RemoteException, GameEndedException {
-        try {
-            client_interface.drawCard(index);
-        } catch (GameEndedException | NotBoundException | IOException e) {
-            throw new RuntimeException(e);
-        }
+        handleAction(() -> client_interface.drawCard(index));
     }
 
     @Override
     public void sendMessage(String receiver, Message msg) {
-        try {
-            client_interface.sendMessage(receiver, msg);
-        } catch (RemoteException e) {
-            noConnectionError();
-        } catch (NotBoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        handleAction(() -> client_interface.sendMessage(receiver, msg));
     }
 
     @Override
     public void showOthersPersonalBoard(int player_index) {
-        try {
-            client_interface.showOthersPersonalBoard(player_index);
-        } catch (IOException | NotBoundException e) {
-            noConnectionError();
-        }
+        handleAction(() -> client_interface.showOthersPersonalBoard(player_index));
     }
 
     @Override
     public void leave(String nick, int idGame) {
-        try {
-            client_interface.leave(nick, idGame);
-        } catch (IOException | NotBoundException e) {
-            noConnectionError();
+        handleAction(() -> client_interface.leave(nick, idGame));
+    }
+
+    @Override
+    public void ping() {}
+
+    private boolean amI(ModelView model) {
+        return model.getCurrentPlayerNickname().equals(nickname);
+    }
+
+    private void ifAmI(ModelView model, Consumer<ModelView> action) {
+        if (amI(model)) {
+            action.accept(model);
         }
     }
 
     @Override
-    public void ping() {
-
-    }
-
-    // Server --------> Client
-
-    @Override
     public void starterCardPlaced(ModelView model, Orientation orientation, String nick) {
-        if (model.getCurrentPlayerNickname().equals(nickname))
-            ui.show_personalBoard(nickname, model);
+        ifAmI(model, m -> ui.show_personalBoard(nickname, m));
     }
 
     @Override
     public void cardChosen(ModelView model, int which_card) {
-        if (model.getCurrentPlayerNickname().equals(nickname)) {
-            facts.offer(model, ASK_WHICH_ORIENTATION);
-        }
+        ifAmI(model, m -> facts.offer(m, FactType.ASK_WHICH_ORIENTATION));
     }
 
     @Override
     public void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
-        if (model.getCurrentPlayerNickname().equals(nickname)) {
-            ui.show_personalBoard(nickname, model);
-            ui.show_commonBoard(model);
-            facts.offer(model, CARD_PLACED);
-        }
+        ifAmI(model, m -> {
+            ui.show_personalBoard(nickname, m);
+            ui.show_commonBoard(m);
+            facts.offer(m, FactType.CARD_PLACED);
+        });
     }
 
     @Override
     public void illegalMove(ModelView model) {
-        if (model.getCurrentPlayerNickname().equals(nickname)) {
+        ifAmI(model, m -> {
             ui.show_illegalMove();
             ui.show_genericMessage("Here we show you again your personal board:");
-            ui.show_personalBoard(nickname, model);
-            facts.offer(model, ILLEGAL_MOVE);
-        }
+            ui.show_personalBoard(nickname, m);
+            facts.offer(m, FactType.ILLEGAL_MOVE);
+        });
     }
 
     @Override
     public void successfulMove(ModelView model, Coordinate coord) throws RemoteException {
-        if (model.getCurrentPlayerNickname().equals(nickname)) {
-            ui.show_successfulMove(coord);
-        }
+        ifAmI(model, m -> ui.show_successfulMove(coord));
     }
 
     @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) {
-        if (model.getCurrentPlayerNickname().equals(nickname)) {
+        ifAmI(model, m -> {
             ui.show_illegalMoveBecauseOf(reason_why);
-            ui.show_personalBoard(nickname, model);
-            facts.offer(model, ILLEGAL_MOVE);
-        }
+            ui.show_personalBoard(nickname, m);
+            facts.offer(m, FactType.ILLEGAL_MOVE);
+        });
     }
 
     @Override
@@ -681,13 +659,12 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
     }
 
     @Override
-    public void nextTurn(ModelView gameModel) {
-        if (!gameModel.getCurrentPlayerNickname().equals(nickname) &&
-                (gameModel.getStatus() == GameStatus.RUNNING ||
-                        gameModel.getStatus() == GameStatus.SECOND_LAST_ROUND))
+    public void nextTurn(ModelView model) {
+        if (!amI(model) && (model.getStatus() == GameStatus.RUNNING || model.getStatus() == GameStatus.SECOND_LAST_ROUND)) {
             ui.show_myTurnIsFinished();
-        facts.offer(gameModel, FactType.NEXT_TURN);
-        this.generic_parser.getProcessedDataQueue().clear();
+        }
+        facts.offer(model, FactType.NEXT_TURN);
+        parser.getProcessed_data_queue().clear();
     }
 
     @Override
@@ -702,7 +679,7 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
         if (nick.equals(nickname)) {
             ui.show_ReadyToStart(gameModel, nickname);
         }
-        facts.offer(gameModel, PLAYER_IS_READY_TO_START);
+        facts.offer(gameModel, FactType.PLAYER_IS_READY_TO_START);
     }
 
     @Override
@@ -712,37 +689,31 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
 
     @Override
     public void joinUnableGameFull(Player wantedToJoin, ModelView gameModel) throws RemoteException {
-        facts.offer(null, FULL_GAME);
+        facts.offer(null, FactType.FULL_GAME);
     }
 
     @Override
     public void messageSent(ModelView gameModel, String nick, Message msg) {
-        if (!msg.getSender().getNickname().equals(nickname)) {
-            if (nickname.equals(nick)) {
-                // async
-                ui.show_messageSent(gameModel, nick);
-            } else if (nick.equals("all")) {
-                // async
-                ui.show_messageSent(gameModel, nick);
-            }
+        if (!msg.sender().getNickname().equals(nickname) && (nickname.equals(nick) || "all".equals(nick))) {
+            ui.show_messageSent(gameModel, nick);
         }
     }
 
     @Override
     public void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
-        facts.offer(null, ALREADY_USED_NICKNAME);
+        facts.offer(null, FactType.ALREADY_USED_NICKNAME);
     }
 
     @Override
     public void gameIdNotExists(int gameid) throws RemoteException {
         ui.show_noAvailableGamesToJoin("No currently game available with the following GameID: " + gameid);
-        facts.offer(null, GENERIC_ERROR);
+        facts.offer(null, FactType.GENERIC_ERROR);
     }
 
     @Override
     public void genericErrorWhenEnteringGame(String why) throws RemoteException {
         ui.show_noAvailableGamesToJoin(why);
-        facts.offer(null, GENERIC_ERROR);
+        facts.offer(null, FactType.GENERIC_ERROR);
     }
 
     @Override
@@ -760,23 +731,14 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
     @Override
     public void playerDisconnected(ModelView gameModel, String nick) {
         ui.addImportantEvent("Player " + nick + " has just disconnected");
-
-        if (gameModel.getStatus().equals(GameStatus.WAIT)) {
-            ui.show_playerJoined(gameModel, nickname);
-        }
     }
 
     @Override
     public void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException {
-        //se sono chi ha chiesto di vedere le personal board
-        if(modelView.getAllPlayers().size() > playerIndex) {
-            if (this.nickname.equals(playerNickname)) {
-                ui.show_othersPersonalBoard(modelView, playerIndex);
-            }
-        }else{
-            if (this.nickname.equals(playerNickname)) {
-                ui.show_genericMessage("Player index out of bounds");
-            }
+        if (modelView.getAllPlayers().size() > playerIndex && this.nickname.equals(playerNickname)) {
+            ui.show_othersPersonalBoard(modelView, playerIndex);
+        } else if (this.nickname.equals(playerNickname)) {
+            ui.show_genericMessage("Player index out of bounds");
         }
     }
 
@@ -789,5 +751,4 @@ public class GameDynamic extends Dynamic implements Runnable, ClientInterface {
     public void lastRound(ModelView gameModel) throws RemoteException {
         ui.show_genericMessage("*** Last round begins! Now you will not be able to draw any additional card! ***");
     }
-
 }

@@ -20,14 +20,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.demo.network.StaticPrinter.*;
+import static it.polimi.demo.view.text.PrintAsync.printAsync;
 import static org.fusesource.jansi.Ansi.Color.*;
 import static org.fusesource.jansi.Ansi.ansi;
+import static it.polimi.demo.view.text.PrintAsync.*;
+
 /**
  * This class is father to both the TUI  implementation<br>
  * it manages all the event that can occur<br>
  */
-
 public class TUI extends UI {
 
     private String nickname;
@@ -107,7 +108,6 @@ public class TUI extends UI {
     @Override
     public void show_gameEnded(ModelView model) {
         clearScreen();
-        // resize();
         show_titleCodexNaturalis();
         new PrintStream(System.out, true, System.console() != null
                 ? System.console().charset()
@@ -139,7 +139,7 @@ public class TUI extends UI {
         int classif = 1;
         StringBuilder ris = new StringBuilder();
         for (Map.Entry<Player, Integer> entry : model.getLeaderBoard().entrySet()) {
-            staticPrinter("");
+            printAsync("");
             ris.append(ansi().fg(WHITE).cursor(Constants.row_leaderboard + i, Constants.col_leaderboard)
                     .a("#" + classif + " "
                             + entry.getKey().getNickname() + ": "
@@ -147,7 +147,7 @@ public class TUI extends UI {
             i += 2;
             classif++;
         }
-        staticPrinter(ris);
+        printAsync(ris);
     }
 
     // *********************** SHOW METHODS  *********************** //
@@ -173,7 +173,7 @@ public class TUI extends UI {
     @Override
     public void show_objectiveCards(ModelView gameModel) {
         clearScreen();
-        staticPrinterTui("First, we show you the two objective cards you can choose from: \n");
+        printAsync("First, we show you the two objective cards you can choose from: \n");
         List<ObjectiveCard> objectiveCards = gameModel.getObjectiveCards(nickname);
         TuiCardGraphics.showObjectiveCard(objectiveCards.get(0));
         TuiCardGraphics.showObjectiveCard(objectiveCards.get(1));
@@ -182,9 +182,11 @@ public class TUI extends UI {
 
     @Override
     public void show_starterCards(ModelView gameModel) {
+        clearScreen();
         List<StarterCard> starterCards = gameModel.getStarterCards(nickname);
         TuiCardGraphics.showStarterCardFront(starterCards.get(0));
         TuiCardGraphics.showStarterCardBack(starterCards.get(1));
+        clearScreen();
     }
 
     /**
@@ -193,6 +195,7 @@ public class TUI extends UI {
      */
     @Override
     public void show_cardChosen(String nickname, ModelView model) {
+        clearScreen();
         if (model.getPlayerEntity(nickname).getChosenGameCard() instanceof GoldCard) {
             System.out.println("You have chosen the following Gold Card: \n");
             TuiCardGraphics.showGoldCard((GoldCard) model.getPlayerEntity(nickname).getChosenGameCard());
@@ -201,19 +204,20 @@ public class TUI extends UI {
             System.out.println("You have chosen the following Resource Card: \n");
             TuiCardGraphics.showResourceCard(model.getPlayerEntity(nickname).getChosenGameCard());
         }
+        clearScreen();
     }
 
     @Override
     public void show_illegalMove() {
         clearScreen();
-        staticPrinterTui("Illegal move! Try again and choose different coordinates! \n");
+        printAsync("Illegal move! Try again and choose different coordinates! \n");
         clearScreen();
     }
 
     @Override
     public void show_illegalMoveBecauseOf(String message) {
         clearScreen();
-        staticPrinterTui("Illegal move! " + message + "\n");
+        printAsync("Illegal move! " + message + "\n");
         clearScreen();
     }
 
@@ -225,7 +229,7 @@ public class TUI extends UI {
     @Override
     public void show_whereToDrawFrom() {
         clearScreen();
-        staticPrinterTui("""                       
+        printAsync("""                       
                         Select the index of the card you want to draw:\s
                          1: Resource Deck
                          2: First Resource Card on the table
@@ -250,7 +254,7 @@ public class TUI extends UI {
     @Override
     public void show_myTurnIsFinished() {
         clearScreen();
-        staticPrinterTui("Your turn is finished. Now, wait until it is again your turn! \n");
+        printAsync("Your turn is finished. Now, wait until it is again your turn! \n");
         clearScreen();
     }
 
@@ -274,9 +278,6 @@ public class TUI extends UI {
         clearScreen();
     }
 
-    /**
-     * @param gameModel the model that has the common cards to show
-     */
     @Override
     public void show_commonObjectives(ModelView gameModel) {
 
@@ -290,15 +291,11 @@ public class TUI extends UI {
         clearScreen();
     }
 
-    /**
-     * @param gameModel model where gameFacts happen
-     * @param nick      player's nickname
-     */
     @Override
     public void show_playerJoined(ModelView gameModel, String nick) {
         clearScreen();
         show_titleCodexNaturalis();
-        staticPrinter(ansi().cursor(10, 0).a("GameID: [" + gameModel.getGameId().toString() + "]\n").fg(DEFAULT));
+        printAsync(ansi().cursor(10, 0).a("GameID: [" + gameModel.getGameId().toString() + "]\n").fg(DEFAULT));
         clearScreen();
         System.out.flush();
         StringBuilder ris = new StringBuilder();
@@ -314,12 +311,12 @@ public class TUI extends UI {
             clearScreen();
             i++;
         }
-        staticPrinter(ris);
+        printAsyncNoCursorReset(ris);
 
         clearScreen();
         for (Player p : gameModel.getPlayersConnected())
             if (!p.getReadyToStart() && p.getNickname().equals(nick))
-                staticPrinter(ansi().cursor(17, 0).fg(WHITE).a("> When you are ready to start, enter (y): \n"));
+                printAsync(ansi().cursor(17, 0).fg(WHITE).a("> When you are ready to start, enter (y): \n"));
         clearScreen();
         System.out.flush();
     }
@@ -338,10 +335,10 @@ public class TUI extends UI {
             ris.append(ansi().fg(WHITE).cursor(Constants.row_important_events + 1 + i, Constants.col_important_events).a(s).a(" ".repeat(longestImportantEvent - s.length())).fg(DEFAULT));
             i++;
         }
-        staticPrinter(ris);
+        printAsync(ris);
         clearScreen();
 
-        staticPrinter(ansi().cursor(Constants.row_input, 0));
+        printAsync(ansi().cursor(Constants.row_input, 0));
     }
 
 
@@ -355,37 +352,7 @@ public class TUI extends UI {
         String ris = ansi().fg(RED).cursor(11, 4).bold().a(msgToVisualize).fg(DEFAULT).boldOff() +
                 String.valueOf(ansi().fg(RED).cursor(12, 4).bold().a(" Try later or create a new game!").fg(DEFAULT).boldOff());
         ansi().fg(DEFAULT);
-        staticPrinterTui(ris);
-    }
-
-    /**
-     * Stuff that always needs to be visible
-     *
-     * @param model
-     */
-    public void show_alwaysShowForAll(ModelView model) {
-        this.clearScreen();
-        //show_messages(model);
-        show_important_events();
-    }
-
-    /**
-     * Shows the next player
-     *
-     * @param gameModel
-     */
-    public void show_nextTurn(ModelView gameModel) {
-        staticPrinter(ansi().cursor(Constants.row_nextTurn, 0).bold().a("Next turn! It's up to: "
-                + gameModel.getPlayersConnected().peek().getNickname()).boldOff());
-    }
-
-    /**
-     * Shows a welcome message
-     *
-     * @param nick
-     */
-    public void show_welcome(String nick) {
-        staticPrinter(ansi().cursor(Constants.row_nextTurn + 1, 0).bold().a("Welcome " + nick).boldOff());
+        printAsyncNoCursorReset(ris);
     }
 
     /**
@@ -403,13 +370,8 @@ public class TUI extends UI {
     @Override
     protected void show_noConnectionError() {
         this.clearScreen();
-        staticPrinter(ansi().fg(WHITE).bg(RED).bold().a("CONNECTION TO SERVER LOST!")
+        printAsync(ansi().fg(WHITE).bg(RED).bold().a("CONNECTION TO SERVER LOST!")
                 .boldOff().fg(DEFAULT).bgDefault());
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
         System.exit(-1);
     }
 
@@ -433,8 +395,8 @@ public class TUI extends UI {
      */
     @Override
     public void show_orientation(String message) {
-        staticPrinterTui(message + "\n" + "\t> Choose card orientation (f:FRONT / b:BACK): ");
-        staticPrinter(ansi().cursorDownLine().a(""));
+        printAsync(message + "\n" + "\t> Choose card orientation (f:FRONT / b:BACK): ");
+        printAsyncNoCursorReset(ansi().cursorDownLine().a(""));
     }
 
     /**
@@ -446,7 +408,7 @@ public class TUI extends UI {
     @Override
     public void show_messageSent(ModelView model, String nickname) {
         Message mess = model.getChat().getLastMessage();
-        staticPrinter(ansi().cursor(Constants.row_chat, Constants.col_chat).a(mess.getSender().getNickname() + ": " + mess.getText()));
+        printAsync(ansi().cursor(Constants.row_chat, Constants.col_chat).a(mess.sender().getNickname() + ": " + mess.text()));
     }
 
     /**
@@ -456,29 +418,29 @@ public class TUI extends UI {
      */
     @Override
     public void show_gameStarted(ModelView model) {
-        this.clearScreen();
-        this.show_titleCodexNaturalis();
-        this.show_alwaysShowForAll(model);
+        clearScreen();
+        show_titleCodexNaturalis();
+        show_important_events();
     }
 
     /**
      * Tells the player to return to the main menu
      */
     @Override
-    public void show_returnToMenuMsg() {
-        staticPrinterTui("\nPress any key to return to the menu");
+    public void show_menu() {
+        printAsync("\nPress any key to return to the menu");
     }
 
     @Override
     public void show_genericMessage(String msg) {
         clearScreen();
-        staticPrinter(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(msg).reset());
+        printAsync(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(msg).reset());
     }
 
     @Override
     public void show_genericError(String msg) {
         clearScreen();
-        staticPrinter(Ansi.ansi().bold().fg(Ansi.Color.RED).a("\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
+        printAsync(Ansi.ansi().bold().fg(Ansi.Color.RED).a("\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
     }
 
     /**
@@ -487,7 +449,7 @@ public class TUI extends UI {
     @Override
     public void show_insertNicknameMsg() {
         clearScreen();
-        staticPrinter(ansi().cursor(Constants.row_gameID, 0).a("> Insert your nickname: "));
+        printAsyncNoCursorReset(ansi().cursor(Constants.row_gameID, 0).a("> Insert your nickname: "));
     }
 
     /**
@@ -496,7 +458,7 @@ public class TUI extends UI {
     @Override
     public void show_insertNumOfPlayersMsg() {
         clearScreen();
-        staticPrinter(ansi().cursor(Constants.row_gameID, 0).a("> Choose the number of players for this game: "));
+        printAsyncNoCursorReset(ansi().cursor(Constants.row_gameID, 0).a("> Choose the number of players for this game: "));
     }
 
     /**
@@ -506,12 +468,11 @@ public class TUI extends UI {
     public void show_menuOptions() {
         this.clearScreen();
         this.show_titleCodexNaturalis();
-        staticPrinter(ansi().cursor(9, 0).a("""
+        printAsync(ansi().cursor(9, 0).a("""
                 > Select one option:
                 \tpress (c) to create a new game
                 \tpress (j) to join to a randomly an existent game
                 \tpress (js) to join to a specific game
-                \tpress (.) to leave
                 \t
                 \t -> Useful commands that can be used at any point in the game:
                 \t\t  type "/c [msg]" to send a public message!
@@ -526,15 +487,15 @@ public class TUI extends UI {
     @Override
     public void show_inputGameIdMsg() {
         clearScreen();
-        staticPrinterTui("> Input the GameId ('.' to leave): ");
+        printAsyncNoCursorReset("> Input the GameId: ");
     }
 
-    /**x
+    /**
      * Generic error message
      */
     @Override
-    public void show_NaNMsg() {
-        staticPrinterTui("> NaN");
+    public void show_invalidInput() {
+        printAsync("[WARNING]: invalid input");
     }
 
     /**
@@ -543,13 +504,13 @@ public class TUI extends UI {
     @Override
     public void show_whichCardToPlaceMsg() {
         clearScreen();
-        staticPrinter(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(
+        printAsync(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(
                 "\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
     }
 
     @Override
     public void show_whichObjectiveToChooseMsg() {
-        staticPrinterTui("> Select which objective card you want to choose (1 / 2):");
+        printAsync("> Select which objective card you want to choose (1 / 2):");
     }
 
     /**
@@ -561,7 +522,7 @@ public class TUI extends UI {
     public void show_creatingNewGameMsg(String nickname) {
         this.clearScreen();
         this.show_titleCodexNaturalis();
-        staticPrinterTui("> Creating a new game...");
+        printAsync("> Creating a new game...");
         this.nickname = nickname;
     }
 
@@ -574,7 +535,7 @@ public class TUI extends UI {
     public void show_joiningFirstAvailableMsg(String nickname) {
         this.clearScreen();
         this.show_titleCodexNaturalis();
-        staticPrinterTui("> Connecting to the first available game...");
+        printAsync("> Connecting to the first available game...");
         this.nickname = nickname;
     }
 
@@ -588,12 +549,13 @@ public class TUI extends UI {
     public void show_joiningToGameIdMsg(int idGame, String nickname) {
         this.clearScreen();
         this.show_titleCodexNaturalis();
-        staticPrinterTui("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
+        printAsync("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
         this.nickname = nickname;
     }
 
     @Override
-    public void show_ReadyToStart(ModelView gameModel, String nicknameofyou) {
+    public void show_ReadyToStart(ModelView gameModel, String s) {
+
     }
 
 }

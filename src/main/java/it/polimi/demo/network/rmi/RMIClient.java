@@ -9,9 +9,9 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.ObserverManagerClient;
 import it.polimi.demo.network.PingSender;
 import it.polimi.demo.view.dynamic.ClientInterface;
-import it.polimi.demo.view.dynamic.Dynamic;
 import it.polimi.demo.network.interfaces.GameControllerInterface;
 import it.polimi.demo.network.interfaces.MainControllerInterface;
+import it.polimi.demo.view.dynamic.GameDynamic;
 
 import java.io.IOException;
 import java.io.Serial;
@@ -81,12 +81,10 @@ public class RMIClient implements ClientInterface {
 
     /**
      * Constructor that initializes the RMIClient.
-     *
-     * @param dynamic the dynamic instance used for managing game state
      */
-    public RMIClient(Dynamic dynamic) {
+    public RMIClient(GameDynamic dynamic) {
         this.gameListenersHandler = new ObserverManagerClient(dynamic);
-        this.ping = new PingSender(dynamic, this);
+        this.ping = new PingSender(this);
         this.ping.start();
         initialize();
     }
@@ -301,6 +299,12 @@ public class RMIClient implements ClientInterface {
         });
     }
 
+    /**
+     * Shows the personal board of the player.
+     * @param player_index the index of the player
+     * @throws NotBoundException if the server name is not bound
+     * @throws RemoteException if an RMI error occurs
+     */
     @Override
     public void showOthersPersonalBoard(int player_index) throws NotBoundException, RemoteException {
         withRegistry(reg -> {
@@ -313,7 +317,7 @@ public class RMIClient implements ClientInterface {
     }
 
     /**
-     * Sends a ping ping to the server.
+     * Sends a ping to the server.
      *
      * @throws RemoteException if an RMI error occurs
      * @throws NotBoundException if the server name is not bound

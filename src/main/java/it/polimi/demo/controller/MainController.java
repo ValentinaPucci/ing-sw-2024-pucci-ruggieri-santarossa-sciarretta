@@ -148,13 +148,13 @@ public class MainController implements MainControllerInterface, Serializable {
     /**
      * Sets a player as ready.
      *
-     * @param listener the listener
+     * @param lis the listener
      * @param nickname the nickname of the player
      * @param gameId the id of the game
      * @throws RemoteException if the connection fails
      */
     @Override
-    public synchronized void setAsReady(Listener listener, String nickname, int gameId)
+    public synchronized void setAsReady(Listener lis, String nickname, int gameId)
             throws RemoteException {
         games.get(gameId).playerIsReadyToStart(nickname);
     }
@@ -239,6 +239,14 @@ public class MainController implements MainControllerInterface, Serializable {
         games.get(gameId).sendMessage(nickname, message);
     }
 
+    /**
+     * Shows the personal board of a player.
+     * @param listener the listener
+     * @param nickname the nickname of the player
+     * @param playerIndex the index of the player
+     * @param gameId the id of the game
+     * @throws RemoteException if the connection fails
+     */
     @Override
     public void showOthersPersonalBoard(Listener listener, String nickname, int playerIndex, int gameId)
             throws RemoteException {

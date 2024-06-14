@@ -1,5 +1,6 @@
 package it.polimi.demo.model;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -7,6 +8,8 @@ import java.io.Serializable;
  */
 public class Ping implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 3476528596147043783L;
     private final Long ping;
     private final String nickname;
 

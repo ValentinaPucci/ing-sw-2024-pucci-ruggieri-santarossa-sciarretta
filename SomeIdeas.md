@@ -62,7 +62,7 @@ We would like to implement this advanced functionality on our program. Namely, w
 - Manage the GameStatus! Implement GameFlow method correctly in the controller.
 
 # ToDo (11 may 2024)
-- check the real condition of gameDynamics! For example, the game should enter in running status only when the cards are dealt to the players.
+- check the real condition of game_dyn! For example, the game should enter in running status only when the cards are dealt to the players.
 
 # ToDo (17 may 2024)
 - we don't provide a list of possible placeable positions in the PersonalBoard, so we need a method that continuously asks the client a different set of coordinate on the PersonalBoard if the previous couple entered was an invalid position

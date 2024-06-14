@@ -2,11 +2,10 @@ package it.polimi.demo.view.gui;
 
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.view.dynamic.ConnectionSelection;
+import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.GameDynamic;
 import it.polimi.demo.view.gui.controllers.*;
 import it.polimi.demo.view.gui.scene.SceneType;
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -24,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static it.polimi.demo.view.gui.scene.SceneType.*;
 
@@ -40,7 +40,7 @@ public class ApplicationGUI extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        gameDynamics = new GameDynamic(this, ConnectionSelection.valueOf(getParameters().getUnnamed().getFirst()));
+        gameDynamics = new GameDynamic(this, TypeConnection.valueOf(getParameters().getUnnamed().getFirst()));
         loadScenes();
         this.primaryStage = primaryStage;
         this.primaryStage.setTitle("Codex Naturalis");
@@ -99,7 +99,7 @@ public class ApplicationGUI extends Application {
         }
     }
 
-    public void setInputReaderGUItoAllControllers(GuiReader GuiReader) {
+    public void setInputReaderGUItoAllControllers(LinkedBlockingQueue<String> GuiReader) {
         loadScenes();
         for (SceneInfo s : scenes) {
             s.setInputReaderGUI(GuiReader);

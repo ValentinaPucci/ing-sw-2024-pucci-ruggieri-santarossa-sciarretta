@@ -1,9 +1,10 @@
 package it.polimi.demo.view.gui;
 
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
 import it.polimi.demo.view.gui.controllers.GenericController;
 import it.polimi.demo.view.gui.scene.SceneType;
 import javafx.scene.Scene;
+
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class SceneInfo {
     /**
@@ -43,10 +44,10 @@ public class SceneInfo {
     }
 
     /**
-     * Method to set the input reader GUI.
-     * @param GuiReader the input reader GUI {@link GuiReader}
+     * Method to set the input reader_queue GUI.
+     * @param GuiReader the input reader_queue GUI
      */
-    public void setInputReaderGUI(GuiReader GuiReader){
+    public void setInputReaderGUI(LinkedBlockingQueue<String> GuiReader){
         //System.out.println("setInputReaderGUI: "+ inputReaderGUI);
         if(genericController!=null) {
             genericController.setInputReaderGUI(GuiReader);

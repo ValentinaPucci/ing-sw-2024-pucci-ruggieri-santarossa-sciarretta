@@ -13,7 +13,7 @@ public class GameIdController extends GenericController{
     void EnterGame(ActionEvent event) {
         System.out.println("GameId entered:" + GameId + GameId.getText());
         if(!GameId.getText().isEmpty()){
-            getInputReaderGUI().addTxt(GameId.getText());
+            getInputReaderGUI().add(GameId.getText());
         }
 
     }

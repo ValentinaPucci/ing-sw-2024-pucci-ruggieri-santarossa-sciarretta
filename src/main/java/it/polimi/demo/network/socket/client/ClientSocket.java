@@ -3,29 +3,27 @@ package it.polimi.demo.network.socket.client;
 import it.polimi.demo.Constants;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
+
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.ObserverManagerClient;
 import it.polimi.demo.network.PingSender;
 import it.polimi.demo.network.socket.client.gameControllerMessages.*;
+import it.polimi.demo.network.socket.client.mainControllerMessages.*;
+import it.polimi.demo.network.socket.client.serverToClientMessages.SocketServerGenericMessage;
 import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMessageJoinFirstAvailableGame;
 import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMsgGameCreation;
 import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMsgJoinGame;
 import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMsgLeaveGame;
 import it.polimi.demo.network.socket.client.serverToClientMessages.SocketServerGenericMessage;
 import it.polimi.demo.view.dynamic.ClientInterface;
-import it.polimi.demo.view.dynamic.Dynamic;
+import it.polimi.demo.view.dynamic.GameDynamic;
 
-import java.io.*;
 import java.net.Socket;
+import java.io.*;
 import java.rmi.NotBoundException;
 
-import static it.polimi.demo.network.StaticPrinter.staticPrinter;
-import static it.polimi.demo.network.StaticPrinter.staticPrinterNoNewLine;
-
-/**
- * ClientSocket is the main class used for the management of the socket connection between the CLIENT and the server.
- * It is responsible for the creation of the socket connection, the sending of messages to the server and the reception of messages from the server.
- */
+import static it.polimi.demo.view.text.PrintAsync.printAsync;
+import static it.polimi.demo.view.text.PrintAsync.printAsyncNoLine;
 
 public class ClientSocket extends Thread implements ClientInterface {
 
@@ -53,22 +51,12 @@ public class ClientSocket extends Thread implements ClientInterface {
      * PingSender used to send heartbeats to the server, used to check the connection status.
      */
     private final transient PingSender socketHeartbeat;
-    /**
-     * Dynamic used to manage the view of the client.
-     */
-    private Dynamic dynamics;
 
-    /**
-     * Constructor of the class. Create a new ClientSocket.
-     *
-     * @param dynamics the dynamic used to manage the view of the client.
-     */
-    public ClientSocket(Dynamic dynamics) {
-        this.dynamics = dynamics;
+    public ClientSocket(GameDynamic dynamics) {
         modelEvents = new ObserverManagerClient(dynamics);
         initiateConnection(Constants.serverIp, Constants.Socket_port);
         this.start();
-        socketHeartbeat = new PingSender(dynamics, this);
+        socketHeartbeat = new PingSender(this);
     }
 
     /**
@@ -310,6 +298,7 @@ public class ClientSocket extends Thread implements ClientInterface {
 //                staticPrinter("Connection lost to the server!! Impossible to send heartbeat...");
 //            }
 //        }
+
     }
 
     private void startHeartbeat() {

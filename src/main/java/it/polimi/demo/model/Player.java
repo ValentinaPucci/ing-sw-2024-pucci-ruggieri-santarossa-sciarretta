@@ -16,7 +16,6 @@ public class Player implements Serializable {
     private List<ResourceCard> card_hand;
     private PersonalBoard personal_board;
     private List<ObjectiveCard> secret_objectives;
-
     private List<StarterCard> starter_card_to_chose;
     private ObjectiveCard chosen_objective;
     private StarterCard starter_card;
@@ -25,8 +24,6 @@ public class Player implements Serializable {
     private int final_score;
     private boolean is_connected;
     private boolean is_ready_to_start;
-
-    //private transient List<Listener> listeners;
 
     public Player(String nickname) {
         this.nickname = nickname;
@@ -39,7 +36,6 @@ public class Player implements Serializable {
         this.chosen_card = null;
         this.score_board_position = 0;
         this.final_score = 0;
-        //this.listeners = new ArrayList<>();
         this.is_connected = false;
         this.is_ready_to_start = false;
     }
@@ -52,15 +48,9 @@ public class Player implements Serializable {
         this.nickname = nickname;
     }
 
-    
     public PersonalBoard getPersonalBoard() {
         return personal_board;
     }
-
-    public void setPersonalBoard(PersonalBoard personal_board) {
-        this.personal_board = personal_board;
-    }
-
     
     public ResourceCard getChosenGameCard() {
         return chosen_card;
@@ -87,7 +77,6 @@ public class Player implements Serializable {
         this.starter_card = starter_card;
     }
 
-    
     public ObjectiveCard getChosenObjectiveCard() {
         return chosen_objective;
     }
@@ -96,14 +85,12 @@ public class Player implements Serializable {
         return secret_objectives ;
     }
 
-
     /**
      * set the secret objective at the start of the game. Then, the player
      * decides which one to keep (only one secret objective is admissible)
      * @param objective1 objective 1
      * @param objective2 objective 2
      */
-    
     public void setSecretObjectives(ObjectiveCard objective1, ObjectiveCard objective2) {
         secret_objectives.add(objective1);
         secret_objectives.add(objective2);
@@ -121,11 +108,6 @@ public class Player implements Serializable {
         return score_board_position;
     }
 
-    public void setScoreBoardPosition(int score_board_position) {
-        this.score_board_position = score_board_position;
-    }
-
-    
     public int getFinalScore() {
         return final_score;
     }
@@ -139,9 +121,6 @@ public class Player implements Serializable {
         card_hand.add(card);
     }
 
-    public List<ResourceCard> getCardHand() { return card_hand; }
-
-    
     public ArrayList<Integer> getCardHandIds(){
        ArrayList<Integer> cardHandIds = new ArrayList<>();
         for (ResourceCard resourceCard : card_hand) {
@@ -150,24 +129,10 @@ public class Player implements Serializable {
        return cardHandIds;
     }
 
-    
-    public void removeFromHand(ResourceCard card) {
-        card_hand.remove(card);
-    }
-
-    
-    public void removeFromHand(GoldCard card) {card_hand.remove(card);}
-
     public List<ResourceCard> getHand() {
         return card_hand;
     }
 
-    
-    public List<ResourceCard> getHandIC() {
-        return new ArrayList<>(card_hand);
-    }
-
-    
     public boolean getReadyToStart() {
         return is_ready_to_start;
     }
@@ -204,31 +169,12 @@ public class Player implements Serializable {
     }
 
     /**
-     * Place the card in the middle of the personal board
-     */
-    public void playStarterCard() {
-        personal_board.bruteForcePlaceCardSE(starter_card, 250, 250);
-    }
-
-    /**
      *
      * @return the current points of the player according to his/her personal board
      */
     public int getCurrentPoints() {
         return personal_board.getPoints();
     }
-
-    
-    public ResourceCard getLastChosenCard() {
-        return chosen_card;
-    }
-
-    
-    public boolean isLast() {
-        //TODO: IMPLEMENT!
-        return false;
-    }
-
     
     public Integer[] getSecretObjectiveCardsIds() {
         Integer[] personalObjectiveIds = new Integer[2];

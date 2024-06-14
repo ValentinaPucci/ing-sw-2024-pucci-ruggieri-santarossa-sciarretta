@@ -5,18 +5,20 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.view.dynamic.Dynamic;
+import it.polimi.demo.view.dynamic.GameDynamic;
 
 import java.io.IOException;
+import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
 public class ObserverManagerClient implements Listener, Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -5070962929563880709L;
+    private GameDynamic dynamic;
 
-    private Dynamic dynamic;
-
-    public ObserverManagerClient(Dynamic gui) {
+    public ObserverManagerClient(GameDynamic gui) {
         this.dynamic = gui;
     }
 
@@ -56,18 +58,18 @@ public class ObserverManagerClient implements Listener, Serializable {
     }
 
     @Override
-    public void playerJoined(ModelView gamemodel) throws RemoteException {
-        dynamic.playerJoined(gamemodel);
+    public void playerJoined(ModelView model) throws RemoteException {
+        dynamic.playerJoined(model);
     }
 
     @Override
-    public void playerLeft(ModelView gamemodel, String nick) throws RemoteException {
-        dynamic.playerLeft(gamemodel, nick);
+    public void playerLeft(ModelView model, String nick) throws RemoteException {
+        dynamic.playerLeft(model, nick);
     }
 
     @Override
-    public void joinUnableGameFull(Player wantedToJoin, ModelView gamemodel) throws RemoteException {
-        dynamic.joinUnableGameFull(wantedToJoin, gamemodel);
+    public void joinUnableGameFull(Player wantedToJoin, ModelView model) throws RemoteException {
+        dynamic.joinUnableGameFull(wantedToJoin, model);
     }
 
     @Override
@@ -86,48 +88,47 @@ public class ObserverManagerClient implements Listener, Serializable {
     }
 
     @Override
-    public void playerIsReadyToStart(ModelView gamemodel, String nick) throws IOException {
-        dynamic.playerIsReadyToStart(gamemodel, nick);
+    public void playerIsReadyToStart(ModelView model, String nick) throws IOException {
+        dynamic.playerIsReadyToStart(model, nick);
     }
 
     @Override
-    public void gameStarted(ModelView gamemodel) throws RemoteException {
-        dynamic.gameStarted(gamemodel);
+    public void gameStarted(ModelView model) throws RemoteException {
+        dynamic.gameStarted(model);
     }
 
     @Override
-    public void gameEnded(ModelView gamemodel) throws RemoteException {
-        dynamic.gameEnded(gamemodel);
+    public void gameEnded(ModelView model) throws RemoteException {
+        dynamic.gameEnded(model);
     }
 
     @Override
-    public void nextTurn(ModelView gamemodel) throws RemoteException {
-        dynamic.nextTurn(gamemodel);
+    public void nextTurn(ModelView model) throws RemoteException {
+        dynamic.nextTurn(model);
     }
 
     @Override
-    public void playerDisconnected(ModelView gameModel, String nick) throws RemoteException {
-        dynamic.playerDisconnected(gameModel, nick);
+    public void playerDisconnected(ModelView model, String nick) throws RemoteException {
+        dynamic.playerDisconnected(model, nick);
     }
 
     @Override
-    public void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException {
-        dynamic.showOthersPersonalBoard(modelView, playerNickname, playerIndex);
+    public void showOthersPersonalBoard(ModelView model, String playerNickname, int playerIndex) throws RemoteException {
+        dynamic.showOthersPersonalBoard(model, playerNickname, playerIndex);
     }
 
     @Override
-    public void secondLastRound(ModelView gamemodel) throws RemoteException {
-        dynamic.secondLastRound(gamemodel);
+    public void secondLastRound(ModelView model) throws RemoteException {
+        dynamic.secondLastRound(model);
     }
 
     @Override
-    public void lastRound(ModelView gamemodel) throws RemoteException {
-        dynamic.lastRound(gamemodel);
+    public void lastRound(ModelView model) throws RemoteException {
+        dynamic.lastRound(model);
     }
 
     @Override
-    public void messageSent(ModelView gameModel, String nickname, Message message) throws RemoteException {
-        dynamic.messageSent(gameModel, nickname, message);
-
+    public void messageSent(ModelView model, String nickname, Message message) throws RemoteException {
+        dynamic.messageSent(model, nickname, message);
     }
 }

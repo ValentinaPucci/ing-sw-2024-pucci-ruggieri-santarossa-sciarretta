@@ -1,9 +1,10 @@
 package it.polimi.demo.view.gui.controllers;
 
-import it.polimi.demo.view.dynamic.utilities.GuiReader;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class numPlayersController extends GenericController {
 
@@ -18,9 +19,9 @@ public class numPlayersController extends GenericController {
 
     @FXML
     public void twoPLayers(ActionEvent actionEvent) {
-        GuiReader reader = getInputReaderGUI();
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("2");
+            reader.add("2");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -28,18 +29,18 @@ public class numPlayersController extends GenericController {
 
     @FXML
     public void threePLayers(ActionEvent actionEvent) {
-        GuiReader reader = getInputReaderGUI();
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("3");
+            reader.add("3");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
     }
     @FXML
     public void fourPLayers(ActionEvent actionEvent) {
-        GuiReader reader = getInputReaderGUI();
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
-            reader.addTxt("4");
+            reader.add("4");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
