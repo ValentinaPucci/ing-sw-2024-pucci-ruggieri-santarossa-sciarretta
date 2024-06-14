@@ -22,8 +22,8 @@ import java.net.Socket;
 import java.io.*;
 import java.rmi.NotBoundException;
 
-import static it.polimi.demo.view.text.PrintAsync.printAsync;
-import static it.polimi.demo.view.text.PrintAsync.printAsyncNoLine;
+import static it.polimi.demo.network.StaticPrinter.staticPrinter;
+import static it.polimi.demo.network.StaticPrinter.staticPrinterNoNewLine;
 
 public class ClientSocket extends Thread implements ClientInterface {
 
