@@ -7,10 +7,10 @@ import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.rmi.RMIClient;
 import it.polimi.demo.observer.Listener;
+import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.utilities.gameFacts.FactQueue;
 import it.polimi.demo.view.dynamic.utilities.gameFacts.FactType;
-import it.polimi.demo.view.dynamic.utilities.liveBuffer.QueueParser;
-import it.polimi.demo.view.dynamic.utilities.liveBuffer.ReaderQueue;
+import it.polimi.demo.view.dynamic.utilities.QueueParser;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import it.polimi.demo.view.gui.GUI;
 import it.polimi.demo.network.socket.client.ClientSocket;
@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
 import static it.polimi.demo.view.dynamic.utilities.gameFacts.FactType.*;
@@ -35,7 +36,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     private static final long serialVersionUID = 3620482106619487368L;
 
     // buffers and parsers
-    protected ReaderQueue reader;
+    protected LinkedBlockingQueue<String> reader_queue;
     protected QueueParser parser;
 
     private final UI ui;
@@ -57,7 +58,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     public GameDynamic(TypeConnection selection, ApplicationGUI guiApplication) {
 
         startConnection(selection);
-        reader = new ReaderQueue();
+        reader_queue = new LinkedBlockingQueue<>();
 
         if (guiApplication == null) {
             // TUI
@@ -66,7 +67,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                     while (!Thread.currentThread().isInterrupted()) {
                         if (scanner.hasNextLine()) {
                             String input = scanner.nextLine();
-                            reader.getBuffer().add(input);
+                            reader_queue.add(input);
                             PrintAsync.printAsync("\033[1A\033[2K");
                         }
                     }
@@ -77,9 +78,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
             }).start();
             ui = new TUI();
         } else {
-            ui = new GUI(guiApplication, reader);
+            ui = new GUI(guiApplication, reader_queue);
         }
-        parser = new QueueParser(reader.getBuffer(), this);
+        parser = new QueueParser(reader_queue, this);
         new Thread(this).start();
     }
 

@@ -1,4 +1,4 @@
-package it.polimi.demo.view.dynamic.utilities.liveBuffer;
+package it.polimi.demo.view.dynamic.utilities;
 
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;

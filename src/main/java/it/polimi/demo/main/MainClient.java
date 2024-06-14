@@ -1,7 +1,7 @@
 package it.polimi.demo.main;
 
 import it.polimi.demo.network.StaticPrinter;
-import it.polimi.demo.view.dynamic.TypeConnection;
+import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.GameDynamic;
 import it.polimi.demo.view.gui.ApplicationGUI;
 import javafx.application.Application;
