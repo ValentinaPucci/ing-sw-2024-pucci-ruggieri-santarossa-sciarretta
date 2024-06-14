@@ -4,9 +4,9 @@ import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.view.dynamic.TypeConnection;
 import it.polimi.demo.view.dynamic.GameDynamic;
+import it.polimi.demo.view.dynamic.utilities.liveBuffer.ReaderQueue;
 import it.polimi.demo.view.gui.controllers.*;
 import it.polimi.demo.view.gui.scene.SceneType;
-import it.polimi.demo.view.dynamic.utilities.parser.GuiReader;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -99,7 +99,7 @@ public class ApplicationGUI extends Application {
         }
     }
 
-    public void setInputReaderGUItoAllControllers(GuiReader GuiReader) {
+    public void setInputReaderGUItoAllControllers(ReaderQueue GuiReader) {
         loadScenes();
         for (SceneInfo s : scenes) {
             s.setInputReaderGUI(GuiReader);

@@ -1,4 +1,4 @@
-package it.polimi.demo.view.dynamic.utilities.parser;
+package it.polimi.demo.view.dynamic.utilities.liveBuffer;
 
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
@@ -8,7 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class GenericParser extends Thread {
+public class QueueParser extends Thread {
 
     private final LinkedBlockingQueue<String> input_queue;
     private final LinkedBlockingQueue<String> processed_data_queue;
@@ -21,12 +21,12 @@ public class GenericParser extends Thread {
     private static final Pattern PUBLIC_MESSAGE_PATTERN = Pattern.compile("^/c\\s+(.+)$");
 
     /**
-     * Constructs a GenericParser instance.
+     * Constructs a QueueParser instance.
      *
      * @param input_queue the queue containing input commands
      * @param game_dyn   the game dynamic instance to interact with
      */
-    public GenericParser(LinkedBlockingQueue<String> input_queue, GameDynamic game_dyn) {
+    public QueueParser(LinkedBlockingQueue<String> input_queue, GameDynamic game_dyn) {
         this.input_queue = input_queue;
         this.processed_data_queue = new LinkedBlockingQueue<>();
         this.game_dyn = game_dyn;
@@ -34,7 +34,7 @@ public class GenericParser extends Thread {
     }
 
     /**
-     * binds the player to parser
+     * binds the player to liveBuffer
      * @param id game id
      * @param p the player to bind
      */
