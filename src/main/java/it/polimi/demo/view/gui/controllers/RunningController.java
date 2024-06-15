@@ -255,13 +255,17 @@ public class RunningController extends GenericController {
 
     // Method to move a piece to a new Pane
     private void movePieceToPosition(int player_index, int indexToGo) {
-        ImageView targetPane = bnImageViews[indexToGo];
-        ImageView piece = pieces.get(player_index);
-        Pane parent = (Pane) piece.getParent();
-        if (parent != null) {
-            parent.getChildren().remove(piece);
+
+        ImageView pieceToMove = pieces.get(player_index);
+
+        for (ImageView bnImageView : bnImageViews) {
+            if (bnImageView.getImage() == pieceToMove.getImage()) {
+                bnImageView.setImage(null);
+                break;
+            }
         }
-        targetPane.setImage(piece.getImage());
+        bnImageViews[indexToGo].setImage(pieceToMove.getImage());
+
     }
 
 

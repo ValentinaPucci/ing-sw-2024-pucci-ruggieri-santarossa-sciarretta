@@ -4,6 +4,7 @@ import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.view.dynamic.UI;
 
+import it.polimi.demo.view.gui.controllers.GameOverController;
 import it.polimi.demo.view.gui.controllers.LobbyController;
 import it.polimi.demo.view.gui.controllers.RunningController;
 import it.polimi.demo.view.gui.scene.SceneType;
@@ -128,6 +129,9 @@ public class GUI extends UI {
 
     @Override
     protected void show_gameEnded(ModelView model) {
+        callPlatformRunLater(() -> ((GameOverController) this.guiApplication.getController(SceneType.GAME_OVER)).show(model));
+
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.GAME_OVER));
 
     }
 
@@ -185,6 +189,7 @@ public class GUI extends UI {
     protected void show_cardDrawn(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel)); //added
     }
 
     @Override
@@ -216,6 +221,7 @@ public class GUI extends UI {
     @Override
     protected void show_successfulMove(Coordinate coord) {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove(coord));
+
     }
 
     @Override
