@@ -5,14 +5,15 @@ import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.exceptions.EmptyStackException;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-//NB il giocatore iniziale (pedina nera) è il giocatore 0
-
 public class CommonBoard implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -2215860359422495618L;
     private ConcreteDeck resource_concrete_deck; // resource_concrete_deck
     private ConcreteDeck gold_concrete_deck; // gold_concrete_deck
     private ConcreteDeck starter_concrete_deck;

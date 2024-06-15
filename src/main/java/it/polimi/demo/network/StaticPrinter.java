@@ -1,64 +1,61 @@
 package it.polimi.demo.network;
 
+import it.polimi.demo.Constants;
 import org.fusesource.jansi.Ansi;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
+/**
+ * This class is used to print messages asynchronously. It is used to print messages in the console.
+ * It is used instead of System.out.println() to avoid blocking the main thread during its execution.
+ */
 public class StaticPrinter {
 
-    private static final Logger LOGGER = Logger.getLogger(StaticPrinter.class.getName());
-    private static final ExecutorService executor = Executors.newCachedThreadPool();
-
-    static {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            executor.shutdown();
-            try {
-                if (!executor.awaitTermination(5, java.util.concurrent.TimeUnit.SECONDS)) {
-                    executor.shutdownNow();
-                }
-            } catch (InterruptedException e) {
-                executor.shutdownNow();
-            }
-        }));
-    }
-
     /**
-     * Prints an Ansi message asynchronously.
-     *
-     * @param msg the Ansi message to print
+     * Async printer for ansis
      */
     public static void staticPrinter(Ansi msg) {
-        executor.submit(() -> LOGGER.log(Level.INFO, msg.toString()));
+        runAsync(() -> {
+            System.out.println(msg);
+            resetCursor();
+        });
     }
 
     /**
-     * Prints a String message asynchronously.
-     *
-     * @param msg the String message to print
+     * Async printer for strings
      */
     public static void staticPrinter(String msg) {
-        executor.submit(() -> LOGGER.log(Level.INFO, msg));
+        runAsync(() -> {
+            System.out.println(msg);
+            resetCursor();
+        });
     }
 
     /**
-     * Prints a StringBuilder message asynchronously.
-     *
-     * @param msg the StringBuilder message to print
+     * Async printer for string builders
      */
     public static void staticPrinter(StringBuilder msg) {
-        executor.submit(() -> LOGGER.log(Level.INFO, msg.toString()));
+        runAsync(() -> {
+            System.out.println(msg);
+            resetCursor();
+        });
     }
 
     /**
-     * Prints a String message without a newline asynchronously.
-     *
-     * @param msg the String message to print
+     * thread starter for async printing
      */
-    public static void staticPrinterNoNewLine(String msg) {
-        executor.submit(() -> LOGGER.log(Level.INFO, "{0}", msg));
+    private static void runAsync(Runnable task) {
+        new Thread(task).start();
+    }
+
+    /**
+     * reset the cursor to the input row
+     */
+    private static void resetCursor() {
+        System.out.println(ansi().cursor(Constants.row_input, 0));
     }
 
 }

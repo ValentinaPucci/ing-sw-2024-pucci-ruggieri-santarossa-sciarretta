@@ -29,11 +29,6 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
     private static final long serialVersionUID = 1L;
 
     /**
-     * The registry for binding RMI objects
-     */
-    private static Registry reg;
-
-    /**
      * Reference to the main controller
      */
     private final MainControllerInterface primary_controller;
@@ -54,22 +49,21 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
      */
     public void initialize() {
         try {
-            reg = LocateRegistry.createRegistry(Constants.RMI_port);
+            Registry reg = LocateRegistry.createRegistry(Constants.RMI_port);
             reg.rebind(Constants.RMI_server_name, this);
             StaticPrinter.staticPrinter("RMI Server ready");
         } catch (RemoteException ex) {
-            logError("RMI SERVER STARTUP", ex);
+            logError(ex);
         }
     }
 
     /**
      * Logs errors that occur during server operations.
      *
-     * @param context the context in which the error occurred
      * @param ex the exception that was thrown
      */
-    private static void logError(String context, Exception ex) {
-        System.err.printf("[ERROR] %s: \n\tRMI server exception: %s%n", context, ex);
+    private static void logError(Exception ex) {
+        System.err.printf("[ERROR] %s: \n\tRMI server exception: %s%n", "RMI SERVER STARTUP", ex);
     }
 
     /**

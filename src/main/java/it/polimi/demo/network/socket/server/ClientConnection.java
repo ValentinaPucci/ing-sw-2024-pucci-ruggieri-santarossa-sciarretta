@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static it.polimi.demo.network.StaticPrinter.staticPrinter;
-import static it.polimi.demo.network.StaticPrinter.staticPrinterNoNewLine;
 
 
 public class ClientConnection extends Thread implements Serializable {
@@ -30,15 +29,6 @@ public class ClientConnection extends Thread implements Serializable {
 
     public ClientConnection(Socket socket) {
         this.socket = socket;
-    }
-
-    public void stopThread() {
-        running.set(false);
-        try {
-            socket.close();
-        } catch (IOException e) {
-            staticPrinter("Error closing socket: " + e.getMessage());
-        }
     }
 
     @Override

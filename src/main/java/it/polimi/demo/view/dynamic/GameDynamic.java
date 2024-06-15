@@ -28,40 +28,54 @@ import java.util.Scanner;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
-import static it.polimi.demo.view.dynamic.utilities.gameFacts.FactType.*;
-
+/**
+ * The GameDynamic class represents the dynamic part of the game, handling game events and state changes.
+ */
 public class GameDynamic implements Listener, Runnable, ClientInterface {
 
     @Serial
-    private static final long serialVersionUID = 3620482106619487368L;
+    private static final long serialVersionUID = -6369242392957782222L;
 
-    // buffers and parsers
+    // Buffers and parsers
     protected LinkedBlockingQueue<String> reader_queue;
     protected QueueParser parser;
 
+    // User Interface (UI) instance
     private final UI ui;
 
+    // Game-related attributes
     private String nickname;
     private final FactQueue facts = new FactQueue();
     private ClientInterface client_interface;
 
-    // Constructor for TUI
+    /**
+     * Constructor for initializing the GameDynamic instance in TUI mode.
+     * @param selection The type of connection (RMI or Socket).
+     */
     public GameDynamic(TypeConnection selection) {
         this(selection, null);
     }
 
-    // Constructor for GUI
+    /**
+     * Constructor for initializing the GameDynamic instance in GUI mode.
+     * @param guiApplication The GUI application instance.
+     * @param selection The type of connection (RMI or Socket).
+     */
     public GameDynamic(ApplicationGUI guiApplication, TypeConnection selection) {
         this(selection, guiApplication);
     }
 
+    /**
+     * Constructor for initializing the GameDynamic instance based on the connection type and GUI application.
+     * @param selection The type of connection (RMI or Socket).
+     * @param guiApplication The GUI application instance (null for TUI).
+     */
     public GameDynamic(TypeConnection selection, ApplicationGUI guiApplication) {
-
         startConnection(selection);
         reader_queue = new LinkedBlockingQueue<>();
 
         if (guiApplication == null) {
-            // TUI
+            // TUI initialization
             new Thread(() -> {
                 try (Scanner scanner = new Scanner(System.in)) {
                     while (!Thread.currentThread().isInterrupted()) {
@@ -78,24 +92,31 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
             }).start();
             ui = new TUI();
         } else {
+            // GUI initialization
             ui = new GUI(guiApplication, reader_queue);
         }
         parser = new QueueParser(reader_queue, this);
         new Thread(this).start();
     }
 
+    /**
+     * Starts the connection based on the selected type (RMI or Socket).
+     * @param selection The type of connection to start.
+     */
     public void startConnection(TypeConnection selection) {
-        client_interface = (selection == TypeConnection.RMI) 
-                ? new RMIClient(this) 
+        client_interface = (selection == TypeConnection.RMI)
+                ? new RMIClient(this)
                 : new ClientSocket(this);
     }
 
+    /**
+     * Main execution method that runs in a separate thread, handling game events and state changes.
+     */
     @Override
     public void run() {
+        facts.offer(null, FactType.LOBBY_INFO);
 
-        facts.offer(null, LOBBY_INFO);
-
-        // In - game handler
+        // Game status handlers
         Map<GameStatus, Consumer<HashMap<ModelView, FactType>>> statusHandlers = Map.of(
                 GameStatus.WAIT, this::safeStatusWait,
                 GameStatus.FIRST_ROUND, this::safeStatusFirstRound,
@@ -105,44 +126,53 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                 GameStatus.ENDED, this::statusEnded
         );
 
-        // Out - game handler
+        // Main event loop
         while (!Thread.currentThread().isInterrupted()) {
-            Runnable event = facts.isToHandle() 
-                            ? () -> handleEvent(statusHandlers)
-                            : () -> handleFallbackEvent(this::safeStatusNotInAGame);
+            Runnable event = facts.isToHandle()
+                    ? () -> handleEvent(statusHandlers)
+                    : () -> handleFallbackEvent(this::safeStatusNotInAGame);
             event.run();
-            try { Thread.sleep(200); }
-            catch (InterruptedException e) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // Preserve interrupt status
                 throw new RuntimeException(e);
             }
         }
-
     }
 
+    /**
+     * Handles a game event based on its status, invoking the corresponding handler.
+     * @param handlers The map of handlers for different game statuses.
+     */
     private void handleEvent(Map<GameStatus, Consumer<HashMap<ModelView, FactType>>> handlers) {
-
         HashMap<ModelView, FactType> map = facts.poll();
-
-        if (map == null || map.containsKey(null) ) 
+        if (map == null || map.containsKey(null)) {
             return;
-        
-        // Here we take the only model_view associated to the given fact
+        }
         ModelView model_view = map.keySet().iterator().next();
-
-        if (model_view != null) 
+        if (model_view != null) {
             handlers.getOrDefault(model_view.getStatus(), this::doNothing).accept(map);
+        }
     }
 
+    /**
+     * Handles a fallback event when no specific handler is found for the current game status.
+     * @param fallback The fallback handler to invoke.
+     */
     private void handleFallbackEvent(Consumer<HashMap<ModelView, FactType>> fallback) {
-
         HashMap<ModelView, FactType> map = facts.poll();
-
-        if (map != null) 
+        if (map != null) {
             fallback.accept(map);
-        
+        }
     }
 
+    // Game status handlers
+
+    /**
+     * Executes the action for handling WAIT game status.
+     * @param map The map containing ModelView and FactType associated with the event.
+     */
     private void safeStatusWait(HashMap<ModelView, FactType> map) {
         try {
             statusWait(map);
@@ -151,6 +181,10 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Executes the action for handling FIRST_ROUND game status.
+     * @param map The map containing ModelView and FactType associated with the event.
+     */
     private void safeStatusFirstRound(HashMap<ModelView, FactType> map) {
         try {
             statusFirstRound(map);
@@ -159,6 +193,10 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Executes the action for handling RUNNING game status.
+     * @param map The map containing ModelView and FactType associated with the event.
+     */
     private void safeStatusRunning(HashMap<ModelView, FactType> map) {
         try {
             statusRunning(map);
@@ -167,6 +205,10 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Executes the action for handling SECOND_LAST_ROUND game status.
+     * @param map The map containing ModelView and FactType associated with the event.
+     */
     private void safeStatusLastRound(HashMap<ModelView, FactType> map) {
         try {
             statusLastRound(map);
@@ -175,16 +217,28 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Executes the action for handling game status when not in a game.
+     * @param map The map containing ModelView and FactType associated with the event.
+     */
     private void safeStatusNotInAGame(HashMap<ModelView, FactType> map) {
         statusNotInAGame(map);
     }
 
+    /**
+     * Placeholder method for handling undefined game statuses.
+     * @param map The map containing ModelView and FactType associated with the event.
+     */
     private void doNothing(HashMap<ModelView, FactType> map) {
         // No action required for undefined statuses
     }
 
     // GameDynamic
 
+    /**
+     * Handles actions when the game status indicates the player is not in a game.
+     * @param map The map containing ModelView and FactType associated with the event.
+     */
     private void statusNotInAGame(HashMap<ModelView, FactType> map) {
 
         FactType type = map.values().iterator().next();
@@ -193,7 +247,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         Consumer<String> handleNicknameAndOffer = (s) -> {
             nickname = null;
             facts.offer(null, FactType.LOBBY_INFO);
-            ui.addImportantEvent(s);
+            ui.addRelevantGameFact(s);
         };
 
         Map<FactType, Runnable> actions = Map.of(
@@ -216,9 +270,13 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         actions.getOrDefault(type, () -> {}).run();
     }
 
-
+    /**
+     * Handles actions when the game status is WAIT.
+     * @param map The map containing ModelView and FactType associated with the event.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the current thread is interrupted.
+     */
     private void statusWait(HashMap<ModelView, FactType> map) throws IOException, InterruptedException {
-
         ModelView model = map.keySet().iterator().next();
         FactType type = map.values().iterator().next();
 
@@ -235,8 +293,13 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         actions.getOrDefault(type, () -> {}).run();
     }
 
+    /**
+     * Handles actions when the game status is FIRST_ROUND.
+     * @param map The map containing ModelView and FactType associated with the event.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the current thread is interrupted.
+     */
     private void statusFirstRound(HashMap<ModelView, FactType> map) throws IOException, InterruptedException {
-
         ModelView model = map.keySet().iterator().next();
         FactType type = map.values().iterator().next();
 
@@ -259,8 +322,13 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         actions.getOrDefault(type, () -> {}).run();
     }
 
+    /**
+     * Handles actions when the game status is RUNNING.
+     * @param map The map containing ModelView and FactType associated with the event.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the current thread is interrupted.
+     */
     private void statusRunning(HashMap<ModelView, FactType> map) throws IOException, InterruptedException {
-
         ModelView model = map.keySet().iterator().next();
         FactType type = map.values().iterator().next();
 
@@ -284,8 +352,13 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         actions.getOrDefault(type, () -> {}).run();
     }
 
+    /**
+     * Handles actions when the game status is LAST_ROUND.
+     * @param map The map containing ModelView and FactType associated with the event.
+     * @throws IOException If an I/O error occurs.
+     * @throws InterruptedException If the current thread is interrupted.
+     */
     private void statusLastRound(HashMap<ModelView, FactType> map) throws IOException, InterruptedException {
-
         ModelView model = map.keySet().iterator().next();
         FactType type = map.values().iterator().next();
 
@@ -304,15 +377,18 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         actions.getOrDefault(type, () -> {}).run();
     }
 
+    /**
+     * Handles actions when the game status is ENDED.
+     * @param map The map containing ModelView and FactType associated with the event.
+     */
     private void statusEnded(HashMap<ModelView, FactType> map) {
-
         ModelView model = map.keySet().iterator().next();
         FactType type = map.values().iterator().next();
 
         Map<FactType, Runnable> actions = Map.of(
                 FactType.GAME_ENDED, () -> {
                     ui.show_menu();
-                    parser.getProcessed_data_queue().clear();
+                    parser.getProcessedDataQueue().clear();
                     updateParser();
                     leave(nickname, model.getGameId());
                     youLeft();
@@ -321,17 +397,23 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
         actions.getOrDefault(type, () -> {}).run();
     }
-    
+
+    /**
+     * Updates the parser by removing the processed data from the queue.
+     */
     private void updateParser() {
         try {
-            parser.getProcessed_data_queue().take();
+            parser.getProcessedDataQueue().take();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Handles orientation or illegal move events in the game.
+     * @param map The map containing ModelView and FactType associated with the event.
+     */
     private void handleOrientationOrIllegalMove(HashMap<ModelView, FactType> map) {
-
         ModelView model = map.keySet().iterator().next();
 
         if (amI(model)) {
@@ -340,24 +422,34 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Performs cleanup actions when the player leaves the game.
+     */
     public void youLeft() {
-        ui.resetImportantEvents();
-        facts.offer(null, LOBBY_INFO);
+        ui.clearRelevantGameFacts();
+        facts.offer(null, FactType.LOBBY_INFO);
         parser.bindPlayerToParser(null, null);
     }
 
     /*===============ASK METHODS===============*/
 
+    /**
+     * Prompts the user to enter a nickname and displays the chosen nickname.
+     */
     private void askNickname() {
-        ui.show_insertNicknameMsg();
+        ui.show_insertNickname();
         nickname = getProcessedData();
         ui.show_chosenNickname(nickname);
     }
 
+    /**
+     * Prompts the user to enter the number of players and validates the input.
+     * @return The number of players entered by the user.
+     */
     private Integer askNumOfPlayers() {
         Integer num_of_players = null;
         while (num_of_players == null) {
-            ui.show_insertNumOfPlayersMsg();
+            ui.show_insertNumOfPlayers();
             try {
                 String temp = getProcessedData();
                 num_of_players = Integer.parseInt(temp);
@@ -368,8 +460,12 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         return num_of_players;
     }
 
+    /**
+     * Prompts the user to select a game option and handles the input accordingly.
+     * @return `true` if the selection was successful, `false` otherwise.
+     */
     private boolean askSelectGame() {
-        ui.show_menuOptions();
+        ui.show_options();
         String optionChoose = getProcessedData();
         if (optionChoose.equals(".")) System.exit(1);
 
@@ -381,6 +477,10 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         };
     }
 
+    /**
+     * Handles the creation of a new game based on user input.
+     * @return `true` if the game creation was successful, `false` otherwise.
+     */
     private boolean handleCreateGame() {
         Integer num_players = askNumOfPlayers();
         if (num_players < 2 || num_players > 4)
@@ -390,12 +490,20 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         return true;
     }
 
+    /**
+     * Handles the joining of a random game based on user input.
+     * @return `true` if joining the game was successful, `false` otherwise.
+     */
     private boolean handleJoinGame() {
         askNickname();
         joinRandomly(nickname);
         return true;
     }
 
+    /**
+     * Handles the joining of a specific game based on user input.
+     * @return `true` if joining the game was successful, `false` otherwise.
+     */
     private boolean handleJoinSpecificGame() {
         Integer gameId = askGameId();
         if (gameId == -1)
@@ -405,10 +513,14 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         return true;
     }
 
+    /**
+     * Prompts the user to enter a game ID and validates the input.
+     * @return The game ID entered by the user.
+     */
     private Integer askGameId() {
         int gameId = -1;
         while (gameId < 0) {
-            ui.show_inputGameIdMsg();
+            ui.show_insertGameId();
             try {
                 String temp = getProcessedData();
                 gameId = Integer.parseInt(temp);
@@ -419,14 +531,20 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         return gameId;
     }
 
+    /**
+     * Prompts the user to confirm readiness to start the game.
+     */
     public void askReadyToStart() {
         ui.show_genericMessage("Are you ready to start? (y)");
         waitForValidInput("y");
         setAsReady();
     }
 
+    /**
+     * Prompts the user to select an objective card.
+     */
     public void askWhichObjectiveCard() {
-        ui.show_whichObjectiveToChooseMsg();
+        ui.show_whichObjectiveToChoose();
         String choice = waitForValidInput("1", "2");
         try {
             chooseCard(Integer.parseInt(choice) - 1);
@@ -435,8 +553,11 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Prompts the user to select a card.
+     */
     public void askWhichCard() {
-        ui.show_whichCardToPlaceMsg();
+        ui.show_whichCardToPlace();
         String choice = waitForValidInput("1", "2", "3");
         try {
             chooseCard(Integer.parseInt(choice) - 1);
@@ -445,6 +566,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Prompts the user to select the orientation and placement of a starter card.
+     */
     public void askStarterCardOrientationAndPlace() {
         ui.show_orientation("Choose the orientation of the starter card");
         String orientation = waitForValidInput("f", "b").equals("f") ? "FRONT" : "BACK";
@@ -455,6 +579,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Prompts the user to select the orientation and placement of a game card.
+     */
     public void askGameCardOrientationAndPlace() {
         ui.show_orientation("Choose the orientation of the card to place");
         String orientation = waitForValidInput("f", "b").equals("f") ? "FRONT" : "BACK";
@@ -467,6 +594,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Prompts the user to select where to draw a card from.
+     */
     public void askWhereToDrawFrom() {
         ui.show_whereToDrawFrom();
         int choice = Integer.parseInt(waitForValidInput("1", "2", "3", "4", "5", "6"));
@@ -479,14 +609,24 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
     // real getters from the buffer
 
+    /**
+     * Retrieves processed data from the parser's queue, blocking until data is available.
+     * @return The processed data retrieved from the queue.
+     * @throws RuntimeException If interrupted while waiting for data.
+     */
     private String getProcessedData() {
         try {
-            return this.parser.getProcessed_data_queue().take();
+            return this.parser.getProcessedDataQueue().take();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
 
+    /**
+     * Waits for valid input from the user based on a list of valid inputs.
+     * @param validInputs The valid inputs the user can provide.
+     * @return The valid input provided by the user.
+     */
     private String waitForValidInput(String... validInputs) {
         String input;
         do {
@@ -497,6 +637,11 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         return input;
     }
 
+    /**
+     * Gets and validates a coordinate input from the user.
+     * @param coordinate The type of coordinate (e.g., "x", "y").
+     * @return The validated coordinate input.
+     */
     private int getValidatedCoordinate(String coordinate) {
         String input;
         do {
@@ -507,6 +652,11 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         return Integer.parseInt(input.trim());
     }
 
+    /**
+     * Checks if the given input string represents a valid coordinate within the specified range.
+     * @param input The input string to validate.
+     * @return `true` if the input is a valid coordinate, `false` otherwise.
+     */
     private boolean isCoordinateValid(String input) {
         try {
             int value = Integer.parseInt(input.trim());
@@ -517,13 +667,22 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+
     // Client --------> Server
 
+    /**
+     * Displays a UI message indicating a connection error.
+     */
     public void noConnectionError() {
         ui.show_noConnectionError();
     }
 
-    // Helper method for handling common try-catch structure
+    /**
+     * Executes the provided action while handling common exceptions.
+     * If an IOException, InterruptedException, NotBoundException, or GameEndedException occurs,
+     * it displays a connection error message on the UI.
+     * @param action The action to execute.
+     */
     private void handleAction(Action action) {
         try {
             action.execute();
@@ -534,92 +693,183 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Functional interface for defining actions that may throw IOException, InterruptedException,
+     * NotBoundException, or GameEndedException.
+     */
     @FunctionalInterface
     private interface Action {
         void execute() throws IOException, InterruptedException, NotBoundException, GameEndedException;
     }
 
+    /**
+     * Initiates the process of creating a game with the given nickname and number of players.
+     * @param nickname The nickname of the player creating the game.
+     * @param num_of_players The number of players to join the game.
+     */
     @Override
     public void createGame(String nickname, int num_of_players) {
-        ui.show_creatingNewGameMsg(nickname);
+        ui.show_createGame(nickname);
         handleAction(() -> client_interface.createGame(nickname, num_of_players));
     }
 
+    /**
+     * Initiates the process of joining a game randomly with the given nickname.
+     * @param nick The nickname of the player joining randomly.
+     */
     @Override
     public void joinRandomly(String nick) {
-        ui.show_joiningFirstAvailableMsg(nick);
+        ui.show_joinRandom(nick);
         handleAction(() -> client_interface.joinRandomly(nick));
     }
 
+    /**
+     * Initiates the process of joining a specific game with the given nickname and game ID.
+     * @param nick The nickname of the player joining the specific game.
+     * @param game_id The ID of the game to join.
+     */
     @Override
     public void joinGame(String nick, int game_id) {
-        ui.show_joiningToGameIdMsg(game_id, nick);
+        ui.show_join(game_id, nick);
         handleAction(() -> client_interface.joinGame(nick, game_id));
     }
 
+    /**
+     * Sets the player as ready to start the game.
+     */
     @Override
     public void setAsReady() {
         handleAction(() -> client_interface.setAsReady());
     }
 
+    /**
+     * Places the starter card with the specified orientation.
+     * @param orientation The orientation of the starter card.
+     * @throws RemoteException If a remote communication error occurs.
+     * @throws GameEndedException If the game has already ended.
+     * @throws NotBoundException If a remote object is not bound.
+     */
     @Override
     public void placeStarterCard(Orientation orientation) throws RemoteException, GameEndedException, NotBoundException {
         handleAction(() -> client_interface.placeStarterCard(orientation));
     }
 
+    /**
+     * Places a card at the specified coordinates with the given orientation.
+     * @param where_to_place_x The x-coordinate where the card will be placed.
+     * @param where_to_place_y The y-coordinate where the card will be placed.
+     * @param orientation The orientation of the card to be placed.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
         handleAction(() -> client_interface.placeCard(where_to_place_x, where_to_place_y, orientation));
     }
 
+    /**
+     * Chooses a card to play based on the provided index.
+     * @param which_card The index of the card to choose.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void chooseCard(int which_card) throws RemoteException {
         handleAction(() -> client_interface.chooseCard(which_card));
     }
 
+    /**
+     * Draws a card from the specified index in the deck.
+     * @param index The index from which to draw the card.
+     * @throws RemoteException If a remote communication error occurs.
+     * @throws GameEndedException If the game has already ended.
+     */
     @Override
     public void drawCard(int index) throws RemoteException, GameEndedException {
         handleAction(() -> client_interface.drawCard(index));
     }
 
+    /**
+     * Sends a message to another player.
+     * @param receiver The nickname of the player who will receive the message.
+     * @param msg The message to be sent.
+     */
     @Override
     public void sendMessage(String receiver, Message msg) {
         handleAction(() -> client_interface.sendMessage(receiver, msg));
     }
 
+    /**
+     * Displays the personal board of another player based on the player's index.
+     * @param player_index The index of the player whose personal board will be shown.
+     */
     @Override
     public void showOthersPersonalBoard(int player_index) {
         handleAction(() -> client_interface.showOthersPersonalBoard(player_index));
     }
 
+    /**
+     * Initiates the process of leaving the game with the given nickname and game ID.
+     * @param nick The nickname of the player leaving the game.
+     * @param idGame The ID of the game from which the player is leaving.
+     */
     @Override
     public void leave(String nick, int idGame) {
         handleAction(() -> client_interface.leave(nick, idGame));
     }
 
+    /**
+     * Pings the server to maintain connection.
+     */
     @Override
     public void ping() {}
 
+    /**
+     * Checks if the current player is the same as the player associated with this instance.
+     * @param model The model view containing game state information.
+     * @return True if the current player nickname matches the instance's nickname; false otherwise.
+     */
     private boolean amI(ModelView model) {
         return model.getCurrentPlayerNickname().equals(nickname);
     }
 
+    /**
+     * Executes a consumer action on the model view if the current player matches the instance's nickname.
+     * @param model The model view containing game state information.
+     * @param action The consumer action to execute if the current player matches the instance's nickname.
+     */
     private void ifAmI(ModelView model, Consumer<ModelView> action) {
         if (amI(model)) {
             action.accept(model);
         }
     }
 
+    /**
+     * Handles the event when the starter card is placed, showing the personal board if it's the current player's turn.
+     * @param model The model view containing game state information.
+     * @param orientation The orientation of the placed starter card.
+     * @param nick The nickname of the player who placed the starter card.
+     */
     @Override
     public void starterCardPlaced(ModelView model, Orientation orientation, String nick) {
         ifAmI(model, m -> ui.show_personalBoard(nickname, m));
     }
 
+    /**
+     * Handles the event when a card is chosen, offering a fact about which orientation to choose if it's the current player's turn.
+     * @param model The model view containing game state information.
+     * @param which_card The index of the chosen card.
+     */
     @Override
     public void cardChosen(ModelView model, int which_card) {
         ifAmI(model, m -> facts.offer(m, FactType.ASK_WHICH_ORIENTATION));
     }
 
+    /**
+     * Handles the event when a card is placed, showing the personal board and common board if it's the current player's turn.
+     * @param model The model view containing game state information.
+     * @param where_to_place_x The x-coordinate where the card is placed.
+     * @param where_to_place_y The y-coordinate where the card is placed.
+     * @param orientation The orientation of the placed card.
+     */
     @Override
     public void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
         ifAmI(model, m -> {
@@ -629,6 +879,10 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         });
     }
 
+    /**
+     * Handles the event when an illegal move is attempted, showing an error message and the personal board if it's the current player's turn.
+     * @param model The model view containing game state information.
+     */
     @Override
     public void illegalMove(ModelView model) {
         ifAmI(model, m -> {
@@ -639,11 +893,22 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         });
     }
 
+    /**
+     * Handles the event when a move is successfully executed, showing a success message if it's the current player's turn.
+     * @param model The model view containing game state information.
+     * @param coord The coordinates of the successful move.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void successfulMove(ModelView model, Coordinate coord) throws RemoteException {
         ifAmI(model, m -> ui.show_successfulMove(coord));
     }
 
+    /**
+     * Handles the event when an illegal move is attempted due to a specific reason, showing an error message and the personal board if it's the current player's turn.
+     * @param model The model view containing game state information.
+     * @param reason_why The reason why the move is illegal.
+     */
     @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) {
         ifAmI(model, m -> {
@@ -653,45 +918,82 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         });
     }
 
+    /**
+     * Handles the event when a card is drawn by a player, showing a message if it's the current player's turn.
+     * @param model The model view containing game state information.
+     * @param index The index of the drawn card.
+     */
     @Override
     public void cardDrawn(ModelView model, int index) {
         ui.show_cardDrawn(model, nickname);
     }
 
+    /**
+     * Handles the event when it's the next player's turn, showing a message if it's not the current player's turn and the game is running or in the second last round.
+     * @param model The model view containing game state information.
+     */
     @Override
     public void nextTurn(ModelView model) {
         if (!amI(model) && (model.getStatus() == GameStatus.RUNNING || model.getStatus() == GameStatus.SECOND_LAST_ROUND)) {
             ui.show_myTurnIsFinished();
         }
         facts.offer(model, FactType.NEXT_TURN);
-        parser.getProcessed_data_queue().clear();
+        parser.getProcessedDataQueue().clear();
     }
 
+    /**
+     * Handles the event when a player joins the game, showing a message and offering a fact about player joining.
+     * @param gameModel The model view containing game state information.
+     */
     @Override
     public void playerJoined(ModelView gameModel) {
         facts.offer(gameModel, FactType.PLAYER_JOINED);
         ui.show_playerJoined(gameModel, nickname);
     }
 
+    /**
+     * Handles the event when a player is ready to start the game, showing a message if it's the current player.
+     * @param gameModel The model view containing game state information.
+     * @param nick The nickname of the player who is ready.
+     * @throws IOException If an I/O error occurs.
+     */
     @Override
     public void playerIsReadyToStart(ModelView gameModel, String nick) throws IOException {
         ui.show_playerJoined(gameModel, nickname);
         if (nick.equals(nickname)) {
-            ui.show_ReadyToStart(gameModel, nickname);
+            ui.show_readyToStart(gameModel, nickname);
         }
         facts.offer(gameModel, FactType.PLAYER_IS_READY_TO_START);
     }
 
+    /**
+     * Handles the event when a player leaves the game, showing a relevant game fact.
+     * @param gameModel The model view containing game state information.
+     * @param nick The nickname of the player who left.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void playerLeft(ModelView gameModel, String nick) throws RemoteException {
-        ui.addImportantEvent("[EVENT]: Player " + nick + " decided to leave the game!");
+        ui.addRelevantGameFact("[EVENT]: Player " + nick + " decided to leave the game!");
     }
 
+    /**
+     * Handles the event when a player attempts to join a game that is full, offering a fact about the game being full.
+     * @param wantedToJoin The player who wanted to join.
+     * @param gameModel The model view containing game state information.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void joinUnableGameFull(Player wantedToJoin, ModelView gameModel) throws RemoteException {
         facts.offer(null, FactType.FULL_GAME);
     }
 
+    /**
+     * Handles the event when a message is sent between players, showing a message if it's the current player sending or receiving.
+     * @param gameModel The model view containing game state information.
+     * @param nick The nickname of the player who sent the message.
+     * @param msg The message that was sent.
+     */
     @Override
     public void messageSent(ModelView gameModel, String nick, Message msg) {
         if (!msg.sender().getNickname().equals(nickname) && (nickname.equals(nick) || "all".equals(nick))) {
@@ -699,40 +1001,76 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Handles the event when a player attempts to join with a nickname that is already in use, offering a fact about the nickname being already used.
+     * @param wantedToJoin The player who attempted to join.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
         facts.offer(null, FactType.ALREADY_USED_NICKNAME);
     }
 
+    /**
+     * Handles the event when a requested game ID does not exist, showing a message and offering a fact about the non-existent game ID.
+     * @param gameid The game ID that does not exist.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void gameIdNotExists(int gameid) throws RemoteException {
         ui.show_noAvailableGamesToJoin("No currently game available with the following GameID: " + gameid);
         facts.offer(null, FactType.GENERIC_ERROR);
     }
 
+    /**
+     * Handles the event when a generic error occurs during the process of entering a game, showing a message and offering a fact about the generic error.
+     * @param why The reason for the generic error.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void genericErrorWhenEnteringGame(String why) throws RemoteException {
         ui.show_noAvailableGamesToJoin(why);
         facts.offer(null, FactType.GENERIC_ERROR);
     }
 
+    /**
+     * Handles the event when the game starts, offering a fact about the game starting.
+     * @param gameModel The model view containing game state information.
+     */
     @Override
     public void gameStarted(ModelView gameModel) {
-        ui.addImportantEvent("All players are connected, the game will start soon!");
+        ui.addRelevantGameFact("All players are connected, the game will start soon!");
         facts.offer(gameModel, FactType.GAME_STARTED);
     }
 
+    /**
+     * Handles the event when the game ends, offering a fact about the game ending and showing the game end screen on the UI.
+     * @param gameModel The model view containing game state information.
+     */
     @Override
     public void gameEnded(ModelView gameModel) {
         facts.offer(gameModel, FactType.GAME_ENDED);
         ui.show_gameEnded(gameModel);
     }
 
+    /**
+     * Handles the event when a player disconnects from the game, adding a relevant game fact about the disconnection.
+     * @param gameModel The model view containing game state information.
+     * @param nick The nickname of the player who disconnected.
+     */
     @Override
     public void playerDisconnected(ModelView gameModel, String nick) {
-        ui.addImportantEvent("Player " + nick + " has just disconnected");
+        ui.addRelevantGameFact("Player " + nick + " has just disconnected");
     }
 
+    /**
+     * Displays the personal board of another player if the index is valid and matches the player's nickname,
+     * otherwise shows a generic message indicating the index is out of bounds.
+     * @param modelView The model view containing game state information.
+     * @param playerNickname The nickname of the player whose personal board is to be shown.
+     * @param playerIndex The index of the player whose personal board is to be shown.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException {
         if (modelView.getAllPlayers().size() > playerIndex && this.nickname.equals(playerNickname)) {
@@ -742,13 +1080,23 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         }
     }
 
+    /**
+     * Handles the event when the second last round of the game begins, showing a generic message on the UI.
+     * @param gameModel The model view containing game state information.
+     */
     @Override
     public void secondLastRound(ModelView gameModel) {
         ui.show_genericMessage("*** Second last round begins! ***");
     }
 
+    /**
+     * Handles the event when the last round of the game begins, showing a generic message on the UI indicating no more card drawing is allowed.
+     * @param gameModel The model view containing game state information.
+     * @throws RemoteException If a remote communication error occurs.
+     */
     @Override
     public void lastRound(ModelView gameModel) throws RemoteException {
         ui.show_genericMessage("*** Last round begins! Now you will not be able to draw any additional card! ***");
     }
+
 }
