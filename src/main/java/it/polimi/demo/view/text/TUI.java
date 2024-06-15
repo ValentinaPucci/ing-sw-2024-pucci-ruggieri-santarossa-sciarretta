@@ -37,27 +37,27 @@ public class TUI extends UI {
      * constructor
      */
     public TUI() {
-        init();
+        initializer();
     }
 
     /**
-     * init
+     * initializer
      */
     @Override
-    public void init() {
+    public void initializer() {
         AnsiConsole.systemInstall();
-        importantEvents = new ArrayList<>();
+        relevant_facts = new ArrayList<>();
     }
 
     /**
      * @param input the string of the important event to offer
      */
     @Override
-    public void addImportantEvent(String input) {
-        if (importantEvents.size() + 1 >= Constants.maxnum_of_last_event_tobe_showed) {
-            importantEvents.remove(0);
+    public void addRelevantGameFact(String input) {
+        if (relevant_facts.size() + 1 >= Constants.maxnum_of_last_event_tobe_showed) {
+            relevant_facts.removeFirst();
         }
-        importantEvents.add(input);
+        relevant_facts.add(input);
         show_important_events();
     }
 
@@ -104,7 +104,6 @@ public class TUI extends UI {
      *
      * @param model where the game is ended
      */
-    // todo: check for correctness
     @Override
     public void show_gameEnded(ModelView model) {
         clearScreen();
@@ -135,19 +134,25 @@ public class TUI extends UI {
                 """).bg(DEFAULT).reset());
 
 
-        int i = 1;
-        int classif = 1;
-        StringBuilder ris = new StringBuilder();
+        int rowOffset = 1; // Start row offset
+        int ranking = 1;   // Start ranking
+
+        StringBuilder output = new StringBuilder();
+
         for (Map.Entry<Player, Integer> entry : model.getLeaderBoard().entrySet()) {
-            StaticPrinterTUI.print("");
-            ris.append(ansi().fg(WHITE).cursor(Constants.row_leaderboard + i, Constants.col_leaderboard)
-                    .a("#" + classif + " "
-                            + entry.getKey().getNickname() + ": "
-                            + entry.getValue() + " points\n").fg(GREEN));
-            i += 2;
-            classif++;
+            output.append(ansi()
+                    .fg(WHITE)
+                    .cursor(Constants.row_leaderboard + rowOffset, Constants.col_leaderboard)
+                    .a("#" + ranking + " " + entry.getKey().getNickname() + ": ")
+                    .fg(GREEN)
+                    .a(entry.getValue() + " points\n")
+                    .reset()); // Reset colors to default after each line
+
+            rowOffset += 2; // Increment row offset for the next entry
+            ranking++;     // Increment ranking for the next entry
         }
-        print(ris);
+
+        StaticPrinterTUI.print(output.toString());
     }
 
     // *********************** SHOW METHODS  *********************** //
@@ -222,9 +227,7 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void show_successfulMove(Coordinate coord) {
-
-    }
+    protected void show_successfulMove(Coordinate coord) {}
 
     @Override
     public void show_whereToDrawFrom() {
@@ -279,9 +282,7 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_commonObjectives(ModelView gameModel) {
-
-    }
+    public void show_commonObjectives(ModelView gameModel) {}
 
     @Override
     public void show_personalObjectiveCard(ModelView gameModel) {
@@ -329,9 +330,9 @@ public class TUI extends UI {
         clearScreen();
         StringBuilder ris = new StringBuilder();
         int i = 0;
-        int longestImportantEvent = importantEvents.stream().map(String::length).reduce(0, (a, b) -> a > b ? a : b);
+        int longestImportantEvent = relevant_facts.stream().map(String::length).reduce(0, (a, b) -> a > b ? a : b);
         ris.append(ansi().fg(GREEN).cursor(Constants.row_important_events + i, Constants.col_important_events - 1).bold().a("Latest Events: ").fg(DEFAULT).boldOff());
-        for (String s : importantEvents) {
+        for (String s : relevant_facts) {
             ris.append(ansi().fg(WHITE).cursor(Constants.row_important_events + 1 + i, Constants.col_important_events).a(s).a(" ".repeat(longestImportantEvent - s.length())).fg(DEFAULT));
             i++;
         }
@@ -359,8 +360,8 @@ public class TUI extends UI {
      * Clears important gameFacts' list
      */
     @Override
-    public void resetImportantEvents() {
-        this.importantEvents = new ArrayList<>();
+    public void clearRelevantGameFacts() {
+        this.relevant_facts = new ArrayList<>();
         this.nickname = null;
     }
 
@@ -376,19 +377,13 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void show_chosenNickname(String nickname) {
-
-    }
+    protected void show_chosenNickname(String nickname) {}
 
     @Override
-    protected void show_nextTurn(ModelView model, String nickname) {
-
-    }
+    protected void show_nextTurn(ModelView model, String nickname) {}
 
     @Override
-    protected void show_cardDrawn(ModelView model, String nickname) {
-
-    }
+    protected void show_cardDrawn(ModelView model, String nickname) {}
 
     /**
      * Asks the player to pick a direction
@@ -447,7 +442,7 @@ public class TUI extends UI {
      * Asks the player to insert his nickname
      */
     @Override
-    public void show_insertNicknameMsg() {
+    public void show_insertNickname() {
         clearScreen();
         printNoNewLine(ansi().cursor(Constants.row_gameID, 0).a("> Insert your nickname: "));
     }
@@ -456,7 +451,7 @@ public class TUI extends UI {
      * Asks the player to choose number of tiles to pick up
      */
     @Override
-    public void show_insertNumOfPlayersMsg() {
+    public void show_insertNumOfPlayers() {
         clearScreen();
         printNoNewLine(ansi().cursor(Constants.row_gameID, 0).a("> Choose the number of players for this game: "));
     }
@@ -465,7 +460,7 @@ public class TUI extends UI {
      * Shows initial menu
      */
     @Override
-    public void show_menuOptions() {
+    public void show_options() {
         this.clearScreen();
         this.show_titleCodexNaturalis();
         StaticPrinterTUI.print(ansi().cursor(9, 0).a("""
@@ -485,7 +480,7 @@ public class TUI extends UI {
      * Asks for the game id
      */
     @Override
-    public void show_inputGameIdMsg() {
+    public void show_insertGameId() {
         clearScreen();
         printNoNewLine("> Input the GameId: ");
     }
@@ -502,14 +497,14 @@ public class TUI extends UI {
      * Asks which tile to place
      */
     @Override
-    public void show_whichCardToPlaceMsg() {
+    public void show_whichCardToPlace() {
         clearScreen();
         StaticPrinterTUI.print(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(
                 "\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
     }
 
     @Override
-    public void show_whichObjectiveToChooseMsg() {
+    public void show_whichObjectiveToChoose() {
         StaticPrinterTUI.print("> Select which objective card you want to choose (1 / 2):");
     }
 
@@ -519,7 +514,7 @@ public class TUI extends UI {
      * @param nickname player's nickname
      */
     @Override
-    public void show_creatingNewGameMsg(String nickname) {
+    public void show_createGame(String nickname) {
         this.clearScreen();
         this.show_titleCodexNaturalis();
         StaticPrinterTUI.print("> Creating a new game...");
@@ -532,7 +527,7 @@ public class TUI extends UI {
      * @param nickname player's nickname
      */
     @Override
-    public void show_joiningFirstAvailableMsg(String nickname) {
+    public void show_joinRandom(String nickname) {
         this.clearScreen();
         this.show_titleCodexNaturalis();
         StaticPrinterTUI.print("> Connecting to the first available game...");
@@ -546,7 +541,7 @@ public class TUI extends UI {
      * @param nickname player's nickname
      */
     @Override
-    public void show_joiningToGameIdMsg(int idGame, String nickname) {
+    public void show_join(int idGame, String nickname) {
         this.clearScreen();
         this.show_titleCodexNaturalis();
         StaticPrinterTUI.print("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
@@ -554,8 +549,5 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_ReadyToStart(ModelView gameModel, String s) {
-
-    }
-
+    public void show_readyToStart(ModelView gameModel, String s) {}
 }
