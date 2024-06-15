@@ -32,15 +32,6 @@ public class ClientConnection extends Thread implements Serializable {
         this.socket = socket;
     }
 
-    public void stopThread() {
-        running.set(false);
-        try {
-            socket.close();
-        } catch (IOException e) {
-            staticPrinter("Error closing socket: " + e.getMessage());
-        }
-    }
-
     @Override
     public void run() {
         running.set(true);

@@ -1,5 +1,6 @@
 package it.polimi.demo.model.board;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 /**
@@ -14,12 +15,17 @@ import java.io.Serializable;
  */
 public class Cell implements Serializable {
 
+    @Serial
+    private static final long serialVersionUID = 7281719514568472877L;
     private Corner corner;
     public int level;
     public boolean is_full;
     public boolean cell_of_a_found_pattern;
 
 
+    /**
+     * Constructor for the class Cell.
+     */
     public Cell() {
         this.level = 0;
         this.is_full = false;
@@ -27,19 +33,8 @@ public class Cell implements Serializable {
     }
 
     /**
-     *
-     * @param corner
-     */
-    public Cell(Corner corner) {
-        this.corner = corner;
-        this.level = 0;
-        this.is_full = false;
-        this.cell_of_a_found_pattern = false;
-    }
-
-    /**
-     *
-     * @param new_corner
+     * This method is used to set the corner of the cell.
+     * @param new_corner the corner of the cell
      */
     public void setCellAsFull(Corner new_corner) {
         this.corner = new_corner;
@@ -62,16 +57,11 @@ public class Cell implements Serializable {
     }
 
     /**
+     * This method is used to check if a cell is empty.
      *
-     * @param cell
-     * @return true iff two cells are both full and has the same color
-     * @Override
+     * @return true if the cell is empty, false otherwise
      */
     public boolean equals(Cell cell) {
         return this.is_full && cell.is_full && this.corner.reference_card.color == cell.corner.reference_card.color;
-    }
-
-    public int getLevel() {
-        return level;
     }
 }

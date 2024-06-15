@@ -312,7 +312,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         Map<FactType, Runnable> actions = Map.of(
                 FactType.GAME_ENDED, () -> {
                     ui.show_menu();
-                    parser.getProcessed_data_queue().clear();
+                    parser.getProcessedDataQueue().clear();
                     updateParser();
                     leave(nickname, model.getGameId());
                     youLeft();
@@ -324,7 +324,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     
     private void updateParser() {
         try {
-            parser.getProcessed_data_queue().take();
+            parser.getProcessedDataQueue().take();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -481,7 +481,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
     private String getProcessedData() {
         try {
-            return this.parser.getProcessed_data_queue().take();
+            return this.parser.getProcessedDataQueue().take();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -664,7 +664,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
             ui.show_myTurnIsFinished();
         }
         facts.offer(model, FactType.NEXT_TURN);
-        parser.getProcessed_data_queue().clear();
+        parser.getProcessedDataQueue().clear();
     }
 
     @Override

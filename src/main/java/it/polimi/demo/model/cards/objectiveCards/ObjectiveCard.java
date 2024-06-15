@@ -10,10 +10,10 @@ public abstract class ObjectiveCard extends Card implements Serializable {
     private int points;
 
     /**
-     * Costruttore protetto per evitare istanziazione diretta
-     * @param id l'id dell'obiettivo
-     * @param orientation front o back
-     * @param points il punteggio dell'obiettivo
+     * Constructor for the ObjectiveCard class
+     * @param id the id of the card
+     * @param orientation the orientation of the card
+     * @param points the points of the card
      */
     protected ObjectiveCard(int id, Orientation orientation, int points) {
         super(id, orientation);
@@ -21,17 +21,17 @@ public abstract class ObjectiveCard extends Card implements Serializable {
     }
 
     /**
-     * Metodo per ottenere il punteggio dell'obiettivo
-     * @return il punteggio dell'obiettivo
+     * Getter for the points of the card
+     * @return the points of the card
      */
     public int getPoints() {
         return points;
     }
 
     /**
-     * Metodo astratto per calcolare il punteggio dell'obiettivo in base allo schema personale del giocatore
-     * @param personal_board lo schema personale del giocatore
-     * @return il punteggio calcolato dell'obiettivo
+     * Abstract method to calculate the score of the card
+     * @param personal_board the personal board of the player
+     * @return the score of the card
      */
     public abstract int calculateScore(PersonalBoard personal_board);
 }

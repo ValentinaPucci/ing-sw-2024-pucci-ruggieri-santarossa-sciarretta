@@ -30,14 +30,17 @@ public class Corner implements Serializable {
      */
     public BoardCellCoordinate board_coordinate;
 
+    /**
+     * Constructor for the class Corner.
+     */
     public Corner() {
         this.is_visible = true;
         this.board_coordinate = new BoardCellCoordinate(0, 0);
     }
 
     /**
-     *
-     * @param board_coordinate
+     * Constructor for the class Corner.
+     * @param board_coordinate the coordinate of the corner
      */
     public Corner(BoardCellCoordinate board_coordinate) {
         this.board_coordinate = board_coordinate;
@@ -46,6 +49,11 @@ public class Corner implements Serializable {
         this.item = null;
     }
 
+    /**
+     * Constructor for the class Corner.
+     * @param board_coordinate the coordinate of the corner
+     * @param reference_card the reference card
+     */
     public Corner(BoardCellCoordinate board_coordinate, ResourceCard reference_card) {
         this.board_coordinate = board_coordinate;
         this.is_visible = true;
@@ -54,69 +62,75 @@ public class Corner implements Serializable {
         this.reference_card = reference_card;
     }
 
-//    /**
-//     * @param coordinate
-//     * @param resource
-//     * @param item
-//     * @param is_visible
-//     * @param card
-//     */
-////    public Corner(Coordinate coordinate, Optional<Resource> resource, Optional<Item> item,
-////                  boolean is_visible, ResourceCard card) {
-////        this.coordinate = coordinate;
-////        this.resource = resource;
-////        this.item = item;
-////        this.is_visible = is_visible;
-////        this.reference_card = card;
-////        this.board_coordinate = new BoardCellCoordinate(0, 0);
-////        this.board_coordinate.setXY(coordinate);
-////    }
-
-    // Set corner
-// Crea un set resource. per settare resource e poi crea anche un set item per settare item.
+    /**
+     * setter for the resource
+     * @param resource the resource
+     */
     public void setCornerResource(Resource resource) {
         this.resource = resource;
     }
 
+    /**
+     * setter for the item
+     * @param item the item
+     */
     public void setCornerItem(Item item) {
         this.item = item;
     }
 
+    /**
+     * set a corner as empty
+     */
     public void setCornerItemEmpty() {this.item = null;}
 
+    /**
+     * set a corner as empty
+     */
     public void setCornerResourceEmpty() {this.resource = null;}
 
+    /**
+     * set a corner as empty
+     */
     public void setEmpty(){
         this.resource = null;
         this.item = null;
     }
 
-//    public void setBoard_coordinate(Coordinate coord) {
-//        this.board_coordinate.setXY(coord);
-//    }
-
     /**
-     * to check
-     *
-     * @return
-     * @throws NoSuchElementException
+     * getter for the resource
      */
     public Resource getResource() throws NoSuchElementException {
         return resource;
     }
 
+    /**
+     * getter for the item
+     */
     public Item getItem() throws NoSuchElementException {
         return item;
     }
 
+    /**
+     * getter for the coordinate
+     * @return the coordinate
+     */
     public Coordinate getCoordinate() {
         return coordinate;
     }
 
+    /**
+     * setter for the coordinate
+     * @param coordinate the coordinate
+     */
     public void setCoordinate(Coordinate coordinate) {
         this.coordinate = coordinate;
     }
 
+    /**
+     * equals method for the class Corner.
+     * @param obj the object to compare
+     * @return true if the two objects are equal, false otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         Corner corner = (Corner) obj;
@@ -130,6 +144,10 @@ public class Corner implements Serializable {
             return false;
     }
 
+    /**
+     * toString method for the class Corner.
+     * @return a string representing the corner
+     */
     @Override
     public String toString() {
         return "Corner{" +
@@ -138,10 +156,10 @@ public class Corner implements Serializable {
                 '}';
     }
 
-    public BoardCellCoordinate getBoard_coordinate() {
-        return board_coordinate;
-    }
-
+    /**
+     * setter for the reference card
+     * @param reference_card the reference card
+     */
     public void setReference_card(ResourceCard reference_card) {
         this.reference_card = reference_card;
     }

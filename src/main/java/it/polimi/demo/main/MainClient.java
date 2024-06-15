@@ -10,8 +10,15 @@ import javafx.application.Application;
 
 import static java.lang.Integer.valueOf;
 
+/**
+ * MainClient is the main class for the client side of the application.
+ */
 public class MainClient {
 
+    /**
+     * Main method for the client side of the application.
+     * @param args the arguments for the main method
+     */
     public static void main(String... args) {
 
         BoolAdd remoteIP = StaticPromptValidator.promptForIP("Insert remote IP (leave empty for localhost): ");

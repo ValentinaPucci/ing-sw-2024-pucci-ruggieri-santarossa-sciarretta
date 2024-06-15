@@ -7,6 +7,9 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * This class is used to print messages asynchronously.
+ */
 public class StaticPrinter {
 
     private static final Logger LOGGER = Logger.getLogger(StaticPrinter.class.getName());

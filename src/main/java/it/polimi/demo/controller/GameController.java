@@ -10,6 +10,7 @@ import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
 import it.polimi.demo.network.interfaces.GameControllerInterface;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -18,6 +19,8 @@ import java.util.function.BiConsumer;
 
 public class GameController implements GameControllerInterface, Serializable, Runnable {
 
+    @Serial
+    private static final long serialVersionUID = -1535857999701952102L;
     private final Model model;
     private final Map<Listener, Ping> pings;
 
