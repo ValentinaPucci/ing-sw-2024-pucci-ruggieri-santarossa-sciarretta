@@ -8,13 +8,11 @@ import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.ObserverManagerClient;
 import it.polimi.demo.network.PingSender;
 import it.polimi.demo.network.socket.client.gameControllerMessages.*;
-import it.polimi.demo.network.socket.client.mainControllerMessages.*;
 import it.polimi.demo.network.socket.client.serverToClientMessages.SocketServerGenericMessage;
 import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMessageJoinFirstAvailableGame;
 import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMsgGameCreation;
 import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMsgJoinGame;
 import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMsgLeaveGame;
-import it.polimi.demo.network.socket.client.serverToClientMessages.SocketServerGenericMessage;
 import it.polimi.demo.view.dynamic.ClientInterface;
 import it.polimi.demo.view.dynamic.GameDynamic;
 
@@ -23,7 +21,6 @@ import java.io.*;
 import java.rmi.NotBoundException;
 
 import static it.polimi.demo.network.StaticPrinter.staticPrinter;
-import static it.polimi.demo.network.StaticPrinter.staticPrinterNoNewLine;
 
 public class ClientSocket extends Thread implements ClientInterface {
 
@@ -54,7 +51,7 @@ public class ClientSocket extends Thread implements ClientInterface {
 
     public ClientSocket(GameDynamic dynamics) {
         modelEvents = new ObserverManagerClient(dynamics);
-        initiateConnection(Constants.serverIp, Constants.Socket_port);
+        initializeConnection(Constants.serverIp, Constants.Socket_port);
         this.start();
         socketHeartbeat = new PingSender(this);
     }
@@ -103,57 +100,29 @@ public class ClientSocket extends Thread implements ClientInterface {
     /**
      * Initialize the connection with the server at the specified IP and port.
      * It uses a buffer in order to improve the performance of the communication.
-     * @param serverIp
-     * @param serverPort
+     * @param serverIp IP of the server
+     * @param serverPort Port of the server
      */
-    private void initiateConnection(String serverIp, int serverPort) {
-        boolean connectionFailed;
-        int connectionAttempts = 0;
+    private void initializeConnection(String serverIp, int serverPort) {
 
-        do {
-            connectionFailed = false;
-            try {
-                // Establish new socket connection
-                clientSocket = new Socket(serverIp, serverPort);
+        try {
+            // Establish new socket connection
+            clientSocket = new Socket(serverIp, serverPort);
 
-                // Buffered streams for better performance:
-                BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(clientSocket.getOutputStream());
-                BufferedInputStream bufferedInputStream = new BufferedInputStream(clientSocket.getInputStream());
+            // Buffered streams for better performance:
+            BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(clientSocket.getOutputStream());
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(clientSocket.getInputStream());
 
-                // Initialize output stream
-                ob_out = new ObjectOutputStream(bufferedOutputStream);
-                ob_out.flush();
+            // Initialize output stream
+            ob_out = new ObjectOutputStream(bufferedOutputStream);
+            ob_out.flush();
 
-                // Initialize input stream
-                ob_in = new ObjectInputStream(bufferedInputStream);
-
-            } catch (IOException ioException) {
-                connectionFailed = true;
-                connectionAttempts++;
-                staticPrinter("[ERROR] Failed to connect to the server: " + ioException + "\n");
-                staticPrinterNoNewLine("[Attempt #" + connectionAttempts + "] Retrying connection to server at port: '" + serverPort + "' and IP: '" + serverIp + "'");
-
-                for (int i = 0; i < Constants.seconds_between_reconnection; i++) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException interruptedException) {
-                        throw new RuntimeException(interruptedException);
-                    }
-                    staticPrinterNoNewLine(".");
-                }
-                staticPrinterNoNewLine("\n");
-
-                if (connectionAttempts >= Constants.num_of_attempt_to_connect_toServer_before_giveup) {
-                    staticPrinterNoNewLine("Aborting reconnection, too many failed attempts!");
-                    try {
-                        System.in.read();
-                    } catch (IOException ex) {
-                        throw new RuntimeException(ex);
-                    }
-                    System.exit(-1);
-                }
-            }
-        } while (connectionFailed);
+            // Initialize input stream
+            ob_in = new ObjectInputStream(bufferedInputStream);
+        }
+        catch (IOException e) {
+            staticPrinter("[ERROR] Error initializing connection: " + e);
+        }
     }
 
     /**
@@ -289,17 +258,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     }
 
     @Override
-    public void ping() throws IOException, NotBoundException {
-        //        if (ob_out != null) {
-//            try {
-//                ob_out.writeObject(new SocketClientMessageHeartBeat(nickname));
-//                finishSending();
-//            } catch (IOException e) {
-//                staticPrinter("Connection lost to the server!! Impossible to send heartbeat...");
-//            }
-//        }
-
-    }
+    public void ping() throws IOException, NotBoundException {}
 
     private void startHeartbeat() {
         if (!socketHeartbeat.isAlive()) {

@@ -16,32 +16,42 @@ import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * This class represents the model of the game. It contains all the logic of the game.
+ * It is responsible for managing the players, the game status, the chat, the game board, and the game cards.
+ * It also manages the connection and disconnection of players, the game status, and the game logic.
+ * It notifies the listeners about the game state changes.
+ */
 public class Model implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 4920324247277456226L;
 
     // the first list let us keep the order of players. It is immutable!!
     // aux_order_player.size() always >= players_connected.size()
     private final List<Player> aux_order_players;
+
     // the second one is used as a queue and let us know which player
     // is connected (and actively playing).
     private final LinkedList<Player> players_connected;
+
     private final Random random = new Random();
-    private CommonBoard common_board;
-    private int gameId;
+    private final CommonBoard common_board;
+    private final int gameId;
     private int num_required_players_to_start;
     private GameStatus status;
     private Chat chat;
-    private List<Player> winners;
-    private Map<Player, Integer> leaderboard;
+    private final Map<Player, Integer> leaderboard;
+    private final ObserverManager observers;
 
     /**
-     * Listener handler that handles the listeners
+     * Constructor for the model.
      */
-    private ObserverManager observers;
-
     public Model() {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
@@ -49,11 +59,15 @@ public class Model implements Serializable {
         gameId = -1;
         num_required_players_to_start = -1; // invalid value on purpose
         status = GameStatus.WAIT;
-        winners = new ArrayList<>();
         leaderboard = new HashMap<>();
         observers = new ObserverManager();
     }
 
+    /**
+     * Constructor for the model.
+     * @param gameID The ID of the game.
+     * @param numberOfPlayers The number of players required to start the game.
+     */
     public Model(int gameID, int numberOfPlayers) {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
@@ -62,7 +76,6 @@ public class Model implements Serializable {
         gameId = gameID;
         status = GameStatus.WAIT;
         chat = new Chat();
-        winners = new ArrayList<>();
         leaderboard = new HashMap<>();
         observers = new ObserverManager();
     }
@@ -88,18 +101,29 @@ public class Model implements Serializable {
     }
 
 
+    /**
+     * Retrieves the list of nicknames of the players participating in the game.
+     *
+     * @return The list of nicknames.
+     */
     public List<String> getAllNicknames() {
         return aux_order_players.stream()
                 .map(Player::getNickname)
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Retrieves the list of players connected to the game.
+     *
+     * @return The list of players connected to the game.
+     */
     public LinkedList<Player> getPlayersConnected() {
         return players_connected;
     }
 
     /**
-     * @param p is set as ready, then everyone is notified
+     * set the player as ready to start
+     * @param p player to set as ready
      */
     public synchronized void setPlayerAsReadyToStart(Player p) {
         p.setAsReadyToStart();
@@ -111,6 +135,10 @@ public class Model implements Serializable {
         }
     }
 
+    /**
+     * extract the first player to play from the list of connected players
+     * and put it at the end of the list.
+     */
     public synchronized void extractFirstPlayerToPlay() {
         Player first_player = players_connected.get(random.nextInt(players_connected.size()));
 
@@ -121,7 +149,8 @@ public class Model implements Serializable {
     }
 
     /**
-     * @return true if there are enough players to start, and if every one of them is ready
+     * determine if all players are ready to start and if there are enough players to start
+     * @return true if all players are ready to start and if there are enough players to start
      */
     public boolean arePlayersReadyToStartAndEnough() {
         List<Player> p = players_connected.stream().filter(Player::getReadyToStart).toList();
@@ -129,22 +158,31 @@ public class Model implements Serializable {
     }
 
     /**
+     * Retrieves the player with the specified nickname.
      * @param nick nickname of the player
      * @return player with the given nickname, or null if not found
      */
     public Player getIdentityOfPlayer(String nick) {
-        for (int i = 0; i < players_connected.size(); i++) {
-            if (players_connected.get(i).getNickname().equals(nick)) {
-                return players_connected.get(i);
+        for (Player player : players_connected) {
+            if (player.getNickname().equals(nick)) {
+                return player;
             }
         }
         return null;
     }
 
+    /**
+     * setter for the number of players required to start the game
+     * @param n number of players required to start the game
+     */
     public void setNumPlayersToPlay(int n) {
         num_required_players_to_start = n;
     }
 
+    /**
+     * getter for the number of players required to start the game
+     * @return the number of players required to start the game
+     */
     public int getNumPlayersToPlay() {
         return num_required_players_to_start;
     }
@@ -191,9 +229,8 @@ public class Model implements Serializable {
     //-------------------------chat and messages---------------------------------------------
 
     /**
-     * Retrieves the chat object associated with the game.
-     *
-     * @return The chat object used for communication among players.
+     * getter for the chat
+     * @return the chat
      */
     public Chat getChat() {
         return this.chat;
@@ -201,9 +238,9 @@ public class Model implements Serializable {
 
     /**
      * Sends a message to the chat.
-     * @param nick
-     * @param message
-     * @throws ActionPerformedByAPlayerNotPlayingException
+     * @param nick nickname of the player sending the message
+     * @param message the message to send
+     * @throws ActionPerformedByAPlayerNotPlayingException If the player is not connected to the game.
      */
     public void sendMessage(String nick, Message message) throws ActionPerformedByAPlayerNotPlayingException {
         chat.addMessage(message);
@@ -305,6 +342,11 @@ public class Model implements Serializable {
         dealCards();
     }
 
+    /**
+     * Choose the game card from the hand of the player.
+     * @param p The player who is choosing the game card.
+     * @param which_card The index of the card in the player's hand.
+     */
     public void chooseCardFromHand(Player p, int which_card) {
         if (getStatus() == GameStatus.FIRST_ROUND)
             p.setChosenObjectiveCard(p.getSecretObjectiveCards().get(which_card));
@@ -677,7 +719,6 @@ public class Model implements Serializable {
      * Updates the leaderboard and the list of winners accordingly.
      * It is called by getWinners() method.
      */
-    // todo: adjust this method. In case of tie, it is ok!
     public void declareWinners() {
 
         List<Player> aux_final_scores_tie = new ArrayList<>();
@@ -698,12 +739,12 @@ public class Model implements Serializable {
             }
         }
 
+        leaderboard.clear(); // Clear the leaderboard before adding new entries
+
         if (aux_final_scores_tie.size() == 1) {
-            leaderboard.clear(); // Clear the leaderboard before adding new entries
             for (Player player : orderedPlayers) {
                 leaderboard.put(player, player.getFinalScore());
             }
-            return;
         }
         else {
             // aux_final_scores_tie.size() >= 2
@@ -717,22 +758,20 @@ public class Model implements Serializable {
                     counter++;
                 }
             }
-            winners.clear();
             Player p_aux = new Player(aux.toString());
             p_aux.setFinalScore(aux_final_scores_tie.getFirst().getFinalScore());
-            winners.add(p_aux);
+            leaderboard.put(p_aux, p_aux.getFinalScore());
             for (int i = counter; i < orderedPlayers.size(); i++) {
-                winners.add(orderedPlayers.get(i));
+                leaderboard.put(orderedPlayers.get(i), orderedPlayers.get(i).getFinalScore());
             }
-        }
-
-        // Populate the leaderboard
-        leaderboard.clear(); // Clear the leaderboard before adding new entries
-        for (Player player : orderedPlayers) {
-            leaderboard.put(player, player.getFinalScore());
         }
     }
 
+    /**
+     * show the personal board of the player with the nickname
+     * @param playerNickname nickname of the player
+     * @param playerIndex index of the player
+     */
     public void showOthersPersonalBoard(String playerNickname, int playerIndex) {
         if(this.getAllPlayers().size() <= playerIndex)
             observers.notify_illegalMoveBecauseOf(this, "Player index out of bounds");
@@ -740,7 +779,10 @@ public class Model implements Serializable {
             observers.notify_showOthersPersonalBoard(this, playerIndex, playerNickname);
     }
 
-
+    /**
+     * getter for the leaderboard
+     * @return the leaderboard
+     */
     public Map<Player, Integer> getLeaderboard() {
         return leaderboard;
     }
@@ -754,13 +796,16 @@ public class Model implements Serializable {
         return this.common_board;
     }
 
-    public void setErrorMessage(String error) {
-
-    }
+    /**
+     * setter for an error message
+     * @param error the error message
+     */
+    public void setErrorMessage(String error) {}
 
     // **************************** Listeners ********************************
 
     /**
+     * Adds a listener to the list of listeners.
      * @param obj adds the listener to the list
      */
     public void addListener(Listener obj) {
@@ -769,6 +814,7 @@ public class Model implements Serializable {
 
 
     /**
+     * Removes a listener from the list of listeners.
      * @param lis removes listener from list
      */
     public void removeListener(Listener lis) {

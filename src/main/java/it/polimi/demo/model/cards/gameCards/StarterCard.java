@@ -7,9 +7,6 @@ import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.enumerations.Resource;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
-
 public class StarterCard extends Card {
 
     public static final int STARTER_CARD_COORDINATE = 500;
@@ -116,17 +113,6 @@ public class StarterCard extends Card {
         else
             throw new IndexOutOfBoundsException("Invalid index");
     }
-
-
-//    public Optional<Resource> getFront_resource1() {
-//        return Optional.of(front_resource1);
-//    }
-//    public Optional<Resource> getFront_resource2() {
-//        return Optional.empty();
-//    }
-//    public Optional<Resource> getFront_resource3() {
-//        return Optional.empty();
-//    }
 
     public Orientation getOrientation() {
         return orientation;

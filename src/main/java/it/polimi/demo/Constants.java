@@ -17,7 +17,6 @@ public class Constants implements Serializable {
 
     public final static int maxnum_of_last_event_tobe_showed = 6;
 
-
     //INPUT
     public final static int row_input = 34;
 

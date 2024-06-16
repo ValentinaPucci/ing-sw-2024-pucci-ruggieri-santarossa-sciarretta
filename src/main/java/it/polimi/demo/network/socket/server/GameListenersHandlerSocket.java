@@ -13,10 +13,10 @@ import java.io.ObjectOutputStream;
 import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
+
 /**
  * This class is used to handle the messages that are sent to the client
  */
-
 public class GameListenersHandlerSocket implements Listener, Serializable {
     @Serial
     private static final long serialVersionUID = -44724272240516582L;

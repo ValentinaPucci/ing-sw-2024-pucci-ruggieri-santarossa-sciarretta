@@ -4,6 +4,7 @@ import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.view.dynamic.UI;
 
+import it.polimi.demo.view.gui.controllers.GameOverController;
 import it.polimi.demo.view.gui.controllers.LobbyController;
 import it.polimi.demo.view.gui.controllers.RunningController;
 import it.polimi.demo.view.gui.scene.SceneType;
@@ -24,12 +25,12 @@ public class GUI extends UI {
         this.guiApplication = guiApplication;
         this.GuiReader = GuiReader;
         nickname = null;
-        init();
+        initializer();
     }
 
     @Override
-    public void init() {
-        importantEvents = new ArrayList<>();
+    public void initializer() {
+        relevant_facts = new ArrayList<>();
     }
 
     public void callPlatformRunLater(Runnable r) {
@@ -39,7 +40,7 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_menuOptions() {
+    protected void show_options() {
         callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.GuiReader));//So the controllers can offer text to the buffer for the gameflow
         callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
@@ -48,30 +49,30 @@ public class GUI extends UI {
 
 
     @Override
-    protected void show_creatingNewGameMsg(String nickname) {
+    protected void show_createGame(String nickname) {
     }
 
     @Override
-    protected void show_joiningFirstAvailableMsg(String nickname) {
+    protected void show_joinRandom(String nickname) {
     }
 
     @Override
-    protected void show_joiningToGameIdMsg(int idGame, String nickname) {
-        show_inputGameIdMsg();
+    protected void show_join(int idGame, String nickname) {
+        show_insertGameId();
     }
 
     @Override
-    protected void show_inputGameIdMsg() {
+    protected void show_insertGameId() {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ID_GAME));
     }
 
     @Override
-    protected void show_insertNicknameMsg() {
+    protected void show_insertNickname() {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.NICKNAME));
     }
 
     @Override
-    protected void show_insertNumOfPlayersMsg() {
+    protected void show_insertNumOfPlayers() {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.NUM_PLAYERS));
     }
 
@@ -111,7 +112,7 @@ public class GUI extends UI {
      * @param nickname player's nickname
      */
     @Override
-    protected void show_ReadyToStart(ModelView gameModel, String nickname) {
+    protected void show_readyToStart(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> this.guiApplication.disableBtnReadyToStart());
     }
 
@@ -128,6 +129,9 @@ public class GUI extends UI {
 
     @Override
     protected void show_gameEnded(ModelView model) {
+        callPlatformRunLater(() -> ((GameOverController) this.guiApplication.getController(SceneType.GAME_OVER)).show(model));
+
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.GAME_OVER));
 
     }
 
@@ -185,6 +189,7 @@ public class GUI extends UI {
     protected void show_cardDrawn(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel)); //added
     }
 
     @Override
@@ -216,6 +221,7 @@ public class GUI extends UI {
     @Override
     protected void show_successfulMove(Coordinate coord) {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove(coord));
+
     }
 
     @Override
@@ -231,12 +237,12 @@ public class GUI extends UI {
 
 
     @Override
-    public void show_whichObjectiveToChooseMsg() {
+    public void show_whichObjectiveToChoose() {
 
     }
 
     @Override
-    public void show_whichCardToPlaceMsg() {
+    public void show_whichCardToPlace() {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).whichCardToPlace());
     }
 
@@ -279,17 +285,17 @@ public class GUI extends UI {
      * @param input the string of the important event to offer
      */
     @Override
-    public void addImportantEvent(String input) {
-        importantEvents.add(input);
-        callPlatformRunLater(() -> this.guiApplication.showImportantEvents(this.importantEvents));
+    public void addRelevantGameFact(String input) {
+        relevant_facts.add(input);
+        callPlatformRunLater(() -> this.guiApplication.showImportantEvents(this.relevant_facts));
     }
 
     /**
      * This method reset the important events
      */
     @Override
-    protected void resetImportantEvents() {
-        this.importantEvents = new ArrayList<>();
+    protected void clearRelevantGameFacts() {
+        this.relevant_facts = new ArrayList<>();
         this.nickname = null;
         alreadyShowedLobby = false;
     }

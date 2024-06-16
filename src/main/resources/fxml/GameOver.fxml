@@ -36,7 +36,7 @@
             <Image url="@/logo.png" />
          </image>
       </ImageView>
-      <Button fx:id="buttonMenu" layoutX="465.0" layoutY="322.0" mnemonicParsing="false" onAction="#goToMenu" text="Button" textFill="#4d0202">
+      <Button fx:id="buttonMenu" layoutX="465.0" layoutY="322.0" mnemonicParsing="false" onAction="#goToMenu" text="Menu" textFill="#4d0202">
          <font>
             <Font name="Luminari" size="22.0" />
          </font>

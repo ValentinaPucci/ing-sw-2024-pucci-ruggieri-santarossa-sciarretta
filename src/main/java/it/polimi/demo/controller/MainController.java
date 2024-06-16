@@ -10,6 +10,7 @@ import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.model.Player;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -22,10 +23,13 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class MainController implements MainControllerInterface, Serializable {
 
+    @Serial
+    private static final long serialVersionUID = -2625500969528591903L;
+
     /**
      * Map of ongoing matches.
      */
-    private Map<Integer, GameController> games = new ConcurrentHashMap<>();
+    private final Map<Integer, GameController> games = new ConcurrentHashMap<>();
 
     /**
      * Private constructor to prevent instantiation.
