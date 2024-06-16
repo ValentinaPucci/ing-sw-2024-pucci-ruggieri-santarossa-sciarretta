@@ -24,12 +24,6 @@ public class PrintAsync {
     public static void printAsync(StringBuilder msg){
         new Thread(()->{System.out.println(msg);System.out.println(ansi().cursor(Constants.row_input,0));}).start();
     }
-    public static void printAsyncNoLine(String msg){
-        new Thread(()->{System.out.print(msg);System.out.println(ansi().cursor(Constants.row_input,0));}).start();
-    }
-    public static void printAsyncNoLine(Ansi msg){
-        new Thread(()->{System.out.print(msg);System.out.println(ansi().cursor(Constants.row_input,0));}).start();
-    }
     public static void printAsyncNoCursorReset(String msg){
         new Thread(()->{System.out.print(msg);}).start();
     }

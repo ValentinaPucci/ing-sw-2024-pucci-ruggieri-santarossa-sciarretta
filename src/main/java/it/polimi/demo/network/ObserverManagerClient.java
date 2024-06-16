@@ -12,6 +12,8 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+
+//TODO: change
 public class ObserverManagerClient implements Listener, Serializable {
 
     @Serial
