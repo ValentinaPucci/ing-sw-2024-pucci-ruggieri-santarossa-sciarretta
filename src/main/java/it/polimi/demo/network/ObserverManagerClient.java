@@ -1,14 +1,14 @@
 package it.polimi.demo.network;
 
+import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.chat.Message;
-import it.polimi.demo.model.enumerations.*;
+import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.view.dynamic.GameDynamic;
 
 import java.io.IOException;
-import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
@@ -18,12 +18,12 @@ import java.rmi.RemoteException;
  */
 public class ObserverManagerClient implements Listener, Serializable {
 
-    @Serial
     private static final long serialVersionUID = -5070962929563880709L;
-    private GameDynamic dynamic;
+    private transient GameDynamic dynamic; // Use 'transient' to avoid serializing GameDynamic
 
     /**
      * Constructs an ObserverManagerClient with the specified GameDynamic instance.
+     *
      * @param dyn The GameDynamic instance or other handler associated with this observer client.
      */
     public ObserverManagerClient(GameDynamic dyn) {
@@ -31,240 +31,372 @@ public class ObserverManagerClient implements Listener, Serializable {
     }
 
     /**
-     * Notifies the handler that a starter card has been placed.
-     * @param model The current state of the game.
-     * @param orientation The orientation in which the card is placed.
-     * @param nick The nickname of the player who placed the card.
-     * @throws RemoteException If there is a remote communication error.
+     * Handles the event of a starter card being placed.
+     *
+     * @param model       The current model view of the game
+     * @param orientation The orientation of the placed card
+     * @param nick        The nickname of the player who placed the starter card
+     * @throws RemoteException If there's a problem with remote communication
      */
+    private void handleStarterCardPlaced(ModelView model, Orientation orientation, String nick) throws RemoteException {
+        handleEvent(() -> dynamic.starterCardPlaced(model, orientation, nick));
+    }
+
+    /**
+     * Handles the event of a card being chosen.
+     *
+     * @param model      The current model view of the game
+     * @param which_card The index of the chosen card
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleCardChosen(ModelView model, int which_card) throws RemoteException {
+        handleEvent(() -> dynamic.cardChosen(model, which_card));
+    }
+
+    /**
+     * Handles the event of a card being placed on the game board.
+     *
+     * @param model       The current model view of the game
+     * @param x           The x-coordinate of the placement
+     * @param y           The y-coordinate of the placement
+     * @param orientation The orientation of the placed card
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleCardPlaced(ModelView model, int x, int y, Orientation orientation) throws RemoteException {
+        handleEvent(() -> dynamic.cardPlaced(model, x, y, orientation));
+    }
+
+    /**
+     * Handles the event of an illegal move attempted by a player.
+     *
+     * @param model The current model view of the game
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleIllegalMove(ModelView model) throws RemoteException {
+        handleEvent(() -> dynamic.illegalMove(model));
+    }
+
+    /**
+     * Handles the event of a successful move performed by a player.
+     *
+     * @param model The current model view of the game
+     * @param coord The coordinate of the successful move
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleSuccessfulMove(ModelView model, Coordinate coord) throws RemoteException {
+        handleEvent(() -> dynamic.successfulMove(model, coord));
+    }
+
+    /**
+     * Handles the event of an illegal move due to a specific reason.
+     *
+     * @param model  The current model view of the game
+     * @param reason The reason for the illegal move
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleIllegalMoveBecauseOf(ModelView model, String reason) throws RemoteException {
+        handleEvent(() -> dynamic.illegalMoveBecauseOf(model, reason));
+    }
+
+    /**
+     * Handles the event of a player drawing a card.
+     *
+     * @param model The current model view of the game
+     * @param index The index of the drawn card
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleCardDrawn(ModelView model, int index) throws RemoteException {
+        handleEvent(() -> dynamic.cardDrawn(model, index));
+    }
+
+    /**
+     * Handles the event of a new player joining the game.
+     *
+     * @param model The current model view of the game
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handlePlayerJoined(ModelView model) throws RemoteException {
+        handleEvent(() -> dynamic.playerJoined(model));
+    }
+
+    /**
+     * Handles the event of a player leaving the game.
+     *
+     * @param model The current model view of the game
+     * @param nick  The nickname of the player who left
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handlePlayerLeft(ModelView model, String nick) throws RemoteException {
+        handleEvent(() -> dynamic.playerLeft(model, nick));
+    }
+
+    /**
+     * Handles the event of a player trying to join but the game is full.
+     *
+     * @param wantedToJoin The player who wanted to join
+     * @param model        The current model view of the game
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleJoinUnableGameFull(Player wantedToJoin, ModelView model) throws RemoteException {
+        handleEvent(() -> dynamic.joinUnableGameFull(wantedToJoin, model));
+    }
+
+    /**
+     * Handles the event of a player trying to join with a nickname that is already in use.
+     *
+     * @param wantedToJoin The player who wanted to join
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleJoinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
+        handleEvent(() -> dynamic.joinUnableNicknameAlreadyIn(wantedToJoin));
+    }
+
+    /**
+     * Handles the event of attempting to enter a game with a non-existent ID.
+     *
+     * @param gameid The ID of the game that does not exist
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleGameIdNotExists(int gameid) throws RemoteException {
+        handleEvent(() -> dynamic.gameIdNotExists(gameid));
+    }
+
+    /**
+     * Handles a generic error when entering a game.
+     *
+     * @param why The reason for the error
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleGenericErrorWhenEnteringGame(String why) throws RemoteException {
+        handleEvent(() -> dynamic.genericErrorWhenEnteringGame(why));
+    }
+
+    /**
+     * Handles the event of a player being ready to start the game.
+     *
+     * @param model The current model view of the game
+     * @param nick  The nickname of the player who is ready
+     * @throws IOException     If there's an IO error
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handlePlayerIsReadyToStart(ModelView model, String nick) throws IOException, RemoteException {
+        handleEvent(() -> dynamic.playerIsReadyToStart(model, nick));
+    }
+
+    /**
+     * Handles the event of the game starting.
+     *
+     * @param model The current model view of the game
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleGameStarted(ModelView model) throws RemoteException {
+        handleEvent(() -> dynamic.gameStarted(model));
+    }
+
+    /**
+     * Handles the event of the game ending.
+     *
+     * @param model The current model view of the game
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleGameEnded(ModelView model) throws RemoteException {
+        handleEvent(() -> dynamic.gameEnded(model));
+    }
+
+    /**
+     * Handles the event of the next turn in the game.
+     *
+     * @param model The current model view of the game
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleNextTurn(ModelView model) throws RemoteException {
+        handleEvent(() -> dynamic.nextTurn(model));
+    }
+
+    /**
+     * Handles the event of a player disconnecting from the game.
+     *
+     * @param model The current model view of the game
+     * @param nick  The nickname of the player who disconnected
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handlePlayerDisconnected(ModelView model, String nick) throws RemoteException {
+        handleEvent(() -> dynamic.playerDisconnected(model, nick));
+    }
+
+    /**
+     * Handles the event of showing another player's personal board.
+     *
+     * @param model          The current model view of the game
+     * @param playerNickname The nickname of the player whose board is shown
+     * @param playerIndex    The index of the player
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleShowOthersPersonalBoard(ModelView model, String playerNickname, int playerIndex) throws RemoteException {
+        handleEvent(() -> dynamic.showOthersPersonalBoard(model, playerNickname, playerIndex));
+    }
+
+    /**
+     * Handles the event of the second last round of the game.
+     *
+     * @param model The current model view of the game
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleSecondLastRound(ModelView model) throws RemoteException {
+        handleEvent(() -> dynamic.secondLastRound(model));
+    }
+
+    /**
+     * Handles the event of the last round of the game.
+     *
+     * @param model The current model view of the game
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleLastRound(ModelView model) throws RemoteException {
+        handleEvent(() -> dynamic.lastRound(model));
+    }
+
+    /**
+     * Handles the event of a message being sent in the game chat.
+     *
+     * @param model    The current model view of the game
+     * @param nickname The nickname of the player sending the message
+     * @param message  The message sent by the player
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleMessageSent(ModelView model, String nickname, Message message) throws RemoteException {
+        handleEvent(() -> dynamic.messageSent(model, nickname, message));
+    }
+
+    /**
+     * Helper method to handle exceptions that occur during event handling.
+     *
+     * @param action The action to be executed
+     * @throws RemoteException If there's a problem with remote communication
+     */
+    private void handleEvent(RemoteEvent action) throws RemoteException {
+        try {
+            action.run();
+        } catch (Exception e) {
+            throw new RemoteException("Event handling failed", e);
+        }
+    }
+
+    // Functional interface for remote events
+    @FunctionalInterface
+    interface RemoteEvent {
+        void run() throws Exception;
+    }
+
+// Implementations of Listener interface methods
+
     @Override
     public void starterCardPlaced(ModelView model, Orientation orientation, String nick) throws RemoteException {
-        dynamic.starterCardPlaced(model, orientation, nick);
+        handleStarterCardPlaced(model, orientation, nick);
     }
 
-    /**
-     * Notifies the handler that a card has been chosen.
-     * @param model The current state of the game.
-     * @param which_card The index of the chosen card.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void cardChosen(ModelView model, int which_card) throws RemoteException {
-        dynamic.cardChosen(model, which_card);
+        handleCardChosen(model, which_card);
     }
 
-    /**
-     * Notifies the handler that a card has been placed on the game board.
-     * @param model The current state of the game.
-     * @param where_to_place_x The x-coordinate where the card is placed.
-     * @param where_to_place_y The y-coordinate where the card is placed.
-     * @param orientation The orientation in which the card is placed.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) throws RemoteException {
-        dynamic.cardPlaced(model, where_to_place_x, where_to_place_y, orientation);
+        handleCardPlaced(model, where_to_place_x, where_to_place_y, orientation);
     }
 
-    /**
-     * Notifies the handler that an illegal move was attempted.
-     * @param model The current state of the game.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void illegalMove(ModelView model) throws RemoteException {
-        dynamic.illegalMove(model);
+        handleIllegalMove(model);
     }
 
-    /**
-     * Notifies the handler that a move was successfully executed.
-     * @param model The current state of the game.
-     * @param coord The coordinate where the successful move was made.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void successfulMove(ModelView model, Coordinate coord) throws RemoteException {
-        dynamic.successfulMove(model, coord);
+        handleSuccessfulMove(model, coord);
     }
 
-    /**
-     * Notifies the handler of an illegal move due to a specific reason.
-     * @param model The current state of the game.
-     * @param reason_why The reason for the illegal move.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) throws RemoteException {
-        dynamic.illegalMoveBecauseOf(model, reason_why);
+        handleIllegalMoveBecauseOf(model, reason_why);
     }
 
-    /**
-     * Notifies the handler that a card has been drawn.
-     * @param model The current state of the game.
-     * @param index The index of the drawn card.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void cardDrawn(ModelView model, int index) throws RemoteException {
-        dynamic.cardDrawn(model, index);
+        handleCardDrawn(model, index);
     }
 
-    /**
-     * Notifies the handler that a player has joined the game.
-     * @param model The current state of the game.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void playerJoined(ModelView model) throws RemoteException {
-        dynamic.playerJoined(model);
+        handlePlayerJoined(model);
     }
 
-    /**
-     * Notifies the handler that a player has left the game.
-     * @param model The current state of the game.
-     * @param nick The nickname of the player who left.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void playerLeft(ModelView model, String nick) throws RemoteException {
-        dynamic.playerLeft(model, nick);
+        handlePlayerLeft(model, nick);
     }
 
-    /**
-     * Notifies the handler that a player couldn't join because the game is full.
-     * @param wantedToJoin The player who attempted to join.
-     * @param model The current state of the game.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void joinUnableGameFull(Player wantedToJoin, ModelView model) throws RemoteException {
-        dynamic.joinUnableGameFull(wantedToJoin, model);
+        handleJoinUnableGameFull(wantedToJoin, model);
     }
 
-    /**
-     * Notifies the handler that a player couldn't join because the nickname is already in use.
-     * @param wantedToJoin The player who attempted to join.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
-        dynamic.joinUnableNicknameAlreadyIn(wantedToJoin);
+        handleJoinUnableNicknameAlreadyIn(wantedToJoin);
     }
 
-    /**
-     * Notifies the handler that the specified game ID does not exist.
-     * @param gameid The ID of the game that does not exist.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void gameIdNotExists(int gameid) throws RemoteException {
-        dynamic.gameIdNotExists(gameid);
+        handleGameIdNotExists(gameid);
     }
 
-    /**
-     * Notifies the handler of a generic error when entering the game.
-     * @param why The reason for the generic error.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void genericErrorWhenEnteringGame(String why) throws RemoteException {
-        dynamic.genericErrorWhenEnteringGame(why);
+        handleGenericErrorWhenEnteringGame(why);
     }
 
-    /**
-     * Notifies the handler that a player is ready to start the game.
-     * @param model The current state of the game.
-     * @param nick The nickname of the player who is ready.
-     * @throws IOException If there is an I/O error.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
-    public void playerIsReadyToStart(ModelView model, String nick) throws IOException {
-        dynamic.playerIsReadyToStart(model, nick);
+    public void playerIsReadyToStart(ModelView model, String nick) throws IOException, RemoteException {
+        handlePlayerIsReadyToStart(model, nick);
     }
 
-    /**
-     * Notifies the handler that the game has started.
-     * @param model The current state of the game.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void gameStarted(ModelView model) throws RemoteException {
-        dynamic.gameStarted(model);
+        handleGameStarted(model);
     }
 
-    /**
-     * Notifies the handler that the game has ended.
-     * @param model The current state of the game.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void gameEnded(ModelView model) throws RemoteException {
-        dynamic.gameEnded(model);
+        handleGameEnded(model);
     }
 
-    /**
-     * Notifies the handler that the next turn is starting.
-     * @param model The current state of the game.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void nextTurn(ModelView model) throws RemoteException {
-        dynamic.nextTurn(model);
+        handleNextTurn(model);
     }
 
-    /**
-     * Notifies the handler that a player has disconnected from the game.
-     * @param model The current state of the game.
-     * @param nick The nickname of the player who disconnected.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void playerDisconnected(ModelView model, String nick) throws RemoteException {
-        dynamic.playerDisconnected(model, nick);
+        handlePlayerDisconnected(model, nick);
     }
 
-    /**
-     * Notifies the handler to show the personal board of another player.
-     * @param model The current state of the game.
-     * @param playerNickname The nickname of the player whose board to show.
-     * @param playerIndex The index of the player whose board to show.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void showOthersPersonalBoard(ModelView model, String playerNickname, int playerIndex) throws RemoteException {
-        dynamic.showOthersPersonalBoard(model, playerNickname, playerIndex);
+        handleShowOthersPersonalBoard(model, playerNickname, playerIndex);
     }
 
-    /**
-     * Notifies the handler that the game is entering its second last round.
-     * @param model The current state of the game.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void secondLastRound(ModelView model) throws RemoteException {
-        dynamic.secondLastRound(model);
+        handleSecondLastRound(model);
     }
 
-    /**
-     * Notifies the handler that the game is entering its last round.
-     * @param model The current state of the game.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void lastRound(ModelView model) throws RemoteException {
-        dynamic.lastRound(model);
+        handleLastRound(model);
     }
 
-    /**
-     * Notifies the handler that the game a message has been sent in the chat.
-     * @param model The current state of the game.
-     * @throws RemoteException If there is a remote communication error.
-     */
     @Override
     public void messageSent(ModelView model, String nickname, Message message) throws RemoteException {
-        dynamic.messageSent(model, nickname, message);
+        handleMessageSent(model, nickname, message);
     }
 }
-
-
