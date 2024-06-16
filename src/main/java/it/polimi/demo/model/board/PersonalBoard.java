@@ -1226,18 +1226,6 @@ public class PersonalBoard implements Serializable {
         return board;
     }
 
-    public void printBoardIDs() {
-        for (int i = 0; i < dim1; i++) {
-            for (int j = 0; j < dim2; j++) {
-                if (board[i][j].getCornerFromCell() != null && board[i][j].getCornerFromCell().reference_card != null) {
-                    System.out.println("Cell at position (" + i + "," + j + ") has ID: " + board[i][j].getCornerFromCell().reference_card.getId());
-                } else {
-                    // niente
-                }
-            }
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

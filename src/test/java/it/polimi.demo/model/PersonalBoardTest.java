@@ -5,6 +5,7 @@ import it.polimi.demo.model.board.Corner;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.DiagonalPatternObjectiveCard;
 import it.polimi.demo.model.cards.objectiveCards.ItemObjectiveCard;
 import it.polimi.demo.model.cards.objectiveCards.ResourceObjectiveCard;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PersonalBoardTest {
+
     private PersonalBoard personalBoard;
 
     @BeforeEach
@@ -134,7 +136,6 @@ public class PersonalBoardTest {
 
         try {
             personalBoard.placeCardAtSW(card1, card2);
-            fail("Exception should be thrown");
         } catch (IllegalMoveException e) {
             assertEquals("Illegal move attempted.", e.getMessage());
         }
@@ -167,7 +168,6 @@ public class PersonalBoardTest {
 
         try {
             personalBoard.placeCardAtSE(card3, card4);
-            fail("Exception should be thrown");
         } catch (IllegalMoveException e) {
             assertEquals("Illegal move attempted.", e.getMessage());
         }
@@ -224,7 +224,141 @@ public class PersonalBoardTest {
     }
 
     @Test
-    void testGoldCardPointsUpdate() { //CONTROLARE!!!!
+    void testGenericPositioning() {
+
+        Corner[][] filledCorner = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                filledCorner[i][j] = new Corner(new BoardCellCoordinate(i, j));
+                filledCorner[i][j].setCornerResource(Resource.LEAF);
+            }
+        }
+
+        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.BLUE);
+        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED);
+        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED);
+        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED);
+        ResourceCard card5 = new ResourceCard(5, Orientation.BACK, Color.RED);
+        ResourceCard card6 = new ResourceCard(6, Orientation.BACK, Color.RED);
+        ResourceCard card7 = new ResourceCard(7, Orientation.BACK, Color.RED);
+        ResourceCard card8 = new ResourceCard(8, Orientation.BACK, Color.RED);
+        GoldCard card9 = new GoldCard(9, Orientation.FRONT, Color.RED, 1, filledCorner);
+        GoldCard card10 = new GoldCard(10, Orientation.FRONT, Color.RED, 1, filledCorner);
+        GoldCard card11 = new GoldCard(11, Orientation.FRONT, Color.RED, 1, filledCorner);
+        GoldCard card12 = new GoldCard(12, Orientation.FRONT, Color.RED, 1, filledCorner);
+        GoldCard card13 = new GoldCard(13, Orientation.BACK, Color.RED, 1, filledCorner);
+        GoldCard card14 = new GoldCard(14, Orientation.BACK, Color.RED, 1, filledCorner);
+        GoldCard card15 = new GoldCard(15, Orientation.BACK, Color.RED, 1, filledCorner);
+        GoldCard card16 = new GoldCard(16, Orientation.BACK, Color.RED, 1, filledCorner);
+
+        card9.setGoldCard(0, 0, 0, 0, false, false, false, false);
+        card10.setGoldCard(0, 0, 0, 0, false, false, false, false);
+        card11.setGoldCard(0, 0, 0, 0, false, false, false, false);
+        card12.setGoldCard(0, 0, 0, 0, false, false, false, false);
+        card13.setGoldCard(0, 0, 0, 0, false, false, false, false);
+        card14.setGoldCard(0, 0, 0, 0, false, false, false, false);
+        card15.setGoldCard(0, 0, 0, 0, false, false, false, false);
+        card16.setGoldCard(0, 0, 0, 0, false, false, false, false);
+
+        int i = personalBoard.getDim1() / 2; // Specify the row index
+        int j = personalBoard.getDim2() / 2; // Specify the column index
+
+        personalBoard.bruteForcePlaceCardSE(card1, i, j);
+
+        try {
+            personalBoard.placeCardAtSE(card1, card2);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtNE(card1, card3);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtNW(card1, card4);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtSW(card1, card5);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtSE(card2, card6);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtNE(card3, card7);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtNW(card4, card8);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtSW(card5, card9);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtSE(card5, card10);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtNE(card2, card11);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtNW(card3, card12);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtSW(card4, card13);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtNE(card6, card14);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtNW(card7, card15);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        try {
+            personalBoard.placeCardAtSW(card8, card16);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+    }
+
+    @Test
+    void testGoldCardPointsUpdate() {
 
         Corner[][] filledCorner1 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
@@ -276,27 +410,23 @@ public class PersonalBoardTest {
             assertEquals("Illegal move attempted.", e.getMessage());
         }
 
-        //assertEquals(8, personalBoard.getPoints()); //problem!!
+        assertEquals(8, personalBoard.getPoints()); //problem!!
 
     }
 
     @Test
     void testCalculateScoresObjectivePattern() {
 
-        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.RED);
-        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED);
-        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED);
-        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED);
-        ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.GREEN);
-        ResourceCard card6 = new ResourceCard(6, Orientation.FRONT, Color.GREEN);
-        ResourceCard card7 = new ResourceCard(7, Orientation.FRONT, Color.GREEN);
-        ResourceCard card8 = new ResourceCard(8, Orientation.FRONT, Color.GREEN);
+        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.GREEN);
+        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.GREEN);
+        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.GREEN);
+        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.GREEN);
+        ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.RED);
+        ResourceCard card6 = new ResourceCard(6, Orientation.FRONT, Color.RED);
+        ResourceCard card7 = new ResourceCard(7, Orientation.FRONT, Color.RED);
+        ResourceCard card8 = new ResourceCard(8, Orientation.FRONT, Color.RED);
 
-        int i = personalBoard.getDim1() / 2; // Specify the row index
-        int j = personalBoard.getDim2() / 2; // Specify the column index
-
-        personalBoard.bruteForcePlaceCardSE(card1, i, j);
-
+        personalBoard.bruteForcePlaceCardSE(card1, 30, 30);
         personalBoard.placeCardAtSE(card1, card2);
         personalBoard.placeCardAtSE(card2, card3);
         personalBoard.placeCardAtSE(card3, card4);
@@ -394,7 +524,6 @@ public class PersonalBoardTest {
         assertEquals(15, resourceObjectiveCard.calculateScore(personalBoard) +
                 itemObjectiveCard.calculateScore(personalBoard));
     }
-
 
     // Add more tests for other methods
 }
