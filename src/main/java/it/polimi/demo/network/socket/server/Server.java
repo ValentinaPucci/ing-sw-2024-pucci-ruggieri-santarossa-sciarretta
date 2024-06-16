@@ -48,8 +48,6 @@ public class Server extends Thread implements Serializable {
     public void run() {
         try {
             while (!Thread.interrupted()) {
-                i++;
-                System.out.println(i);
                 ClientConnection Client = new ClientConnection(serverSocket.accept());
                 handlers.add(Client);
                 handlers.get(handlers.size() - 1).start();
