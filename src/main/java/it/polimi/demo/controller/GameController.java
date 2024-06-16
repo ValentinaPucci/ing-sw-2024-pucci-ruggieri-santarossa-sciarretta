@@ -156,13 +156,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * @return the list of the players
-     */
-    public List<Player> getPlayers() {
-        return model.getAllPlayers();
-    }
-
-    /**
      * @return the list of the players currently connected
      */
     public LinkedList<Player> getConnectedPlayers() {
@@ -224,11 +217,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public synchronized boolean isMyTurn(String nick) throws RemoteException {
-        if (model.getPlayersConnected().isEmpty()) {
-            return false;
-        }
-        else
-            return model.getPlayersConnected().peek().getNickname().equals(nick);
+        return model.getPlayersConnected().peek().getNickname().equals(nick);
     }
 
     /**
@@ -298,7 +287,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
         if (!getConnectedPlayers().contains(getIdentityOfPlayer(nick)))
             throw new RemoteException("Player not connected");
-        else if (!isMyTurn(getIdentityOfPlayer(nick).getNickname()))
+        else if (!isMyTurn(nick))
             throw new RemoteException("It's not your turn");
 
         if (orientation == Orientation.FRONT) {

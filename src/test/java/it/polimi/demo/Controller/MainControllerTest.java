@@ -43,7 +43,18 @@ public class MainControllerTest {
         // try to enter a full game
         GameDynamic gameDynamic4 = new GameDynamic(TypeConnection.RMI);
         String nickname4 = "Player4";
-        mainController.joinGame(gameDynamic4, nickname4, 0);
+
+        try {
+            mainController.joinGame(gameDynamic4, nickname4, 0);
+        } catch (RemoteException e) {
+            assert e.getMessage().equals("Game is full");
+        }
+
+        try {
+            mainController.joinGame(gameDynamic4, nickname4, 1);
+        } catch (RemoteException e) {
+            assert e.getMessage().equals("Game not found");
+        }
 
         assert mainController.getGameController(0).getConnectedPlayers().size() == 3;
 
@@ -54,6 +65,12 @@ public class MainControllerTest {
 
         // the game is start
         assert mainController.getGameController(0).getStatus().equals(GameStatus.FIRST_ROUND);
+
+        try {
+            mainController.joinGame(gameDynamic4, nickname4, 0);
+        } catch (RemoteException e) {
+            assert e.getMessage().equals("Game currently not available: already started");
+        }
 
         current_player = mainController.getGameController(0).getCurrentPlayer().getNickname();
 
@@ -128,7 +145,36 @@ public class MainControllerTest {
             mainController.drawCard(gameDynamic3, nickname3, 5, 0);
         }
 
+        if (!current_player.equals(nickname1)) {
+            try {
+                mainController.chooseCard(gameDynamic1, nickname1, 2, 0);
+                mainController.placeCard(gameDynamic1, nickname1, 0, 0, Orientation.BACK, 0);
+            } catch (RemoteException e) {
+                assert e.getMessage().equals("It's not your turn");
+            }
+        } else if (!current_player.equals(nickname2)) {
+            try {
+                mainController.chooseCard(gameDynamic2, nickname2, 1, 0);
+                mainController.placeCard(gameDynamic2, nickname2, 0, 0, Orientation.BACK, 0);
+            } catch (RemoteException e) {
+                assert e.getMessage().equals("It's not your turn");
+            }
+        } else if (!current_player.equals(nickname3)) {
+            try {
+                mainController.chooseCard(gameDynamic3, nickname3, 2, 0);
+                mainController.placeCard(gameDynamic3, nickname3, 0, 0, Orientation.BACK, 0);
+            } catch (RemoteException e) {
+                assert e.getMessage().equals("It's not your turn");
+            }
+        }
+
         current_player = mainController.getGameController(0).getCurrentPlayer().getNickname();
+
+        try {
+            mainController.placeCard(gameDynamic4, nickname4, 0, 0, Orientation.BACK, 0);
+        } catch (RemoteException e) {
+            assert e.getMessage().equals("Player not connected");
+        }
 
         if (current_player.equals(nickname1)) {
             mainController.chooseCard(gameDynamic1, nickname1, 0, 0);
@@ -157,6 +203,81 @@ public class MainControllerTest {
         mainController.leaveGame(gameDynamic1, nickname1, 0);
         mainController.leaveGame(gameDynamic2, nickname2, 0);
         mainController.leaveGame(gameDynamic3, nickname3, 0);
+
+    }
+
+    @Test
+    public void hitDisconnectionTest() throws RemoteException, GameEndedException {
+
+        String current_player;
+
+        // Listener associated to a player (the creator)
+        GameDynamic gameDynamic1 = new GameDynamic(TypeConnection.RMI);
+        String nickname1 = "Player1";
+
+        // Listener associated to another player (the opponent)
+        GameDynamic gameDynamic2 = new GameDynamic(TypeConnection.RMI);
+        String nickname2 = "Player2";
+
+        // Listener associated to another player (the opponent)
+        GameDynamic gameDynamic3 = new GameDynamic(TypeConnection.RMI);
+        String nickname3 = "Player3";
+
+        // Create a new game
+        mainController.createGame(gameDynamic1, nickname1, 3);
+        // Join randomly
+        mainController.joinRandomly(gameDynamic2, nickname2);
+        // Join a specific game
+        mainController.joinGame(gameDynamic3, nickname3, 0);
+
+        // try to enter a full game
+        GameDynamic gameDynamic4 = new GameDynamic(TypeConnection.RMI);
+        String nickname4 = "Player4";
+        mainController.joinGame(gameDynamic4, nickname4, 0);
+
+        assert mainController.getGameController(0).getConnectedPlayers().size() == 3;
+
+        // Set as ready
+        mainController.setAsReady(gameDynamic1, nickname1, 0);
+        mainController.setAsReady(gameDynamic2, nickname2, 0);
+        mainController.setAsReady(gameDynamic3, nickname3, 0);
+
+        // the game is start
+        assert mainController.getGameController(0).getStatus().equals(GameStatus.FIRST_ROUND);
+
+        current_player = mainController.getGameController(0).getCurrentPlayer().getNickname();
+
+        if (current_player.equals(nickname1)) {
+            mainController.chooseCard(gameDynamic1, nickname1, 1, 0);
+            mainController.placeStarterCard(gameDynamic1, nickname1, Orientation.FRONT, 0);
+        } else if (current_player.equals(nickname2)) {
+            mainController.chooseCard(gameDynamic2, nickname2, 1, 0);
+            mainController.placeStarterCard(gameDynamic2, nickname2, Orientation.FRONT, 0);
+        } else if (current_player.equals(nickname3)) {
+            mainController.chooseCard(gameDynamic3, nickname3, 1, 0);
+            mainController.placeStarterCard(gameDynamic3, nickname3, Orientation.FRONT, 0);
+        }
+
+        mainController.addPing(gameDynamic1, nickname1, 0);
+        mainController.addPing(gameDynamic2, nickname2, 0);
+        mainController.addPing(gameDynamic3, nickname3, 0);
+
+
+        Thread thread = new Thread(() -> {
+            try {
+                Thread.sleep(8000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        thread.start();
+
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 }
