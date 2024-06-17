@@ -485,4 +485,8 @@ public class TUI extends UI {
 
     @Override
     public void show_readyToStart(ModelView gameModel, String s) {}
+
+    @Override
+    public void show_pawnPositions(ModelView model){
+    }
 }

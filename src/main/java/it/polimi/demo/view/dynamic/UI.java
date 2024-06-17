@@ -116,6 +116,12 @@ public abstract class UI {
     protected abstract void show_commonBoard(ModelView gameModel);
 
     /**
+     * Show the correct position of players' pawns
+     */
+
+    protected abstract void show_pawnPositions(ModelView model);
+
+    /**
      * Shows a message indicating the current player's turn has finished.
      */
     protected abstract void show_myTurnIsFinished();
