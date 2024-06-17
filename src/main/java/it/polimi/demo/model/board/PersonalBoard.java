@@ -93,70 +93,6 @@ public class PersonalBoard implements Serializable {
         this.num_potions = 0;
     }
 
-    /**
-     * Updates the count of mushrooms in the player's inventory by adding the specified amount.
-     *
-     * @param mushrooms_placed The number of mushrooms to offer to the inventory.
-     */
-    public void updateMushrooms(int mushrooms_placed) {
-        this.num_mushrooms += mushrooms_placed;
-    }
-
-    /**
-     * Updates the count of leaves in the player's inventory by adding the specified amount.
-     *
-     * @param leaves_placed The number of leaves to offer to the inventory.
-     */
-    public void updateLeaves(int leaves_placed) {
-        this.num_leaves += leaves_placed;
-    }
-
-    /**
-     * Updates the count of butterflies in the player's inventory by adding the specified amount.
-     *
-     * @param butterflies_placed The number of butterflies to offer to the inventory.
-     */
-
-    public void updateButterflies(int butterflies_placed) {
-        this.num_butterflies += butterflies_placed;
-    }
-
-    /**
-     * Updates the count of wolves in the player's inventory by adding the specified amount.
-     *
-     * @param wolves_placed The number of wolves to offer to the inventory.
-     */
-    public void updateWolves(int wolves_placed) {
-        this.num_wolves += wolves_placed;
-    }
-
-    /**
-     * Updates the count of parchments in the player's inventory by adding the specified amount.
-     *
-     * @param parchments_placed The number of parchments to offer to the inventory.
-     */
-    public void updateParchments(int parchments_placed) {
-        this.num_parchments += parchments_placed;
-    }
-
-    /**
-     * Updates the count of feathers in the player's inventory by adding the specified amount.
-     *
-     * @param feathers_placed The number of feathers to offer to the inventory.
-     */
-    public void updateFeathers(int feathers_placed) {
-        this.num_feathers += feathers_placed;
-    }
-
-    /**
-     * Updates the count of potions in the player's inventory by adding the specified amount.
-     *
-     * @param potions_placed The number of potions to offer to the inventory.
-     */
-    public void updatePotions(int potions_placed) {
-        this.num_potions += potions_placed;
-    }
-
 
     /**
      * Updates the player's points by adding the points from the specified resource card.
@@ -237,6 +173,10 @@ public class PersonalBoard implements Serializable {
 
     public int getPoints() {
         return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     public int getDim1() {
@@ -447,45 +387,6 @@ public class PersonalBoard implements Serializable {
      * @param card
      */
     public void bruteForcePlaceCardSE(ResourceCard card, int i, int j) {
-        for (int k = 0; k < 2; k++) {
-            for (int h = 0; h < 2; h++) {
-                this.board[i + k][j + h].setCellAsFull(card.getCornerAt(k, h));
-                this.board[i + k][j + h].getCornerFromCell().board_coordinate.setXY(i + k, j + h);
-            }
-        }
-    }
-
-    /**
-     * @Overloading
-     *
-     * This method simply put a card at position (i,j) of the board
-     * without doing any check. It is used for the placement of the firs card.
-     * SE because we use a classic for loop with increasing indexes both for i and j.
-     *
-     * @param card
-     */
-
-    // specific method for starter cards
-    public void bruteForcePlaceCardSE(StarterCard card, int i, int j) {
-
-        Resource res1_ = card.front_resource1;
-        Resource res2_ = card.front_resource2;
-        Resource res3_ = card.front_resource3;
-
-        addResource(res1_);
-        addResource(res2_);
-        addResource(res3_);
-
-        Resource res1 = card.getCornerAtNW().resource;
-        Resource res2 = card.getCornerAtNE().resource;
-        Resource res3 = card.getCornerAtSW().resource;
-        Resource res4 = card.getCornerAtSE().resource;
-
-        addResource(res1);
-        addResource(res2);
-        addResource(res3);
-        addResource(res4);
-
         for (int k = 0; k < 2; k++) {
             for (int h = 0; h < 2; h++) {
                 this.board[i + k][j + h].setCellAsFull(card.getCornerAt(k, h));
