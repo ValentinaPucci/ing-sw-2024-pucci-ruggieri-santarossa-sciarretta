@@ -22,7 +22,6 @@ public class Player implements Serializable {
     private ResourceCard chosen_card;
     private int score_board_position;
     private int final_score;
-    private boolean is_connected;
     private boolean is_ready_to_start;
 
     public Player(String nickname) {
@@ -36,7 +35,6 @@ public class Player implements Serializable {
         this.chosen_card = null;
         this.score_board_position = 0;
         this.final_score = 0;
-        this.is_connected = false;
         this.is_ready_to_start = false;
     }
 
@@ -139,23 +137,6 @@ public class Player implements Serializable {
 
     public void setAsReadyToStart() {
         this.is_ready_to_start = true;
-    }
-
-    public void setAsNotReadyToStart() {
-        this.is_ready_to_start = false;
-    }
-
-    
-    public boolean getIsConnected() {
-        return is_connected;
-    }
-
-    public void setAsConnected() {
-        this.is_connected = true;
-    }
-
-    public void setAsNotConnected() {
-        this.is_connected = false;
     }
 
     

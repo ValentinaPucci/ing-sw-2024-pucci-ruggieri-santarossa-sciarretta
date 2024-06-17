@@ -26,8 +26,7 @@ import static org.fusesource.jansi.Ansi.ansi;
 import static it.polimi.demo.view.text.StaticPrinterTUI.*;
 
 /**
- * This class is father to both the TUI  implementation<br>
- * it manages all the event that can occur<br>
+ * Text User Interface class
  */
 public class TUI extends UI {
 
@@ -50,21 +49,18 @@ public class TUI extends UI {
     }
 
     /**
-     * @param input the string of the important event to offer
+     * @param input The input to add as a relevant game fact.
      */
     @Override
     public void addRelevantGameFact(String input) {
-        if (relevant_facts.size() + 1 >= Constants.maxnum_of_last_event_tobe_showed) {
-            relevant_facts.removeFirst();
-        }
         relevant_facts.add(input);
-        show_important_events();
+        show_relevantFacts();
     }
 
     // ********************* aux ********************* //
 
     /**
-     * Clears the console
+     * clears the screen
      */
     public void clearScreen() {
         try {
@@ -75,91 +71,101 @@ public class TUI extends UI {
     }
 
     /**
-     * Shows the game title
+     * shows the title
      */
-    public void show_titleCodexNaturalis() {
+    public void show_title() {
         clearScreen();
-        new PrintStream(System.out, true, System.console() != null
-                ? System.console().charset()
-                : Charset.defaultCharset()
-        ).println(ansi().fg(YELLOW).a("""
-                 ▄████████  ▄██████▄  ████████▄     ▄████████ ▀████    ▐████▀
-                ███    ███ ███    ███ ███   ▀███   ███    ███   ███▌   ████▀\s
-                ███    █▀  ███    ███ ███    ███   ███    █▀     ███  ▐███  \s
-                ███        ███    ███ ███    ███  ▄███▄▄▄        ▀███▄███▀  \s
-                ███        ███    ███ ███    ███ ▀▀███▀▀▀        ████▀██▄   \s
-                ███    █▄  ███    ███ ███    ███   ███    █▄    ▐███  ▀███  \s
-                ███    ███ ███    ███ ███   ▄███   ███    ███  ▄███     ███▄\s
-                ████████▀   ▀██████▀  ████████▀    ██████████ ████       ███▄
-                
-                ░█▀█░█▀█░▀█▀░█░█░█▀▄░█▀█░█░░░▀█▀░█▀▀
-                ░█░█░█▀█░░█░░█░█░█▀▄░█▀█░█░░░░█░░▀▀█
-                ░▀░▀░▀░▀░░▀░░▀▀▀░▀░▀░▀░▀░▀▀▀░▀▀▀░▀▀▀
-                
-                """).reset());
+        String message = ansi().fg(YELLOW).a("""
+                  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄  ▄       ▄                                                      \s
+                ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░▌     ▐░▌                                                     \s
+                ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀  ▐░▌   ▐░▌                                                      \s
+                ▐░▌          ▐░▌       ▐░▌▐░▌       ▐░▌▐░▌            ▐░▌ ▐░▌                                                       \s
+                ▐░▌          ▐░▌       ▐░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄    ▐░▐░▌                                                        \s
+                ▐░▌          ▐░▌       ▐░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌    ▐░▌                                                         \s
+                ▐░▌          ▐░▌       ▐░▌▐░▌       ▐░▌▐░█▀▀▀▀▀▀▀▀▀    ▐░▌░▌                                                        \s
+                ▐░▌          ▐░▌       ▐░▌▐░▌       ▐░▌▐░▌            ▐░▌ ▐░▌                                                       \s
+                ▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄  ▐░▌   ▐░▌                                                      \s
+                ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░▌     ▐░▌                                                     \s
+                 ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀   ▀▀▀▀▀▀▀▀▀▀▀  ▀       ▀                                                      \s
+                                                                                                                                    \s
+                 ▄▄        ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄         ▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄            ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄\s
+                ▐░░▌      ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌          ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
+                ▐░▌░▌     ▐░▌▐░█▀▀▀▀▀▀▀█░▌ ▀▀▀▀█░█▀▀▀▀ ▐░▌       ▐░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░▌           ▀▀▀▀█░█▀▀▀▀ ▐░█▀▀▀▀▀▀▀▀▀\s
+                ▐░▌▐░▌    ▐░▌▐░▌       ▐░▌     ▐░▌     ▐░▌       ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌               ▐░▌     ▐░▌         \s
+                ▐░▌ ▐░▌   ▐░▌▐░█▄▄▄▄▄▄▄█░▌     ▐░▌     ▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄█░▌▐░▌               ▐░▌     ▐░█▄▄▄▄▄▄▄▄▄\s
+                ▐░▌  ▐░▌  ▐░▌▐░░░░░░░░░░░▌     ▐░▌     ▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌               ▐░▌     ▐░░░░░░░░░░░▌
+                ▐░▌   ▐░▌ ▐░▌▐░█▀▀▀▀▀▀▀█░▌     ▐░▌     ▐░▌       ▐░▌▐░█▀▀▀▀█░█▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░▌               ▐░▌      ▀▀▀▀▀▀▀▀▀█░▌
+                ▐░▌    ▐░▌▐░▌▐░▌       ▐░▌     ▐░▌     ▐░▌       ▐░▌▐░▌     ▐░▌  ▐░▌       ▐░▌▐░▌               ▐░▌               ▐░▌
+                ▐░▌     ▐░▐░▌▐░▌       ▐░▌     ▐░▌     ▐░█▄▄▄▄▄▄▄█░▌▐░▌      ▐░▌ ▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄  ▄▄▄▄█░█▄▄▄▄  ▄▄▄▄▄▄▄▄▄█░▌
+                ▐░▌      ▐░░▌▐░▌       ▐░▌     ▐░▌     ▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌
+                 ▀        ▀▀  ▀         ▀       ▀       ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀▀\s
+                """).reset().toString();
+        if (System.console() != null) {
+            System.out.println(new String(message.getBytes(), System.console().charset()));
+        } else {
+            System.out.println(message);
+        }
     }
 
     /**
-     * Shows the last panel
-     *
-     * @param model where the game is ended
+     * shows the game ended
+     * @param model The model view containing game state information.
      */
     @Override
     public void show_gameEnded(ModelView model) {
         clearScreen();
-        show_titleCodexNaturalis();
-        new PrintStream(System.out, true, System.console() != null
-                ? System.console().charset()
-                : Charset.defaultCharset()
-        ).println(ansi().cursor(Constants.row_nextTurn, 0).fg(YELLOW).a("""
+        String message_1 = ansi().fg(YELLOW).a("""
+                  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄       ▄▄  ▄▄▄▄▄▄▄▄▄▄▄       ▄▄▄▄▄▄▄▄▄▄▄  ▄▄        ▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄ \s
+                ▐░░░░░░░░░░░▌▐░░░░░░░░░░░▌▐░░▌     ▐░░▌▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌▐░░▌      ▐░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░░░░░░░░░░▌\s
+                ▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌▐░▌░▌   ▐░▐░▌▐░█▀▀▀▀▀▀▀▀▀      ▐░█▀▀▀▀▀▀▀▀▀ ▐░▌░▌     ▐░▌▐░█▀▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░█▀▀▀▀▀▀▀█░▌
+                ▐░▌          ▐░▌       ▐░▌▐░▌▐░▌ ▐░▌▐░▌▐░▌               ▐░▌          ▐░▌▐░▌    ▐░▌▐░▌       ▐░▌▐░▌          ▐░▌       ▐░▌
+                ▐░▌ ▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌▐░▌ ▐░▐░▌ ▐░▌▐░█▄▄▄▄▄▄▄▄▄      ▐░█▄▄▄▄▄▄▄▄▄ ▐░▌ ▐░▌   ▐░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░▌       ▐░▌
+                ▐░▌▐░░░░░░░░▌▐░░░░░░░░░░░▌▐░▌  ▐░▌  ▐░▌▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌▐░▌  ▐░▌  ▐░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌▐░▌       ▐░▌
+                ▐░▌ ▀▀▀▀▀▀█░▌▐░█▀▀▀▀▀▀▀█░▌▐░▌   ▀   ▐░▌▐░█▀▀▀▀▀▀▀▀▀      ▐░█▀▀▀▀▀▀▀▀▀ ▐░▌   ▐░▌ ▐░▌▐░▌       ▐░▌▐░█▀▀▀▀▀▀▀▀▀ ▐░▌       ▐░▌
+                ▐░▌       ▐░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░▌               ▐░▌          ▐░▌    ▐░▌▐░▌▐░▌       ▐░▌▐░▌          ▐░▌       ▐░▌
+                ▐░█▄▄▄▄▄▄▄█░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░█▄▄▄▄▄▄▄▄▄      ▐░█▄▄▄▄▄▄▄▄▄ ▐░▌     ▐░▐░▌▐░█▄▄▄▄▄▄▄█░▌▐░█▄▄▄▄▄▄▄▄▄ ▐░█▄▄▄▄▄▄▄█░▌
+                ▐░░░░░░░░░░░▌▐░▌       ▐░▌▐░▌       ▐░▌▐░░░░░░░░░░░▌     ▐░░░░░░░░░░░▌▐░▌      ▐░░▌▐░░░░░░░░░░▌ ▐░░░░░░░░░░░▌▐░░░░░░░░░░▌\s
+                 ▀▀▀▀▀▀▀▀▀▀▀  ▀         ▀  ▀         ▀  ▀▀▀▀▀▀▀▀▀▀▀       ▀▀▀▀▀▀▀▀▀▀▀  ▀        ▀▀  ▀▀▀▀▀▀▀▀▀▀   ▀▀▀▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀▀▀ \s
+                                                                                                                                         \s
+                """).reset().toString();
+        if (System.console() != null) {
+            System.out.println(new String(message_1.getBytes(), System.console().charset()));
+        } else {
+            System.out.println(message_1);
+        }
 
-                ░██████╗░░█████╗░███╗░░░███╗███████╗        ███████╗███╗░░██╗██████╗░███████╗██████╗░
-                ██╔════╝░██╔══██╗████╗░████║██╔════╝        ██╔════╝████╗░██║██╔══██╗██╔════╝██╔══██╗
-                ██║░░██╗░███████║██╔████╔██║█████╗░░        █████╗░░██╔██╗██║██║░░██║█████╗░░██║░░██║
-                ██║░░╚██╗██╔══██║██║╚██╔╝██║██╔══╝░░        ██╔══╝░░██║╚████║██║░░██║██╔══╝░░██║░░██║
-                ╚██████╔╝██║░░██║██║░╚═╝░██║███████╗        ███████╗██║░╚███║██████╔╝███████╗██████╔╝
-                ░╚═════╝░╚═╝░░╚═╝╚═╝░░░░░╚═╝╚══════╝        ╚══════╝╚═╝░░╚══╝╚═════╝░╚══════╝╚═════╝░
-                                
-                """).fg(DEFAULT).reset());
+        clearScreen();
+        String message_2 = ansi().fg(YELLOW).a("""   
+                ▄▄▌  ▄▄▄ . ▄▄▄· ·▄▄▄▄  ▄▄▄ .▄▄▄  ▄▄▄▄·        ▄▄▄· ▄▄▄  ·▄▄▄▄ \s
+                ██•  ▀▄.▀·▐█ ▀█ ██▪ ██ ▀▄.▀·▀▄ █·▐█ ▀█▪▪     ▐█ ▀█ ▀▄ █·██▪ ██\s
+                ██▪  ▐▀▀▪▄▄█▀▀█ ▐█· ▐█▌▐▀▀▪▄▐▀▀▄ ▐█▀▀█▄ ▄█▀▄ ▄█▀▀█ ▐▀▀▄ ▐█· ▐█▌
+                ▐█▌▐▌▐█▄▄▌▐█ ▪▐▌██. ██ ▐█▄▄▌▐█•█▌██▄▪▐█▐█▌.▐▌▐█ ▪▐▌▐█•█▌██. ██\s
+                .▀▀▀  ▀▀▀  ▀  ▀ ▀▀▀▀▀•  ▀▀▀ .▀  ▀·▀▀▀▀  ▀█▄▀▪ ▀  ▀ .▀  ▀▀▀▀▀▀•\s                                                                                            \s
+                """).reset().toString();
+        if (System.console() != null) {
+            System.out.println(new String(message_2.getBytes(), System.console().charset()));
+        } else {
+            System.out.println(message_2);
+        }
 
-        new PrintStream(System.out, true, System.console() != null
-                ? System.console().charset()
-                : Charset.defaultCharset()
-        ).println(ansi().cursor(Constants.row_nextTurn + 10, 0).bg(CYAN).a("""
-
-                █     █▀▀▀  █▀▀█  █▀▀▄  █▀▀▀  █▀▀█    █▀▀█  █▀▀▀█  █▀▀█  █▀▀█  █▀▀▄
-                █     █▀▀▀  █▄▄█  █  █  █▀▀▀  █▄▄▀    █▀▀▄  █   █  █▄▄█  █▄▄▀  █  █
-                █▄▄█  █▄▄▄  █  █  █▄▄▀  █▄▄▄  █  █    █▄▄█  █▄▄▄█  █  █  █  █  █▄▄
-                        
-                """).bg(DEFAULT).reset());
-
-
-        int rowOffset = 1; // Start row offset
-        int ranking = 1;   // Start ranking
-
+        int ranking = 1; // Start ranking
         StringBuilder output = new StringBuilder();
 
         for (Map.Entry<Player, Integer> entry : model.getLeaderBoard().entrySet()) {
-            output.append(ansi()
-                    .fg(WHITE)
-                    .cursor(Constants.row_leaderboard + rowOffset, Constants.col_leaderboard)
-                    .a("#" + ranking + " " + entry.getKey().getNickname() + ": ")
-                    .fg(GREEN)
-                    .a(entry.getValue() + " points\n")
-                    .reset()); // Reset colors to default after each line
-
-            rowOffset += 2; // Increment row offset for the next entry
-            ranking++;     // Increment ranking for the next entry
+            output.append("#")
+                    .append(ranking)
+                    .append(" ")
+                    .append(entry.getKey().getNickname())
+                    .append(": ")
+                    .append(entry.getValue())
+                    .append(" points\n");
+            ranking++; // Increment ranking for the next entry
         }
-
         StaticPrinterTUI.print(output.toString());
     }
 
     // *********************** SHOW METHODS  *********************** //
 
-    /**
-     * @param gameModel the model that has the player hand that needs to be shown
-     */
     @Override
     public void show_playerHand(ModelView gameModel, String nickname) {
         List<ResourceCard> player_hand = gameModel.getPlayerEntity(nickname).getHand();
@@ -194,10 +200,6 @@ public class TUI extends UI {
         clearScreen();
     }
 
-    /**
-     * @param nickname the player that grabbed the tiles
-     * @param model    the model in which the player grabbed the tiles
-     */
     @Override
     public void show_cardChosen(String nickname, ModelView model) {
         clearScreen();
@@ -276,7 +278,7 @@ public class TUI extends UI {
     @Override
     protected void show_othersPersonalBoard(ModelView model, int playerIndex) {
         clearScreen();
-        if(model.getAllPlayers().size() > playerIndex)
+        if (model.getAllPlayers().size() > playerIndex)
             TuiPersonalBoardGraphics.showPersonalBoard(model.getAllPlayers().get(playerIndex).getPersonalBoard());
         clearScreen();
     }
@@ -295,84 +297,40 @@ public class TUI extends UI {
     @Override
     public void show_playerJoined(ModelView gameModel, String nick) {
         clearScreen();
-        show_titleCodexNaturalis();
-        StaticPrinterTUI.print(ansi().cursor(10, 0).a("GameID: [" + gameModel.getGameId().toString() + "]\n").fg(DEFAULT));
-        clearScreen();
-        System.out.flush();
-        StringBuilder ris = new StringBuilder();
-
-        clearScreen();
-        int i = 0;
         for (Player p : gameModel.getPlayersConnected()) {
             if (p.getReadyToStart()) {
-                ris.append(ansi().cursor(12 + i, 0)).append("[EVENT]: ").append(p.getNickname()).append(" is ready!\n");
+                StaticPrinterTUI.print(p.getNickname() + ": ready\n");
             } else {
-                ris.append(ansi().cursor(12 + i, 0)).append("[EVENT]: ").append(p.getNickname()).append(" has joined!\n");
+                StaticPrinterTUI.print(p.getNickname() + ": joined\n");
             }
-            clearScreen();
-            i++;
         }
-        printNoNewLine(ris);
-
         clearScreen();
-        for (Player p : gameModel.getPlayersConnected())
-            if (!p.getReadyToStart() && p.getNickname().equals(nick))
-                StaticPrinterTUI.print(ansi().cursor(17, 0).fg(WHITE).a("> When you are ready to start, enter (y): \n"));
-        clearScreen();
-        System.out.flush();
     }
 
-    /**
-     * Shows the important gameFacts
-     */
-    public void show_important_events() {
-
+    public void show_relevantFacts() {
         clearScreen();
-        StringBuilder ris = new StringBuilder();
-        int i = 0;
-        int longestImportantEvent = relevant_facts.stream().map(String::length).reduce(0, (a, b) -> a > b ? a : b);
-        ris.append(ansi().fg(GREEN).cursor(Constants.row_important_events + i, Constants.col_important_events - 1).bold().a("Latest Events: ").fg(DEFAULT).boldOff());
         for (String s : relevant_facts) {
-            ris.append(ansi().fg(WHITE).cursor(Constants.row_important_events + 1 + i, Constants.col_important_events).a(s).a(" ".repeat(longestImportantEvent - s.length())).fg(DEFAULT));
-            i++;
+            StaticPrinterTUI.print(ansi().cursor(10, 0).a(s + "\n"));
         }
-        print(ris);
         clearScreen();
-
-        StaticPrinterTUI.print(ansi().cursor(Constants.row_input, 0));
     }
 
-
-    /**
-     * Error message when there are no games to join
-     *
-     * @param msgToVisualize message that needs visualisation
-     */
     @Override
     public void show_noAvailableGamesToJoin(String msgToVisualize) {
-        String ris = ansi().fg(RED).cursor(11, 4).bold().a(msgToVisualize).fg(DEFAULT).boldOff() +
-                String.valueOf(ansi().fg(RED).cursor(12, 4).bold().a(" Try later or create a new game!").fg(DEFAULT).boldOff());
-        ansi().fg(DEFAULT);
-        printNoNewLine(ris);
+        clearScreen();
+        StaticPrinterTUI.print(msgToVisualize + "\nTry later or create a new game!");
+        clearScreen();
     }
 
-    /**
-     * Clears important gameFacts' list
-     */
     @Override
     public void clearRelevantGameFacts() {
         this.relevant_facts = new ArrayList<>();
         this.nickname = null;
     }
 
-    /**
-     * Shows error if there's no connection
-     */
     @Override
     protected void show_noConnectionError() {
-        this.clearScreen();
-        StaticPrinterTUI.print(ansi().fg(WHITE).bg(RED).bold().a("CONNECTION TO SERVER LOST!")
-                .boldOff().fg(DEFAULT).bgDefault());
+        StaticPrinterTUI.print("CONNECTION TO SERVER LOST!");
         System.exit(-1);
     }
 
@@ -385,42 +343,25 @@ public class TUI extends UI {
     @Override
     protected void show_cardDrawn(ModelView model, String nickname) {}
 
-    /**
-     * Asks the player to pick a direction
-     */
     @Override
     public void show_orientation(String message) {
         StaticPrinterTUI.print(message + "\n" + "\t> Choose card orientation (f:FRONT / b:BACK): ");
         printNoNewLine(ansi().cursorDownLine().a(""));
     }
 
-    /**
-     * Shows the messages sent
-     *
-     * @param model    the model where the message need to be shown
-     * @param nickname the sender's nickname
-     */
     @Override
     public void show_messageSent(ModelView model, String nickname) {
         Message mess = model.getChat().getLastMessage();
         StaticPrinterTUI.print(ansi().cursor(Constants.row_chat, Constants.col_chat).a(mess.sender().getNickname() + ": " + mess.text()));
     }
 
-    /**
-     * Shows messages on game start
-     *
-     * @param model model where the game has started
-     */
     @Override
     public void show_gameStarted(ModelView model) {
         clearScreen();
-        show_titleCodexNaturalis();
-        show_important_events();
+        show_title();
+        show_relevantFacts();
     }
 
-    /**
-     * Tells the player to return to the main menu
-     */
     @Override
     public void show_menu() {
         StaticPrinterTUI.print("\nPress any key to return to the menu");
@@ -438,18 +379,12 @@ public class TUI extends UI {
         StaticPrinterTUI.print(Ansi.ansi().bold().fg(Ansi.Color.RED).a("\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
     }
 
-    /**
-     * Asks the player to insert his nickname
-     */
     @Override
     public void show_insertNickname() {
         clearScreen();
         printNoNewLine(ansi().cursor(Constants.row_gameID, 0).a("> Insert your nickname: "));
     }
 
-    /**
-     * Asks the player to choose number of tiles to pick up
-     */
     @Override
     public void show_insertNumOfPlayers() {
         clearScreen();
@@ -457,12 +392,12 @@ public class TUI extends UI {
     }
 
     /**
-     * Shows initial menu
+     * shows options
      */
     @Override
     public void show_options() {
         this.clearScreen();
-        this.show_titleCodexNaturalis();
+        this.show_title();
         StaticPrinterTUI.print(ansi().cursor(9, 0).a("""
                 > Select one option:
                 \tpress (c) to create a new game
@@ -477,7 +412,7 @@ public class TUI extends UI {
     }
 
     /**
-     * Asks for the game id
+     * Shows the game id
      */
     @Override
     public void show_insertGameId() {
@@ -486,7 +421,7 @@ public class TUI extends UI {
     }
 
     /**
-     * Generic error message
+     * shows invalid input
      */
     @Override
     public void show_invalidInput() {
@@ -494,7 +429,7 @@ public class TUI extends UI {
     }
 
     /**
-     * Asks which tile to place
+     * shows which card to place
      */
     @Override
     public void show_whichCardToPlace() {
@@ -503,51 +438,55 @@ public class TUI extends UI {
                 "\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
     }
 
+    /**
+     * shows which objective card to choose
+     */
     @Override
     public void show_whichObjectiveToChoose() {
         StaticPrinterTUI.print("> Select which objective card you want to choose (1 / 2):");
     }
 
     /**
-     * Creating game message
-     *
-     * @param nickname player's nickname
+     * shows create game message
+     * @param nickname The nickname of the player who created the game.
      */
     @Override
     public void show_createGame(String nickname) {
-        this.clearScreen();
-        this.show_titleCodexNaturalis();
-        StaticPrinterTUI.print("> Creating a new game...");
         this.nickname = nickname;
+        clearScreen();
+        show_title();
+        StaticPrinterTUI.print("> Creating a new game...");
     }
 
     /**
-     * Join first available game message
-     *
-     * @param nickname player's nickname
+     * shows join random game message
+     * @param nickname The nickname of the player who joined the game.
      */
     @Override
     public void show_joinRandom(String nickname) {
-        this.clearScreen();
-        this.show_titleCodexNaturalis();
-        StaticPrinterTUI.print("> Connecting to the first available game...");
         this.nickname = nickname;
+        clearScreen();
+        show_title();
+        StaticPrinterTUI.print("> Connecting to the first available game...");
     }
 
     /**
-     * Shows the game id of the game that it's been joined
-     *
-     * @param idGame   id of the game the player is trying to join
-     * @param nickname player's nickname
+     * shows join specific game message
+     * @param idGame The id of the game to join.
+     * @param nickname The nickname of the player who joined the game.
      */
     @Override
     public void show_join(int idGame, String nickname) {
-        this.clearScreen();
-        this.show_titleCodexNaturalis();
-        StaticPrinterTUI.print("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
         this.nickname = nickname;
+        clearScreen();
+        show_title();
+        StaticPrinterTUI.print("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
     }
 
     @Override
     public void show_readyToStart(ModelView gameModel, String s) {}
+
+    @Override
+    public void show_pawnPositions(ModelView model){
+    }
 }

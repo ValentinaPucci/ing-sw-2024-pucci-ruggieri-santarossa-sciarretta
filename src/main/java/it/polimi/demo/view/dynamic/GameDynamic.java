@@ -367,6 +367,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                     if (amI(model)) {
                         ui.show_personalObjectiveCard(model);
                         ui.show_playerHand(model, nickname);
+                        ui.show_pawnPositions(model);
                         askWhichCard();
                     }
                 },
@@ -934,7 +935,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void nextTurn(ModelView model) {
-        if (!amI(model) && (model.getStatus() == GameStatus.RUNNING || model.getStatus() == GameStatus.SECOND_LAST_ROUND)) {
+        if (!amI(model) && (model.getStatus() == GameStatus.RUNNING || model.getStatus() == GameStatus.SECOND_LAST_ROUND || model.getStatus()==GameStatus.LAST_ROUND)) {
             ui.show_myTurnIsFinished();
         }
         facts.offer(model, FactType.NEXT_TURN);

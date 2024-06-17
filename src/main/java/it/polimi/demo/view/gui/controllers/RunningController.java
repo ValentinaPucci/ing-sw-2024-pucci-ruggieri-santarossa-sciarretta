@@ -858,7 +858,7 @@ public class RunningController extends GenericController {
     public void commonCard1Clicked(MouseEvent mouseEvent) {
         LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
-            reader.add("2");
+            reader.add("1");
         } else {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
@@ -922,14 +922,20 @@ public class RunningController extends GenericController {
     }
 
     public void illegalMove() {
-        setMsgToShow("Card can't be placed there, retry", false);
+        setMsgToShow("Invalid position, change orientation or corner", false);
+//        cardHandVBox.setDisable(false);
+//        cardHandVBox.setMouseTransparent(false);
+//        handCard0.setDisable(false);
+//        handCard1.setDisable(false);
+//        handCard2.setDisable(false);
         personalBoardAnchorPane.setDisable(false);
     }
 
 
     public void successfulMove(Coordinate coord) {
         reallyPlaceCard(mapper.getMinCorner(chosenX,chosenY)[0], (mapper.getMinCorner(chosenX,chosenY)[1]), coord);
-        setMsgToShow("Posizione valida!", true);
+        setMsgToShow("Valid position!", true);
+        personalBoardAnchorPane.setDisable(true);
     }
 
 

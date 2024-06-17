@@ -288,7 +288,7 @@ public class ObserverManagerClient implements Listener, Serializable {
         void run() throws Exception;
     }
 
-// Implementations of Listener interface methods
+    // Implementations of Listener interface methods
 
     @Override
     public void starterCardPlaced(ModelView model, Orientation orientation, String nick) throws RemoteException {

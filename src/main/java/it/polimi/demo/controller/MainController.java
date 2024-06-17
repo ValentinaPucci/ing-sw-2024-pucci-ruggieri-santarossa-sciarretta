@@ -252,7 +252,7 @@ public class MainController implements MainControllerInterface, Serializable {
      * @throws RemoteException if the connection fails
      */
     @Override
-    public void showOthersPersonalBoard(Listener listener, String nickname, int playerIndex, int gameId)
+    public synchronized void showOthersPersonalBoard(Listener listener, String nickname, int playerIndex, int gameId)
             throws RemoteException {
         games.get(gameId).showOthersPersonalBoard(nickname, playerIndex);
     }
@@ -312,5 +312,6 @@ public class MainController implements MainControllerInterface, Serializable {
     public synchronized GameControllerInterface getGameController(int gameId) {
         return games.get(gameId);
     }
+
 
 }

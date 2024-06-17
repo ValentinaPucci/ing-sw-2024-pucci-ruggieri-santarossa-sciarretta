@@ -246,6 +246,11 @@ public class GUI extends UI {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).whichCardToPlace());
     }
 
+    @Override
+    public void show_pawnPositions(ModelView model){
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(model));
+    }
+
 
     @Override
     protected void show_invalidInput() {

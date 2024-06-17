@@ -83,15 +83,6 @@ public class Model implements Serializable {
     //------------------------------------methods for players-----------------------
 
     /**
-     * Retrieves the beginner player of the game.
-     *
-     * @return The first player.
-     */
-    public Player getBeginnerPlayer() {
-        return aux_order_players.getFirst();
-    }
-
-    /**
      * Retrieves the list of players participating in the game even if they are connected or not.
      *
      * @return The list of players.
@@ -141,7 +132,6 @@ public class Model implements Serializable {
      */
     public synchronized void extractFirstPlayerToPlay() {
         Player first_player = players_connected.get(random.nextInt(players_connected.size()));
-
         aux_order_players.remove(first_player);
         aux_order_players.addFirst(first_player);
         players_connected.remove(first_player);
@@ -245,38 +235,6 @@ public class Model implements Serializable {
     public void sendMessage(String nick, Message message) throws ActionPerformedByAPlayerNotPlayingException {
         chat.addMessage(message);
         observers.notify_messageSent(this, nick, message);
-    }
-
-    //-------------------------connection/disconnection management---------------------------------------------
-
-    /**
-     * Sets the player p as disconnected, it removes p from the players_connected list.
-     * @param p player to disconnect
-     */
-    public void setPlayerAsDisconnected(Player p) {
-
-        if (players_connected.contains(p)) {
-            p.setAsNotConnected();
-            observers.notify_playerDisconnected(this, p.getNickname());
-            p.setAsNotReadyToStart();
-            players_connected.remove(p);
-        }
-    }
-
-    /**
-     * It requires player.isConnected() == true.
-     * Add the player, that is connected, to the players_connected list, notify that the player is connected.
-     * If the player is already connected, it throws exception. Dynamical offer (connection).
-     * @param p player to set as connected.
-     */
-    public void setPlayerAsConnected(Player p) {
-        if (aux_order_players.contains(p) && !players_connected.contains(p)) {
-            // Here we bypass the question 'are you ready to start?'
-            p.setAsReadyToStart();
-        }
-        else {
-            throw new IllegalArgumentException("Player not in the game!");
-        }
     }
 
     //-------------------------managing status---------------------------------------------
