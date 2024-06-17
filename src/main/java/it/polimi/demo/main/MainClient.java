@@ -5,7 +5,7 @@ import it.polimi.demo.main.utils.BoolAdd;
 import it.polimi.demo.main.utils.StaticPromptValidator;
 import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.GameDynamic;
-import it.polimi.demo.view.gui.ApplicationGUI;
+import it.polimi.demo.view.ui.gui.ApplicationGUI;
 import javafx.application.Application;
 
 import static java.lang.Integer.valueOf;

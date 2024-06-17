@@ -6,7 +6,7 @@ import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.demo.network.StaticPrinter.staticPrinter;
+import static it.polimi.demo.network.utils.StaticPrinter.staticPrinter;
 
 public class Server extends Thread implements Serializable {
     /**
