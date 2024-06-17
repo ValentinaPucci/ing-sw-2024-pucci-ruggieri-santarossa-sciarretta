@@ -19,8 +19,7 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 3; j++) {
                 if (l + i >= 250  && m + j >= 250 && l + i <= 251 && m + j <= 251) {
-                    if (personal_board.board[l + i][m + j].level == 0)
-                        return false;
+                    return false;
                 }
                 if (objectiveCard.aux_personal_board.board[i][j].is_full) {
                     if (personal_board.board[l + i][m + j].cell_of_a_found_pattern)
