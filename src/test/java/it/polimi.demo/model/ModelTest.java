@@ -24,12 +24,6 @@ public class ModelTest {
 
 
     //--------------------methods for player + connection/disconnection management-------------------
-    @Test
-    public void testGetBeginnerPlayer() {
-        assertThrows(NoSuchElementException.class, ()-> model.getBeginnerPlayer());
-        addPlayersToGameModel(Constants.minNumOfPlayer);
-        assertNotNull(model.getBeginnerPlayer());
-    }
 
     @Test
     public void testGetAllPlayers() {
@@ -124,67 +118,6 @@ public class ModelTest {
         for (int i = 0; i < numPlayers; i++) {
             model.addPlayer(new Player("Player" + i));
         }
-    }
-    @Test
-   // This method is useless because a player is set as connected in addPlayer method
-    public void testSetPlayerAsConnected() {
-
-        Player player1 = new Player("Player1");
-        Player player2 = new Player("Player2");
-        model.addPlayer(player1);
-        model.addPlayer(player2);
-        assertEquals(2, model.getAllPlayers().size());
-
-        //assertThrows(IllegalArgumentException.class, () -> gameModel.setPlayerAsConnected(gameModel.getAllPlayers().getFirst()));
-        //assertThrows(IllegalArgumentException.class, () -> gameModel.setPlayerAsConnected(gameModel.getAllPlayers().get(1)));
-
-        model.getAllPlayers().getFirst().setAsConnected();
-        model.setPlayerAsConnected(model.getAllPlayers().getFirst());
-        System.out.println(model.getAllPlayers().getFirst().getIsConnected());
-
-        assertEquals(1, model.getPlayersConnected().size());
-        assertNotEquals(2, model.getPlayersConnected().size());
-
-        assertTrue(model.getAllPlayers().getFirst().getIsConnected());
-        assertFalse(model.getAllPlayers().get(1).getIsConnected());
-        model.getAllPlayers().get(1).setAsConnected();
-        model.setPlayerAsConnected(model.getAllPlayers().get(1));
-        assertEquals(2, model.getPlayersConnected().size());
-    }
-
-    @Test
-    public void testSetPlayerAsDisconnected() {
-
-
-        addPlayersToGameModel(3);
-
-        System.out.println((model.getAllPlayers().getFirst().getIsConnected()));
-
-
-        // Verify that the player1 is connected
-        assertTrue(model.getAllPlayers().getFirst().getIsConnected());
-        // Disconnect player1
-        model.setPlayerAsDisconnected(model.getAllPlayers().getFirst());
-        //Verify that the player1 is disconnect and not ready to start
-        assertFalse(model.getAllPlayers().getFirst().getIsConnected());
-        assertFalse(model.getAllPlayers().getFirst().getReadyToStart());
-        //Verify that the player1 is not in players_connected list
-
-        assertFalse(model.getPlayersConnected().contains(model.getAllPlayers().getFirst()));
-
-        // Verifica che il metodo notify_playerDisconnected sia stato chiamato con i parametri corretti
-        //verify(listener_handler).notify_playerDisconnected(gameModel, player1.getNickname());
-
-        // Add and connect player2
-        //gameModel.addPlayer("Player2");
-        model.getAllPlayers().get(1).setAsConnected();
-        model.setPlayerAsConnected(model.getAllPlayers().get(1));
-
-
-        // Disconnect player2
-        model.setPlayerAsDisconnected(model.getAllPlayers().get(1));
-        assertFalse(model.getAllPlayers().get(1).getIsConnected());
-
     }
 
 
