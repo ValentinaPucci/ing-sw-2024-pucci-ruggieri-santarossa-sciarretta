@@ -30,8 +30,8 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
 //                    return false;
 //                }
                 if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-                    if (personal_board.board[l + i][m + j].cell_of_a_found_pattern)
-                        return false;
+//                    if (personal_board.board[l + i][m + j].cell_of_a_found_pattern)
+//                        return false;
                     if (!personal_board.board[l + i][m + j].is_full)
                         return false;
                     else if (!personal_board.board[l + i][m + j].equals(objectiveCard.aux_personal_board.board[i][j]))
@@ -40,18 +40,19 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
             }
         }
 
-        for (int i = 0; i < 5; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-                    personal_board.board[l + i][m + j].setCellAsPatternFound();
-                }
-            }
-        }
+//        for (int i = 0; i < 5; i++) {
+//            for (int j = 0; j < 3; j++) {
+//                if (objectiveCard.aux_personal_board.board[i][j].is_full) {
+//                    personal_board.board[l + i][m + j].setCellAsPatternFound();
+//                }
+//            }
+//        }
 
         Color target_1 = null;
         Color target_2 = null;
 
         Map<Integer, Integer> idColorCount = new HashMap<>();
+        List<IdColor> idColors;
 
         // case 1: P / Q patterns
         if (objectiveCard.aux_personal_board.board[1][1].level == 2) {
@@ -66,7 +67,7 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-                        List<IdColor> idColors = personal_board.board[l + i][m + j].getIdColors();
+                        idColors = personal_board.board[l + i][m + j].getIdColors();
                         for (IdColor q : idColors) {
                             if (q.color().equals(target_1)) {
                                 int id = q.id();
@@ -79,7 +80,7 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
             for (int i = 1; i < 5; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-                        List<IdColor> idColors = personal_board.board[l + i][m + j].getIdColors();
+                        idColors = personal_board.board[l + i][m + j].getIdColors();
                         for (IdColor q : idColors) {
                             if (q.color().equals(target_2)) {
                                 int id = q.id();
@@ -103,7 +104,7 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
             for (int i = 3; i < 5; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-                        List<IdColor> idColors = personal_board.board[l + i][m + j].getIdColors();
+                        idColors = personal_board.board[l + i][m + j].getIdColors();
                         for (IdColor q : idColors) {
                             if (q.color().equals(target_1)) {
                                 int id = q.id();
@@ -116,7 +117,7 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-                        List<IdColor> idColors = personal_board.board[l + i][m + j].getIdColors();
+                        idColors = personal_board.board[l + i][m + j].getIdColors();
                         for (IdColor q : idColors) {
                             if (q.color().equals(target_2)) {
                                 int id = q.id();
@@ -148,9 +149,9 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
                         for (int j = 0; j < 3; j++) {
                             if (objectiveCard.aux_personal_board.board[i][j].is_full) {
                                 if (personal_board.board[l + i][m + j].getIdColors().contains(new IdColor(id, target_1)))
-                                    personal_board.board[l + i][m + j].setIdColorAsFoundPattern(id, target_2);
-                                else if (personal_board.board[l + i][m + j].getIdColors().contains(new IdColor(id, target_2)))
                                     personal_board.board[l + i][m + j].setIdColorAsFoundPattern(id, target_1);
+                                else if (personal_board.board[l + i][m + j].getIdColors().contains(new IdColor(id, target_2)))
+                                    personal_board.board[l + i][m + j].setIdColorAsFoundPattern(id, target_2);
                             }
                         }
                     }

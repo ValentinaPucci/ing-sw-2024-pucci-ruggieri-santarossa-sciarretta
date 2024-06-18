@@ -58,12 +58,13 @@ public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable
 
         // HashMap to store the count of each IdColor ID
         Map<Integer, Integer> idColorCount = new HashMap<>();
+        List<IdColor> idColors;
 
         // Iterate over the 4x4 section of the board
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-                    List<IdColor> idColors = personal_board.board[l + i][m + j].getIdColors();
+                    idColors = personal_board.board[l + i][m + j].getIdColors();
                     for (IdColor q : idColors) {
                         if (q.color().equals(targetColor)) {
                             int id = q.id();
