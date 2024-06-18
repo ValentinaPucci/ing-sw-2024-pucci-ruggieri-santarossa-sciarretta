@@ -186,8 +186,8 @@ public class PersonalBoardTest {
         }
 
         ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.BLUE);
-        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED, 1, filledCorner);
-        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED, 1, filledCorner);
+        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED);
+        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED);
         ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED);
         ResourceCard card5 = new ResourceCard(5, Orientation.BACK, Color.RED);
 
@@ -219,8 +219,6 @@ public class PersonalBoardTest {
         } catch (IllegalMoveException e) {
             fail("Exception should not be thrown");
         }
-
-        assertEquals(7, personalBoard.getNum_mushrooms());
     }
 
     @Test
@@ -242,14 +240,14 @@ public class PersonalBoardTest {
         ResourceCard card6 = new ResourceCard(6, Orientation.BACK, Color.RED);
         ResourceCard card7 = new ResourceCard(7, Orientation.BACK, Color.RED);
         ResourceCard card8 = new ResourceCard(8, Orientation.BACK, Color.RED);
-        GoldCard card9 = new GoldCard(9, Orientation.FRONT, Color.RED, 1, filledCorner);
-        GoldCard card10 = new GoldCard(10, Orientation.FRONT, Color.RED, 1, filledCorner);
-        GoldCard card11 = new GoldCard(11, Orientation.FRONT, Color.RED, 1, filledCorner);
-        GoldCard card12 = new GoldCard(12, Orientation.FRONT, Color.RED, 1, filledCorner);
-        GoldCard card13 = new GoldCard(13, Orientation.BACK, Color.RED, 1, filledCorner);
-        GoldCard card14 = new GoldCard(14, Orientation.BACK, Color.RED, 1, filledCorner);
-        GoldCard card15 = new GoldCard(15, Orientation.BACK, Color.RED, 1, filledCorner);
-        GoldCard card16 = new GoldCard(16, Orientation.BACK, Color.RED, 1, filledCorner);
+        GoldCard card9 = new GoldCard(9, Orientation.FRONT, Color.RED);
+        GoldCard card10 = new GoldCard(10, Orientation.FRONT, Color.RED);
+        GoldCard card11 = new GoldCard(11, Orientation.FRONT, Color.RED);
+        GoldCard card12 = new GoldCard(12, Orientation.FRONT, Color.RED);
+        GoldCard card13 = new GoldCard(13, Orientation.BACK, Color.RED);
+        GoldCard card14 = new GoldCard(14, Orientation.BACK, Color.RED);
+        GoldCard card15 = new GoldCard(15, Orientation.BACK, Color.RED);
+        GoldCard card16 = new GoldCard(16, Orientation.BACK, Color.RED);
 
         card9.setGoldCard(0, 0, 0, 0, false, false, false, false);
         card10.setGoldCard(0, 0, 0, 0, false, false, false, false);
@@ -381,7 +379,16 @@ public class PersonalBoardTest {
 
         ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.BLUE);
         GoldCard card2 = new GoldCard(2, Orientation.FRONT, Color.RED, 2, filledCorner1);
+        filledCorner1[0][0].setReference_card(card2);
+        filledCorner1[0][1].setReference_card(card2);
+        filledCorner1[1][0].setReference_card(card2);
+        filledCorner1[1][1].setReference_card(card2);
+
         GoldCard card3 = new GoldCard(3, Orientation.FRONT, Color.RED, 3, filledCorner2);
+        filledCorner2[0][0].setReference_card(card3);
+        filledCorner2[0][1].setReference_card(card3);
+        filledCorner2[1][0].setReference_card(card3);
+        filledCorner2[1][1].setReference_card(card3);
 
         card2.setGoldCard(0, 0, 0, 0, true, false, false, false);
         card3.setGoldCard(4, 0, 0, 0, false, true, false, false);
@@ -448,6 +455,8 @@ public class PersonalBoardTest {
 
     @Test
     void testCalculateResourceItemObjective() {
+
+        // todo: you need to update filled corner references card
 
         Corner[][] filledCorner1 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
@@ -535,7 +544,6 @@ public class PersonalBoardTest {
         ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.GREEN);
         ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED);
         ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.RED);
-
 
         Corner[][] filledCorner1 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {

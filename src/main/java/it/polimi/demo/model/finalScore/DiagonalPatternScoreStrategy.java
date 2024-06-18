@@ -62,11 +62,13 @@ public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable
         // Iterate over the 4x4 section of the board
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                List<IdColor> idColors = personal_board.board[l + i][m + j].getIdColors();
-                for (IdColor q : idColors) {
-                    if (q.color().equals(targetColor)) {
-                        int id = q.id();
-                        idColorCount.put(id, idColorCount.getOrDefault(id, 0) + 1);
+                if (objectiveCard.aux_personal_board.board[i][j].is_full) {
+                    List<IdColor> idColors = personal_board.board[l + i][m + j].getIdColors();
+                    for (IdColor q : idColors) {
+                        if (q.color().equals(targetColor)) {
+                            int id = q.id();
+                            idColorCount.put(id, idColorCount.getOrDefault(id, 0) + 1);
+                        }
                     }
                 }
             }
