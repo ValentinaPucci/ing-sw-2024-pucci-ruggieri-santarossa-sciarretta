@@ -27,8 +27,12 @@ public  class CardsCollection implements Serializable {
         cards = new ArrayList<>();
     }
 
-    public void addCard(Card card) {
-        cards.add(card);
+    public void addCard(Card card) throws NullPointerException{
+        if( card == null) {
+            throw new NullPointerException("Card cannot be null");
+        }else {
+            cards.add(card);
+        }
     }
 
     public int size() {
@@ -43,6 +47,7 @@ public  class CardsCollection implements Serializable {
      * @param type
      */
     public void populateDeck(String jsonFilePath, String type) {
+        cards.clear();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
@@ -203,6 +208,7 @@ public  class CardsCollection implements Serializable {
 
     // populate objective cards draft
     public void populateDeckObjective(String jsonFilePath) {
+        cards.clear();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
@@ -285,6 +291,7 @@ public  class CardsCollection implements Serializable {
 
     // Remark: at the moment the same deck has both front and back of stater cards. Use the flag Orientation.
     public void populateDeckStarterFrontAndBack(String jsonFilePath) {
+        cards.clear();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
             JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
