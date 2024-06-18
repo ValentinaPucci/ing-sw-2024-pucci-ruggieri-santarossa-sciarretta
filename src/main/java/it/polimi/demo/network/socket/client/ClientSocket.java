@@ -47,7 +47,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     /**
      * PingSender used to send heartbeats to the server, used to check the connection status.
      */
-    private final transient PingSender socketHeartbeat;
+    private transient PingSender socketHeartbeat;
 
     public ClientSocket(GameDynamic dynamics) {
         modelEvents = new ObserverManagerClient(dynamics);
@@ -261,9 +261,11 @@ public class ClientSocket extends Thread implements ClientInterface {
     public void ping() throws IOException, NotBoundException {}
 
     private void startHeartbeat() {
-        if (!socketHeartbeat.isAlive()) {
-            socketHeartbeat.start();
+        if (socketHeartbeat != null && socketHeartbeat.isAlive()) {
+            socketHeartbeat.interrupt();
         }
+        socketHeartbeat = new PingSender(this);
+        socketHeartbeat.start();
     }
 
     private void stopHeartbeat() {
