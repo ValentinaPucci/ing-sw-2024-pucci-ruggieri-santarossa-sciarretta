@@ -863,6 +863,10 @@ public class RunningController extends GenericController {
             personalBoardAnchorPane.setPrefHeight(newHeight + 10);
         }
 
+        handCard0.setStyle(null);
+        handCard1.setStyle(null);
+        handCard2.setStyle(null);
+
         personalBoardAnchorPane.getChildren().add(CardPic);
         setMsgToShow("Card placed", true);
         removeFromHand(cardIndex);
