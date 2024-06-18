@@ -29,9 +29,11 @@ public class TuiPersonalBoardGraphics {
         for (int i = first_row; i <= last_row; i++) {
             System.out.print("|");
             for (int j = first_column; j <= last_column; j++) {
-                if (matrix[i][j].getCornerFromCell() != null && matrix[i][j].getCornerFromCell().reference_card == null){
+                // auxiliary print ************************************************************************************************
+                if (matrix[i][j].getCornerFromCell() != null && matrix[i][j].getCornerFromCell().reference_card.getId() == -1){
                     System.out.print(" S ");
                 }
+                // ****************************************************************************************************************
                 else if (matrix[i][j].getCornerFromCell() != null && matrix[i][j].getCornerFromCell().reference_card != null) {
                     if (matrix[i][j].getCornerFromCell().reference_card.getColor().equals(Color.RED)){
                         System.out.print(ANSI_RED + matrix[i][j].getCornerFromCell().reference_card.getId()+ANSI_RST);

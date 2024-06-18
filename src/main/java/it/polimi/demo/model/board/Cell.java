@@ -1,7 +1,14 @@
 package it.polimi.demo.model.board;
 
+import it.polimi.demo.model.cards.gameCards.ResourceCard;
+import it.polimi.demo.model.enumerations.Color;
+import it.polimi.demo.model.enumerations.Orientation;
+
 import java.io.Serial;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * This class is thought to be complementary to the class Corner.
@@ -17,17 +24,22 @@ public class Cell implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 7281719514568472877L;
-    private Corner corner;
-    public int level;
+
+    /**
+     * This is the last visible corner (the one we need to use throughout the game)
+     */
+    private Corner corner; // level 0 or level 1 (the last one available)
+
+    public int level = 0;
     public boolean is_full;
     public boolean cell_of_a_found_pattern;
 
+    private List<IdColor> id_colors = new ArrayList<>();
 
     /**
      * Constructor for the class Cell.
      */
     public Cell() {
-        this.level = 0;
         this.is_full = false;
         this.cell_of_a_found_pattern = false;
     }
@@ -37,6 +49,7 @@ public class Cell implements Serializable {
      * @param new_corner the corner of the cell
      */
     public void setCellAsFull(Corner new_corner) {
+        id_colors.add(new IdColor(new_corner.reference_card.getId(), new_corner.reference_card.color));
         this.corner = new_corner;
         this.level++;
         this.is_full = true;
@@ -45,6 +58,7 @@ public class Cell implements Serializable {
     public void setCellAsPatternFound() {
         this.cell_of_a_found_pattern = true;
     }
+
 
     /**
      * Remark: this method is crucial since it implement
@@ -56,12 +70,22 @@ public class Cell implements Serializable {
         return this.corner;
     }
 
+    public List<IdColor> getIdColors() {
+        return id_colors;
+    }
+
     /**
      * This method is used to check if a cell is empty.
      *
      * @return true if the cell is empty, false otherwise
      */
     public boolean equals(Cell cell) {
-        return this.is_full && cell.is_full && this.corner.reference_card.color == cell.corner.reference_card.color;
+        // all possible combinations, but we need to check they belong to the same card!
+        return this.is_full && cell.is_full && (
+                this.id_colors.getFirst().color() == cell.id_colors.getFirst().color() ||
+                        this.id_colors.getLast().color() == cell.id_colors.getLast().color() ||
+                        this.id_colors.getFirst().color() == cell.id_colors.getLast().color() ||
+                        this.id_colors.getLast().color() == cell.id_colors.getFirst().color()
+                );
     }
 }

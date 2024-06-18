@@ -24,7 +24,7 @@ public class PersonalBoardTest {
 
     @BeforeEach
     public void setup() {
-        personalBoard = new PersonalBoard(1000);
+        personalBoard = new PersonalBoard(500);
     }
 
     @Test
@@ -363,7 +363,7 @@ public class PersonalBoardTest {
         Corner[][] filledCorner1 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(0, 0));
+                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(i, j));
                 filledCorner1[i][j].setCornerResource(Resource.MUSHROOM);
             }
         }
@@ -371,7 +371,7 @@ public class PersonalBoardTest {
         Corner[][] filledCorner2 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                filledCorner2[i][j] = new Corner(new BoardCellCoordinate(0, 0));
+                filledCorner2[i][j] = new Corner(new BoardCellCoordinate(i, j));
                 filledCorner2[i][j].setCornerResource(Resource.LEAF);
             }
         }
@@ -452,7 +452,7 @@ public class PersonalBoardTest {
         Corner[][] filledCorner1 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(0, 0));
+                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(i, j));
                 filledCorner1[i][j].setCornerResource(Resource.MUSHROOM);
             }
         }
@@ -462,7 +462,7 @@ public class PersonalBoardTest {
         Corner[][] filledCorner2 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                filledCorner2[i][j] = new Corner(new BoardCellCoordinate(0, 0));
+                filledCorner2[i][j] = new Corner(new BoardCellCoordinate(i, j));
                 filledCorner2[i][j].setCornerItem(Item.POTION);
             }
         }
@@ -470,7 +470,7 @@ public class PersonalBoardTest {
         Corner[][] filledCorner3 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                filledCorner3[i][j] = new Corner(new BoardCellCoordinate(0, 0));
+                filledCorner3[i][j] = new Corner(new BoardCellCoordinate(i, j));
                 filledCorner3[i][j].setCornerItem(Item.PARCHMENT);
             }
         }
@@ -478,7 +478,7 @@ public class PersonalBoardTest {
         Corner[][] filledCorner4 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 2; j++) {
-                filledCorner4[i][j] = new Corner(new BoardCellCoordinate(0, 0));
+                filledCorner4[i][j] = new Corner(new BoardCellCoordinate(i, j));
                 filledCorner4[i][j].setCornerItem(Item.FEATHER);
             }
         }
@@ -526,4 +526,77 @@ public class PersonalBoardTest {
     }
 
     // Add more tests for other methods
+
+    @Test
+    void testCalculateScore() {
+
+        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.GREEN);
+        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.GREEN);
+        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.GREEN);
+        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED);
+        ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.RED);
+
+
+        Corner[][] filledCorner1 = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(i, j));
+                filledCorner1[i][j].setCornerResource(Resource.MUSHROOM);
+            }
+        }
+
+        StarterCard starterCard = new StarterCard(0, Orientation.FRONT);
+        starterCard.setStarterCardFront(Resource.LEAF, Resource.LEAF, Resource.LEAF, filledCorner1);
+
+        // todo: complete it
+
+        //personalBoard.placeStarterCard(starterCard);
+        personalBoard.placeStarterCard(starterCard);
+        personalBoard.placeCardAtSW(starterCard, card1);
+        //personalBoard.placeCardAtSW(card5, card1);
+        personalBoard.placeCardAtSE(card1, card2);
+        personalBoard.placeCardAtNW(card1, card3);
+
+        DiagonalPatternObjectiveCard diagonalPatternObjectiveCard1 = new DiagonalPatternObjectiveCard(1, Orientation.FRONT, 2);
+        diagonalPatternObjectiveCard1.init_objDecreasingDiagonal(Color.GREEN);
+
+        assertEquals(2, diagonalPatternObjectiveCard1.calculateScore(personalBoard));
+
+    }
+
+    @Test
+    void patternCrisis() {
+
+        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.BLUE);
+        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.BLUE);
+        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED);
+        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.BLUE);
+        ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.BLUE);
+        ResourceCard card6 = new ResourceCard(6, Orientation.FRONT, Color.BLUE);
+
+        Corner[][] filledCorner1 = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(i, j));
+                filledCorner1[i][j].setCornerResource(Resource.MUSHROOM);
+            }
+        }
+
+        StarterCard starterCard = new StarterCard(0, Orientation.FRONT);
+        starterCard.setStarterCardFront(Resource.LEAF, Resource.LEAF, Resource.LEAF, filledCorner1);
+
+        personalBoard.placeStarterCard(starterCard);
+
+        personalBoard.placeCardAtSE(starterCard, card1);
+        personalBoard.placeCardAtNE(card1, card2);
+        personalBoard.placeCardAtSW(card1, card3);
+        personalBoard.placeCardAtNW(card3, card4);
+        personalBoard.placeCardAtSW(card3, card5);
+        personalBoard.placeCardAtSE(card3, card6);
+
+        DiagonalPatternObjectiveCard diagonalPatternObjectiveCard1 = new DiagonalPatternObjectiveCard(1, Orientation.FRONT, 2);
+        diagonalPatternObjectiveCard1.init_objIncreasingDiagonal(Color.BLUE);
+
+        assertEquals(0, diagonalPatternObjectiveCard1.calculateScore(personalBoard));
+    }
 }
