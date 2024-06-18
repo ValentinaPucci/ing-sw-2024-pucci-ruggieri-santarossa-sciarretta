@@ -48,12 +48,12 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
             }
         }
 
-        Color target_1;
-        Color target_2;
+        Color target_1 = null;
+        Color target_2 = null;
 
         Map<Integer, Integer> idColorCount = new HashMap<>();
 
-        // case 1: p / q patterns
+        // case 1: P / Q patterns
         if (objectiveCard.aux_personal_board.board[1][1].level == 2) {
             if (objectiveCard.aux_personal_board.board[0][2].is_full) {
                 target_1 = objectiveCard.aux_personal_board.board[0][2].getCornerFromCell().reference_card.color;
@@ -76,7 +76,7 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
                     }
                 }
             }
-            for (int i = 2; i < 5; i++) {
+            for (int i = 1; i < 5; i++) {
                 for (int j = 0; j < 3; j++) {
                     if (objectiveCard.aux_personal_board.board[i][j].is_full) {
                         List<IdColor> idColors = personal_board.board[l + i][m + j].getIdColors();
@@ -138,7 +138,26 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
 
         System.out.println("countOfIdsWithFourOccurrences: " + countOfIdsWithFourOccurrences);
 
-        return countOfIdsWithFourOccurrences == 3;
+        if (countOfIdsWithFourOccurrences != 3) {
+            return false;
+        }
+        else {
+            for (Integer id : idColorCount.keySet()) {
+                if (idColorCount.get(id) == 4) {
+                    for (int i = 0; i < 5; i++) {
+                        for (int j = 0; j < 3; j++) {
+                            if (objectiveCard.aux_personal_board.board[i][j].is_full) {
+                                if (personal_board.board[l + i][m + j].getIdColors().contains(new IdColor(id, target_1)))
+                                    personal_board.board[l + i][m + j].setIdColorAsFoundPattern(id, target_2);
+                                else if (personal_board.board[l + i][m + j].getIdColors().contains(new IdColor(id, target_2)))
+                                    personal_board.board[l + i][m + j].setIdColorAsFoundPattern(id, target_1);
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
     }
 
     /**

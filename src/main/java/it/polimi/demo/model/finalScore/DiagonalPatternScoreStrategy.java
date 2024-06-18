@@ -34,8 +34,8 @@ public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable
 //                }
                 if (objectiveCard.aux_personal_board.board[i][j].is_full) {
                     targetColor = objectiveCard.aux_personal_board.board[i][j].getCornerFromCell().reference_card.color;
-                    if (personal_board.board[l + i][m + j].cell_of_a_found_pattern)
-                        return false;
+//                    if (personal_board.board[l + i][m + j].cell_of_a_found_pattern)
+//                        return false;
                     if (!personal_board.board[l + i][m + j].is_full)
                         return false;
                     else if (!personal_board.board[l + i][m + j].equals(objectiveCard.aux_personal_board.board[i][j]))
@@ -46,13 +46,13 @@ public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable
 
         // it is a possible pattern!
 
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-                    personal_board.board[l + i][m + j].setCellAsPatternFound();
-                }
-            }
-        }
+//        for (int i = 0; i < 4; i++) {
+//            for (int j = 0; j < 4; j++) {
+//                if (objectiveCard.aux_personal_board.board[i][j].is_full) {
+//                    personal_board.board[l + i][m + j].setCellAsPatternFound();
+//                }
+//            }
+//        }
 
         // Here we populate the hypercube
 
@@ -84,7 +84,24 @@ public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable
 
         System.out.println("countOfIdsWithFourOccurrences: " + countOfIdsWithFourOccurrences);
 
-        return countOfIdsWithFourOccurrences == 3;
+        if (countOfIdsWithFourOccurrences != 3) {
+            return false;
+        }
+        else {
+            for (Integer id : idColorCount.keySet()) {
+                if (idColorCount.get(id) == 4) {
+                    for (int i = 0; i < 4; i++) {
+                        for (int j = 0; j < 4; j++) {
+                            if (objectiveCard.aux_personal_board.board[i][j].is_full) {
+                                if (personal_board.board[l + i][m + j].getIdColors().contains(new IdColor(id, targetColor)))
+                                    personal_board.board[l + i][m + j].setIdColorAsFoundPattern(id, targetColor);
+                            }
+                        }
+                    }
+                }
+            }
+            return true;
+        }
     }
 
     /**

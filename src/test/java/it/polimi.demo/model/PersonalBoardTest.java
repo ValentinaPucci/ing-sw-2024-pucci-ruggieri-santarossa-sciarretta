@@ -684,13 +684,15 @@ public class PersonalBoardTest {
     }
 
     @Test
-    void doublePattern() {
+    void doubleDiagonalPattern() {
+
         ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.RED);
         ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED);
         ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED);
         ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED);
         ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.RED);
         ResourceCard card6 = new ResourceCard(6, Orientation.FRONT, Color.RED);
+        //ResourceCard card7 = new ResourceCard(7, Orientation.FRONT, Color.RED);
 
         Corner[][] filledCorner1 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
@@ -711,14 +713,57 @@ public class PersonalBoardTest {
         personalBoard.placeCardAtNE(card3, card4);
         personalBoard.placeCardAtNE(card4, card5);
         personalBoard.placeCardAtNE(card5, card6);
+        //personalBoard.placeCardAtNE(card6, card7);
 
         // todo: revise internal junction for set cell as a found pattern
+        // todo: it is enough to change the color to NONE of that cell (IdColor, not reference)
 
         DiagonalPatternObjectiveCard diagonalPatternObjectiveCard1 = new DiagonalPatternObjectiveCard(1, Orientation.FRONT, 2);
         diagonalPatternObjectiveCard1.init_objIncreasingDiagonal(Color.RED);
 
         assertEquals(4, diagonalPatternObjectiveCard1.calculateScore(personalBoard));
 
+    }
+
+    @Test
+    void doubleLetterPattern() {
+
+        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.BLUE);
+        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.BLUE);
+        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED);
+        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.BLUE);
+        ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.BLUE);
+        ResourceCard card6 = new ResourceCard(6, Orientation.FRONT, Color.RED);
+        //ResourceCard card7 = new ResourceCard(7, Orientation.FRONT, Color.RED);
+
+        Corner[][] filledCorner1 = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(i, j));
+                filledCorner1[i][j].setCornerResource(Resource.MUSHROOM);
+            }
+        }
+
+        StarterCard starterCard = new StarterCard(0, Orientation.FRONT);
+        starterCard.setStarterCardFront(Resource.LEAF, Resource.LEAF, Resource.LEAF, filledCorner1);
+
+        personalBoard.placeStarterCard(starterCard);
+
+        personalBoard.placeCardAtSW(starterCard, card1);
+        personalBoard.placeCardAtNW(starterCard, card2);
+        personalBoard.placeCardAtNE(card2, card3);
+        // todo: there is something missing here, it does not count the second pattern
+        personalBoard.placeCardAtSE(starterCard, card4);
+        personalBoard.placeCardAtNE(starterCard, card5);
+        personalBoard.placeCardAtNE(card5, card6);
+
+        // todo: revise internal junction for set cell as a found pattern
+        // todo: it is enough to change the color to NONE of that cell (IdColor, not reference)
+
+        LetterPatternObjectiveCard letterPatternObjectiveCard1 = new LetterPatternObjectiveCard(1, Orientation.FRONT, 2);
+        letterPatternObjectiveCard1.init_obj_P();
+
+        assertEquals(4, letterPatternObjectiveCard1.calculateScore(personalBoard));
     }
 
 }

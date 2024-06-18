@@ -70,8 +70,22 @@ public class Cell implements Serializable {
         return this.corner;
     }
 
+    /**
+     * getter for IdColor type list
+     * @return the list of IdColor objects
+     */
     public List<IdColor> getIdColors() {
         return id_colors;
+    }
+
+    /**
+     * setter for found pattern cell
+     * @param id the id of the card
+     * @param color the color of the card
+     */
+    public void setIdColorAsFoundPattern(int id, Color color) {
+        id_colors.remove(new IdColor(id, color));
+        id_colors.add(new IdColor(id, Color.NONE));
     }
 
     /**
