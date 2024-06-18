@@ -692,7 +692,6 @@ public class PersonalBoardTest {
         ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED);
         ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.RED);
         ResourceCard card6 = new ResourceCard(6, Orientation.FRONT, Color.RED);
-        //ResourceCard card7 = new ResourceCard(7, Orientation.FRONT, Color.RED);
 
         Corner[][] filledCorner1 = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
@@ -713,10 +712,6 @@ public class PersonalBoardTest {
         personalBoard.placeCardAtNE(card3, card4);
         personalBoard.placeCardAtNE(card4, card5);
         personalBoard.placeCardAtNE(card5, card6);
-        //personalBoard.placeCardAtNE(card6, card7);
-
-        // todo: revise internal junction for set cell as a found pattern
-        // todo: it is enough to change the color to NONE of that cell (IdColor, not reference)
 
         DiagonalPatternObjectiveCard diagonalPatternObjectiveCard1 = new DiagonalPatternObjectiveCard(1, Orientation.FRONT, 2);
         diagonalPatternObjectiveCard1.init_objIncreasingDiagonal(Color.RED);
@@ -752,18 +747,85 @@ public class PersonalBoardTest {
         personalBoard.placeCardAtSW(starterCard, card1);
         personalBoard.placeCardAtNW(starterCard, card2);
         personalBoard.placeCardAtNE(card2, card3);
-        // todo: there is something missing here, it does not count the second pattern
+
         personalBoard.placeCardAtSE(starterCard, card4);
         personalBoard.placeCardAtNE(starterCard, card5);
         personalBoard.placeCardAtNE(card5, card6);
-
-        // todo: revise internal junction for set cell as a found pattern
-        // todo: it is enough to change the color to NONE of that cell (IdColor, not reference)
 
         LetterPatternObjectiveCard letterPatternObjectiveCard1 = new LetterPatternObjectiveCard(1, Orientation.FRONT, 2);
         letterPatternObjectiveCard1.init_obj_P();
 
         assertEquals(4, letterPatternObjectiveCard1.calculateScore(personalBoard));
+    }
+
+    @Test
+    void diagonalPatternsWithBackStarter() {
+
+        ResourceCard card0 = new ResourceCard(0, Orientation.FRONT, Color.RED);
+        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.GREEN);
+        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED);
+        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED);
+        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED);
+        ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.RED);
+        ResourceCard card6 = new ResourceCard(6, Orientation.FRONT, Color.RED);
+        ResourceCard card7 = new ResourceCard(7, Orientation.FRONT, Color.GREEN);
+        ResourceCard card8 = new ResourceCard(8, Orientation.FRONT, Color.GREEN);
+        ResourceCard card9 = new ResourceCard(9, Orientation.FRONT, Color.GREEN);
+        ResourceCard card10 = new ResourceCard(10, Orientation.FRONT, Color.RED);
+        ResourceCard card11 = new ResourceCard(11, Orientation.FRONT, Color.RED);
+        ResourceCard card12 = new ResourceCard(12, Orientation.FRONT, Color.RED);
+        ResourceCard card13 = new ResourceCard(13, Orientation.FRONT, Color.BLUE);
+        ResourceCard card14 = new ResourceCard(14, Orientation.FRONT, Color.PURPLE);
+        ResourceCard card15 = new ResourceCard(15, Orientation.FRONT, Color.PURPLE);
+        ResourceCard card16 = new ResourceCard(16, Orientation.FRONT, Color.PURPLE);
+
+        Corner[][] filledCorner1 = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(i, j));
+                filledCorner1[i][j].setCornerResource(Resource.MUSHROOM);
+            }
+        }
+
+        StarterCard starterCard = new StarterCard(-1, Orientation.FRONT);
+        starterCard.setStarterCardBack(filledCorner1);
+
+        personalBoard.placeStarterCard(starterCard);
+        personalBoard.placeCardAtNE(starterCard, card7);
+        personalBoard.placeCardAtSE(card7, card8);
+        personalBoard.placeCardAtSE(card8, card1);
+        personalBoard.placeCardAtNE(card1, card2);
+        personalBoard.placeCardAtNE(card2, card3);
+        personalBoard.placeCardAtNE(card3, card4);
+        personalBoard.placeCardAtNE(card4, card5);
+        personalBoard.placeCardAtNE(card5, card6);
+        personalBoard.placeCardAtNE(card6, card0);
+        personalBoard.placeCardAtNW(starterCard, card9);
+        personalBoard.placeCardAtNW(card9, card10);
+        personalBoard.placeCardAtNE(card10, card11);
+        personalBoard.placeCardAtNW(card11, card12);
+        personalBoard.placeCardAtSE(card0, card13);
+        personalBoard.placeCardAtSE(card13, card14);
+        personalBoard.placeCardAtSW(card14, card15);
+        personalBoard.placeCardAtSE(card15, card16);
+
+        DiagonalPatternObjectiveCard diagonalPatternObjectiveCard1 = new DiagonalPatternObjectiveCard(1, Orientation.FRONT, 2);
+        diagonalPatternObjectiveCard1.init_objIncreasingDiagonal(Color.RED);
+
+        DiagonalPatternObjectiveCard diagonalPatternObjectiveCard2 = new DiagonalPatternObjectiveCard(1, Orientation.FRONT, 2);
+        diagonalPatternObjectiveCard2.init_objDecreasingDiagonal(Color.GREEN);
+
+        LetterPatternObjectiveCard letterPatternObjectiveCard1 = new LetterPatternObjectiveCard(1, Orientation.FRONT, 2);
+        letterPatternObjectiveCard1.init_obj_L();
+
+        LetterPatternObjectiveCard letterPatternObjectiveCard2 = new LetterPatternObjectiveCard(1, Orientation.FRONT, 2);
+        letterPatternObjectiveCard2.init_obj_Q();
+
+        assertEquals(10, diagonalPatternObjectiveCard1.calculateScore(personalBoard) +
+                diagonalPatternObjectiveCard2.calculateScore(personalBoard) +
+                letterPatternObjectiveCard1.calculateScore(personalBoard) +
+                letterPatternObjectiveCard2.calculateScore(personalBoard));
+
     }
 
 }
