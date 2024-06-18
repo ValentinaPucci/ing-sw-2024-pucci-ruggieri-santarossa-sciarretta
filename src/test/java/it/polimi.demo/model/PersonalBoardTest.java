@@ -8,6 +8,7 @@ import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.DiagonalPatternObjectiveCard;
 import it.polimi.demo.model.cards.objectiveCards.ItemObjectiveCard;
+import it.polimi.demo.model.cards.objectiveCards.LetterPatternObjectiveCard;
 import it.polimi.demo.model.cards.objectiveCards.ResourceObjectiveCard;
 import it.polimi.demo.model.enumerations.Color;
 import it.polimi.demo.model.enumerations.Item;
@@ -606,5 +607,40 @@ public class PersonalBoardTest {
         diagonalPatternObjectiveCard1.init_objIncreasingDiagonal(Color.BLUE);
 
         assertEquals(0, diagonalPatternObjectiveCard1.calculateScore(personalBoard));
+    }
+
+    @Test
+    void letterPattern() {
+
+        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.PURPLE);
+        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.GREEN);
+        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.GREEN);
+
+        Corner[][] filledCorner1 = new Corner[2][2];
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 2; j++) {
+                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(i, j));
+                filledCorner1[i][j].setCornerResource(Resource.MUSHROOM);
+            }
+        }
+
+        StarterCard starterCard = new StarterCard(0, Orientation.FRONT);
+        starterCard.setStarterCardFront(Resource.LEAF, Resource.LEAF, Resource.LEAF, filledCorner1);
+
+        personalBoard.placeStarterCard(starterCard);
+
+        personalBoard.placeCardAtSE(starterCard, card2);
+        personalBoard.placeCardAtNE(starterCard, card3);
+        personalBoard.placeCardAtSW(card2, card1);
+
+        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.PURPLE);
+
+        personalBoard.placeCardAtSE(card3, card4);
+
+        LetterPatternObjectiveCard letterPatternObjectiveCard = new LetterPatternObjectiveCard(1, Orientation.FRONT, 2);
+        letterPatternObjectiveCard.init_obj_J();
+
+        assertEquals(2, letterPatternObjectiveCard.calculateScore(personalBoard));
+
     }
 }
