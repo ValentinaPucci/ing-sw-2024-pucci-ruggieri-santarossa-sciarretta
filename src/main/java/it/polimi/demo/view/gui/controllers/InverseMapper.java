@@ -148,8 +148,6 @@ public class InverseMapper {
         inverseMappableAreas.put("5,5", new int[]{750, 500});
         inverseMappableAreas.put("6,5", new int[]{750, 540});
 
-        inverseMappableAreas.put("7,7", new int[]{1520, 580});
-        inverseMappableAreas.put("7,6", new int[]{1450, 580});
         inverseMappableAreas.put("7,5", new int[]{1380, 580});
         inverseMappableAreas.put("7,4", new int[]{1310, 580});
         inverseMappableAreas.put("7,3", new int[]{1240, 580});
@@ -160,57 +158,6 @@ public class InverseMapper {
         inverseMappableAreas.put("7,-2", new int[]{890, 580});
         inverseMappableAreas.put("7,-3", new int[]{820, 580});
         inverseMappableAreas.put("7,-4", new int[]{750, 580});
-        inverseMappableAreas.put("7,-5", new int[]{680, 580});
-        inverseMappableAreas.put("7,-6", new int[]{610, 580});
-        inverseMappableAreas.put("7,-7", new int[]{540, 580});
-
-        inverseMappableAreas.put("6,-7", new int[]{50, 540});
-        inverseMappableAreas.put("6,-6", new int[]{120, 540});
-        inverseMappableAreas.put("6,-5", new int[]{190, 540});
-
-        inverseMappableAreas.put("5,-7", new int[]{50, 500});
-        inverseMappableAreas.put("5,-6", new int[]{120, 460});
-        inverseMappableAreas.put("5,-5", new int[]{190, 420});
-
-        inverseMappableAreas.put("4,-7", new int[]{260, 460});
-        inverseMappableAreas.put("4,-6", new int[]{330, 460});
-        inverseMappableAreas.put("4,-5", new int[]{400, 460});
-
-        inverseMappableAreas.put("3,-7", new int[]{330, 420});
-        inverseMappableAreas.put("3,-6", new int[]{400, 420});
-        inverseMappableAreas.put("3,-5", new int[]{470, 420});
-
-        inverseMappableAreas.put("2,-7", new int[]{190, 220});
-        inverseMappableAreas.put("2,-6", new int[]{260, 220});
-        inverseMappableAreas.put("2,-5", new int[]{330, 220});
-
-        inverseMappableAreas.put("1,-7", new int[]{260, 260});
-        inverseMappableAreas.put("1,-6", new int[]{330, 260});
-        inverseMappableAreas.put("1,-5", new int[]{400, 260});
-
-        inverseMappableAreas.put("0,-7", new int[]{330, 300});
-        inverseMappableAreas.put("0,-6", new int[]{400, 300});
-        inverseMappableAreas.put("0,-5", new int[]{470, 300});
-
-        inverseMappableAreas.put("-1,-7", new int[]{190, 260});
-        inverseMappableAreas.put("-1,-6", new int[]{260, 260});
-        inverseMappableAreas.put("-1,-5", new int[]{330, 260});
-
-        inverseMappableAreas.put("-2,-7", new int[]{120, 220});
-        inverseMappableAreas.put("-2,-6", new int[]{190, 220});
-        inverseMappableAreas.put("-2,-5", new int[]{260, 220});
-
-        inverseMappableAreas.put("-3,-7", new int[]{50, 180});
-        inverseMappableAreas.put("-3,-6", new int[]{120, 180});
-        inverseMappableAreas.put("-3,-5", new int[]{190, 180});
-
-        inverseMappableAreas.put("-4,-7", new int[]{50, 140});
-        inverseMappableAreas.put("-4,-6", new int[]{120, 140});
-        inverseMappableAreas.put("-4,-5", new int[]{190, 140});
-
-        inverseMappableAreas.put("-5,-7", new int[]{50, 100});
-        inverseMappableAreas.put("-5,-6", new int[]{120, 100});
-        inverseMappableAreas.put("-5,-5", new int[]{120, 100});
 
 
     }
