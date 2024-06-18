@@ -205,7 +205,7 @@ public class GUI extends UI {
 
     @Override
     protected void show_cardChosen(String nickname, ModelView model) {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).illegalMovePlace());
     }
 
     @Override
@@ -215,7 +215,7 @@ public class GUI extends UI {
 
     @Override
     protected void show_illegalMoveBecauseOf(String message) {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).illegalMoveBecauseOf(message));
     }
 
     @Override
@@ -291,8 +291,8 @@ public class GUI extends UI {
      */
     @Override
     public void addRelevantGameFact(String input) {
-        relevant_facts.add(input);
-        callPlatformRunLater(() -> this.guiApplication.showImportantEvents(this.relevant_facts));
+//        relevant_facts.add(input);
+//        callPlatformRunLater(() -> this.guiApplication.showImportantEvents(this.relevant_facts));
     }
 
     /**

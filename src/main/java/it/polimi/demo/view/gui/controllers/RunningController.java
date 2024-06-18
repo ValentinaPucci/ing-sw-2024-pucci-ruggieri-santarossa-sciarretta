@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -39,6 +40,7 @@ public class RunningController extends GenericController {
     @FXML public Pane handCard0;
     @FXML public Pane handCard1;
     @FXML public Pane handCard2;
+    @FXML public Button FlipHand;
     @FXML public VBox commonCardsVbox;
     @FXML public Pane commonCard1;
     @FXML public Pane commonCard2;
@@ -494,10 +496,18 @@ public class RunningController extends GenericController {
         for (int i = 0; i < cardIds.size(); i++) {
             cardHand.set(i, cardIds.get(i));
             String formattedCardId = String.format("%03d", cardIds.get(i));
+            System.out.println("Card id: " + formattedCardId);
             String imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
-            ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+            InputStream imageStream = getClass().getResourceAsStream(imagePath);
+            if (imageStream == null) {
+                System.out.println("Image not found: " + imagePath);
+                continue;
+            }
+
+            ImageView imageView = new ImageView(new Image(imageStream));
             imageView.setFitWidth(90); // Imposta la larghezza desiderata
             imageView.setFitHeight(65); // Imposta l'altezza desiderata
+
             if(i==0) {
                 handCard0.getChildren().add(imageView);
             } else if (i==1) {
@@ -611,6 +621,8 @@ public class RunningController extends GenericController {
         }
         cardHandVBox.setDisable(true);
 
+        FlipHand.setDisable(true);
+
         LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("1");
@@ -640,6 +652,8 @@ public class RunningController extends GenericController {
         }
         cardHandVBox.setDisable(true);
 
+        FlipHand.setDisable(true);
+
         LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("2");
@@ -668,6 +682,8 @@ public class RunningController extends GenericController {
             setMsgToShow("Card 3 from hand clicked with orientation: BACK", true);
         }
         cardHandVBox.setDisable(true);
+
+        FlipHand.setDisable(true);
 
         LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
@@ -735,6 +751,7 @@ public class RunningController extends GenericController {
         handCard0.setDisable(false);
         handCard1.setDisable(false);
         handCard2.setDisable(false);
+        FlipHand.setDisable(false);
         setMsgToShow("Choose a card to place from your hand: ", true);
     }
 
@@ -834,6 +851,18 @@ public class RunningController extends GenericController {
         CardPic.setLayoutX((double)position[0]);
         CardPic.setLayoutY((double)position[1]);
 
+        // Verifica e aggiorna le dimensioni dell'AnchorPane
+        double newWidth = position[0] + CardPic.getFitWidth();
+        double newHeight = position[1] + CardPic.getFitHeight();
+
+        if (newWidth > personalBoardAnchorPane.getPrefWidth()) {
+            personalBoardAnchorPane.setPrefWidth(newWidth + 10);
+        }
+
+        if (newHeight > personalBoardAnchorPane.getPrefHeight()) {
+            personalBoardAnchorPane.setPrefHeight(newHeight + 10);
+        }
+
         personalBoardAnchorPane.getChildren().add(CardPic);
         setMsgToShow("Card placed", true);
         removeFromHand(cardIndex);
@@ -922,14 +951,30 @@ public class RunningController extends GenericController {
     }
 
     public void illegalMove() {
-        setMsgToShow("Invalid position, change orientation or corner", false);
-//        cardHandVBox.setDisable(false);
-//        cardHandVBox.setMouseTransparent(false);
-//        handCard0.setDisable(false);
-//        handCard1.setDisable(false);
-//        handCard2.setDisable(false);
+        setMsgToShow("Illegal move! Choose different coordinates or flip card! \n", false);
+        cardHandVBox.setDisable(false);
+        cardHandVBox.setMouseTransparent(false);
+        handCard0.setDisable(false);
+        handCard1.setDisable(false);
+        handCard2.setDisable(false);
+        FlipHand.setDisable(false);
         personalBoardAnchorPane.setDisable(false);
     }
+
+    public void illegalMovePlace() {
+        cardHandVBox.setDisable(false);
+        cardHandVBox.setMouseTransparent(false);
+        handCard0.setDisable(false);
+        handCard1.setDisable(false);
+        handCard2.setDisable(false);
+        FlipHand.setDisable(false);
+        personalBoardAnchorPane.setDisable(false);
+    }
+
+    public void illegalMoveBecauseOf(String message) {
+        //setMsgToShow(message, false);
+    }
+
 
 
     public void successfulMove(Coordinate coord) {
@@ -943,13 +988,13 @@ public class RunningController extends GenericController {
     //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
 
 
-    public void setImportantEvents(List<String> importantEvents) {
-        eventsListView.getItems().clear();
-        for (String s : importantEvents) {
-            eventsListView.getItems().add(s);
-        }
-        eventsListView.scrollTo(eventsListView.getItems().size());
-    }
+//    public void setImportantEvents(List<String> importantEvents) {
+//        eventsListView.getItems().clear();
+//        for (String s : importantEvents) {
+//            eventsListView.getItems().add(s);
+//        }
+//        eventsListView.scrollTo(eventsListView.getItems().size());
+//    }
 
     @FXML
     private void ActionSendMessage() {
