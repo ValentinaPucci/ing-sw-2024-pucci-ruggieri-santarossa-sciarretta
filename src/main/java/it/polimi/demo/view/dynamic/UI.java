@@ -9,12 +9,6 @@ import java.util.List;
  * Abstract class defining the interface for the User Interface (ui) of the application.
  */
 public abstract class UI {
-    /**
-     * Initializes the ui.
-     */
-    protected abstract void initializer();
-
-    // --------------------- show methods ---------------------
 
     /**
      * Shows the options available to the user.
@@ -209,8 +203,6 @@ public abstract class UI {
      * @param s The error message to show.
      */
     protected abstract void show_genericError(String s);
-
-    // --------------------- actions ---------------------
 
     /**
      * Shows a message indicating a no connection error.

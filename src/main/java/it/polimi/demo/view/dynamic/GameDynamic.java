@@ -40,7 +40,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     protected LinkedBlockingQueue<String> reader_queue;
     protected QueueParser parser;
 
-    // User Interface (ui) instance
+    // User Interface instance
     private final UI ui;
 
     // Game-related attributes
@@ -229,9 +229,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Placeholder method for handling undefined game statuses.
      * @param map The map containing ModelView and FactType associated with the event.
      */
-    private void doNothing(HashMap<ModelView, FactType> map) {
-        // No action required for undefined statuses
-    }
+    private void doNothing(HashMap<ModelView, FactType> map) {}
 
     // GameDynamic
 
@@ -249,7 +247,12 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
             facts.offer(null, FactType.LOBBY_INFO);
         };
 
-        Map<FactType, Runnable> actions = Map.of(
+        Map<FactType, Runnable> actions = Map.of(FactType.GENERIC_ERROR, () -> {
+                    ui.show_menu();
+                    updateParser();
+                    nickname = null;
+                    facts.offer(null, FactType.LOBBY_INFO);
+                },
                 FactType.LOBBY_INFO, () -> {
                     boolean selectionOk;
                     do {
@@ -257,13 +260,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                     } while (!selectionOk);
                 },
                 FactType.ALREADY_USED_NICKNAME, () -> handleNicknameAndOffer.accept("[WARNING]: Already used nickname!"),
-                FactType.FULL_GAME, () -> handleNicknameAndOffer.accept("[WARNING] Full game!"),
-                FactType.GENERIC_ERROR, () -> {
-                    ui.show_menu();
-                    updateParser();
-                    nickname = null;
-                    facts.offer(null, FactType.LOBBY_INFO);
-                }
+                FactType.FULL_GAME, () -> handleNicknameAndOffer.accept("[WARNING] Full game!")
         );
 
         actions.getOrDefault(type, () -> {}).run();

@@ -24,11 +24,7 @@ public class GUI extends UI {
         this.guiApplication = guiApplication;
         this.GuiReader = GuiReader;
         nickname = null;
-        initializer();
     }
-
-    @Override
-    public void initializer() {}
 
     public void callPlatformRunLater(Runnable r) {
         //Need to use this method to call any methods inside the GuiApplication

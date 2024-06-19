@@ -32,17 +32,7 @@ public class TUI extends UI {
     /**
      * constructor
      */
-    public TUI() {
-        initializer();
-    }
-
-    /**
-     * initializer
-     */
-    @Override
-    public void initializer() {
-        AnsiConsole.systemInstall();
-    }
+    public TUI() { AnsiConsole.systemInstall(); }
 
 
     // ********************* aux ********************* //
@@ -453,6 +443,5 @@ public class TUI extends UI {
     public void show_readyToStart(ModelView gameModel, String s) {}
 
     @Override
-    public void show_pawnPositions(ModelView model){
-    }
+    public void show_pawnPositions(ModelView model) {}
 }

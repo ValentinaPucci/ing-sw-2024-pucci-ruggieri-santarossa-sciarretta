@@ -190,12 +190,10 @@ public class Model implements Serializable {
 
         if (nicknames.contains(nickname)) {
             observers.notify_joinUnableNicknameAlreadyIn(getIdentityOfPlayer(nickname));
-            throw new PlayerAlreadyConnectedException();
         }
         else if (aux_order_players.size() >= num_required_players_to_start ||
                 aux_order_players.size() >= Constants.MaxNumOfPlayer) {
             observers.notify_joinUnableGameFull(getIdentityOfPlayer(nickname), this);
-            throw new MaxPlayersLimitException();
         }
         else {
             aux_order_players.add(p);
