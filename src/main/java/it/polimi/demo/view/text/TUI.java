@@ -14,7 +14,6 @@ import it.polimi.demo.model.ModelView;
 import it.polimi.demo.view.dynamic.UI;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -260,6 +259,14 @@ public class TUI extends UI {
             TuiPersonalBoardGraphics.showPersonalBoard(model.getAllPlayers().get(playerIndex).getPersonalBoard());
         clearScreen();
     }
+
+    @Override
+    protected void playerLeft(ModelView modelView, String nick) {
+
+    }
+
+    @Override
+    public void show_commonObjectives(ModelView gameModel) {}
 
     @Override
     public void show_personalObjectiveCard(ModelView gameModel) {
