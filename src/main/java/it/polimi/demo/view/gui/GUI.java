@@ -10,7 +10,6 @@ import it.polimi.demo.view.gui.controllers.RunningController;
 import it.polimi.demo.view.gui.scene.SceneType;
 import javafx.application.Platform;
 
-import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class GUI extends UI {
@@ -28,9 +27,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void initializer() {
-        relevant_facts = new ArrayList<>();
-    }
+    public void initializer() {}
 
     public void callPlatformRunLater(Runnable r) {
         //Need to use this method to call any methods inside the GuiApplication
@@ -228,16 +225,7 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_commonObjectives(ModelView gameModel) {
-
-    }
-
-
-
-    @Override
-    public void show_whichObjectiveToChoose() {
-
-    }
+    public void show_whichObjectiveToChoose() {}
 
     @Override
     public void show_whichCardToPlace() {
@@ -279,28 +267,6 @@ public class GUI extends UI {
     @Override
     protected void show_genericError(String s) {
 
-    }
-
-
-
-    /**
-     * This method offer an important event to the list of important events, and show it
-     * @param input the string of the important event to offer
-     */
-    @Override
-    public void addRelevantGameFact(String input) {
-//        relevant_facts.add(input);
-//        callPlatformRunLater(() -> this.guiApplication.showImportantEvents(this.relevant_facts));
-    }
-
-    /**
-     * This method reset the important events
-     */
-    @Override
-    protected void clearRelevantGameFacts() {
-//        this.relevant_facts = new ArrayList<>();
-//        this.nickname = null;
-//        alreadyShowedLobby = false;
     }
 
     /**

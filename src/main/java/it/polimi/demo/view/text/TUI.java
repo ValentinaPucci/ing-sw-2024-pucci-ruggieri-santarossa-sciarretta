@@ -14,8 +14,6 @@ import it.polimi.demo.model.ModelView;
 import it.polimi.demo.view.dynamic.UI;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +21,6 @@ import java.util.Map;
 import static it.polimi.demo.view.text.StaticPrinterTUI.print;
 import static org.fusesource.jansi.Ansi.Color.*;
 import static org.fusesource.jansi.Ansi.ansi;
-import static it.polimi.demo.view.text.StaticPrinterTUI.*;
 
 /**
  * Text User Interface class
@@ -45,17 +42,8 @@ public class TUI extends UI {
     @Override
     public void initializer() {
         AnsiConsole.systemInstall();
-        relevant_facts = new ArrayList<>();
     }
 
-    /**
-     * @param input The input to add as a relevant game fact.
-     */
-    @Override
-    public void addRelevantGameFact(String input) {
-        relevant_facts.add(input);
-        show_relevantFacts();
-    }
 
     // ********************* aux ********************* //
 
@@ -229,7 +217,7 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void show_successfulMove(Coordinate coord) {}
+    public void show_successfulMove(Coordinate coord) {}
 
     @Override
     public void show_whereToDrawFrom() {
@@ -276,7 +264,7 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void show_othersPersonalBoard(ModelView model, int playerIndex) {
+    public void show_othersPersonalBoard(ModelView model, int playerIndex) {
         clearScreen();
         if (model.getAllPlayers().size() > playerIndex)
             TuiPersonalBoardGraphics.showPersonalBoard(model.getAllPlayers().get(playerIndex).getPersonalBoard());
@@ -312,59 +300,40 @@ public class TUI extends UI {
         clearScreen();
     }
 
-    public void show_relevantFacts() {
-        clearScreen();
-        for (String s : relevant_facts) {
-            StaticPrinterTUI.print(ansi().cursor(10, 0).a(s + "\n"));
-        }
-        clearScreen();
-    }
+    @Override
+    public void show_noAvailableGamesToJoin(String msgToVisualize) {}
 
     @Override
-    public void show_noAvailableGamesToJoin(String msgToVisualize) {
-        clearScreen();
-        StaticPrinterTUI.print(msgToVisualize + "\nTry later or create a new game!");
-        clearScreen();
-    }
-
-    @Override
-    public void clearRelevantGameFacts() {
-        this.relevant_facts = new ArrayList<>();
-        this.nickname = null;
-    }
-
-    @Override
-    protected void show_noConnectionError() {
+    public void show_noConnectionError() {
         StaticPrinterTUI.print("CONNECTION TO SERVER LOST!");
         System.exit(-1);
     }
 
     @Override
-    protected void show_chosenNickname(String nickname) {}
+    public void show_chosenNickname(String nickname) {}
 
     @Override
-    protected void show_nextTurn(ModelView model, String nickname) {}
+    public void show_nextTurn(ModelView model, String nickname) {}
 
     @Override
-    protected void show_cardDrawn(ModelView model, String nickname) {}
+    public void show_cardDrawn(ModelView model, String nickname) {}
 
     @Override
     public void show_orientation(String message) {
         StaticPrinterTUI.print(message + "\n" + "\t> Choose card orientation (f:FRONT / b:BACK): ");
-        printNoNewLine(ansi().cursorDownLine().a(""));
+        StaticPrinterTUI.printNoNewLine(ansi().cursorDownLine().a(""));
     }
 
     @Override
     public void show_messageSent(ModelView model, String nickname) {
         Message mess = model.getChat().getLastMessage();
-        StaticPrinterTUI.print(ansi().cursor(Constants.row_chat, Constants.col_chat).a(mess.sender().getNickname() + ": " + mess.text()));
+        StaticPrinterTUI.print(ansi().a(mess.sender().getNickname() + ": " + mess.text()));
     }
 
     @Override
     public void show_gameStarted(ModelView model) {
         clearScreen();
         show_title();
-        show_relevantFacts();
     }
 
     @Override
@@ -387,13 +356,13 @@ public class TUI extends UI {
     @Override
     public void show_insertNickname() {
         clearScreen();
-        printNoNewLine(ansi().cursor(Constants.row_gameID, 0).a("> Insert your nickname: "));
+        StaticPrinterTUI.printNoNewLine(ansi().cursor(Constants.row_gameID, 0).a("> Insert your nickname: "));
     }
 
     @Override
     public void show_insertNumOfPlayers() {
         clearScreen();
-        printNoNewLine(ansi().cursor(Constants.row_gameID, 0).a("> Choose the number of players for this game: "));
+        StaticPrinterTUI.printNoNewLine(ansi().cursor(Constants.row_gameID, 0).a("> Choose the number of players for this game: "));
     }
 
     /**
@@ -422,7 +391,7 @@ public class TUI extends UI {
     @Override
     public void show_insertGameId() {
         clearScreen();
-        printNoNewLine("> Input the GameId: ");
+        StaticPrinterTUI.printNoNewLine("> Input the GameId: ");
     }
 
     /**

@@ -7,7 +7,7 @@ import it.polimi.demo.model.enumerations.Resource;
 
 import java.io.Serializable;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+
 
 /**
  * This class is thought to be complementary to the class Cell.
@@ -156,10 +156,6 @@ public class Corner implements Serializable {
                 '}';
     }
 
-    /**
-     * setter for the reference card
-     * @param reference_card the reference card
-     */
     public void setReference_card(ResourceCard reference_card) {
         this.reference_card = reference_card;
     }

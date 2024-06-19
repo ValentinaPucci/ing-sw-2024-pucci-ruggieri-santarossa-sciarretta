@@ -40,7 +40,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     protected LinkedBlockingQueue<String> reader_queue;
     protected QueueParser parser;
 
-    // User Interface (UI) instance
+    // User Interface (ui) instance
     private final UI ui;
 
     // Game-related attributes
@@ -247,7 +247,6 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         Consumer<String> handleNicknameAndOffer = (s) -> {
             nickname = null;
             facts.offer(null, FactType.LOBBY_INFO);
-            ui.addRelevantGameFact(s);
         };
 
         Map<FactType, Runnable> actions = Map.of(
@@ -427,7 +426,6 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Performs cleanup actions when the player leaves the game.
      */
     public void youLeft() {
-        ui.clearRelevantGameFacts();
         facts.offer(null, FactType.LOBBY_INFO);
         parser.bindPlayerToParser(null, null);
     }
@@ -672,7 +670,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     // Client --------> Server
 
     /**
-     * Displays a UI message indicating a connection error.
+     * Displays ui message indicating a connection error.
      */
     public void noConnectionError() {
         ui.show_noConnectionError();
@@ -681,7 +679,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     /**
      * Executes the provided action while handling common exceptions.
      * If an IOException, InterruptedException, NotBoundException, or GameEndedException occurs,
-     * it displays a connection error message on the UI.
+     * it displays a connection error message on the ui.
      * @param action The action to execute.
      */
     private void handleAction(Action action) {
@@ -898,10 +896,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Handles the event when a move is successfully executed, showing a success message if it's the current player's turn.
      * @param model The model view containing game state information.
      * @param coord The coordinates of the successful move.
-     * @throws RemoteException If a remote communication error occurs.
      */
     @Override
-    public void successfulMove(ModelView model, Coordinate coord) throws RemoteException {
+    public void successfulMove(ModelView model, Coordinate coord) {
         ifAmI(model, m -> ui.show_successfulMove(coord));
     }
 
@@ -956,10 +953,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Handles the event when a player is ready to start the game, showing a message if it's the current player.
      * @param gameModel The model view containing game state information.
      * @param nick The nickname of the player who is ready.
-     * @throws IOException If an I/O error occurs.
      */
     @Override
-    public void playerIsReadyToStart(ModelView gameModel, String nick) throws IOException {
+    public void playerIsReadyToStart(ModelView gameModel, String nick) {
         ui.show_playerJoined(gameModel, nickname);
         if (nick.equals(nickname)) {
             ui.show_readyToStart(gameModel, nickname);
@@ -971,11 +967,10 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Handles the event when a player leaves the game, showing a relevant game fact.
      * @param gameModel The model view containing game state information.
      * @param nick The nickname of the player who left.
-     * @throws RemoteException If a remote communication error occurs.
      */
     @Override
-    public void playerLeft(ModelView gameModel, String nick) throws RemoteException {
-        ui.addRelevantGameFact("[EVENT]: Player " + nick + " decided to leave the game!");
+    public void playerLeft(ModelView gameModel, String nick) {
+        ui.show_genericMessage("[EVENT]: Player " + nick + " decided to leave the game!");
         ui.playerLeft(gameModel, nick);
     }
 
@@ -983,10 +978,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Handles the event when a player attempts to join a game that is full, offering a fact about the game being full.
      * @param wantedToJoin The player who wanted to join.
      * @param gameModel The model view containing game state information.
-     * @throws RemoteException If a remote communication error occurs.
      */
     @Override
-    public void joinUnableGameFull(Player wantedToJoin, ModelView gameModel) throws RemoteException {
+    public void joinUnableGameFull(Player wantedToJoin, ModelView gameModel) {
         facts.offer(null, FactType.FULL_GAME);
     }
 
@@ -1006,32 +1000,29 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     /**
      * Handles the event when a player attempts to join with a nickname that is already in use, offering a fact about the nickname being already used.
      * @param wantedToJoin The player who attempted to join.
-     * @throws RemoteException If a remote communication error occurs.
      */
     @Override
-    public void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
+    public void joinUnableNicknameAlreadyIn(Player wantedToJoin) {
         facts.offer(null, FactType.ALREADY_USED_NICKNAME);
     }
 
     /**
      * Handles the event when a requested game ID does not exist, showing a message and offering a fact about the non-existent game ID.
-     * @param gameid The game ID that does not exist.
-     * @throws RemoteException If a remote communication error occurs.
+     * @param game_id The game ID that does not exist.
      */
     @Override
-    public void gameIdNotExists(int gameid) throws RemoteException {
-        ui.show_noAvailableGamesToJoin("No currently game available with the following GameID: " + gameid);
+    public void gameIdNotExists(int game_id) {
+        ui.show_genericMessage("No currently game available with the following GameID: " + game_id);
         facts.offer(null, FactType.GENERIC_ERROR);
     }
 
     /**
      * Handles the event when a generic error occurs during the process of entering a game, showing a message and offering a fact about the generic error.
      * @param why The reason for the generic error.
-     * @throws RemoteException If a remote communication error occurs.
      */
     @Override
-    public void genericErrorWhenEnteringGame(String why) throws RemoteException {
-        ui.show_noAvailableGamesToJoin(why);
+    public void genericErrorWhenEnteringGame(String why) {
+        ui.show_genericMessage("No available game to join:" + why);
         facts.offer(null, FactType.GENERIC_ERROR);
     }
 
@@ -1041,12 +1032,12 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void gameStarted(ModelView gameModel) {
-        ui.addRelevantGameFact("All players are connected, the game will start soon!");
+        ui.show_genericMessage("All players are connected, the game will start soon!");
         facts.offer(gameModel, FactType.GAME_STARTED);
     }
 
     /**
-     * Handles the event when the game ends, offering a fact about the game ending and showing the game end screen on the UI.
+     * Handles the event when the game ends, offering a fact about the game ending and showing the game end screen on the ui.
      * @param gameModel The model view containing game state information.
      */
     @Override
@@ -1062,7 +1053,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void playerDisconnected(ModelView gameModel, String nick) {
-        ui.addRelevantGameFact("Player " + nick + " has just disconnected");
+        ui.show_genericMessage("Player " + nick + " has just disconnected");
     }
 
     /**
@@ -1083,7 +1074,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     }
 
     /**
-     * Handles the event when the second last round of the game begins, showing a generic message on the UI.
+     * Handles the event when the second last round of the game begins, showing a generic message on the ui.
      * @param gameModel The model view containing game state information.
      */
     @Override
@@ -1092,12 +1083,11 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     }
 
     /**
-     * Handles the event when the last round of the game begins, showing a generic message on the UI indicating no more card drawing is allowed.
+     * Handles the event when the last round of the game begins, showing a generic message on the ui indicating no more card drawing is allowed.
      * @param gameModel The model view containing game state information.
-     * @throws RemoteException If a remote communication error occurs.
      */
     @Override
-    public void lastRound(ModelView gameModel) throws RemoteException {
+    public void lastRound(ModelView gameModel) {
         ui.show_genericMessage("*** Last round begins! Now you will not be able to draw any additional card! ***");
     }
 

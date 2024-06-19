@@ -6,7 +6,7 @@ import it.polimi.demo.model.enumerations.Orientation;
 
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.ObserverManagerClient;
-import it.polimi.demo.network.PingSender;
+import it.polimi.demo.network.utils.PingSender;
 import it.polimi.demo.network.socket.client.gameControllerMessages.*;
 import it.polimi.demo.network.socket.client.serverToClientMessages.SocketServerGenericMessage;
 import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMessageJoinFirstAvailableGame;
@@ -20,7 +20,7 @@ import java.net.Socket;
 import java.io.*;
 import java.rmi.NotBoundException;
 
-import static it.polimi.demo.network.StaticPrinter.staticPrinter;
+import static it.polimi.demo.network.utils.StaticPrinter.staticPrinter;
 
 public class ClientSocket extends Thread implements ClientInterface {
 
@@ -43,14 +43,14 @@ public class ClientSocket extends Thread implements ClientInterface {
     /**
      * ObserverManagerClient used to manage the events received from the server.
      */
-    private final ObserverManagerClient modelEvents;
+    private final ObserverManagerClient model_facts;
     /**
      * PingSender used to send heartbeats to the server, used to check the connection status.
      */
     private transient PingSender socketHeartbeat;
 
     public ClientSocket(GameDynamic dynamics) {
-        modelEvents = new ObserverManagerClient(dynamics);
+        model_facts = new ObserverManagerClient(dynamics);
         initializeConnection(Constants.serverIp, Constants.Socket_port);
         this.start();
         socketHeartbeat = new PingSender(this);
@@ -66,7 +66,7 @@ public class ClientSocket extends Thread implements ClientInterface {
             while (true) {
                 try {
                     SocketServerGenericMessage msg = (SocketServerGenericMessage) ob_in.readObject();
-                    msg.perform(modelEvents);
+                    msg.perform(model_facts);
                 } catch (IOException | ClassNotFoundException e) {
                     staticPrinter("[ERROR] Connection to server lost! " + e);
                     break;

@@ -1,20 +1,21 @@
 package it.polimi.demo.model.cards.gameCards;
 
+import it.polimi.demo.model.cards.Card;
+import it.polimi.demo.model.enumerations.Color;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.board.BoardCellCoordinate;
 import it.polimi.demo.model.board.Corner;
-import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.enumerations.Resource;
 
 public class StarterCard extends Card {
 
-    public static final int STARTER_CARD_COORDINATE = 500;
     public Resource front_resource1;
     public Resource front_resource2;
     public Resource front_resource3;
     public Corner[][] corners;
     public Orientation orientation;
+    public Color color;
 
     /**
      *
@@ -26,6 +27,7 @@ public class StarterCard extends Card {
         this.front_resource1 = null;
         this.front_resource2 = null;
         this.front_resource3 = null;
+        this.color = Color.NONE;
 
         this.corners = new Corner[2][2];
         for (int i = 0; i < 2; i++) {

@@ -25,9 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static it.polimi.demo.view.gui.scene.SceneType.*;
-
-
 
 public class ApplicationGUI extends Application {
 
@@ -241,7 +238,7 @@ public class ApplicationGUI extends Application {
     }
 
     public void showError(String msg) {
-        ErrorController controller = (ErrorController) scenes.get(getSceneIndex(ERROR)).getGenericController();
+        ErrorController controller = (ErrorController) scenes.get(getSceneIndex(SceneType.ERROR)).getGenericController();
     }
 
 }

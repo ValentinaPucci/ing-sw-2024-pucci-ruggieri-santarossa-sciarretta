@@ -1,10 +1,7 @@
-package it.polimi.demo.network;
+package it.polimi.demo.network.utils;
 
 import it.polimi.demo.Constants;
 import org.fusesource.jansi.Ansi;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static org.fusesource.jansi.Ansi.ansi;
 

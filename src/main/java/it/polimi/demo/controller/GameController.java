@@ -1,7 +1,7 @@
 package it.polimi.demo.controller;
 
 import it.polimi.demo.Constants;
-import it.polimi.demo.network.StaticPrinter;
+import it.polimi.demo.network.utils.StaticPrinter;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.*;
@@ -125,16 +125,16 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * It removes a player by nickname @param nick from the game including the associated listeners
-     *
-     * @param lis  Listener to remove
-     * @param nick of the player to remove
-     * @throws RemoteException
+     * This method is called when a player leaves the game
+     * @param lis  the listener for updates
+     * @param nick the nickname of the player leaving the game
+     * @throws RemoteException if there is an error
      */
     @Override
     public synchronized void leave(Listener lis, String nick) throws RemoteException {
+        Player p = model.getIdentityOfPlayer(nick);
         removeListener(lis);
-        model.removePlayer(model.getIdentityOfPlayer(nick));
+        model.removePlayer(p);
     }
 
     @Override

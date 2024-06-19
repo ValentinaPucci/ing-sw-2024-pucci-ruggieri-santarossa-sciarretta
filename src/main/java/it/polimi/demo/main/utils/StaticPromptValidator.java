@@ -1,6 +1,6 @@
 package it.polimi.demo.main.utils;
 
-import it.polimi.demo.network.StaticPrinter;
+import it.polimi.demo.network.utils.StaticPrinter;
 
 import java.util.Scanner;
 
