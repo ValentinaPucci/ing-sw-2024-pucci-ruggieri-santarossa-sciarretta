@@ -15,22 +15,55 @@ import static it.polimi.demo.network.utils.StaticPrinter.staticPrinter;
 
 
 public class ClientConnection extends Thread implements Serializable {
-
+    /**
+     * Serial Version UID
+     */
     private static final long serialVersionUID = 1L;
 
+    /**
+     * 'ObjectInputStream' used to receive messages from the client.
+     */
     private transient ObjectInputStream inputStream;
+    /**
+     * 'ObjectOutputStream' used to send messages to the client.
+     */
     private transient ObjectOutputStream outputStream;
+    /**
+     * 'GameControllerInterface' used to handle the game logic.
+     */
     private GameControllerInterface controller;
+    /**
+     * Nickname of the client.
+     */
     private String userNickname = null;
+    /**
+     * Queue of messages to process.
+     */
     private final ConcurrentLinkedQueue<SocketClientGenericMessage> messageQueue = new ConcurrentLinkedQueue<>();
+    /**
+     * Flag to check if the client is running.
+     */
     private final AtomicBoolean running = new AtomicBoolean(false);
 
+    /**
+     * Socket associated with the client.
+     */
     private Socket socket;
 
+    /**
+     * Constructor for the class.
+     *
+     * @param socket the socket associated with the client
+     */
     public ClientConnection(Socket socket) {
         this.socket = socket;
     }
 
+    /**
+     * Method to start the client connection.
+     * The buffer is needed to improve the socket connection performance. It wraps the object
+     * streams with buffered streams. So the data is read and written in chunks, which is faster.
+     */
     @Override
     public void run() {
         running.set(true);
@@ -60,6 +93,9 @@ public class ClientConnection extends Thread implements Serializable {
         }
     }
 
+    /**
+     * Method to read messages.
+     */
     private void readMessages() {
         try {
             while (running.get()) {
@@ -71,6 +107,10 @@ public class ClientConnection extends Thread implements Serializable {
         }
     }
 
+    /**
+     * Method used to handle the game logic .
+     * @param gameListenerHandler
+     */
     private void handleGameLogic(GameListenersHandlerSocket gameListenerHandler) {
         SocketClientGenericMessage message = messageQueue.poll();
         if (message != null) {
@@ -87,6 +127,9 @@ public class ClientConnection extends Thread implements Serializable {
         }
     }
 
+    /**
+     * Method to disconnect the client.
+     */
     private void disconnectClient() {
         staticPrinter("ClientSocket disconnected due to communication failure");
         try {
