@@ -61,14 +61,27 @@ public abstract class SocketClientGenericMessage implements Serializable {
     }
 
     // Setters for the private fields
+
+    /**
+     * Setters for the private fields
+     * @param userNickname
+     */
     public void setUserNickname(String userNickname) {
         this.nickname= userNickname;
     }
 
+    /**
+     * Setters for the private fields
+     * @param mainControllerTarget
+     */
     public void setMainControllerTarget(boolean mainControllerTarget) {
         this.isMainControllerTarget = mainControllerTarget;
     }
 
+    /**
+     * Setters for the private fields
+     * @param heartbeatMessage
+     */
     public void setHeartbeatMessage(boolean heartbeatMessage) {
         this.heartbeatMessage = heartbeatMessage;
     }

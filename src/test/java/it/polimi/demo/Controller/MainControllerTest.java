@@ -2,6 +2,7 @@ package it.polimi.demo.Controller;
 
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.model.chat.Chat;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
@@ -11,6 +12,8 @@ import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import org.junit.jupiter.api.Test;
 
 import java.rmi.RemoteException;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MainControllerTest {
 
@@ -279,5 +282,18 @@ public class MainControllerTest {
             e.printStackTrace();
         }
 
+    }
+
+    @Test
+    public void testGetLastMessage() {
+        Chat chat = new Chat();
+        Player p1 = new Player("p1");
+        Player p2 = new Player("p2");
+        Message message1 = new Message("Hi", p1);
+        Message message2 = new Message("Hello", p2);
+        chat.addMessage(message1);
+        chat.addMessage(message2);
+
+        assertEquals(message2, chat.getLastMessage());
     }
 }

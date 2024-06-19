@@ -252,6 +252,12 @@ public class ClientSocket extends Thread implements ClientInterface {
         sendMessage(new SocketClientMsgShowOthersPersonalBoard(nickname, player_index));
     }
 
+    /**
+     * Send a message to the specified receiver,a real message.
+     * @param receiver The receiver of the message.
+     * @param msg The message to send.
+     * @throws IOException
+     */
     @Override
     public void sendMessage(String receiver, Message msg) throws IOException {
         sendMessage(new SocketClientMsgSendMessage(receiver, msg));
