@@ -42,19 +42,8 @@ public class TUI extends UI {
     @Override
     public void initializer() {
         AnsiConsole.systemInstall();
-        // todo: remove relevant facts
-        relevant_facts = new ArrayList<>();
     }
 
-    /**
-     * @param input The input to add as a relevant game fact.
-     */
-    // todo: remove relevant facts
-    @Override
-    public void addRelevantGameFact(String input) {
-        relevant_facts.add(input);
-        show_relevantFacts();
-    }
 
     // ********************* aux ********************* //
 
@@ -306,27 +295,12 @@ public class TUI extends UI {
         clearScreen();
     }
 
-    public void show_relevantFacts() {
-        clearScreen();
-        for (String s : relevant_facts) {
-            StaticPrinterTUI.print(ansi().cursor(10, 0).a(s + "\n"));
-        }
-        clearScreen();
-    }
-
     // todo: remove this
     @Override
     public void show_noAvailableGamesToJoin(String msgToVisualize) {
         clearScreen();
         StaticPrinterTUI.print(msgToVisualize + "\nTry later or create a new game!");
         clearScreen();
-    }
-
-    @Override
-    // todo: remove this
-    public void clearRelevantGameFacts() {
-        this.relevant_facts = new ArrayList<>();
-        this.nickname = null;
     }
 
     @Override
@@ -353,14 +327,13 @@ public class TUI extends UI {
     @Override
     public void show_messageSent(ModelView model, String nickname) {
         Message mess = model.getChat().getLastMessage();
-        StaticPrinterTUI.print(ansi().cursor(Constants.row_chat, Constants.col_chat).a(mess.sender().getNickname() + ": " + mess.text()));
+        StaticPrinterTUI.print(ansi().a(mess.sender().getNickname() + ": " + mess.text()));
     }
 
     @Override
     public void show_gameStarted(ModelView model) {
         clearScreen();
         show_title();
-        show_relevantFacts();
     }
 
     @Override

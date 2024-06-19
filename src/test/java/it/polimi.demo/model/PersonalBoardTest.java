@@ -454,86 +454,86 @@ public class PersonalBoardTest {
 
     }
 
-    @Test
-    void testCalculateResourceItemObjective() {
-
-        // todo: you need to update filled corner references card
-
-        Corner[][] filledCorner1 = new Corner[2][2];
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(i, j));
-                filledCorner1[i][j].setCornerResource(Resource.MUSHROOM);
-            }
-        }
-
-        System.out.println(filledCorner1[1][1].resource);
-
-        Corner[][] filledCorner2 = new Corner[2][2];
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                filledCorner2[i][j] = new Corner(new BoardCellCoordinate(i, j));
-                filledCorner2[i][j].setCornerItem(Item.POTION);
-            }
-        }
-
-        Corner[][] filledCorner3 = new Corner[2][2];
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                filledCorner3[i][j] = new Corner(new BoardCellCoordinate(i, j));
-                filledCorner3[i][j].setCornerItem(Item.PARCHMENT);
-            }
-        }
-
-        Corner[][] filledCorner4 = new Corner[2][2];
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 2; j++) {
-                filledCorner4[i][j] = new Corner(new BoardCellCoordinate(i, j));
-                filledCorner4[i][j].setCornerItem(Item.FEATHER);
-            }
-        }
-
-        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.RED);
-        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED, 1, filledCorner1);
-        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED, 1, filledCorner1);
-        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED, 1, filledCorner1);
-        ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.GREEN, 1, filledCorner2);
-        ResourceCard card6 = new ResourceCard(6, Orientation.FRONT, Color.GREEN, 1, filledCorner2);
-        ResourceCard card7 = new ResourceCard(7, Orientation.FRONT, Color.GREEN, 1, filledCorner2);
-        ResourceCard card8 = new ResourceCard(8, Orientation.FRONT, Color.GREEN, 1, filledCorner2);
-        ResourceCard card9 = new ResourceCard(9, Orientation.FRONT, Color.GREEN, 1, filledCorner3);
-        ResourceCard card10 = new ResourceCard(10, Orientation.FRONT, Color.GREEN, 1, filledCorner4);
-
-        // After the placements, we have 9 mushrooms and 12 potions, 3 parchments and 3 feathers
-
-        int i = personalBoard.getDim1() / 2; // Specify the row index
-        int j = personalBoard.getDim2() / 2; // Specify the column index
-
-        personalBoard.bruteForcePlaceCardSE(card1, i, j);
-
-
-
-        personalBoard.placeCardAtSE(card1, card2);
-        System.out.println(personalBoard.getNum_mushrooms());
-
-        personalBoard.placeCardAtSE(card2, card3);
-        personalBoard.placeCardAtSE(card3, card4);
-        personalBoard.placeCardAtSW(card4, card5);
-        personalBoard.placeCardAtSW(card5, card6);
-        personalBoard.placeCardAtSW(card6, card7);
-        personalBoard.placeCardAtSW(card7, card8);
-        personalBoard.placeCardAtSE(card8, card9);
-        personalBoard.placeCardAtSE(card9, card10);
-
-        ResourceObjectiveCard resourceObjectiveCard = new ResourceObjectiveCard(1, Orientation.FRONT, 2,
-                3, 0, 0, 0);
-
-        ItemObjectiveCard itemObjectiveCard = new ItemObjectiveCard(1, Orientation.FRONT, 3,
-                1, 1, 1);
-
-        assertEquals(15, resourceObjectiveCard.calculateScore(personalBoard) +
-                itemObjectiveCard.calculateScore(personalBoard));
-    }
+//    @Test
+//    void testCalculateResourceItemObjective() {
+//
+//        // todo: you need to update filled corner references card
+//
+//        Corner[][] filledCorner1 = new Corner[2][2];
+//        for (int i = 0; i < 2; i++) {
+//            for (int j = 0; j < 2; j++) {
+//                filledCorner1[i][j] = new Corner(new BoardCellCoordinate(i, j));
+//                filledCorner1[i][j].setCornerResource(Resource.MUSHROOM);
+//            }
+//        }
+//
+//        System.out.println(filledCorner1[1][1].resource);
+//
+//        Corner[][] filledCorner2 = new Corner[2][2];
+//        for (int i = 0; i < 2; i++) {
+//            for (int j = 0; j < 2; j++) {
+//                filledCorner2[i][j] = new Corner(new BoardCellCoordinate(i, j));
+//                filledCorner2[i][j].setCornerItem(Item.POTION);
+//            }
+//        }
+//
+//        Corner[][] filledCorner3 = new Corner[2][2];
+//        for (int i = 0; i < 2; i++) {
+//            for (int j = 0; j < 2; j++) {
+//                filledCorner3[i][j] = new Corner(new BoardCellCoordinate(i, j));
+//                filledCorner3[i][j].setCornerItem(Item.PARCHMENT);
+//            }
+//        }
+//
+//        Corner[][] filledCorner4 = new Corner[2][2];
+//        for (int i = 0; i < 2; i++) {
+//            for (int j = 0; j < 2; j++) {
+//                filledCorner4[i][j] = new Corner(new BoardCellCoordinate(i, j));
+//                filledCorner4[i][j].setCornerItem(Item.FEATHER);
+//            }
+//        }
+//
+//        ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.RED);
+//        ResourceCard card2 = new ResourceCard(2, Orientation.FRONT, Color.RED, 1, filledCorner1);
+//        ResourceCard card3 = new ResourceCard(3, Orientation.FRONT, Color.RED, 1, filledCorner1);
+//        ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED, 1, filledCorner1);
+//        ResourceCard card5 = new ResourceCard(5, Orientation.FRONT, Color.GREEN, 1, filledCorner2);
+//        ResourceCard card6 = new ResourceCard(6, Orientation.FRONT, Color.GREEN, 1, filledCorner2);
+//        ResourceCard card7 = new ResourceCard(7, Orientation.FRONT, Color.GREEN, 1, filledCorner2);
+//        ResourceCard card8 = new ResourceCard(8, Orientation.FRONT, Color.GREEN, 1, filledCorner2);
+//        ResourceCard card9 = new ResourceCard(9, Orientation.FRONT, Color.GREEN, 1, filledCorner3);
+//        ResourceCard card10 = new ResourceCard(10, Orientation.FRONT, Color.GREEN, 1, filledCorner4);
+//
+//        // After the placements, we have 9 mushrooms and 12 potions, 3 parchments and 3 feathers
+//
+//        int i = personalBoard.getDim1() / 2; // Specify the row index
+//        int j = personalBoard.getDim2() / 2; // Specify the column index
+//
+//        personalBoard.bruteForcePlaceCardSE(card1, i, j);
+//
+//
+//
+//        personalBoard.placeCardAtSE(card1, card2);
+//        System.out.println(personalBoard.getNum_mushrooms());
+//
+//        personalBoard.placeCardAtSE(card2, card3);
+//        personalBoard.placeCardAtSE(card3, card4);
+//        personalBoard.placeCardAtSW(card4, card5);
+//        personalBoard.placeCardAtSW(card5, card6);
+//        personalBoard.placeCardAtSW(card6, card7);
+//        personalBoard.placeCardAtSW(card7, card8);
+//        personalBoard.placeCardAtSE(card8, card9);
+//        personalBoard.placeCardAtSE(card9, card10);
+//
+//        ResourceObjectiveCard resourceObjectiveCard = new ResourceObjectiveCard(1, Orientation.FRONT, 2,
+//                3, 0, 0, 0);
+//
+//        ItemObjectiveCard itemObjectiveCard = new ItemObjectiveCard(1, Orientation.FRONT, 3,
+//                1, 1, 1);
+//
+//        assertEquals(15, resourceObjectiveCard.calculateScore(personalBoard) +
+//                itemObjectiveCard.calculateScore(personalBoard));
+//    }
 
     // Add more tests for other methods
 

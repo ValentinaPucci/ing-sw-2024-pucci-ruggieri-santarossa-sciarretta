@@ -247,7 +247,6 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         Consumer<String> handleNicknameAndOffer = (s) -> {
             nickname = null;
             facts.offer(null, FactType.LOBBY_INFO);
-            ui.addRelevantGameFact(s);
         };
 
         Map<FactType, Runnable> actions = Map.of(
@@ -427,7 +426,6 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Performs cleanup actions when the player leaves the game.
      */
     public void youLeft() {
-        ui.clearRelevantGameFacts();
         facts.offer(null, FactType.LOBBY_INFO);
         parser.bindPlayerToParser(null, null);
     }
@@ -972,7 +970,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void playerLeft(ModelView gameModel, String nick) {
-        ui.addRelevantGameFact("[EVENT]: Player " + nick + " decided to leave the game!");
+        ui.show_genericMessage("[EVENT]: Player " + nick + " decided to leave the game!");
     }
 
     /**
@@ -1035,7 +1033,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void gameStarted(ModelView gameModel) {
-        ui.addRelevantGameFact("All players are connected, the game will start soon!");
+        ui.show_genericMessage("All players are connected, the game will start soon!");
         facts.offer(gameModel, FactType.GAME_STARTED);
     }
 
@@ -1056,7 +1054,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void playerDisconnected(ModelView gameModel, String nick) {
-        ui.addRelevantGameFact("Player " + nick + " has just disconnected");
+        ui.show_genericMessage("Player " + nick + " has just disconnected");
     }
 
     /**
