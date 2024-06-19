@@ -227,16 +227,7 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_commonObjectives(ModelView gameModel) {
-
-    }
-
-
-
-    @Override
-    public void show_whichObjectiveToChoose() {
-
-    }
+    public void show_whichObjectiveToChoose() {}
 
     @Override
     public void show_whichCardToPlace() {

@@ -272,9 +272,6 @@ public class TUI extends UI {
     }
 
     @Override
-    public void show_commonObjectives(ModelView gameModel) {}
-
-    @Override
     public void show_personalObjectiveCard(ModelView gameModel) {
         clearScreen();
         System.out.println("Your chosen objective card is: \n");
@@ -295,13 +292,8 @@ public class TUI extends UI {
         clearScreen();
     }
 
-    // todo: remove this
     @Override
-    public void show_noAvailableGamesToJoin(String msgToVisualize) {
-        clearScreen();
-        StaticPrinterTUI.print(msgToVisualize + "\nTry later or create a new game!");
-        clearScreen();
-    }
+    public void show_noAvailableGamesToJoin(String msgToVisualize) {}
 
     @Override
     public void show_noConnectionError() {
