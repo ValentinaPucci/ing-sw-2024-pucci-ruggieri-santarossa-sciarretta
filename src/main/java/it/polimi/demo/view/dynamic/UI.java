@@ -263,4 +263,6 @@ public abstract class UI {
      * @param playerIndex The index of the player whose personal board is to be shown.
      */
     protected abstract void show_othersPersonalBoard(ModelView modelView, int playerIndex);
+
+    protected abstract void playerLeft(ModelView modelView, String nick);
 }

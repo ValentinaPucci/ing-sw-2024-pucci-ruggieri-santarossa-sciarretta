@@ -976,6 +976,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void playerLeft(ModelView gameModel, String nick) throws RemoteException {
         ui.addRelevantGameFact("[EVENT]: Player " + nick + " decided to leave the game!");
+        ui.playerLeft(gameModel, nick);
     }
 
     /**

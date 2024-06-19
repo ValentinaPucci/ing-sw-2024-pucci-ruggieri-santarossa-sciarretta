@@ -4,6 +4,7 @@ import it.polimi.demo.model.board.CommonBoard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
 import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 import it.polimi.demo.model.chat.Chat;
+import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.GameStatus;
 import it.polimi.demo.model.enumerations.Orientation;
 
@@ -32,6 +33,7 @@ public class ModelView implements Serializable {
     private final List<ObjectiveCard> objective_cards;
     private final ArrayList<Integer> last_chosen_card;
     private final Orientation last_chosen_orientation;
+    private final Coordinate last_coordinate;
 
     /**
      * Constructs a ModelView object based on the provided game model.
@@ -50,6 +52,7 @@ public class ModelView implements Serializable {
         this.objective_cards = new ArrayList<>(model.getPersonalObjectiveCardsToChoose(current_player_nickname));
         this.last_chosen_card = model.getLastChosenCardAndPosition();
         this.last_chosen_orientation = model.getLastChosenOrientation();
+        this.last_coordinate = model.getLastCoordinate();
     }
 
     /**
@@ -173,5 +176,9 @@ public class ModelView implements Serializable {
 
     public Orientation getLastChosenOrientation(){
         return last_chosen_orientation;
+    }
+
+    public Coordinate getLastCoordinate(){
+        return last_coordinate;
     }
 }

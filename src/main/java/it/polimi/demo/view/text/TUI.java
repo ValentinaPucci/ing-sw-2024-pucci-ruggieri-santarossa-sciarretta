@@ -284,6 +284,11 @@ public class TUI extends UI {
     }
 
     @Override
+    protected void playerLeft(ModelView modelView, String nick) {
+
+    }
+
+    @Override
     public void show_commonObjectives(ModelView gameModel) {}
 
     @Override

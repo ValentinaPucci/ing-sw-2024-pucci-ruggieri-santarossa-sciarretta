@@ -1,7 +1,6 @@
 package it.polimi.demo.view.gui.controllers;
 
 import it.polimi.demo.model.Player;
-import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
@@ -51,10 +50,9 @@ public class RunningController extends GenericController {
     @FXML public Pane commonCard8;
     @FXML public Pane commonCard9;
     @FXML public AnchorPane personalBoardAnchorPane;
-    @FXML public AnchorPane personalBoardPlayer0;
-    @FXML public AnchorPane personalBoardPlayer1;
-    @FXML public AnchorPane personalBoardPlayer2;
-    @FXML public AnchorPane personalBoardPlayer3;
+    @FXML public AnchorPane pb0;
+    @FXML public AnchorPane pb1;
+    @FXML public AnchorPane pb2;
     @FXML public ImageView personalObjective0;
     @FXML public ImageView personalObjective1;
     private Orientation cardHandOrientation;
@@ -229,10 +227,9 @@ public class RunningController extends GenericController {
         personalBoardAnchorPane.setOnMouseClicked(this::handleMouseClick);
 
         personalBoardAnchorPane.setVisible(true);
-        personalBoardPlayer0.setVisible(false);
-        personalBoardPlayer1.setVisible(false);
-        personalBoardPlayer2.setVisible(false);
-        personalBoardPlayer3.setVisible(false);
+        pb0.setVisible(true);
+        pb1.setVisible(true);
+        pb2.setVisible(true);
     }
 
     private void setComponentsDisable(List<? extends javafx.scene.Node> components, boolean disable) {
@@ -268,47 +265,13 @@ public class RunningController extends GenericController {
         ArrayList<Player> players_list = model.getAllPlayers();
         this.players_list = players_list;
         this.player_index = getPlayerIndex(players_list, nickname);
-        //System.out.println("Player index: " + player_index + " Nickname: " + nickname);
-
-        // Update recipient combo box
         recipientComboBox.getItems().clear();
         recipientComboBox.getItems().add("Everyone");
-
-        // Clear existing rows except the header
-        otherPlayers.getChildren().removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) > 0);
-        // Remove existing RowConstraints except the first one
-        while (otherPlayers.getRowConstraints().size() > 1) {
-            otherPlayers.getRowConstraints().remove(1);
-        }
-
         int j = 0;
         for (Player player : players_list) {
             if (!player.getNickname().equals(nickname)) {
                 // Add player to recipient combo box
                 recipientComboBox.getItems().add(player.getNickname());
-                // Create and offer player label
-                Label playerLabel = new Label(player.getNickname());
-                playerLabel.setTextFill(Color.web("#4d0202"));
-                playerLabel.setAlignment(javafx.geometry.Pos.CENTER);
-                playerLabel.setFont(javafx.scene.text.Font.font("Luminari", 19));
-                GridPane.setRowIndex(playerLabel, j + 1);
-                GridPane.setColumnIndex(playerLabel, 0);
-                otherPlayers.getChildren().add(playerLabel);
-
-                // Create and offer button
-                Button goButton = new Button("GO");
-                goButton.setPrefHeight(26.0);
-                goButton.setPrefWidth(188.0);
-                goButton.setEffect(new javafx.scene.effect.ColorAdjust(0.17, 0.3, 0.0, 0.0));
-                goButton.setOnAction((ActionEvent event) -> {
-                    showOthersPersonalBoard(getPlayerIndex(players_list, player.getNickname()));
-                });
-                GridPane.setRowIndex(goButton, j + 1);
-                GridPane.setColumnIndex(goButton, 1);
-                otherPlayers.getChildren().add(goButton);
-
-                // Add row constraints
-                otherPlayers.getRowConstraints().add(new RowConstraints(30.0, 30.0, Double.MAX_VALUE));
                 j++;
             }
         }
@@ -323,65 +286,6 @@ public class RunningController extends GenericController {
         return -1; // Restituisce -1 se il player non è trovato
     }
 
-    public void showParticularPersonalBoard(int player_index) {
-        System.out.println("Showing personal board of player " + players_list.get(player_index).getNickname());
-        // Hide all boards first
-        personalBoardAnchorPane.setVisible(false);
-        personalBoardPlayer0.setVisible(false);
-        personalBoardPlayer1.setVisible(false);
-        personalBoardPlayer2.setVisible(false);
-        personalBoardPlayer3.setVisible(false);
-
-        // Show the correct board based on the player's index
-        switch (player_index) {
-            case 0:
-                personalBoardPlayer0.setVisible(true);
-                personalBoardPlayer0.toFront();
-                break;
-            case 1:
-                personalBoardPlayer1.setVisible(true);
-                personalBoardPlayer1.toFront();
-                break;
-            case 2:
-                personalBoardPlayer2.setVisible(true);
-                personalBoardPlayer2.toFront();
-                break;
-            case 3:
-                personalBoardPlayer3.setVisible(true);
-                personalBoardPlayer3.toFront();
-                break;
-            default:
-                System.out.println("Invalid player index");
-                break;
-        }
-    }
-
-    public void showOthersPersonalBoard(int index) {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
-        System.out.println("GO x " + players_list.get(index).getNickname());
-        if (reader != null) {
-            // Show the correct board based on the player's index or name
-            switch (index) {
-                case 0:
-                    reader.add("/pb0");
-                    break;
-                case 1:
-                    reader.add("/pb1");
-                    break;
-                case 2:
-                    reader.add("/pb2");
-                    break;
-                case 3:
-                    reader.add("/pb3");
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-
-    }
 
     // Method to set an image to one of the common card ImageViews
     public void setCommonCards(ModelView model) {
@@ -748,17 +652,19 @@ public class RunningController extends GenericController {
         placeCard(2);
     }
 
+    //-------------------------------------------------------------------------------------------------------------------------
     public void setPersonalBoard(ModelView gameModel) {
         Player player = gameModel.getPlayersConnected().getFirst();
         int playerIndex = getPlayerIndex(gameModel.getAllPlayers(), player.getNickname());
         ArrayList<Integer> last_chosen_card = gameModel.getLastChosenCardAndPosition();
         Orientation last_chosen_orientation = gameModel.getLastChosenOrientation();
 
-        placeOthersPlayersCard(playerIndex, last_chosen_card, last_chosen_orientation);
+        placeOthersPlayersCard(playerIndex, last_chosen_card, last_chosen_orientation, gameModel.getLastCoordinate());
     }
 
-    private void placeOthersPlayersCard(int playerIndex, ArrayList<Integer> lastChosenCard, Orientation lastChosenOrientation) {
+    private void placeOthersPlayersCard(int playerIndex, ArrayList<Integer> lastChosenCard, Orientation lastChosenOrientation, Coordinate coord) {
         String imagePath;
+        System.out.println("lastChosenCardId: " + lastChosenCard);
         String formattedCardId = String.format("%03d", lastChosenCard.getFirst());
         if(lastChosenOrientation == Orientation.FRONT){
             imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
@@ -772,21 +678,63 @@ public class RunningController extends GenericController {
         CardPic.setFitWidth(90); // Imposta la larghezza desiderata
         CardPic.setFitHeight(65); // Imposta l'altezza desiderata
 
-        System.out.println("lastChosenCard: x: " + lastChosenCard.get(1) + " y: " + lastChosenCard.get(2));
-        String resultString = String.format("%d,%d", lastChosenCard.get(1) - 250, lastChosenCard.get(2) - 250);
+        int[] result = {lastChosenCard.get(1) - 250, lastChosenCard.get(2) - 250};
+
+        switch (coord) {
+            case NE -> result[0] = result[0] - 1;
+            case NW -> {
+                result[0] = result[0] - 1;
+                result[1] = result[1] - 1;
+            }
+            case SW -> result[1] = result[1] - 1;
+            case SE -> {
+                // it's correct
+            }
+        }
+
+        String resultString = String.format("%d,%d", result[0], result[1]);
 
         int[] position = inverseMapper.getInverseMappedPosition(resultString);
-        System.out.println("lastChosenCard: x: " + position[0] + " y: " + position[1]);
 
         CardPic.setLayoutX((double)position[0]);
         CardPic.setLayoutY((double)position[1]);
 
+        // Verifica e aggiorna le dimensioni dell'AnchorPane
+        double newWidth = position[0] + CardPic.getFitWidth();
+        double newHeight = position[1]  + CardPic.getFitHeight();
+
         System.out.println("add card for: " + players_list.get(playerIndex).getNickname());
         switch (playerIndex){
-            case 0 -> personalBoardPlayer0.getChildren().add(CardPic);
-            case 1 -> personalBoardPlayer1.getChildren().add(CardPic);
-            case 2 -> personalBoardPlayer2.getChildren().add(CardPic);
-            case 3 -> personalBoardPlayer3.getChildren().add(CardPic);
+            case 0 -> {
+                if (newWidth > pb0.getPrefWidth()) {
+                    pb0.setPrefWidth(newWidth + 10);
+                }
+
+                if (newHeight > pb0.getPrefHeight()) {
+                    pb0.setPrefHeight(newHeight + 10);
+                }
+                pb0.getChildren().add(CardPic);
+            }
+            case 1 -> {
+                if (newWidth > pb1.getPrefWidth()) {
+                    pb1.setPrefWidth(newWidth + 10);
+                }
+
+                if (newHeight > pb1.getPrefHeight()) {
+                    pb1.setPrefHeight(newHeight + 10);
+                }
+                pb1.getChildren().add(CardPic);
+            }
+            case 2 -> {
+                if (newWidth > pb2.getPrefWidth()) {
+                    pb2.setPrefWidth(newWidth + 10);
+                }
+
+                if (newHeight > pb2.getPrefHeight()) {
+                    pb2.setPrefHeight(newHeight + 10);
+                }
+                pb2.getChildren().add(CardPic);
+            }
         }
         System.out.println("card added ");
     }
@@ -810,8 +758,11 @@ public class RunningController extends GenericController {
         personalBoardAnchorPane.setDisable(false);
     }
     private void placeStarterCard() {
-        double xCenter = personalBoardAnchorPane.getWidth() / 2;
-        double yCenter = personalBoardAnchorPane.getHeight() / 2;
+        String resultString = String.format("%d,%d", 0, 0);
+        int[] position = inverseMapper.getInverseMappedPosition(resultString);
+
+        double xCenter = (double)position[0];
+        double yCenter = (double)position[1];
         String imagePath;
         // Posiziona la carta iniziale al centro
         String formattedCardId = String.format("%03d", starterCard);
@@ -831,6 +782,9 @@ public class RunningController extends GenericController {
         personalBoardAnchorPane.getChildren().add(StarterCardPic);
         setMsgToShow("StarterCard placed", true);
     }
+
+    //-------------------------------------------------------------------------------------------------------------------------
+
     public void whichCardToPlace() {
         cardHandVBox.setDisable(false);
         cardHandVBox.setMouseTransparent(false);
@@ -1119,17 +1073,15 @@ public class RunningController extends GenericController {
         }
     }
 
-    @FXML
-    private void hideAllPersonalBoards() {
-        personalBoardPlayer0.setVisible(false);
-        personalBoardPlayer1.setVisible(false);
-        personalBoardPlayer2.setVisible(false);
-        personalBoardPlayer3.setVisible(false);
-        personalBoardAnchorPane.setVisible(true);
+    public void exitGame(ActionEvent actionEvent) {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
+        if (reader != null) {
+            reader.add("/quit");
+            reader.add("/leave");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
     }
-
-
-
 }
 
 

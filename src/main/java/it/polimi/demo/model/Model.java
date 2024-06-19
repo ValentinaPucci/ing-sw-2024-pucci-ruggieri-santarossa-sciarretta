@@ -48,6 +48,7 @@ public class Model implements Serializable {
     private final Map<Player, Integer> leaderboard;
     private final ObserverManager observers;
     private ArrayList<Integer> last_chosen_card;
+    private Coordinate last_coord;
     private Orientation last_chosen_orientation;
 
     /**
@@ -60,6 +61,7 @@ public class Model implements Serializable {
         last_chosen_card.add(0);
         last_chosen_card.add(0);
         last_chosen_card.add(0);
+        last_coord = null;
         last_chosen_orientation = null;
         common_board = new CommonBoard();
         gameId = -1;
@@ -81,6 +83,7 @@ public class Model implements Serializable {
         last_chosen_card.add(0);
         last_chosen_card.add(0);
         last_chosen_card.add(0);
+        last_coord = null;
         last_chosen_orientation = null;
         common_board = new CommonBoard();
         num_required_players_to_start = numberOfPlayers;
@@ -189,11 +192,15 @@ public class Model implements Serializable {
     }
 
     public ArrayList<Integer> getLastChosenCardAndPosition(){
-        return last_chosen_card;
+        return this.last_chosen_card;
     }
 
     public Orientation getLastChosenOrientation(){
-        return last_chosen_orientation;
+        return this.last_chosen_orientation;
+    }
+
+    public Coordinate getLastCoordinate(){
+        return this.last_coord;
     }
 
     /**
@@ -456,6 +463,7 @@ public class Model implements Serializable {
                 }
                 else {
                     // remove the card from the player's hand
+                    this.last_coord = coord;
                     observers.notify_successMove(this, coord);
                     p.getHand().remove(p.getChosenGameCard());
                     getCommonBoard().movePlayer(aux_order_players.indexOf(p), p.getCurrentPoints() - old_points);
@@ -478,6 +486,7 @@ public class Model implements Serializable {
                     observers.notify_illegalMove(this);
                 }
                 else {
+                    this.last_coord = coord;
                     observers.notify_successMove(this, coord);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
@@ -527,6 +536,7 @@ public class Model implements Serializable {
                     observers.notify_illegalMove(this);
                 }
                 else {
+                    this.last_coord = coord;
                     observers.notify_successMove(this, coord);
                     // remove the card from the player's hand
                     p.getHand().remove(p.getChosenGameCard());
@@ -550,6 +560,7 @@ public class Model implements Serializable {
                     observers.notify_illegalMove(this);
                 }
                 else {
+                    this.last_coord = coord;
                     // remove the card from the player's hand
                     observers.notify_successMove(this, coord);
                     p.getHand().remove(p.getChosenGameCard());

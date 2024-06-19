@@ -18,7 +18,6 @@ public class GUI extends UI {
     private ApplicationGUI guiApplication;
     private LinkedBlockingQueue<String> GuiReader;
     private boolean alreadyShowedLobby = false;
-
     private String nickname;
 
     public GUI(ApplicationGUI guiApplication, LinkedBlockingQueue<String> GuiReader) {
@@ -45,8 +44,6 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
     }
-
-
 
     @Override
     protected void show_createGame(String nickname) {
@@ -103,8 +100,6 @@ public class GUI extends UI {
     }
 
 
-
-
     /**
      * this method show that the player is ready to start
      *
@@ -130,9 +125,7 @@ public class GUI extends UI {
     @Override
     protected void show_gameEnded(ModelView model) {
         callPlatformRunLater(() -> ((GameOverController) this.guiApplication.getController(SceneType.GAME_OVER)).show(model));
-
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.GAME_OVER));
-
     }
 
     @Override
@@ -190,13 +183,17 @@ public class GUI extends UI {
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel));
-        System.out.println("SET PERSONAL BOARD: " + gameModel.getPlayersConnected().getFirst().getNickname());
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setPersonalBoard(gameModel));
     }
 
     @Override
     protected void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
-        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).showParticularPersonalBoard(playerIndex));
+    }
+
+    @Override
+    protected void playerLeft(ModelView model, String nick) {
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ERROR));
+        System.out.println("Player " + nick + " left the game");
     }
 
     @Override
@@ -301,9 +298,9 @@ public class GUI extends UI {
      */
     @Override
     protected void clearRelevantGameFacts() {
-        this.relevant_facts = new ArrayList<>();
-        this.nickname = null;
-        alreadyShowedLobby = false;
+//        this.relevant_facts = new ArrayList<>();
+//        this.nickname = null;
+//        alreadyShowedLobby = false;
     }
 
     /**
