@@ -174,6 +174,11 @@ public class GUI extends UI {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
     }
 
+    @Override
+    public void show_commonObjectives(ModelView gameModel) {
+
+    }
+
 
     @Override
     protected void show_cardDrawn(ModelView gameModel, String nickname) {

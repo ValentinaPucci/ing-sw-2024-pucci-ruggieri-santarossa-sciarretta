@@ -130,6 +130,8 @@ public abstract class UI {
      */
     protected abstract void show_playerHand(ModelView gameModel, String nickname);
 
+    public abstract void show_commonObjectives(ModelView gameModel);
+
     /**
      * Shows the personal objective card of the player.
      * @param gameModel The model view containing game state information.
