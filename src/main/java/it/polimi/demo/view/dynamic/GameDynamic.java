@@ -670,7 +670,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     // Client --------> Server
 
     /**
-     * Displays a ui message indicating a connection error.
+     * Displays ui message indicating a connection error.
      */
     public void noConnectionError() {
         ui.show_noConnectionError();
@@ -1009,10 +1009,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Handles the event when a requested game ID does not exist, showing a message and offering a fact about the non-existent game ID.
      * @param game_id The game ID that does not exist.
      */
-    // todo: remove show:noAvailableGameToJoin
     @Override
     public void gameIdNotExists(int game_id) {
-        ui.show_noAvailableGamesToJoin("No currently game available with the following GameID: " + game_id);
+        ui.show_genericMessage("No currently game available with the following GameID: " + game_id);
         facts.offer(null, FactType.GENERIC_ERROR);
     }
 
@@ -1020,10 +1019,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Handles the event when a generic error occurs during the process of entering a game, showing a message and offering a fact about the generic error.
      * @param why The reason for the generic error.
      */
-    // todo: remove this
     @Override
     public void genericErrorWhenEnteringGame(String why) {
-        ui.show_noAvailableGamesToJoin(why);
+        ui.show_genericMessage("No available game to join:" + why);
         facts.offer(null, FactType.GENERIC_ERROR);
     }
 

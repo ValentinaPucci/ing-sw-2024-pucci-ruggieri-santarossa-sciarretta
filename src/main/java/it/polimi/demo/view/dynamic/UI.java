@@ -166,12 +166,6 @@ public abstract class UI {
     protected abstract void show_whereToDrawFrom();
 
     /**
-     * Shows the common objectives of the game.
-     * @param gameModel The model view containing game state information.
-     */
-    protected abstract void show_commonObjectives(ModelView gameModel);
-
-    /**
      * Shows a message indicating that a message was sent.
      * @param model The model view containing game state information.
      * @param nickname The nickname of the player who sent the message.
