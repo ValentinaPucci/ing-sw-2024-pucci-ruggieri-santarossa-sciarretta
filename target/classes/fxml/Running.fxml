@@ -244,41 +244,22 @@
                 <children>
                     <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
                         <content>
+                            <AnchorPane fx:id="personalBoardPlayer0" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
+                        </content>
+                    </ScrollPane>
+                </children>
+            </Pane>
+
+            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
+                <children>
+                    <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
+                        <content>
                             <AnchorPane fx:id="personalBoardPlayer1" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
                         </content>
                     </ScrollPane>
                 </children>
             </Pane>
 
-            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
-                <children>
-                    <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
-                        <content>
-                            <AnchorPane fx:id="personalBoardPlayer2" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
-                        </content>
-                    </ScrollPane>
-                </children>
-            </Pane>
-
-            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
-                <children>
-                    <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
-                        <content>
-                            <AnchorPane fx:id="personalBoardPlayer3" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
-                        </content>
-                    </ScrollPane>
-                </children>
-            </Pane>
-
-            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
-                <children>
-                    <ScrollPane layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
-                        <content>
-                            <AnchorPane fx:id="personalBoardPlayer4" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
-                        </content>
-                    </ScrollPane>
-                </children>
-            </Pane>
 
             <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
                 <children>

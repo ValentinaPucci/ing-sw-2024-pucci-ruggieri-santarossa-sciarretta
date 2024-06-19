@@ -189,13 +189,14 @@ public class GUI extends UI {
     protected void show_cardDrawn(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
-        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel)); //added
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel));
+        System.out.println("SET PERSONAL BOARD: " + gameModel.getPlayersConnected().getFirst().getNickname());
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setPersonalBoard(gameModel));
     }
 
     @Override
     protected void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
-        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setOthersPersonalBoard(modelView.getAllPlayers().get(playerIndex).getPersonalBoard(), playerIndex));
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).showParticularPersonalBoard(playerIndex));
     }
 
     @Override

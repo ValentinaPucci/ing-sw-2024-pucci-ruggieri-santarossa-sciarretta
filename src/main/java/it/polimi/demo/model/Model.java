@@ -39,7 +39,6 @@ public class Model implements Serializable {
     // the second one is used as a queue and let us know which player
     // is connected (and actively playing).
     private final LinkedList<Player> players_connected;
-
     private final Random random = new Random();
     private final CommonBoard common_board;
     private final int gameId;
@@ -48,6 +47,8 @@ public class Model implements Serializable {
     private Chat chat;
     private final Map<Player, Integer> leaderboard;
     private final ObserverManager observers;
+    private ArrayList<Integer> last_chosen_card;
+    private Orientation last_chosen_orientation;
 
     /**
      * Constructor for the model.
@@ -55,6 +56,11 @@ public class Model implements Serializable {
     public Model() {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
+        last_chosen_card = new ArrayList<>(3);
+        last_chosen_card.add(0);
+        last_chosen_card.add(0);
+        last_chosen_card.add(0);
+        last_chosen_orientation = null;
         common_board = new CommonBoard();
         gameId = -1;
         num_required_players_to_start = -1; // invalid value on purpose
@@ -71,6 +77,11 @@ public class Model implements Serializable {
     public Model(int gameID, int numberOfPlayers) {
         aux_order_players = new ArrayList<>();
         players_connected = new LinkedList<>();
+        last_chosen_card = new ArrayList<>();
+        last_chosen_card.add(0);
+        last_chosen_card.add(0);
+        last_chosen_card.add(0);
+        last_chosen_orientation = null;
         common_board = new CommonBoard();
         num_required_players_to_start = numberOfPlayers;
         gameId = gameID;
@@ -175,6 +186,14 @@ public class Model implements Serializable {
      */
     public int getNumPlayersToPlay() {
         return num_required_players_to_start;
+    }
+
+    public ArrayList<Integer> getLastChosenCardAndPosition(){
+        return last_chosen_card;
+    }
+
+    public Orientation getLastChosenOrientation(){
+        return last_chosen_orientation;
     }
 
     /**
@@ -382,13 +401,20 @@ public class Model implements Serializable {
 
         PersonalBoard personal_board = p.getPersonalBoard();
 
-        if (o == Orientation.FRONT) {p.setStarterCard(p.getStarterCardToChose().get(0));
+        if (o == Orientation.FRONT) {
+            p.setStarterCard(p.getStarterCardToChose().getFirst());
+            last_chosen_card.set(0, p.getStarterCardToChose().getFirst().getId());
         }
         else {
             p.setStarterCard(p.getStarterCardToChose().get(1));
+            last_chosen_card.set(0, p.getStarterCardToChose().get(1).getId());
         }
+        last_chosen_card.set(1, 250);
+        last_chosen_card.set(2, 250);
+        last_chosen_orientation = o;
 
         personal_board.placeStarterCard(p.getStarterCard());
+
         if (players_connected.stream()
                 .filter(q -> q.getStarterCard() != null)
                 .toList()
@@ -411,6 +437,11 @@ public class Model implements Serializable {
         PersonalBoard personal_board = p.getPersonalBoard();
         int old_points = p.getCurrentPoints();
         boolean admissible_move;
+
+        last_chosen_card.set(0, card_chosen.getId());
+        last_chosen_card.set(1, x);
+        last_chosen_card.set(2, y);
+        last_chosen_orientation = card_chosen.orientation;
 
         if (!personal_board.board[x][y].is_full) {
             observers.notify_illegalMove(this);
@@ -478,6 +509,11 @@ public class Model implements Serializable {
         PersonalBoard personal_board = p.getPersonalBoard();
         int old_points = p.getCurrentPoints();
         boolean admissible_move;
+
+        last_chosen_card.set(0, card_chosen.getId());
+        last_chosen_card.set(1, x);
+        last_chosen_card.set(2, y);
+        last_chosen_orientation = card_chosen.orientation;
 
         if (!personal_board.board[x][y].is_full) {
             observers.notify_illegalMove(this);
