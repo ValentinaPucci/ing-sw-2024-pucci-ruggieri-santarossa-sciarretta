@@ -10,7 +10,7 @@ import java.util.Stack;
 
 public class ConcreteDeck implements Serializable {
 
-    private String type;
+    public String type;
     private CardsCollection concrete_cards_bunch;
     private DeckFactory deck_factory;
     private Stack<Card> deck;

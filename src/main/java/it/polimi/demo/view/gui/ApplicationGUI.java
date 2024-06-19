@@ -116,7 +116,7 @@ public class ApplicationGUI extends Application {
             heightOld = heightWindow;
             Scale scale = new Scale(w, h, 0, 0);
             primaryStage.getScene().getRoot().getTransforms().add(scale);
-            primaryStage.getScene().lookup("#content").getTransforms().add(scale);
+            //primaryStage.getScene().lookup("#content").getTransforms().add(scale);
         }
     }
 
@@ -257,10 +257,10 @@ public class ApplicationGUI extends Application {
 //        controller.setMessage(model.getChat().getMsgs(), myNickname);
 //    }
 
-    public void showImportantEvents(List<String> importantEvents) {
-        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-        controller.setImportantEvents(importantEvents);
-    }
+//    public void showImportantEvents(List<String> importantEvents) {
+//        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
+//        controller.setImportantEvents(importantEvents);
+//    }
 
 
     public void showError(String msg) {

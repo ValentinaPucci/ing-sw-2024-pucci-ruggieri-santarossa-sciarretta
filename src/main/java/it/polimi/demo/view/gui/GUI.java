@@ -40,7 +40,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_options() {
+    protected void show_options() {
         callPlatformRunLater(() -> this.guiApplication.setInputReaderGUItoAllControllers(this.GuiReader));//So the controllers can offer text to the buffer for the gameflow
         callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
@@ -49,30 +49,30 @@ public class GUI extends UI {
 
 
     @Override
-    public void show_createGame(String nickname) {
+    protected void show_createGame(String nickname) {
     }
 
     @Override
-    public void show_joinRandom(String nickname) {
+    protected void show_joinRandom(String nickname) {
     }
 
     @Override
-    public void show_join(int idGame, String nickname) {
+    protected void show_join(int idGame, String nickname) {
         show_insertGameId();
     }
 
     @Override
-    public void show_insertGameId() {
+    protected void show_insertGameId() {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ID_GAME));
     }
 
     @Override
-    public void show_insertNickname() {
+    protected void show_insertNickname() {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.NICKNAME));
     }
 
     @Override
-    public void show_insertNumOfPlayers() {
+    protected void show_insertNumOfPlayers() {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.NUM_PLAYERS));
     }
 
@@ -82,19 +82,19 @@ public class GUI extends UI {
      * @param model model where the game has started
      */
     @Override
-    public void show_gameStarted(ModelView model) {
+    protected void show_gameStarted(ModelView model) {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.RUNNING));
         callPlatformRunLater(() -> this.guiApplication.showRunningModel(model, nickname));
     }
 
     @Override
-    public void show_chosenNickname(String nickname) {
+    protected void show_chosenNickname(String nickname) {
         this.nickname = nickname;
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.LOBBY));
     }
 
     @Override
-    public void show_nextTurn(ModelView model, String nickname) {
+    protected void show_nextTurn(ModelView model, String nickname) {
         if (!alreadyShowedLobby) {
             show_gameStarted(model);
             alreadyShowedLobby = true;
@@ -112,7 +112,7 @@ public class GUI extends UI {
      * @param nickname player's nickname
      */
     @Override
-    public void show_readyToStart(ModelView gameModel, String nickname) {
+    protected void show_readyToStart(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> this.guiApplication.disableBtnReadyToStart());
     }
 
@@ -122,13 +122,13 @@ public class GUI extends UI {
      * @param msgToVisualize message that needs visualisation
      */
     @Override
-    public void show_noAvailableGamesToJoin(String msgToVisualize) {
+    protected void show_noAvailableGamesToJoin(String msgToVisualize) {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ERROR));
         callPlatformRunLater(() -> this.guiApplication.showError(msgToVisualize));
     }
 
     @Override
-    public void show_gameEnded(ModelView model) {
+    protected void show_gameEnded(ModelView model) {
         callPlatformRunLater(() -> ((GameOverController) this.guiApplication.getController(SceneType.GAME_OVER)).show(model));
 
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.GAME_OVER));
@@ -136,7 +136,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_playerJoined(ModelView gameModel, String nick) {
+    protected void show_playerJoined(ModelView gameModel, String nick) {
         if (!alreadyShowedLobby) {
             this.nickname = nick;
             callPlatformRunLater(() -> ((LobbyController) this.guiApplication.getController(SceneType.LOBBY)).setNicknameLabel(nick));
@@ -152,60 +152,60 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_starterCards(ModelView gameModel) {
+    protected void show_starterCards(ModelView gameModel) {
 
     }
 
     @Override
-    public void show_objectiveCards(ModelView gameModel) {
+    protected void show_objectiveCards(ModelView gameModel) {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableObjectiveCardsClick());
 
     }
 
     @Override
-    public void show_personalBoard(String nick, ModelView gameModel) {
+    protected void show_personalBoard(String nick, ModelView gameModel) {
 
     }
 
     @Override
-    public void show_commonBoard(ModelView gameModel) {
+    protected void show_commonBoard(ModelView gameModel) {
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel));
     }
 
     @Override
-    public void show_myTurnIsFinished() {
+    protected void show_myTurnIsFinished() {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).myTurnIsFinished());
     }
 
     @Override
-    public void show_playerHand(ModelView gameModel, String nickname) {
+    protected void show_playerHand(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
     }
 
 
     @Override
-    public void show_cardDrawn(ModelView gameModel, String nickname) {
+    protected void show_cardDrawn(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel)); //added
     }
 
     @Override
-    public void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
+    protected void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setOthersPersonalBoard(modelView.getAllPlayers().get(playerIndex).getPersonalBoard(), playerIndex));
 
     }
 
     @Override
-    public void show_personalObjectiveCard(ModelView gameModel) {
+    protected void show_personalObjectiveCard(ModelView gameModel) {
 
     }
 
     @Override
-    public void show_cardChosen(String nickname, ModelView model) {
-
+    protected void show_cardChosen(String nickname, ModelView model) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).illegalMovePlace());
     }
 
     @Override
@@ -214,23 +214,23 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_illegalMoveBecauseOf(String message) {
-
+    protected void show_illegalMoveBecauseOf(String message) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).illegalMoveBecauseOf(message));
     }
 
     @Override
-    public void show_successfulMove(Coordinate coord) {
+    protected void show_successfulMove(Coordinate coord) {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).successfulMove(coord));
 
     }
 
     @Override
-    public void show_whereToDrawFrom() {
+    protected void show_whereToDrawFrom() {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
     }
 
     @Override
-    public void show_commonObjectives(ModelView gameModel) {
+    protected void show_commonObjectives(ModelView gameModel) {
 
     }
 
@@ -253,17 +253,17 @@ public class GUI extends UI {
 
 
     @Override
-    public void show_invalidInput() {
+    protected void show_invalidInput() {
 
     }
 
     @Override
-    public void show_menu() {
+    protected void show_menu() {
 
     }
 
     @Override
-    public void show_orientation(String message) {
+    protected void show_orientation(String message) {
         if(message.equals("Choose the orientation of the card to place")) {
             //System.out.println("GUI: whichOrientationToPlace()");
             callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).whichOrientationToPlace());
@@ -275,11 +275,11 @@ public class GUI extends UI {
     }
 
     @Override
-    public void show_genericMessage(String s) {
+    protected void show_genericMessage(String s) {
     }
 
     @Override
-    public void show_genericError(String s) {
+    protected void show_genericError(String s) {
 
     }
 
@@ -291,15 +291,15 @@ public class GUI extends UI {
      */
     @Override
     public void addRelevantGameFact(String input) {
-        relevant_facts.add(input);
-        callPlatformRunLater(() -> this.guiApplication.showImportantEvents(this.relevant_facts));
+//        relevant_facts.add(input);
+//        callPlatformRunLater(() -> this.guiApplication.showImportantEvents(this.relevant_facts));
     }
 
     /**
      * This method reset the important events
      */
     @Override
-    public void clearRelevantGameFacts() {
+    protected void clearRelevantGameFacts() {
         this.relevant_facts = new ArrayList<>();
         this.nickname = null;
         alreadyShowedLobby = false;
@@ -309,14 +309,14 @@ public class GUI extends UI {
      * This method show a message about a no connection error
      */
     @Override
-    public void show_noConnectionError() {
+    protected void show_noConnectionError() {
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ERROR));
         callPlatformRunLater(() -> this.guiApplication.showError("Connection to server lost!"));
     }
 
     //-----------------------chat-----------------------
     @Override
-    public void show_messageSent(ModelView gameModel, String nickname) {
+    protected void show_messageSent(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).updateChat(gameModel, nickname));
     }
 

@@ -123,24 +123,24 @@ public class CommonBoardTest {
 
 
 
-        /*
 
-        //BIIIIIIIIIG PROBLEM
-        assertEquals(1, commonBoard.getPartialWinner());
-
-        commonBoard.movePlayer(1, 34);
-        assertEquals(4, commonBoard.getPlayerPosition(1));
-
-        commonBoard.movePlayer(2,29);
-        assertEquals(29, commonBoard.getPlayerPosition(2));
-
-
-        // Testing partial winner
-        commonBoard.movePlayer(1, 21);
-        //assertEquals(2, commonBoard.getPartialWinner());
-        // Testing partial winner cannot be overwritten
-        commonBoard.movePlayer(0, 14);
-        assertEquals(2, commonBoard.getPartialWinner());*/
+//
+//        //BIIIIIIIIIG PROBLEM
+//        assertEquals(1, commonBoard.getPartialWinner());
+//
+//        commonBoard.movePlayer(1, 34);
+//        assertEquals(4, commonBoard.getPlayerPosition(1));
+//
+//        commonBoard.movePlayer(2,29);
+//        assertEquals(29, commonBoard.getPlayerPosition(2));
+//
+//
+//        // Testing partial winner
+//        commonBoard.movePlayer(1, 21);
+//        //assertEquals(2, commonBoard.getPartialWinner());
+//        // Testing partial winner cannot be overwritten
+//        commonBoard.movePlayer(0, 14);
+//        assertEquals(2, commonBoard.getPartialWinner());
     }
 
 }
