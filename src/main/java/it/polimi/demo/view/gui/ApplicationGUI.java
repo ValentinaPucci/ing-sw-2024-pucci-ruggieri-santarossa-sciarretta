@@ -25,9 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static it.polimi.demo.view.gui.scene.SceneType.*;
-
-
 
 public class ApplicationGUI extends Application {
 
@@ -119,7 +116,7 @@ public class ApplicationGUI extends Application {
             heightOld = heightWindow;
             Scale scale = new Scale(w, h, 0, 0);
             primaryStage.getScene().getRoot().getTransforms().add(scale);
-            primaryStage.getScene().lookup("#content").getTransforms().add(scale);
+            //primaryStage.getScene().lookup("#content").getTransforms().add(scale);
         }
     }
 
@@ -230,19 +227,6 @@ public class ApplicationGUI extends Application {
         controller.setPlayersPointsAndNicknames(model, nickname);
         controller.setCommonCards(model);
         controller.setPersonalObjectives(model, nickname);
-        //TODO: controller.setPersonalBoard(model, nickname);
-        //TODO: controller.setOthersPersonalBoard(model, nickname);
-    }
-
-    public void showPlayerDrawnCard(ModelView model, String nickname) {
-        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
-        controller.setPlayerDrawnCard(model, nickname);
-    }
-
-    public void showPlayerPlacedCard(ModelView model, String nickname) {
-        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
-        controller.setCardHand(model, nickname);
-        //TODO: controller.setPersonalBoard(model, nickname);
     }
 
     //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
@@ -253,21 +237,8 @@ public class ApplicationGUI extends Application {
         controller.setMessage(msg,false);
     }
 
-//TODO: understand what to do
-
-//    public void showMessages(GameModelImmutable model, String myNickname) {
-//        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-//        controller.setMessage(model.getChat().getMsgs(), myNickname);
-//    }
-
-    public void showImportantEvents(List<String> importantEvents) {
-        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
-        controller.setImportantEvents(importantEvents);
-    }
-
-
     public void showError(String msg) {
-        ErrorController controller = (ErrorController) scenes.get(getSceneIndex(ERROR)).getGenericController();
+        ErrorController controller = (ErrorController) scenes.get(getSceneIndex(SceneType.ERROR)).getGenericController();
     }
 
 }

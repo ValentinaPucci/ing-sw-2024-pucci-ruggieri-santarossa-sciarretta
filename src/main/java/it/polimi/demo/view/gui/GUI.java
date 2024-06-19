@@ -10,7 +10,6 @@ import it.polimi.demo.view.gui.controllers.RunningController;
 import it.polimi.demo.view.gui.scene.SceneType;
 import javafx.application.Platform;
 
-import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class GUI extends UI {
@@ -18,7 +17,6 @@ public class GUI extends UI {
     private ApplicationGUI guiApplication;
     private LinkedBlockingQueue<String> GuiReader;
     private boolean alreadyShowedLobby = false;
-
     private String nickname;
 
     public GUI(ApplicationGUI guiApplication, LinkedBlockingQueue<String> GuiReader) {
@@ -29,9 +27,7 @@ public class GUI extends UI {
     }
 
     @Override
-    public void initializer() {
-        relevant_facts = new ArrayList<>();
-    }
+    public void initializer() {}
 
     public void callPlatformRunLater(Runnable r) {
         //Need to use this method to call any methods inside the GuiApplication
@@ -45,8 +41,6 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.createNewWindowWithStyle());
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.MENU));
     }
-
-
 
     @Override
     protected void show_createGame(String nickname) {
@@ -103,8 +97,6 @@ public class GUI extends UI {
     }
 
 
-
-
     /**
      * this method show that the player is ready to start
      *
@@ -130,9 +122,7 @@ public class GUI extends UI {
     @Override
     protected void show_gameEnded(ModelView model) {
         callPlatformRunLater(() -> ((GameOverController) this.guiApplication.getController(SceneType.GAME_OVER)).show(model));
-
         callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.GAME_OVER));
-
     }
 
     @Override
@@ -184,18 +174,28 @@ public class GUI extends UI {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
     }
 
+    @Override
+    public void show_commonObjectives(ModelView gameModel) {
+
+    }
+
 
     @Override
     protected void show_cardDrawn(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
-        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel)); //added
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel));
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setPersonalBoard(gameModel));
     }
 
     @Override
     protected void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
-        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setOthersPersonalBoard(modelView.getAllPlayers().get(playerIndex).getPersonalBoard(), playerIndex));
+    }
 
+    @Override
+    protected void playerLeft(ModelView model, String nick) {
+        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ERROR));
+        System.out.println("Player " + nick + " left the game");
     }
 
     @Override
@@ -205,7 +205,7 @@ public class GUI extends UI {
 
     @Override
     protected void show_cardChosen(String nickname, ModelView model) {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).illegalMovePlace());
     }
 
     @Override
@@ -215,7 +215,7 @@ public class GUI extends UI {
 
     @Override
     protected void show_illegalMoveBecauseOf(String message) {
-
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).illegalMoveBecauseOf(message));
     }
 
     @Override
@@ -230,16 +230,7 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_commonObjectives(ModelView gameModel) {
-
-    }
-
-
-
-    @Override
-    public void show_whichObjectiveToChoose() {
-
-    }
+    public void show_whichObjectiveToChoose() {}
 
     @Override
     public void show_whichCardToPlace() {
@@ -281,28 +272,6 @@ public class GUI extends UI {
     @Override
     protected void show_genericError(String s) {
 
-    }
-
-
-
-    /**
-     * This method offer an important event to the list of important events, and show it
-     * @param input the string of the important event to offer
-     */
-    @Override
-    public void addRelevantGameFact(String input) {
-        relevant_facts.add(input);
-        callPlatformRunLater(() -> this.guiApplication.showImportantEvents(this.relevant_facts));
-    }
-
-    /**
-     * This method reset the important events
-     */
-    @Override
-    protected void clearRelevantGameFacts() {
-        this.relevant_facts = new ArrayList<>();
-        this.nickname = null;
-        alreadyShowedLobby = false;
     }
 
     /**

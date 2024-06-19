@@ -6,16 +6,13 @@ import it.polimi.demo.model.enumerations.Coordinate;
 import java.util.List;
 
 /**
- * Abstract class defining the interface for the User Interface (UI) of the application.
+ * Abstract class defining the interface for the User Interface (ui) of the application.
  */
 public abstract class UI {
-
-    protected List<String> relevant_facts; // gameFacts that needs to be showed always in screen
-
     /**
-     * Initializes the UI.
+     * Initializes the ui.
      */
-    public abstract void initializer();
+    protected abstract void initializer();
 
     // --------------------- show methods ---------------------
 
@@ -133,6 +130,8 @@ public abstract class UI {
      */
     protected abstract void show_playerHand(ModelView gameModel, String nickname);
 
+    public abstract void show_commonObjectives(ModelView gameModel);
+
     /**
      * Shows the personal objective card of the player.
      * @param gameModel The model view containing game state information.
@@ -169,12 +168,6 @@ public abstract class UI {
     protected abstract void show_whereToDrawFrom();
 
     /**
-     * Shows the common objectives of the game.
-     * @param gameModel The model view containing game state information.
-     */
-    protected abstract void show_commonObjectives(ModelView gameModel);
-
-    /**
      * Shows a message indicating that a message was sent.
      * @param model The model view containing game state information.
      * @param nickname The nickname of the player who sent the message.
@@ -184,12 +177,12 @@ public abstract class UI {
     /**
      * Shows a prompt to choose which objective card to choose.
      */
-    public abstract void show_whichObjectiveToChoose();
+    protected abstract void show_whichObjectiveToChoose();
 
     /**
      * Shows a prompt to choose which card to place.
      */
-    public abstract void show_whichCardToPlace();
+    protected abstract void show_whichCardToPlace();
 
     /**
      * Shows a message indicating invalid input.
@@ -222,17 +215,6 @@ public abstract class UI {
     // --------------------- actions ---------------------
 
     /**
-     * Adds a relevant game fact to be displayed.
-     * @param input The input to add as a relevant game fact.
-     */
-    public abstract void addRelevantGameFact(String input);
-
-    /**
-     * Clears all relevant game facts.
-     */
-    protected abstract void clearRelevantGameFacts();
-
-    /**
      * Shows a message indicating a no connection error.
      */
     protected abstract void show_noConnectionError();
@@ -263,4 +245,6 @@ public abstract class UI {
      * @param playerIndex The index of the player whose personal board is to be shown.
      */
     protected abstract void show_othersPersonalBoard(ModelView modelView, int playerIndex);
+
+    protected abstract void playerLeft(ModelView modelView, String nick);
 }

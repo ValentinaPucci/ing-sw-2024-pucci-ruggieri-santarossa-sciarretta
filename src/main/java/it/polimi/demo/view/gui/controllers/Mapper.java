@@ -42,6 +42,7 @@ public class Mapper {
         mappableAreas.put("4,-2", new int[]{260, 460, 278, 482});
         mappableAreas.put("4,-1", new int[]{330, 460, 348, 482});
         mappableAreas.put("4,0", new int[]{400, 460, 418, 482});
+
         mappableAreas.put("4,1", new int[]{470, 460, 488, 482});
         mappableAreas.put("4,2", new int[]{540, 460, 558, 482});
         mappableAreas.put("4,3", new int[]{610, 460, 628, 482});
@@ -154,31 +155,150 @@ public class Mapper {
         mappableAreas.put("6,-6", new int[]{120, 540, 138, 562});
         mappableAreas.put("6,-5", new int[]{190, 540, 208, 562});
 
-        mappableAreas.put("7,-7", new int[]{50, 580, 68, 602});
-        mappableAreas.put("7,-6", new int[]{120, 580, 138, 602});
-        mappableAreas.put("7,-5", new int[]{190, 580, 208, 602});
-        mappableAreas.put("7,-4", new int[]{260, 580, 278, 602});
-        mappableAreas.put("7,-3", new int[]{330, 580, 348, 602});
-        mappableAreas.put("7,-2", new int[]{400, 580, 418, 602});
-        mappableAreas.put("7,-1", new int[]{470, 580, 488, 602});
-        mappableAreas.put("7,0", new int[]{540, 580, 558, 602});
-        mappableAreas.put("7,1", new int[]{610, 580, 628, 602});
-        mappableAreas.put("7,2", new int[]{680, 580, 698, 602});
-        mappableAreas.put("7,3", new int[]{750, 580, 768, 602});
-        mappableAreas.put("7,4", new int[]{820, 580, 838, 602});
-        mappableAreas.put("7,5", new int[]{890, 580, 908, 602});
+        //nuove:
+        mappableAreas.put("7,-4", new int[]{120, 580, 138, 602});
+        mappableAreas.put("7,-3", new int[]{190, 580, 208, 602});
+        mappableAreas.put("7,-2", new int[]{260, 580, 278, 602});
+        mappableAreas.put("7,-1", new int[]{330, 580, 348, 602});
+        mappableAreas.put("7,0", new int[]{400, 580, 418, 602});
+        mappableAreas.put("7,1", new int[]{470, 580, 488, 602});
+        mappableAreas.put("7,2", new int[]{540, 580, 558, 602});
+        mappableAreas.put("7,3", new int[]{610, 580, 628, 602});
+        mappableAreas.put("7,4", new int[]{680, 580, 698, 602});
+        mappableAreas.put("7,5", new int[]{750, 580, 768, 602});
 
-        mappableAreas.put("-6,-4", new int[]{260, 460, 278, 482});
-        mappableAreas.put("-6,-3", new int[]{330, 460, 348, 482});
-        mappableAreas.put("-6,-2", new int[]{400, 460, 418, 482});
-        mappableAreas.put("-6,-1", new int[]{470, 460, 488, 482});
-        mappableAreas.put("-6,0", new int[]{540, 460, 558, 482});
-        mappableAreas.put("-6,1", new int[]{610, 460, 628, 482});
-        mappableAreas.put("-6,2", new int[]{680, 460, 698, 482});
-        mappableAreas.put("-6,3", new int[]{750, 460, 768, 482});
-        mappableAreas.put("-6,4", new int[]{820, 460, 838, 482});
-        mappableAreas.put("-6,5", new int[]{890, 460, 908, 482});
+        mappableAreas.put("8,-4", new int[]{120, 620, 138, 642});
+        mappableAreas.put("8,-3", new int[]{190, 620, 208, 642});
+        mappableAreas.put("8,-2", new int[]{260, 620, 278, 642});
+        mappableAreas.put("8,-1", new int[]{330, 620, 348, 642});
+        mappableAreas.put("8,0", new int[]{400, 620, 418, 642});
+        mappableAreas.put("8,1", new int[]{470, 620, 488, 642});
+        mappableAreas.put("8,2", new int[]{540, 620, 558, 642});
+        mappableAreas.put("8,3", new int[]{610, 620, 628, 642});
+        mappableAreas.put("8,4", new int[]{680, 620, 698, 642});
+        mappableAreas.put("8,5", new int[]{750, 620, 768, 642});
 
+        mappableAreas.put("9,-4", new int[]{120, 660, 138, 682});
+        mappableAreas.put("9,-3", new int[]{190, 660, 208, 682});
+        mappableAreas.put("9,-2", new int[]{260, 660, 278, 682});
+        mappableAreas.put("9,-1", new int[]{330, 660, 348, 682});
+        mappableAreas.put("9,0", new int[]{400, 660, 418, 682});
+        mappableAreas.put("9,1", new int[]{470, 660, 488, 682});
+        mappableAreas.put("9,2", new int[]{540, 660, 558, 682});
+        mappableAreas.put("9,3", new int[]{610, 660, 628, 682});
+        mappableAreas.put("9,4", new int[]{680, 660, 698, 682});
+        mappableAreas.put("9,5", new int[]{750, 660, 768, 682});
+
+        mappableAreas.put("10,-4", new int[]{120, 700, 138, 722});
+        mappableAreas.put("10,-3", new int[]{190, 700, 208, 722});
+        mappableAreas.put("10,-2", new int[]{260, 700, 278, 722});
+        mappableAreas.put("10,-1", new int[]{330, 700, 348, 722});
+        mappableAreas.put("10,0", new int[]{400, 700, 418, 722});
+        mappableAreas.put("10,1", new int[]{470, 700, 488, 722});
+        mappableAreas.put("10,2", new int[]{540, 700, 558, 722});
+        mappableAreas.put("10,3", new int[]{610, 700, 628, 722});
+        mappableAreas.put("10,4", new int[]{680, 700, 698, 722});
+        mappableAreas.put("10,5", new int[]{750, 700, 768, 722});
+
+        mappableAreas.put("11,-4", new int[]{120, 740, 138, 762});
+        mappableAreas.put("11,-3", new int[]{190, 740, 208, 762});
+        mappableAreas.put("11,-2", new int[]{260, 740, 278, 762});
+        mappableAreas.put("11,-1", new int[]{330, 740, 348, 762});
+        mappableAreas.put("11,0", new int[]{400, 740, 418, 762});
+        mappableAreas.put("11,1", new int[]{470, 740, 488, 762});
+        mappableAreas.put("11,2", new int[]{540, 740, 558, 762});
+        mappableAreas.put("11,3", new int[]{610, 740, 628, 762});
+        mappableAreas.put("11,4", new int[]{680, 740, 698, 762});
+        mappableAreas.put("11,5", new int[]{750, 740, 768, 762});
+
+        mappableAreas.put("12,-4", new int[]{120, 780, 138, 802});
+        mappableAreas.put("12,-3", new int[]{190, 780, 208, 802});
+        mappableAreas.put("12,-2", new int[]{260, 780, 278, 802});
+        mappableAreas.put("12,-1", new int[]{330, 780, 348, 802});
+        mappableAreas.put("12,0", new int[]{400, 780, 418, 802});
+        mappableAreas.put("12,1", new int[]{470, 780, 488, 802});
+        mappableAreas.put("12,2", new int[]{540, 780, 558, 802});
+        mappableAreas.put("12,3", new int[]{610, 780, 628, 802});
+        mappableAreas.put("12,4", new int[]{680, 780, 698, 802});
+        mappableAreas.put("12,5", new int[]{750, 780, 768, 802});
+
+
+        mappableAreas.put("-6,-4", new int[]{120, 60, 138, 82});
+        mappableAreas.put("-6,-3", new int[]{190, 60, 208, 82});
+        mappableAreas.put("-6,-2", new int[]{260, 60, 278, 82});
+        mappableAreas.put("-6,-1", new int[]{330, 60, 348, 82});
+        mappableAreas.put("-6,0", new int[]{400, 60, 418, 82});
+        mappableAreas.put("-6,1", new int[]{470, 60, 488, 82});
+        mappableAreas.put("-6,2", new int[]{540, 60, 558, 82});
+        mappableAreas.put("-6,3", new int[]{610, 60, 628, 82});
+        mappableAreas.put("-6,4", new int[]{680, 60, 698, 82});
+        mappableAreas.put("-6,5", new int[]{750, 60, 768, 82});
+
+        mappableAreas.put("-7,-4", new int[]{120, 20, 138, 42});
+        mappableAreas.put("-7,-3", new int[]{190, 20, 208, 42});
+        mappableAreas.put("-7,-2", new int[]{260, 20, 278, 42});
+        mappableAreas.put("-7,-1", new int[]{330, 20, 348, 42});
+        mappableAreas.put("-7,0", new int[]{400, 20, 418, 42});
+        mappableAreas.put("-7,1", new int[]{470, 20, 488, 42});
+        mappableAreas.put("-7,2", new int[]{540, 20, 558, 42});
+        mappableAreas.put("-7,3", new int[]{610, 20, 628, 42});
+        mappableAreas.put("-7,4", new int[]{680, 20, 698, 42});
+        mappableAreas.put("-7,5", new int[]{750, 20, 768, 42});
+
+        mappableAreas.put("-8,-4", new int[]{120, -20, 138, 2});
+        mappableAreas.put("-8,-3", new int[]{190, -20, 208, 2});
+        mappableAreas.put("-8,-2", new int[]{260, -20, 278, 2});
+        mappableAreas.put("-8,-1", new int[]{330, -20, 348, 2});
+        mappableAreas.put("-8,0", new int[]{400, -20, 418, 2});
+        mappableAreas.put("-8,1", new int[]{470, -20, 488, 2});
+        mappableAreas.put("-8,2", new int[]{540, -20, 558, 2});
+        mappableAreas.put("-8,3", new int[]{610, -20, 628, 2});
+        mappableAreas.put("-8,4", new int[]{680, -20, 698, 2});
+        mappableAreas.put("-8,5", new int[]{750, -20, 768, 2});
+
+        mappableAreas.put("-9,-4", new int[]{120, -60, 138, -38});
+        mappableAreas.put("-9,-3", new int[]{190, -60, 208, -38});
+        mappableAreas.put("-9,-2", new int[]{260, -60, 278, -38});
+        mappableAreas.put("-9,-1", new int[]{330, -60, 348, -38});
+        mappableAreas.put("-9,0", new int[]{400, -60, 418, -38});
+        mappableAreas.put("-9,1", new int[]{470, -60, 488, -38});
+        mappableAreas.put("-9,2", new int[]{540, -60, 558, -38});
+        mappableAreas.put("-9,3", new int[]{610, -60, 628, -38});
+        mappableAreas.put("-9,4", new int[]{680, -60, 698, -38});
+        mappableAreas.put("-9,5", new int[]{750, -60, 768, -38});
+
+        mappableAreas.put("-10,-4", new int[]{120, -100, 138, -78});
+        mappableAreas.put("-10,-3", new int[]{190, -100, 208, -78});
+        mappableAreas.put("-10,-2", new int[]{260, -100, 278, -78});
+        mappableAreas.put("-10,-1", new int[]{330, -100, 348, -78});
+        mappableAreas.put("-10,0", new int[]{400, -100, 418, -78});
+        mappableAreas.put("-10,1", new int[]{470, -100, 488, -78});
+        mappableAreas.put("-10,2", new int[]{540, -100, 558, -78});
+        mappableAreas.put("-10,3", new int[]{610, -100, 628, -78});
+        mappableAreas.put("-10,4", new int[]{680, -100, 698, -78});
+        mappableAreas.put("-10,5", new int[]{750, -100, 768, -78});
+
+        mappableAreas.put("-11,-4", new int[]{120, -140, 138, -118});
+        mappableAreas.put("-11,-3", new int[]{190, -140, 208, -118});
+        mappableAreas.put("-11,-2", new int[]{260, -140, 278, -118});
+        mappableAreas.put("-11,-1", new int[]{330, -140, 348, -118});
+        mappableAreas.put("-11,0", new int[]{400, -140, 418, -118});
+        mappableAreas.put("-11,1", new int[]{470, -140, 488, -118});
+        mappableAreas.put("-11,2", new int[]{540, -140, 558, -118});
+        mappableAreas.put("-11,3", new int[]{610, -140, 628, -118});
+        mappableAreas.put("-11,4", new int[]{680, -140, 698, -118});
+        mappableAreas.put("-11,5", new int[]{750, -140, 768, -118});
+
+        mappableAreas.put("-12,-4", new int[]{120, -180, 138, -158});
+        mappableAreas.put("-12,-3", new int[]{190, -180, 208, -158});
+        mappableAreas.put("-12,-2", new int[]{260, -180, 278, -158});
+        mappableAreas.put("-12,-1", new int[]{330, -180, 348, -158});
+        mappableAreas.put("-12,0", new int[]{400, -180, 418, -158});
+        mappableAreas.put("-12,1", new int[]{470, -180, 488, -158});
+        mappableAreas.put("-12,2", new int[]{540, -180, 558, -158});
+        mappableAreas.put("-12,3", new int[]{610, -180, 628, -158});
+        mappableAreas.put("-12,4", new int[]{680, -180, 698, -158});
+        mappableAreas.put("-12,5", new int[]{750, -180, 768, -158});
 
 
     }

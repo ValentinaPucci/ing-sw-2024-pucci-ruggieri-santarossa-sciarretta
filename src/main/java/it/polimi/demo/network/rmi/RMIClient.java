@@ -1,13 +1,13 @@
 package it.polimi.demo.network.rmi;
 
-import it.polimi.demo.network.StaticPrinter;
+import it.polimi.demo.network.utils.StaticPrinter;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.Constants;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.ObserverManagerClient;
-import it.polimi.demo.network.PingSender;
+import it.polimi.demo.network.utils.PingSender;
 import it.polimi.demo.view.dynamic.ClientInterface;
 import it.polimi.demo.network.interfaces.GameControllerInterface;
 import it.polimi.demo.network.interfaces.MainControllerInterface;
@@ -62,7 +62,7 @@ public class RMIClient implements ClientInterface {
     /**
      * The observer manager for handling game listeners
      */
-    private final ObserverManagerClient gameListenersHandler;
+    private final ObserverManagerClient observer_manager_client;
 
     /**
      * The listener for RMI callbacks
@@ -83,7 +83,7 @@ public class RMIClient implements ClientInterface {
      * Constructor that initializes the RMIClient.
      */
     public RMIClient(GameDynamic dynamic) {
-        this.gameListenersHandler = new ObserverManagerClient(dynamic);
+        this.observer_manager_client = new ObserverManagerClient(dynamic);
         this.ping = new PingSender(this);
         this.ping.start();
         initialize();
@@ -96,7 +96,7 @@ public class RMIClient implements ClientInterface {
         try {
             registry = LocateRegistry.getRegistry(Constants.serverIp, Constants.RMI_port);
             asks = (MainControllerInterface) registry.lookup(Constants.RMI_server_name);
-            lis = (Listener) UnicastRemoteObject.exportObject(gameListenersHandler, 0);
+            lis = (Listener) UnicastRemoteObject.exportObject(observer_manager_client, 0);
             StaticPrinter.staticPrinter("Client RMI ready");
         } catch (Exception e) {
             StaticPrinter.staticPrinter("Connection failed");

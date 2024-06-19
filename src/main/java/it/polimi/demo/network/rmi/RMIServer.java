@@ -1,7 +1,7 @@
 package it.polimi.demo.network.rmi;
 
 import it.polimi.demo.controller.MainController;
-import it.polimi.demo.network.StaticPrinter;
+import it.polimi.demo.network.utils.StaticPrinter;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.Constants;
 import it.polimi.demo.model.chat.Message;
