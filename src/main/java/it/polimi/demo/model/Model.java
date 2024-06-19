@@ -105,18 +105,6 @@ public class Model implements Serializable {
         return aux_order_players;
     }
 
-
-    /**
-     * Retrieves the list of nicknames of the players participating in the game.
-     *
-     * @return The list of nicknames.
-     */
-    public List<String> getAllNicknames() {
-        return aux_order_players.stream()
-                .map(Player::getNickname)
-                .collect(Collectors.toList());
-    }
-
     /**
      * Retrieves the list of players connected to the game.
      *
