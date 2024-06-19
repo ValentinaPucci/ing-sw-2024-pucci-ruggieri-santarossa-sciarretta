@@ -75,7 +75,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         reader_queue = new LinkedBlockingQueue<>();
 
         if (guiApplication == null) {
-            // TUI initialization
+            // TUI initialization (reader thread)
             new Thread(() -> {
                 try (Scanner scanner = new Scanner(System.in)) {
                     while (!Thread.currentThread().isInterrupted()) {
@@ -133,7 +133,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                     : () -> handleFallbackEvent(this::safeStatusNotInAGame);
             event.run();
             try {
-                Thread.sleep(200);
+                Thread.sleep(250);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt(); // Preserve interrupt status
                 throw new RuntimeException(e);
@@ -146,11 +146,16 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * @param handlers The map of handlers for different game statuses.
      */
     private void handleEvent(Map<GameStatus, Consumer<HashMap<ModelView, FactType>>> handlers) {
+
+        // Here we poll the facts queue to get the next event
         HashMap<ModelView, FactType> map = facts.poll();
+
         if (map == null || map.containsKey(null)) {
             return;
         }
+
         ModelView model_view = map.keySet().iterator().next();
+
         if (model_view != null) {
             handlers.getOrDefault(model_view.getStatus(), this::doNothing).accept(map);
         }
@@ -161,7 +166,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * @param fallback The fallback handler to invoke.
      */
     private void handleFallbackEvent(Consumer<HashMap<ModelView, FactType>> fallback) {
+
         HashMap<ModelView, FactType> map = facts.poll();
+
         if (map != null) {
             fallback.accept(map);
         }
@@ -241,16 +248,10 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
         FactType type = map.values().iterator().next();
 
-        // Helper method to handle common nickname and fact operations
-        Consumer<String> handleNicknameAndOffer = (s) -> {
-            nickname = null;
-            facts.offer(null, FactType.LOBBY_INFO);
-        };
-
         Map<FactType, Runnable> actions = Map.of(FactType.GENERIC_ERROR, () -> {
                     ui.show_menu();
-                    updateParser();
                     nickname = null;
+                    parser.getProcessedDataQueue().clear();
                     facts.offer(null, FactType.LOBBY_INFO);
                 },
                 FactType.LOBBY_INFO, () -> {
@@ -258,9 +259,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                     do {
                         selectionOk = askSelectGame();
                     } while (!selectionOk);
-                },
-                FactType.ALREADY_USED_NICKNAME, () -> handleNicknameAndOffer.accept("[WARNING]: Already used nickname!"),
-                FactType.FULL_GAME, () -> handleNicknameAndOffer.accept("[WARNING] Full game!")
+                }
         );
 
         actions.getOrDefault(type, () -> {}).run();
@@ -386,24 +385,12 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                 FactType.GAME_ENDED, () -> {
                     ui.show_menu();
                     parser.getProcessedDataQueue().clear();
-                    updateParser();
                     leave(nickname, model.getGameId());
                     youLeft();
                 }
         );
 
         actions.getOrDefault(type, () -> {}).run();
-    }
-
-    /**
-     * Updates the parser by removing the processed data from the queue.
-     */
-    private void updateParser() {
-        try {
-            parser.getProcessedDataQueue().take();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     /**
@@ -1018,7 +1005,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void genericErrorWhenEnteringGame(String why) {
-        ui.show_genericMessage("No available game to join:" + why);
+        ui.show_genericMessage("No available game to join: " + why);
         facts.offer(null, FactType.GENERIC_ERROR);
     }
 

@@ -184,22 +184,9 @@ public class Model implements Serializable {
      * Statical offer.
      */
     public void addPlayer(Player p) {
-
-        List<String> nicknames = this.getAllNicknames();
-        String nickname = p.getNickname();
-
-        if (nicknames.contains(nickname)) {
-            observers.notify_joinUnableNicknameAlreadyIn(getIdentityOfPlayer(nickname));
-        }
-        else if (aux_order_players.size() >= num_required_players_to_start ||
-                aux_order_players.size() >= Constants.MaxNumOfPlayer) {
-            observers.notify_joinUnableGameFull(getIdentityOfPlayer(nickname), this);
-        }
-        else {
-            aux_order_players.add(p);
-            players_connected.offer(p);
-            observers.notify_playerJoined(this);
-        }
+        aux_order_players.add(p);
+        players_connected.offer(p);
+        observers.notify_playerJoined(this);
     }
 
     /**

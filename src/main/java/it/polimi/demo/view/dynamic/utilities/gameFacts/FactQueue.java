@@ -54,7 +54,10 @@ public class FactQueue implements Serializable {
         return queue_of_facts.stream()
                 .map(HashMap::values)
                 .flatMap(Collection::stream)
-                .anyMatch(factType -> !factType.equals(FactType.LOBBY_INFO));
+                .anyMatch(factType -> !(factType.equals(FactType.LOBBY_INFO) ||
+                        factType.equals(FactType.GENERIC_ERROR) ||
+                        factType.equals(FactType.ALREADY_USED_NICKNAME) ||
+                        factType.equals(FactType.FULL_GAME)));
     }
 }
 
