@@ -25,9 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import static it.polimi.demo.view.gui.scene.SceneType.*;
-
-
 
 public class ApplicationGUI extends Application {
 
@@ -235,12 +232,12 @@ public class ApplicationGUI extends Application {
     }
 
     public void showPlayerDrawnCard(ModelView model, String nickname) {
-        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setPlayerDrawnCard(model, nickname);
     }
 
     public void showPlayerPlacedCard(ModelView model, String nickname) {
-        RunningController controller = (RunningController) scenes.get(getSceneIndex(RUNNING)).getGenericController();
+        RunningController controller = (RunningController) scenes.get(getSceneIndex(SceneType.RUNNING)).getGenericController();
         controller.setCardHand(model, nickname);
         //TODO: controller.setPersonalBoard(model, nickname);
     }
@@ -267,7 +264,7 @@ public class ApplicationGUI extends Application {
 
 
     public void showError(String msg) {
-        ErrorController controller = (ErrorController) scenes.get(getSceneIndex(ERROR)).getGenericController();
+        ErrorController controller = (ErrorController) scenes.get(getSceneIndex(SceneType.ERROR)).getGenericController();
     }
 
 }

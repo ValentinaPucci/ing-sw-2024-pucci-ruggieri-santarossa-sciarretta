@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static it.polimi.demo.network.StaticPrinter.staticPrinter;
+import static it.polimi.demo.network.utils.StaticPrinter.staticPrinter;
 
 
 public class ClientConnection extends Thread implements Serializable {

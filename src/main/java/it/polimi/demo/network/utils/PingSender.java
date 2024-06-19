@@ -1,4 +1,4 @@
-package it.polimi.demo.network;
+package it.polimi.demo.network.utils;
 
 import it.polimi.demo.view.dynamic.ClientInterface;
 import java.io.IOException;

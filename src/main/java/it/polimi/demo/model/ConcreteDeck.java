@@ -28,7 +28,7 @@ public class ConcreteDeck implements Serializable {
         this.deck.addAll(this.concrete_cards_bunch.cards);
     }
 
-    // Second constructor to use for ayother type of card besides Resources cards that use the first one.
+    // Second constructor to use for another type of card besides Resources cards that use the first one.
 
     public void push(Card card) {
         this.deck.push(card);

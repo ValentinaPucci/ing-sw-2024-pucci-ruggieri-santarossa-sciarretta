@@ -1,17 +1,17 @@
 package it.polimi.demo.model.cards.gameCards;
 
+import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.board.BoardCellCoordinate;
 import it.polimi.demo.model.board.Corner;
-import it.polimi.demo.model.cards.Card;
 import it.polimi.demo.model.enumerations.Color;
 import it.polimi.demo.model.enumerations.Orientation;
 
 public class ResourceCard extends Card {
 
     public int points;
-    public Color color;
     private Corner[][] corners;
+    public Color color;
 
     /**
      * Remark: we first initialize the points at 0 for every card
@@ -81,9 +81,7 @@ public class ResourceCard extends Card {
      *
      * @return NO corner
      */
-    public Corner getCornerAtNW () {
-        return corners[0][0];
-    }
+    public Corner getCornerAtNW () { return corners[0][0]; }
 
     /**
      * @requires

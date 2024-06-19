@@ -6,7 +6,7 @@ import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
-import it.polimi.demo.network.StaticPrinter;
+import it.polimi.demo.network.utils.StaticPrinter;
 
 import java.io.IOException;
 import java.io.Serial;
