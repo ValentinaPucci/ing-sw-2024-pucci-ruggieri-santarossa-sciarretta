@@ -1,13 +1,13 @@
-package it.polimi.demo.view.ui.gui;
+package it.polimi.demo.view.gui;
 
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.enumerations.Coordinate;
-import it.polimi.demo.view.ui.UI;
+import it.polimi.demo.view.dynamic.UI;
 
-import it.polimi.demo.view.ui.gui.controllers.GameOverController;
-import it.polimi.demo.view.ui.gui.controllers.LobbyController;
-import it.polimi.demo.view.ui.gui.controllers.RunningController;
-import it.polimi.demo.view.ui.gui.scene.SceneType;
+import it.polimi.demo.view.gui.controllers.GameOverController;
+import it.polimi.demo.view.gui.controllers.LobbyController;
+import it.polimi.demo.view.gui.controllers.RunningController;
+import it.polimi.demo.view.gui.scene.SceneType;
 import javafx.application.Platform;
 
 import java.util.ArrayList;

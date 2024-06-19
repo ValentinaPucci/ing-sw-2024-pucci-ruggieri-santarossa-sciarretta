@@ -1,4 +1,4 @@
-package it.polimi.demo.view.ui.gui.scene;
+package it.polimi.demo.view.gui.scene;
 
 public enum SceneType {
     MENU("/fxml/Menu.fxml"),

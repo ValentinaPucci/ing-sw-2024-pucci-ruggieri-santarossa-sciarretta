@@ -1,11 +1,12 @@
-package it.polimi.demo.view.ui.gui;
+package it.polimi.demo.view.gui;
 
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.GameDynamic;
+import it.polimi.demo.view.gui.controllers.*;
+import it.polimi.demo.view.gui.scene.SceneType;
 import it.polimi.demo.view.ui.gui.controllers.*;
-import it.polimi.demo.view.ui.gui.scene.SceneType;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

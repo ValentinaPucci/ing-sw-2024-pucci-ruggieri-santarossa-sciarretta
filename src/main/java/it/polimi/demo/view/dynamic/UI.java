@@ -1,4 +1,4 @@
-package it.polimi.demo.view.ui;
+package it.polimi.demo.view.dynamic;
 
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.enumerations.Coordinate;

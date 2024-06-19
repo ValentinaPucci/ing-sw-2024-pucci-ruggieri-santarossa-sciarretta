@@ -1,4 +1,4 @@
-package it.polimi.demo.view.ui.text;
+package it.polimi.demo.view.text;
 
 import it.polimi.demo.model.board.Cell;
 import it.polimi.demo.model.board.PersonalBoard;

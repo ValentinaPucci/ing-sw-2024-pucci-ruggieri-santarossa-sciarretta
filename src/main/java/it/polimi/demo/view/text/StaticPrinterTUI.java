@@ -1,4 +1,4 @@
-package it.polimi.demo.view.ui.text;
+package it.polimi.demo.view.text;
 
 import org.fusesource.jansi.Ansi;
 import it.polimi.demo.Constants;

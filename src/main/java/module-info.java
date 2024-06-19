@@ -22,9 +22,9 @@ module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
     exports it.polimi.demo.observer to java.rmi;
     exports it.polimi.demo.main to java.rmi;
 
-    exports it.polimi.demo.view.ui.gui to javafx.graphics;
-    exports it.polimi.demo.view.ui.gui.controllers to javafx.fxml;
-    opens it.polimi.demo.view.ui.gui.controllers to javafx.fxml;
+    exports it.polimi.demo.view.gui to javafx.graphics;
+    exports it.polimi.demo.view.gui.controllers to javafx.fxml;
+    opens it.polimi.demo.view.gui.controllers to javafx.fxml;
     exports it.polimi.demo.main.utils to java.rmi;
     exports it.polimi.demo.network.utils to java.rmi;
 }

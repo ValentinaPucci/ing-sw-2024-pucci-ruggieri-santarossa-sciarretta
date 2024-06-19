@@ -1,4 +1,4 @@
-package it.polimi.demo.view.ui.text;
+package it.polimi.demo.view.text;
 
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
@@ -11,14 +11,14 @@ import it.polimi.demo.Constants;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.view.ui.UI;
+import it.polimi.demo.view.dynamic.UI;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.demo.view.ui.text.StaticPrinterTUI.print;
+import static it.polimi.demo.view.text.StaticPrinterTUI.print;
 import static org.fusesource.jansi.Ansi.Color.*;
 import static org.fusesource.jansi.Ansi.ansi;
 

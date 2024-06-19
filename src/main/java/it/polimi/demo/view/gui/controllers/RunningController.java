@@ -1,4 +1,4 @@
-package it.polimi.demo.view.ui.gui.controllers;
+package it.polimi.demo.view.gui.controllers;
 
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.board.PersonalBoard;

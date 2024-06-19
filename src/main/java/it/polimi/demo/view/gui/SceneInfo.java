@@ -1,7 +1,7 @@
-package it.polimi.demo.view.ui.gui;
+package it.polimi.demo.view.gui;
 
-import it.polimi.demo.view.ui.gui.controllers.GenericController;
-import it.polimi.demo.view.ui.gui.scene.SceneType;
+import it.polimi.demo.view.gui.controllers.GenericController;
+import it.polimi.demo.view.gui.scene.SceneType;
 import javafx.scene.Scene;
 
 import java.util.concurrent.LinkedBlockingQueue;
