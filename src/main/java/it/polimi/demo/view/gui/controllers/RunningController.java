@@ -5,8 +5,10 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -104,17 +106,16 @@ public class RunningController extends GenericController {
     private ComboBox<String> recipientComboBox;
     private int starterCard = 0;
     private ArrayList<Player> players_list;
-    private int player_index;
+    private int my_index = 0;
     private List<Pane> cardPanes;
     private List<Button> buttons;
     private Mapper mapper = new Mapper();
-
     private InverseMapper inverseMapper = new InverseMapper();
     private int chosenCard = 0;
     double chosenX = 0;
     private double chosenY = 0;
     private int cardIndex = 0;
-    private int commonIndex = 0;
+    int commonIndex = 0;
     private ArrayList<Player> players_without_me = new ArrayList<>();
     int players_without_me_size = 0;
     private ArrayList<Integer> personalObjectiveIds = new ArrayList<>();
@@ -268,7 +269,6 @@ public class RunningController extends GenericController {
             }
         }
         bnImageViews[indexToGo].setImage(pieceToMove.getImage());
-
     }
 
 
@@ -301,6 +301,15 @@ public class RunningController extends GenericController {
                 otherPlayers.getChildren().add(playerLabel);
 
                 // Create and offer button
+                Label pointsLabel = new Label("0");
+                pointsLabel.setTextFill(Color.web("#4d0202"));
+                pointsLabel.setAlignment(javafx.geometry.Pos.CENTER);
+                pointsLabel.setFont(javafx.scene.text.Font.font("Luminari", 19));
+                GridPane.setRowIndex(pointsLabel, j + 1);
+                GridPane.setColumnIndex(pointsLabel, 1);
+                otherPlayers.getChildren().add(pointsLabel);
+
+                // Create and offer button
                 Button goButton = new Button("GO");
                 goButton.setPrefHeight(26.0);
                 goButton.setPrefWidth(188.0);
@@ -308,18 +317,19 @@ public class RunningController extends GenericController {
                 goButton.setOnAction((ActionEvent event) ->{
                     showOthersPersonalBoard(getPlayerIndex(players_list, player.getNickname()));});
                 GridPane.setRowIndex(goButton, j + 1);
-                GridPane.setColumnIndex(goButton, 1);
+                GridPane.setColumnIndex(goButton, 2);
                 otherPlayers.getChildren().add(goButton);
 
                 // Add row constraints
                 otherPlayers.getRowConstraints().add(new RowConstraints(30.0, 30.0, Double.MAX_VALUE));
                 j++;
+            }else{
+                this.my_index = j;
             }
         }
         players_without_me_size = players_without_me.size();
     }
     public void showOthersPersonalBoard(int index) {
-        System.out.println("ho cliccato GO");
         LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             switch (index) {
@@ -348,7 +358,6 @@ public class RunningController extends GenericController {
         int playerIndex = getPlayerIndex(players_without_me, player.getNickname());
         personalBoardAnchorPane.setVisible(false);
         my_sp.setVisible(false);
-        System.out.println("playerIndex: " + playerIndex + " playerNickname: " + player.getNickname() + " playerIndex: " + player_index);
 
         if(playerIndex == 0){
             pb0.setVisible(true);
@@ -751,6 +760,36 @@ public class RunningController extends GenericController {
     }
 
     //-------------------------------------------------------------------------------------------------------------------------
+
+    public void setPoints(ModelView gameModel) {
+        int j = 0;
+        for(Player player : players_without_me){
+            int playerIndex = getPlayerIndex(players_list, player.getNickname());
+            removeNodeByRowColumnIndex(j + 1, 1, otherPlayers);
+            Label pointsLabel = new Label(String.valueOf(gameModel.getCommonBoard().getPlayerPosition(playerIndex)));
+            pointsLabel.setTextFill(Color.web("#4d0202"));
+            pointsLabel.setAlignment(javafx.geometry.Pos.CENTER);
+            pointsLabel.setFont(javafx.scene.text.Font.font("Luminari", 19));
+            GridPane.setRowIndex(pointsLabel, j + 1);
+            GridPane.setColumnIndex(pointsLabel, 1);
+            otherPlayers.getChildren().add(pointsLabel);
+            j++;
+        }
+        myPoints.setText(gameModel.getCommonBoard().getPlayerPosition(my_index) + "");
+    }
+
+    private void removeNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
+        ObservableList<Node> children = gridPane.getChildren();
+        for (Node node : children) {
+            Integer rowIndex = GridPane.getRowIndex(node);
+            Integer colIndex = GridPane.getColumnIndex(node);
+
+            if (rowIndex != null && rowIndex == row && colIndex != null && colIndex == column) {
+                gridPane.getChildren().remove(node);
+                break; // Importante uscire dal ciclo dopo aver rimosso il nodo per evitare ConcurrentModificationException
+            }
+        }
+    }
     public void setPersonalBoard(ModelView gameModel) {
         Player player = gameModel.getPlayersConnected().getFirst();
         int playerIndex = getPlayerIndex(gameModel.getAllPlayers(), player.getNickname());
@@ -762,7 +801,7 @@ public class RunningController extends GenericController {
 
     private void placeOthersPlayersCard(int playerIndex, ArrayList<Integer> lastChosenCard, Orientation lastChosenOrientation, Coordinate coord) {
         String imagePath;
-        System.out.println("lastChosenCardId: " + lastChosenCard);
+        //System.out.println("lastChosenCardId: " + lastChosenCard);
         String formattedCardId = String.format("%03d", lastChosenCard.getFirst());
         if(lastChosenOrientation == Orientation.FRONT){
             imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
@@ -1184,6 +1223,8 @@ public class RunningController extends GenericController {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
     }
+
+
 }
 
 
