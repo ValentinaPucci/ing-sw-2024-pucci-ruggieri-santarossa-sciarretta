@@ -135,6 +135,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
         Player p = model.getIdentityOfPlayer(nick);
         removeListener(lis);
         model.removePlayer(p);
+        model.setStatus(GameStatus.ENDED);
     }
 
     @Override

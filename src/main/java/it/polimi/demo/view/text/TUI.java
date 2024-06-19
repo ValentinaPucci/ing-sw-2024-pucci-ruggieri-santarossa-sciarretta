@@ -371,9 +371,9 @@ public class TUI extends UI {
                 \tpress (js) to join to a specific game
                 \t
                 \t -> Useful commands that can be used at any point in the game:
-                \t\t  type "/c [msg]" to send a public message!
-                \t\t  type "/cs [playerName] [msg]" to send a private message!
-                \t\t  type "/quit" and you can leave the game!
+                \t\t  type "/c [msg]" to send a public message
+                \t\t  type "/cs [playerName] [msg]" to send a private message
+                \t\t  type "/leave, /quit, /exit" to leave the game
                 \t""").fg(DEFAULT));
     }
 
