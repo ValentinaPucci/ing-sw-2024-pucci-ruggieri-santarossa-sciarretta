@@ -22,6 +22,17 @@ public class AuxFI {
             handleException(e);
         }
     }
+    /**
+     * Handles an event with a single parameter
+     * @param eventAction the event to handle
+     */
+    public static void handleEvent(Runnable eventAction) {
+        try {
+            eventAction.run();
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
 
     /**
      * Handles an event with two parameters
