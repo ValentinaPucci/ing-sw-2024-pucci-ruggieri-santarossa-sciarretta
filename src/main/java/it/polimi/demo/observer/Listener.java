@@ -91,28 +91,6 @@ public interface Listener extends Remote {
     void playerLeft(ModelView model, String nick) throws RemoteException;
 
     /**
-     * Notifies that a player could not join because the game is full.
-     * @param p The player who attempted to join.
-     * @param model The current state of the game.
-     * @throws RemoteException If a remote communication error occurs.
-     */
-    void joinUnableGameFull(Player p, ModelView model) throws RemoteException;
-
-    /**
-     * Notifies that a player could not join because the nickname is already in use.
-     * @param wantedToJoin The player who wanted to join with the conflicting nickname.
-     * @throws RemoteException If a remote communication error occurs.
-     */
-    void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException;
-
-    /**
-     * Notifies that the requested game ID does not exist.
-     * @param gameid The ID of the requested game.
-     * @throws RemoteException If a remote communication error occurs.
-     */
-    void gameIdNotExists(int gameid) throws RemoteException;
-
-    /**
      * Notifies of a generic error when attempting to enter a game.
      * @param why The reason for the error.
      * @throws RemoteException If a remote communication error occurs.

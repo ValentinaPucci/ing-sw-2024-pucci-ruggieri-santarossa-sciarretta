@@ -5,25 +5,22 @@ import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.model.Player;
 import it.polimi.demo.view.dynamic.GameDynamic;
 import it.polimi.demo.network.utils.AuxFI;
-
-import java.io.IOException;
 import java.io.Serializable;
-import java.rmi.RemoteException;
+
 
 /**
- * This class manages observer notifications from the game model and forwards them to the dynamic game view.
+ * This class manages observer notifications from the game model and forwards them to the dyn game view.
  * It implements the Listener interface and handles events by invoking corresponding methods on a GameDynamic instance.
  */
 public class ObserverManagerClient implements Listener, Serializable {
 
     private static final long serialVersionUID = -5070962929563880709L;
-    private transient GameDynamic dynamic;
+    private transient GameDynamic dyn;
 
     public ObserverManagerClient(GameDynamic dyn) {
-        this.dynamic = dyn;
+        this.dyn = dyn;
     }
 
     /**
@@ -34,7 +31,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void starterCardPlaced(ModelView model, Orientation orientation, String nick) {
-        AuxFI.handleEvent(dynamic::starterCardPlaced, model, orientation, nick);
+        AuxFI.handleEvent(dyn::starterCardPlaced, model, orientation, nick);
     }
 
     /**
@@ -44,7 +41,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void cardChosen(ModelView model, int which_card) {
-        AuxFI.handleEvent(dynamic::cardChosen, model, which_card);
+        AuxFI.handleEvent(dyn::cardChosen, model, which_card);
     }
 
     /**
@@ -56,7 +53,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
-        AuxFI.handleEvent(dynamic::cardPlaced, model, where_to_place_x, where_to_place_y, orientation);
+        AuxFI.handleEvent(dyn::cardPlaced, model, where_to_place_x, where_to_place_y, orientation);
     }
 
     /**
@@ -65,7 +62,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void illegalMove(ModelView model) {
-        AuxFI.handleEvent(dynamic::illegalMove, model);
+        AuxFI.handleEvent(dyn::illegalMove, model);
     }
 
     /**
@@ -75,7 +72,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void successfulMove(ModelView model, Coordinate coord) {
-        AuxFI.handleEvent(dynamic::successfulMove, model, coord);
+        AuxFI.handleEvent(dyn::successfulMove, model, coord);
     }
 
     /**
@@ -85,7 +82,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) {
-        AuxFI.handleEvent(dynamic::illegalMoveBecauseOf, model, reason_why);
+        AuxFI.handleEvent(dyn::illegalMoveBecauseOf, model, reason_why);
     }
 
     /**
@@ -95,7 +92,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void cardDrawn(ModelView model, int index) {
-        AuxFI.handleEvent(dynamic::cardDrawn, model, index);
+        AuxFI.handleEvent(dyn::cardDrawn, model, index);
     }
 
     /**
@@ -104,7 +101,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void playerJoined(ModelView model) {
-        AuxFI.handleEvent(dynamic::playerJoined, model);
+        AuxFI.handleEvent(dyn::playerJoined, model);
     }
 
     /**
@@ -114,35 +111,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void playerLeft(ModelView model, String nick)  {
-        AuxFI.handleEvent(dynamic::playerLeft, model, nick);
-    }
-
-    /**
-     * Notifies that a player is unable to join because the game is full.
-     * @param wantedToJoin the player who wanted to join
-     * @param model the current model view
-     */
-    @Override
-    public void joinUnableGameFull(Player wantedToJoin, ModelView model)  {
-        AuxFI.handleEvent(dynamic::joinUnableGameFull, wantedToJoin, model);
-    }
-
-    /**
-     * Notifies that a player is unable to join because the nickname is already in use.
-     * @param wantedToJoin the player who wanted to join
-     */
-    @Override
-    public void joinUnableNicknameAlreadyIn(Player wantedToJoin)  {
-        AuxFI.handleEvent(dynamic::joinUnableNicknameAlreadyIn, wantedToJoin);
-    }
-
-    /**
-     * Notifies that a game with the specified ID does not exist.
-     * @param game_id the ID of the game
-     */
-    @Override
-    public void gameIdNotExists(int game_id)  {
-        AuxFI.handleEvent(dynamic::gameIdNotExists, game_id);
+        AuxFI.handleEvent(dyn::playerLeft, model, nick);
     }
 
     /**
@@ -151,7 +120,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void genericErrorWhenEnteringGame(String why)  {
-        AuxFI.handleEvent(dynamic::genericErrorWhenEnteringGame, why);
+        AuxFI.handleEvent(dyn::genericErrorWhenEnteringGame, why);
     }
 
     /**
@@ -160,8 +129,8 @@ public class ObserverManagerClient implements Listener, Serializable {
      * @param nick the nickname of the player who is ready
      */
     @Override
-    public void playerIsReadyToStart(ModelView model, String nick) throws IOException, RemoteException {
-        AuxFI.handleEvent(dynamic::playerIsReadyToStart, model, nick);
+    public void playerIsReadyToStart(ModelView model, String nick) {
+        AuxFI.handleEvent(dyn::playerIsReadyToStart, model, nick);
     }
 
     /**
@@ -170,7 +139,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void gameStarted(ModelView model)  {
-        AuxFI.handleEvent(dynamic::gameStarted, model);
+        AuxFI.handleEvent(dyn::gameStarted, model);
     }
 
     /**
@@ -179,7 +148,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void gameEnded(ModelView model)  {
-        AuxFI.handleEvent(dynamic::gameEnded, model);
+        AuxFI.handleEvent(dyn::gameEnded, model);
     }
 
     /**
@@ -188,7 +157,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void nextTurn(ModelView model)  {
-        AuxFI.handleEvent(dynamic::nextTurn, model);
+        AuxFI.handleEvent(dyn::nextTurn, model);
     }
 
     /**
@@ -198,7 +167,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void playerDisconnected(ModelView model, String nick)  {
-        AuxFI.handleEvent(dynamic::playerDisconnected, model, nick);
+        AuxFI.handleEvent(dyn::playerDisconnected, model, nick);
     }
 
     /**
@@ -209,7 +178,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void showOthersPersonalBoard(ModelView model, String playerNickname, int playerIndex)  {
-        AuxFI.handleEvent(dynamic::showOthersPersonalBoard, model, playerNickname, playerIndex);
+        AuxFI.handleEvent(dyn::showOthersPersonalBoard, model, playerNickname, playerIndex);
     }
 
     /**
@@ -218,7 +187,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void secondLastRound(ModelView model)  {
-        AuxFI.handleEvent(dynamic::secondLastRound, model);
+        AuxFI.handleEvent(dyn::secondLastRound, model);
     }
 
     /**
@@ -227,7 +196,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void lastRound(ModelView model)  {
-        AuxFI.handleEvent(dynamic::lastRound, model);
+        AuxFI.handleEvent(dyn::lastRound, model);
     }
 
     /**
@@ -238,6 +207,6 @@ public class ObserverManagerClient implements Listener, Serializable {
      */
     @Override
     public void messageSent(ModelView model, String nickname, Message message)  {
-        AuxFI.handleEvent(dynamic::messageSent, model, nickname, message);
+        AuxFI.handleEvent(dyn::messageSent, model, nickname, message);
     }
 }

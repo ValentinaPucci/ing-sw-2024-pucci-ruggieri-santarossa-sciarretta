@@ -14,6 +14,7 @@ import it.polimi.demo.model.ModelView;
 import it.polimi.demo.view.dynamic.UI;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,17 +32,7 @@ public class TUI extends UI {
     /**
      * constructor
      */
-    public TUI() {
-        initializer();
-    }
-
-    /**
-     * initializer
-     */
-    @Override
-    public void initializer() {
-        AnsiConsole.systemInstall();
-    }
+    public TUI() { AnsiConsole.systemInstall(); }
 
 
     // ********************* aux ********************* //
@@ -271,12 +262,7 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void playerLeft(ModelView modelView, String nick) {
-
-    }
-
-    @Override
-    public void show_commonObjectives(ModelView gameModel) {}
+    protected void playerLeft(ModelView modelView, String nick) {}
 
     @Override
     public void show_personalObjectiveCard(ModelView gameModel) {
@@ -298,9 +284,6 @@ public class TUI extends UI {
         }
         clearScreen();
     }
-
-    @Override
-    public void show_noAvailableGamesToJoin(String msgToVisualize) {}
 
     @Override
     public void show_noConnectionError() {
@@ -378,9 +361,9 @@ public class TUI extends UI {
                 \tpress (js) to join to a specific game
                 \t
                 \t -> Useful commands that can be used at any point in the game:
-                \t\t  type "/c [msg]" to send a public message!
-                \t\t  type "/cs [playerName] [msg]" to send a private message!
-                \t\t  type "/quit" and you can leave the game!
+                \t\t  type "/c [msg]" to send a public message
+                \t\t  type "/cs [playerName] [msg]" to send a private message
+                \t\t  type "/leave, /quit, /exit" to leave the game
                 \t""").fg(DEFAULT));
     }
 
@@ -460,6 +443,5 @@ public class TUI extends UI {
     public void show_readyToStart(ModelView gameModel, String s) {}
 
     @Override
-    public void show_pawnPositions(ModelView model){
-    }
+    public void show_pawnPositions(ModelView model) {}
 }

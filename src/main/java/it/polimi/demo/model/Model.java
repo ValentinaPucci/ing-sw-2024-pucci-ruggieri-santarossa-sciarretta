@@ -109,18 +109,6 @@ public class Model implements Serializable {
         return aux_order_players;
     }
 
-
-    /**
-     * Retrieves the list of nicknames of the players participating in the game.
-     *
-     * @return The list of nicknames.
-     */
-    public List<String> getAllNicknames() {
-        return aux_order_players.stream()
-                .map(Player::getNickname)
-                .collect(Collectors.toList());
-    }
-
     /**
      * Retrieves the list of players connected to the game.
      *
@@ -214,24 +202,9 @@ public class Model implements Serializable {
      * Statical offer.
      */
     public void addPlayer(Player p) {
-
-        List<String> nicknames = this.getAllNicknames();
-        String nickname = p.getNickname();
-
-        if (nicknames.contains(nickname)) {
-            observers.notify_joinUnableNicknameAlreadyIn(getIdentityOfPlayer(nickname));
-            throw new PlayerAlreadyConnectedException();
-        }
-        else if (aux_order_players.size() >= num_required_players_to_start ||
-                aux_order_players.size() >= Constants.MaxNumOfPlayer) {
-            observers.notify_joinUnableGameFull(getIdentityOfPlayer(nickname), this);
-            throw new MaxPlayersLimitException();
-        }
-        else {
-            aux_order_players.add(p);
-            players_connected.offer(p);
-            observers.notify_playerJoined(this);
-        }
+        aux_order_players.add(p);
+        players_connected.offer(p);
+        observers.notify_playerJoined(this);
     }
 
     /**
@@ -724,6 +697,7 @@ public class Model implements Serializable {
      * Updates the leaderboard and the list of winners accordingly.
      * It is called by getWinners() method.
      */
+    // todo: leaderboard to check
     public void declareWinners() {
 
         List<Player> aux_final_scores_tie = new ArrayList<>();
@@ -747,19 +721,19 @@ public class Model implements Serializable {
         leaderboard.clear(); // Clear the leaderboard before adding new entries
 
         if (aux_final_scores_tie.size() == 1) {
-            for (Player player : orderedPlayers) {
-                leaderboard.put(player, player.getFinalScore());
+            for (Player orderedPlayer : orderedPlayers) {
+                leaderboard.put(orderedPlayer, orderedPlayer.getFinalScore());
             }
         }
         else {
             // aux_final_scores_tie.size() >= 2
             // another filtering:
             aux_final_scores_tie.sort(Comparator.comparingInt(Player::scoreOnlyObjectiveCards).reversed());
-            StringBuilder aux = new StringBuilder(aux_final_scores_tie.getFirst().getNickname());
+            StringBuilder aux = new StringBuilder();
             int counter = 0;
             for (Player p : aux_final_scores_tie) {
                 if (p.scoreOnlyObjectiveCards() == aux_final_scores_tie.getFirst().scoreOnlyObjectiveCards()) {
-                    aux.append(p.getNickname());
+                    aux.append(p.getNickname() + " ");
                     counter++;
                 }
             }

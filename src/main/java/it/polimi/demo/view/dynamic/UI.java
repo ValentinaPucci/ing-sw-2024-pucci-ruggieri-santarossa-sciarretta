@@ -9,12 +9,6 @@ import java.util.List;
  * Abstract class defining the interface for the User Interface (ui) of the application.
  */
 public abstract class UI {
-    /**
-     * Initializes the ui.
-     */
-    protected abstract void initializer();
-
-    // --------------------- show methods ---------------------
 
     /**
      * Shows the options available to the user.
@@ -67,12 +61,6 @@ public abstract class UI {
      * @param nicknameofyou The nickname of the player who is ready to start.
      */
     protected abstract void show_readyToStart(ModelView gameModel, String nicknameofyou);
-
-    /**
-     * Shows a message indicating that no available games are to be joined.
-     * @param msgToVisualize The message to visualize.
-     */
-    protected abstract void show_noAvailableGamesToJoin(String msgToVisualize);
 
     /**
      * Shows the message indicating the game has ended.
@@ -129,8 +117,6 @@ public abstract class UI {
      * @param nickname The nickname of the player.
      */
     protected abstract void show_playerHand(ModelView gameModel, String nickname);
-
-    public abstract void show_commonObjectives(ModelView gameModel);
 
     /**
      * Shows the personal objective card of the player.
@@ -211,8 +197,6 @@ public abstract class UI {
      * @param s The error message to show.
      */
     protected abstract void show_genericError(String s);
-
-    // --------------------- actions ---------------------
 
     /**
      * Shows a message indicating a no connection error.

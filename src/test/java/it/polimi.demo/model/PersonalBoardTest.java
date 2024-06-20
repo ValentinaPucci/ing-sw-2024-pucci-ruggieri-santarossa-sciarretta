@@ -6,10 +6,7 @@ import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.cards.gameCards.StarterCard;
-import it.polimi.demo.model.cards.objectiveCards.DiagonalPatternObjectiveCard;
-import it.polimi.demo.model.cards.objectiveCards.ItemObjectiveCard;
-import it.polimi.demo.model.cards.objectiveCards.LetterPatternObjectiveCard;
-import it.polimi.demo.model.cards.objectiveCards.ResourceObjectiveCard;
+import it.polimi.demo.model.cards.objectiveCards.*;
 import it.polimi.demo.model.enumerations.Color;
 import it.polimi.demo.model.enumerations.Item;
 import it.polimi.demo.model.enumerations.Orientation;
@@ -95,6 +92,55 @@ public class PersonalBoardTest {
             }
         }
     }
+
+    @Test
+    void testPlaceCardAtNE2() {
+        StarterCard card0 = new StarterCard(1, Orientation.FRONT);
+
+
+        //ResourceCard card1 = new ResourceCard(1, Orientation.FRONT, Color.BLUE);
+        GoldCard card2 = new GoldCard(2, Orientation.FRONT, Color.RED);
+        int i = personalBoard.getDim1() / 2; // Specify the row index
+        int j = personalBoard.getDim2() / 2; // Specify the column index
+
+        personalBoard.placeStarterCard(card0);
+
+        try {
+            personalBoard.placeCardAtNE(card0, card2);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                assertTrue(personalBoard.board[i + k][j + h].is_full);
+            }
+        }
+    }
+
+    @Test
+    void placeCardAtNW2(){
+        StarterCard card0 = new StarterCard(1, Orientation.FRONT);
+        GoldCard card2 = new GoldCard(2, Orientation.FRONT, Color.RED);
+        int i = personalBoard.getDim1() / 2; // Specify the row index
+        int j = personalBoard.getDim2() / 2; // Specify the column index
+
+        personalBoard.placeStarterCard(card0);
+
+        try {
+            personalBoard.placeCardAtNW(card0, card2);
+        } catch (IllegalMoveException e) {
+            fail("Exception should not be thrown");
+        }
+
+        for (int k = 0; k < 2; k++) {
+            for (int h = 0; h < 2; h++) {
+                assertTrue(personalBoard.board[i + k][j + h].is_full);
+            }
+        }
+    }
+
+
 
     @Test
     void testPlaceCardAtSO() {
@@ -192,6 +238,9 @@ public class PersonalBoardTest {
         ResourceCard card4 = new ResourceCard(4, Orientation.FRONT, Color.RED);
         ResourceCard card5 = new ResourceCard(5, Orientation.BACK, Color.RED);
 
+        card1.getCornerAtNE().getResource();
+        card5.getCornerAtNE().getItem();
+
         int i = personalBoard.getDim1() / 2; // Specify the row index
         int j = personalBoard.getDim2() / 2; // Specify the column index
 
@@ -261,6 +310,17 @@ public class PersonalBoardTest {
 
         int i = personalBoard.getDim1() / 2; // Specify the row index
         int j = personalBoard.getDim2() / 2; // Specify the column index
+
+        //test
+        personalBoard.getNum_feathers();
+        personalBoard.getNum_mushrooms();
+        personalBoard.getNum_wolves();
+        personalBoard.getNum_butterflies();
+        personalBoard.getNum_parchments();
+        personalBoard.getNum_potions();
+        personalBoard.getNum_leaves();
+        personalBoard.getPoints();
+
 
         personalBoard.bruteForcePlaceCardSE(card1, i, j);
 
@@ -451,6 +511,14 @@ public class PersonalBoardTest {
 
         assertEquals(2, diagonalPatternObjectiveCard1.calculateScore(personalBoard) +
                 diagonalPatternObjectiveCard2.calculateScore(personalBoard));
+
+        personalBoard.getNumItem(Item.POTION);
+        personalBoard.getNumItem(Item.PARCHMENT);
+        personalBoard.getNumItem(Item.FEATHER);
+
+        personalBoard.removeItem(Item.POTION);
+        personalBoard.removeItem(Item.PARCHMENT);
+        personalBoard.removeItem(Item.FEATHER);
 
     }
 
@@ -825,6 +893,30 @@ public class PersonalBoardTest {
                 diagonalPatternObjectiveCard2.calculateScore(personalBoard) +
                 letterPatternObjectiveCard1.calculateScore(personalBoard) +
                 letterPatternObjectiveCard2.calculateScore(personalBoard));
+
+    }
+
+    @Test
+    public void testGetNumResource() {
+        personalBoard.addResource(Resource.LEAF);
+        personalBoard.addResource(Resource.MUSHROOM);
+        personalBoard.addResource(Resource.BUTTERFLY);
+        personalBoard.addResource(Resource.WOLF);
+
+        assertEquals(1, personalBoard.getNumResource(Resource.LEAF));
+        assertEquals(1, personalBoard.getNumResource(Resource.MUSHROOM));
+        assertEquals(1, personalBoard.getNumResource(Resource.BUTTERFLY));
+        assertEquals(1, personalBoard.getNumResource(Resource.WOLF));
+    }
+
+    @Test
+    void ObjectiveItemTest(){
+        ItemObjectiveCard card = new ItemObjectiveCard(1, Orientation.FRONT, 1, 1, 1, 1);
+        card.getItemType();
+        card.getNumItem(Item.POTION);
+        card.getNumItem(Item.PARCHMENT);
+        card.getNumItem(Item.FEATHER);
+
 
     }
 
