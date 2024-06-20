@@ -5,14 +5,17 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -55,6 +58,10 @@ public class RunningController extends GenericController {
     @FXML public AnchorPane pb2;
     @FXML public ImageView personalObjective0;
     @FXML public ImageView personalObjective1;
+    @FXML public ScrollPane sp1;
+    @FXML public ScrollPane sp2;
+    @FXML public ScrollPane sp0;
+    @FXML public ScrollPane my_sp;
     private Orientation cardHandOrientation;
     private Orientation starterCardOrientation;
     private ArrayList<Integer> cardHand = new ArrayList<>();
@@ -99,18 +106,19 @@ public class RunningController extends GenericController {
     private ComboBox<String> recipientComboBox;
     private int starterCard = 0;
     private ArrayList<Player> players_list;
-    private int player_index;
+    private int my_index = 0;
     private List<Pane> cardPanes;
     private List<Button> buttons;
     private Mapper mapper = new Mapper();
-
     private InverseMapper inverseMapper = new InverseMapper();
     private int chosenCard = 0;
     double chosenX = 0;
-    double chosenY = 0;
-    int cardIndex = 0;
+    private double chosenY = 0;
+    private int cardIndex = 0;
     int commonIndex = 0;
-    ArrayList<Integer> personalObjectiveIds = new ArrayList<>();
+    private ArrayList<Player> players_without_me = new ArrayList<>();
+    int players_without_me_size = 0;
+    private ArrayList<Integer> personalObjectiveIds = new ArrayList<>();
     public void initialize() {
 
         personalObjectivesBox = new HBox();
@@ -227,9 +235,13 @@ public class RunningController extends GenericController {
         personalBoardAnchorPane.setOnMouseClicked(this::handleMouseClick);
 
         personalBoardAnchorPane.setVisible(true);
-        pb0.setVisible(true);
-        pb1.setVisible(true);
-        pb2.setVisible(true);
+        my_sp.setVisible(true);
+        pb0.setVisible(false);
+        sp0.setVisible(false);
+        pb1.setVisible(false);
+        sp1.setVisible(false);
+        pb2.setVisible(false);
+        sp2.setVisible(false);
     }
 
     private void setComponentsDisable(List<? extends javafx.scene.Node> components, boolean disable) {
@@ -257,25 +269,120 @@ public class RunningController extends GenericController {
             }
         }
         bnImageViews[indexToGo].setImage(pieceToMove.getImage());
-
     }
 
 
     public void setPlayersPointsAndNicknames(ModelView model, String nickname) {
         ArrayList<Player> players_list = model.getAllPlayers();
         this.players_list = players_list;
-        this.player_index = getPlayerIndex(players_list, nickname);
+
         recipientComboBox.getItems().clear();
         recipientComboBox.getItems().add("Everyone");
+
+        // Clear existing rows except the header
+        otherPlayers.getChildren().removeIf(node -> GridPane.getRowIndex(node) != null && GridPane.getRowIndex(node) > 0);
+        while (otherPlayers.getRowConstraints().size() > 1) {
+            otherPlayers.getRowConstraints().remove(1);
+        }
+
         int j = 0;
         for (Player player : players_list) {
             if (!player.getNickname().equals(nickname)) {
+                players_without_me.add(j, player);
                 // Add player to recipient combo box
                 recipientComboBox.getItems().add(player.getNickname());
+                // Create and offer player label
+                Label playerLabel = new Label(player.getNickname());
+                playerLabel.setTextFill(Color.web("#4d0202"));
+                playerLabel.setAlignment(javafx.geometry.Pos.CENTER);
+                playerLabel.setFont(javafx.scene.text.Font.font("Luminari", 19));
+                GridPane.setRowIndex(playerLabel, j + 1);
+                GridPane.setColumnIndex(playerLabel, 0);
+                otherPlayers.getChildren().add(playerLabel);
+
+                // Create and offer button
+                Label pointsLabel = new Label("0");
+                pointsLabel.setTextFill(Color.web("#4d0202"));
+                pointsLabel.setAlignment(javafx.geometry.Pos.CENTER);
+                pointsLabel.setFont(javafx.scene.text.Font.font("Luminari", 19));
+                GridPane.setRowIndex(pointsLabel, j + 1);
+                GridPane.setColumnIndex(pointsLabel, 1);
+                otherPlayers.getChildren().add(pointsLabel);
+
+                // Create and offer button
+                Button goButton = new Button("GO");
+                goButton.setPrefHeight(26.0);
+                goButton.setPrefWidth(188.0);
+                goButton.setEffect(new javafx.scene.effect.ColorAdjust(0.17, 0.3, 0.0, 0.0));
+                goButton.setOnAction((ActionEvent event) ->{
+                    showOthersPersonalBoard(getPlayerIndex(players_list, player.getNickname()));});
+                GridPane.setRowIndex(goButton, j + 1);
+                GridPane.setColumnIndex(goButton, 2);
+                otherPlayers.getChildren().add(goButton);
+
+                // Add row constraints
+                otherPlayers.getRowConstraints().add(new RowConstraints(30.0, 30.0, Double.MAX_VALUE));
                 j++;
+            }else{
+                this.my_index = j;
             }
         }
+        players_without_me_size = players_without_me.size();
     }
+    public void showOthersPersonalBoard(int index) {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
+        if (reader != null) {
+            switch (index) {
+                case 0:
+                    reader.add("/pb0");
+                    break;
+                case 1:
+                    reader.add("/pb1");
+                    break;
+                case 2:
+                    reader.add("/pb2");
+                    break;
+                case 3:
+                    reader.add("/pb3");
+                    break;
+                default:
+                    break;
+            }
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+    }
+
+    public void setOthersPersonalBoard(int player_index) {
+        Player player = players_list.get(player_index);
+        int playerIndex = getPlayerIndex(players_without_me, player.getNickname());
+        personalBoardAnchorPane.setVisible(false);
+        my_sp.setVisible(false);
+
+        if(playerIndex == 0){
+            pb0.setVisible(true);
+            sp0.setVisible(true);
+            pb1.setVisible(false);
+            sp1.setVisible(false);
+            pb2.setVisible(false);
+            sp2.setVisible(false);
+        } else if(playerIndex == 1){
+            pb0.setVisible(false);
+            sp0.setVisible(false);
+            pb1.setVisible(true);
+            sp1.setVisible(true);
+            pb2.setVisible(false);
+            sp2.setVisible(false);
+        } else {
+            pb0.setVisible(false);
+            sp0.setVisible(false);
+            pb1.setVisible(false);
+            sp1.setVisible(false);
+            pb2.setVisible(true);
+            sp2.setVisible(true);
+        }
+    }
+
 
     public int getPlayerIndex(ArrayList<Player> players_list, String nickname) {
         for (int i = 0; i < players_list.size(); i++) {
@@ -653,6 +760,36 @@ public class RunningController extends GenericController {
     }
 
     //-------------------------------------------------------------------------------------------------------------------------
+
+    public void setPoints(ModelView gameModel) {
+        int j = 0;
+        for(Player player : players_without_me){
+            int playerIndex = getPlayerIndex(players_list, player.getNickname());
+            removeNodeByRowColumnIndex(j + 1, 1, otherPlayers);
+            Label pointsLabel = new Label(String.valueOf(gameModel.getCommonBoard().getPlayerPosition(playerIndex)));
+            pointsLabel.setTextFill(Color.web("#4d0202"));
+            pointsLabel.setAlignment(javafx.geometry.Pos.CENTER);
+            pointsLabel.setFont(javafx.scene.text.Font.font("Luminari", 19));
+            GridPane.setRowIndex(pointsLabel, j + 1);
+            GridPane.setColumnIndex(pointsLabel, 1);
+            otherPlayers.getChildren().add(pointsLabel);
+            j++;
+        }
+        myPoints.setText(gameModel.getCommonBoard().getPlayerPosition(my_index) + "");
+    }
+
+    private void removeNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
+        ObservableList<Node> children = gridPane.getChildren();
+        for (Node node : children) {
+            Integer rowIndex = GridPane.getRowIndex(node);
+            Integer colIndex = GridPane.getColumnIndex(node);
+
+            if (rowIndex != null && rowIndex == row && colIndex != null && colIndex == column) {
+                gridPane.getChildren().remove(node);
+                break; // Importante uscire dal ciclo dopo aver rimosso il nodo per evitare ConcurrentModificationException
+            }
+        }
+    }
     public void setPersonalBoard(ModelView gameModel) {
         Player player = gameModel.getPlayersConnected().getFirst();
         int playerIndex = getPlayerIndex(gameModel.getAllPlayers(), player.getNickname());
@@ -664,7 +801,7 @@ public class RunningController extends GenericController {
 
     private void placeOthersPlayersCard(int playerIndex, ArrayList<Integer> lastChosenCard, Orientation lastChosenOrientation, Coordinate coord) {
         String imagePath;
-        System.out.println("lastChosenCardId: " + lastChosenCard);
+        //System.out.println("lastChosenCardId: " + lastChosenCard);
         String formattedCardId = String.format("%03d", lastChosenCard.getFirst());
         if(lastChosenOrientation == Orientation.FRONT){
             imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
@@ -703,8 +840,9 @@ public class RunningController extends GenericController {
         double newWidth = position[0] + CardPic.getFitWidth();
         double newHeight = position[1]  + CardPic.getFitHeight();
 
-        System.out.println("add card for: " + players_list.get(playerIndex).getNickname());
-        switch (playerIndex){
+        Player player_without_me = players_list.get(playerIndex);
+        int player_without_me_index = getPlayerIndex(players_without_me, player_without_me.getNickname());
+        switch (player_without_me_index){
             case 0 -> {
                 if (newWidth > pb0.getPrefWidth()) {
                     pb0.setPrefWidth(newWidth + 10);
@@ -736,7 +874,6 @@ public class RunningController extends GenericController {
                 pb2.getChildren().add(CardPic);
             }
         }
-        System.out.println("card added ");
     }
 
     private void placeCard(int index) {
@@ -1026,18 +1163,22 @@ public class RunningController extends GenericController {
         personalBoardAnchorPane.setDisable(true);
     }
 
+    @FXML
+    private void hideAllPersonalBoards() {
+        pb0.setVisible(false);
+        sp0.setVisible(false);
+        pb1.setVisible(false);
+        sp1.setVisible(false);
+        pb2.setVisible(false);
+        sp2.setVisible(false);
+        personalBoardAnchorPane.setVisible(true);
+        my_sp.setVisible(true);
+    }
+
 
 
     //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
 
-
-//    public void setImportantEvents(List<String> importantEvents) {
-//        eventsListView.getItems().clear();
-//        for (String s : importantEvents) {
-//            eventsListView.getItems().add(s);
-//        }
-//        eventsListView.scrollTo(eventsListView.getItems().size());
-//    }
 
     @FXML
     private void ActionSendMessage() {
@@ -1082,6 +1223,8 @@ public class RunningController extends GenericController {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
     }
+
+
 }
 
 

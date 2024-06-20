@@ -9,7 +9,7 @@ public class MenuController extends GenericController{
 
     @FXML
     public void CreateGame(ActionEvent event) {
-        System.out.println("CreateGame: "+ event);
+        //System.out.println("CreateGame: "+ event);
         LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("c");

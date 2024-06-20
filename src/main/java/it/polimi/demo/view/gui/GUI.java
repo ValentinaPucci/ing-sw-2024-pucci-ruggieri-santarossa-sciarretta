@@ -146,6 +146,7 @@ public class GUI extends UI {
     protected void show_commonBoard(ModelView gameModel) {
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setCommonCards(gameModel));
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel));
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setPoints(gameModel));
     }
 
     @Override
@@ -166,10 +167,13 @@ public class GUI extends UI {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(gameModel));
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setPersonalBoard(gameModel));
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setPoints(gameModel));
     }
 
     @Override
     protected void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
+        callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setOthersPersonalBoard(playerIndex));
+
     }
 
     @Override
@@ -220,6 +224,7 @@ public class GUI extends UI {
     @Override
     public void show_pawnPositions(ModelView model){
         callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setScoreBoardPosition(model));
+        callPlatformRunLater(() -> ((RunningController)this.guiApplication.getController(SceneType.RUNNING)).setPoints(model));
     }
 
 
