@@ -130,8 +130,8 @@ public class ModelView implements Serializable {
      * Retrieves the leaderboard map of players and their scores.
      * @return A Map of players and their scores.
      */
-    public LinkedHashMap<Player, Integer> getLeaderBoard() {
-        return (LinkedHashMap<Player, Integer>) leaderboard;
+    public Map<Player, Integer> getLeaderBoard() {
+        return leaderboard;
     }
 
     /**

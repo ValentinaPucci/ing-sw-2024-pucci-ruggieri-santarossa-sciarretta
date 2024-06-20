@@ -67,7 +67,7 @@ public class Model implements Serializable {
         gameId = -1;
         num_required_players_to_start = -1; // invalid value on purpose
         status = GameStatus.WAIT;
-        leaderboard = new LinkedHashMap<>();
+        leaderboard = new HashMap<>();
         observers = new ObserverManager();
     }
 
@@ -762,8 +762,8 @@ public class Model implements Serializable {
      * getter for the leaderboard
      * @return the leaderboard
      */
-    public LinkedHashMap<Player, Integer> getLeaderboard() {
-        return (LinkedHashMap<Player, Integer>) leaderboard;
+    public Map<Player, Integer> getLeaderboard() {
+        return leaderboard;
     }
 
     /**
