@@ -90,23 +90,6 @@ public class ObserverManager implements Serializable {
     }
 
     /**
-     * Notifies all listeners that a player could not join because the game is full.
-     * @param p The player who attempted to join.
-     * @param model The current game model.
-     */
-    public synchronized void notify_joinUnableGameFull(Player p, Model model) {
-        notifyListeners(listener -> listener.joinUnableGameFull(p, new ModelView(model)), "notify_joinUnableGameFull");
-    }
-
-    /**
-     * Notifies all listeners that a player could not join because the nickname is already in use.
-     * @param p The player who attempted to join with the conflicting nickname.
-     */
-    public synchronized void notify_joinUnableNicknameAlreadyIn(Player p) {
-        notifyListeners(listener -> listener.joinUnableNicknameAlreadyIn(p), "notify_joinUnableNicknameAlreadyIn");
-    }
-
-    /**
      * Notifies all listeners that a player is ready to start the game.
      * @param model The current game model.
      * @param nick The nickname of the player who is ready.
@@ -229,15 +212,6 @@ public class ObserverManager implements Serializable {
      */
     public synchronized void notify_nextTurn(Model model) {
         notifyListeners(listener -> listener.nextTurn(new ModelView(model)), "notify_nextTurn");
-    }
-
-    /**
-     * Notifies all listeners that a player has disconnected from the game.
-     * @param model The current game model.
-     * @param nick The nickname of the player who disconnected.
-     */
-    public synchronized void notify_playerDisconnected(Model model, String nick) {
-        notifyListeners(listener -> listener.playerDisconnected(new ModelView(model), nick), "notify_playerDisconnected");
     }
     
     /**

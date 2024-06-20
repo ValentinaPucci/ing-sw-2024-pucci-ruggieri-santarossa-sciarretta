@@ -104,17 +104,6 @@ public class GUI extends UI {
         callPlatformRunLater(() -> this.guiApplication.disableBtnReadyToStart());
     }
 
-    /**
-     * This method show that there are no available games to join
-     *
-     * @param msgToVisualize message that needs visualisation
-     */
-    @Override
-    protected void show_noAvailableGamesToJoin(String msgToVisualize) {
-        callPlatformRunLater(() -> this.guiApplication.setActiveScene(SceneType.ERROR));
-        callPlatformRunLater(() -> this.guiApplication.showError(msgToVisualize));
-    }
-
     @Override
     protected void show_gameEnded(ModelView model) {
         callPlatformRunLater(() -> ((GameOverController) this.guiApplication.getController(SceneType.GAME_OVER)).show(model));
@@ -168,11 +157,6 @@ public class GUI extends UI {
     protected void show_playerHand(ModelView gameModel, String nickname) {
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).setCardHand(gameModel, nickname));
         callPlatformRunLater(() -> ((RunningController) this.guiApplication.getController(SceneType.RUNNING)).ableCommonCardsClick());
-    }
-
-    @Override
-    public void show_commonObjectives(ModelView gameModel) {
-
     }
 
 

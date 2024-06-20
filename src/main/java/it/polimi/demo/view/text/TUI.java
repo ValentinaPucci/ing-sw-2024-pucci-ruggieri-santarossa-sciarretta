@@ -261,12 +261,7 @@ public class TUI extends UI {
     }
 
     @Override
-    protected void playerLeft(ModelView modelView, String nick) {
-
-    }
-
-    @Override
-    public void show_commonObjectives(ModelView gameModel) {}
+    protected void playerLeft(ModelView modelView, String nick) {}
 
     @Override
     public void show_personalObjectiveCard(ModelView gameModel) {
@@ -288,9 +283,6 @@ public class TUI extends UI {
         }
         clearScreen();
     }
-
-    @Override
-    public void show_noAvailableGamesToJoin(String msgToVisualize) {}
 
     @Override
     public void show_noConnectionError() {

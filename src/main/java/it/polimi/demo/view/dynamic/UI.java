@@ -63,12 +63,6 @@ public abstract class UI {
     protected abstract void show_readyToStart(ModelView gameModel, String nicknameofyou);
 
     /**
-     * Shows a message indicating that no available games are to be joined.
-     * @param msgToVisualize The message to visualize.
-     */
-    protected abstract void show_noAvailableGamesToJoin(String msgToVisualize);
-
-    /**
      * Shows the message indicating the game has ended.
      * @param model The model view containing game state information.
      */
@@ -123,8 +117,6 @@ public abstract class UI {
      * @param nickname The nickname of the player.
      */
     protected abstract void show_playerHand(ModelView gameModel, String nickname);
-
-    public abstract void show_commonObjectives(ModelView gameModel);
 
     /**
      * Shows the personal objective card of the player.

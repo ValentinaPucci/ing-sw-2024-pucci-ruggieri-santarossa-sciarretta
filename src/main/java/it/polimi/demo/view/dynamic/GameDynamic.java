@@ -385,12 +385,24 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                 FactType.GAME_ENDED, () -> {
                     ui.show_menu();
                     parser.getProcessedDataQueue().clear();
+                    updateParser();
                     leave(nickname, model.getGameId());
                     youLeft();
                 }
         );
 
         actions.getOrDefault(type, () -> {}).run();
+    }
+
+    /**
+     * Updates the parser by removing the processed data from the queue.
+     */
+    private void updateParser() {
+        try {
+            parser.getProcessedDataQueue().take();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -959,16 +971,6 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     }
 
     /**
-     * Handles the event when a player attempts to join a game that is full, offering a fact about the game being full.
-     * @param wantedToJoin The player who wanted to join.
-     * @param gameModel The model view containing game state information.
-     */
-    @Override
-    public void joinUnableGameFull(Player wantedToJoin, ModelView gameModel) {
-        facts.offer(null, FactType.FULL_GAME);
-    }
-
-    /**
      * Handles the event when a message is sent between players, showing a message if it's the current player sending or receiving.
      * @param gameModel The model view containing game state information.
      * @param nick The nickname of the player who sent the message.
@@ -979,25 +981,6 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         if (!msg.sender().getNickname().equals(nickname) && (nickname.equals(nick) || "all".equals(nick))) {
             ui.show_messageSent(gameModel, nick);
         }
-    }
-
-    /**
-     * Handles the event when a player attempts to join with a nickname that is already in use, offering a fact about the nickname being already used.
-     * @param wantedToJoin The player who attempted to join.
-     */
-    @Override
-    public void joinUnableNicknameAlreadyIn(Player wantedToJoin) {
-        facts.offer(null, FactType.ALREADY_USED_NICKNAME);
-    }
-
-    /**
-     * Handles the event when a requested game ID does not exist, showing a message and offering a fact about the non-existent game ID.
-     * @param game_id The game ID that does not exist.
-     */
-    @Override
-    public void gameIdNotExists(int game_id) {
-        ui.show_genericMessage("No currently game available with the following GameID: " + game_id);
-        facts.offer(null, FactType.GENERIC_ERROR);
     }
 
     /**
