@@ -808,9 +808,9 @@ public class RunningController extends GenericController {
             int player_without_me_index = getPlayerIndex(players_without_me, player_without_me.getNickname());
             String formattedCardId = String.format("%03d", all_players.get(playerIndex).getStarterCard().getId());
             if(all_players.get(playerIndex).getStarterCard().getOrientation() == Orientation.FRONT){
-                StarterImagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
-            }else if(all_players.get(playerIndex).getStarterCard().getOrientation()  == Orientation.BACK){
                 StarterImagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
+            }else if(all_players.get(playerIndex).getStarterCard().getOrientation()  == Orientation.BACK){
+                StarterImagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
             } else {
                 System.out.println("Orientation non valida.");
                 return;
