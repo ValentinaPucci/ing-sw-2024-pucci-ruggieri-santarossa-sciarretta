@@ -27,7 +27,7 @@ public class ModelView implements Serializable {
     private final CommonBoard common_board;
     private final GameStatus actual_status;
     private final String current_player_nickname;
-    private final Map<Player, Integer> leaderboard;
+    private final LinkedHashMap<Player, Integer> leaderboard;
     private final Chat chat;
     private final List<StarterCard> starter_cards;
     private final List<ObjectiveCard> objective_cards;
@@ -130,7 +130,7 @@ public class ModelView implements Serializable {
      * Retrieves the leaderboard map of players and their scores.
      * @return A Map of players and their scores.
      */
-    public Map<Player, Integer> getLeaderBoard() {
+    public LinkedHashMap<Player, Integer> getLeaderBoard() {
         return leaderboard;
     }
 

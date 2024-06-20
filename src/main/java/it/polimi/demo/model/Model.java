@@ -45,7 +45,7 @@ public class Model implements Serializable {
     private int num_required_players_to_start;
     private GameStatus status;
     private Chat chat;
-    private final Map<Player, Integer> leaderboard;
+    private final LinkedHashMap<Player, Integer> leaderboard;
     private final ObserverManager observers;
     private ArrayList<Integer> last_chosen_card;
     private Coordinate last_coord;
@@ -67,7 +67,7 @@ public class Model implements Serializable {
         gameId = -1;
         num_required_players_to_start = -1; // invalid value on purpose
         status = GameStatus.WAIT;
-        leaderboard = new HashMap<>();
+        leaderboard = new LinkedHashMap<>();
         observers = new ObserverManager();
     }
 
@@ -90,7 +90,7 @@ public class Model implements Serializable {
         gameId = gameID;
         status = GameStatus.WAIT;
         chat = new Chat();
-        leaderboard = new HashMap<>();
+        leaderboard = new LinkedHashMap<>();
         observers = new ObserverManager();
     }
 
@@ -762,7 +762,7 @@ public class Model implements Serializable {
      * getter for the leaderboard
      * @return the leaderboard
      */
-    public Map<Player, Integer> getLeaderboard() {
+    public LinkedHashMap<Player, Integer> getLeaderboard() {
         return leaderboard;
     }
 
