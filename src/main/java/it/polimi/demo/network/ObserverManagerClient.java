@@ -5,13 +5,10 @@ import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.model.Player;
 import it.polimi.demo.view.dynamic.GameDynamic;
 import it.polimi.demo.network.utils.AuxFI;
-
-import java.io.IOException;
 import java.io.Serializable;
-import java.rmi.RemoteException;
+
 
 /**
  * This class manages observer notifications from the game model and forwards them to the dyn game view.
@@ -132,7 +129,7 @@ public class ObserverManagerClient implements Listener, Serializable {
      * @param nick the nickname of the player who is ready
      */
     @Override
-    public void playerIsReadyToStart(ModelView model, String nick) throws IOException, RemoteException {
+    public void playerIsReadyToStart(ModelView model, String nick) {
         AuxFI.handleEvent(dyn::playerIsReadyToStart, model, nick);
     }
 
