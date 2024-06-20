@@ -67,7 +67,7 @@ public class Model implements Serializable {
         gameId = -1;
         num_required_players_to_start = -1; // invalid value on purpose
         status = GameStatus.WAIT;
-        leaderboard = new HashMap<>();
+        leaderboard = new LinkedHashMap<>();
         observers = new ObserverManager();
     }
 
@@ -721,15 +721,15 @@ public class Model implements Serializable {
         leaderboard.clear(); // Clear the leaderboard before adding new entries
 
         if (aux_final_scores_tie.size() == 1) {
-            for (Player player : orderedPlayers) {
-                leaderboard.put(player, player.getFinalScore());
+            for (Player orderedPlayer : orderedPlayers) {
+                leaderboard.put(orderedPlayer, orderedPlayer.getFinalScore());
             }
         }
         else {
             // aux_final_scores_tie.size() >= 2
             // another filtering:
             aux_final_scores_tie.sort(Comparator.comparingInt(Player::scoreOnlyObjectiveCards).reversed());
-            StringBuilder aux = new StringBuilder(aux_final_scores_tie.getFirst().getNickname());
+            StringBuilder aux = new StringBuilder();
             int counter = 0;
             for (Player p : aux_final_scores_tie) {
                 if (p.scoreOnlyObjectiveCards() == aux_final_scores_tie.getFirst().scoreOnlyObjectiveCards()) {
@@ -762,8 +762,8 @@ public class Model implements Serializable {
      * getter for the leaderboard
      * @return the leaderboard
      */
-    public Map<Player, Integer> getLeaderboard() {
-        return leaderboard;
+    public LinkedHashMap<Player, Integer> getLeaderboard() {
+        return (LinkedHashMap<Player, Integer>) leaderboard;
     }
 
     /**

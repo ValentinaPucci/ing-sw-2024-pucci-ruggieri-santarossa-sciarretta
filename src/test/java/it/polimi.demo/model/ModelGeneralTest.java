@@ -17,11 +17,12 @@ public class ModelGeneralTest {
     @BeforeEach
     public void setUp() {
         model = new Model();
-        model.setNumPlayersToPlay(2);
     }
 
     @Test
     public void testGeneral() throws GameEndedException {
+
+        model.setNumPlayersToPlay(2);
 
         Player p1 = new Player("Player1");
         Player p2 = new Player("Player2");
@@ -184,10 +185,49 @@ public class ModelGeneralTest {
         model.getPlayersConnected().getFirst().getPersonalBoard().setPoints(15);
         model.getPlayersConnected().getLast().getPersonalBoard().setPoints(20);
 
+        model.declareWinners();
+
         model_view = new ModelView(model);
 
         tui.show_gameEnded(model_view);
 
+    }
+
+    @Test
+    public void testDeclareWinners() {
+        Player p1 = new Player("Player1");
+        Player p2 = new Player("Player2");
+        Player p3 = new Player("Player3");
+
+        model.setNumPlayersToPlay(3);
+
+        model.addPlayer(p1);
+        model.addPlayer(p2);
+        model.addPlayer(p3);
+
+        model.setPlayerAsReadyToStart(p1);
+        model.setPlayerAsReadyToStart(p2);
+        model.setPlayerAsReadyToStart(p3);
+
+        assert model.getStatus() == GameStatus.FIRST_ROUND;
+
+        model.chooseCardFromHand(p1, 0);
+        model.chooseCardFromHand(p2, 1);
+        model.chooseCardFromHand(p3, 1);
+
         model.declareWinners();
+
+        TUI tui = new TUI();
+        ModelView model_view = new ModelView(model);
+        tui.show_gameEnded(model_view);
+
+        model.getPlayersConnected().get(0).getPersonalBoard().setPoints(20);
+        model.getPlayersConnected().get(1).getPersonalBoard().setPoints(20);
+        model.getPlayersConnected().get(2).getPersonalBoard().setPoints(19);
+
+        model.declareWinners();
+
+        model_view = new ModelView(model);
+        tui.show_gameEnded(model_view);
     }
 }
