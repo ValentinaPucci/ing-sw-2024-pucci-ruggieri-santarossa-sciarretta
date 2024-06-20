@@ -697,6 +697,7 @@ public class Model implements Serializable {
      * Updates the leaderboard and the list of winners accordingly.
      * It is called by getWinners() method.
      */
+    // todo: leaderboard to check
     public void declareWinners() {
 
         List<Player> aux_final_scores_tie = new ArrayList<>();
@@ -732,7 +733,7 @@ public class Model implements Serializable {
             int counter = 0;
             for (Player p : aux_final_scores_tie) {
                 if (p.scoreOnlyObjectiveCards() == aux_final_scores_tie.getFirst().scoreOnlyObjectiveCards()) {
-                    aux.append(p.getNickname());
+                    aux.append(p.getNickname() + " ");
                     counter++;
                 }
             }

@@ -6,6 +6,7 @@ import it.polimi.demo.model.cards.gameCards.GoldCard;
 import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
+import it.polimi.demo.view.text.TUI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -129,6 +130,14 @@ public class ModelGeneralTest {
         card3.setGoldCard(0, 0, 0, 0, false, false, false, false);
         card4.setGoldCard(0, 0, 0, 0, false, false, false, false);
 
+        model.declareWinners();
+
+        TUI tui = new TUI();
+
+        ModelView model_view = new ModelView(model);
+
+        tui.show_gameEnded(model_view);
+
         model.placeCard(card1, p1, 250, 250);
         // hit illegal starter
         model.placeCard(card1, p1, 250, 250);
@@ -168,8 +177,16 @@ public class ModelGeneralTest {
 
         model.declareWinners();
 
+        model_view = new ModelView(model);
+
+        tui.show_gameEnded(model_view);
+
         model.getPlayersConnected().getFirst().getPersonalBoard().setPoints(15);
         model.getPlayersConnected().getLast().getPersonalBoard().setPoints(20);
+
+        model_view = new ModelView(model);
+
+        tui.show_gameEnded(model_view);
 
         model.declareWinners();
     }
