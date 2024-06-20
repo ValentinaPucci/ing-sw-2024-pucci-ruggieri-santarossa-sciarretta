@@ -94,8 +94,7 @@ public class QueueParser extends Thread {
                 case "/pb3":
                     showOthersPersonalBoard(3);
                     break;
-                case "/quit":
-                case "/leave":
+                case "/leave", "/quit", "/exit":
                     handleQuit();
                     break;
                 default:
