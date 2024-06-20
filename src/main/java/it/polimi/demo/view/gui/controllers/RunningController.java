@@ -119,6 +119,7 @@ public class RunningController extends GenericController {
     private ArrayList<Player> players_without_me = new ArrayList<>();
     int players_without_me_size = 0;
     private ArrayList<Integer> personalObjectiveIds = new ArrayList<>();
+    private boolean first_round = true;
     public void initialize() {
 
         personalObjectivesBox = new HBox();
@@ -796,12 +797,51 @@ public class RunningController extends GenericController {
         ArrayList<Integer> last_chosen_card = gameModel.getLastChosenCardAndPosition();
         Orientation last_chosen_orientation = gameModel.getLastChosenOrientation();
 
-        placeOthersPlayersCard(playerIndex, last_chosen_card, last_chosen_orientation, gameModel.getLastCoordinate());
+        placeOthersPlayersCard(gameModel.getAllPlayers(), playerIndex, last_chosen_card, last_chosen_orientation, gameModel.getLastCoordinate());
     }
 
-    private void placeOthersPlayersCard(int playerIndex, ArrayList<Integer> lastChosenCard, Orientation lastChosenOrientation, Coordinate coord) {
+    private void placeOthersPlayersCard(ArrayList<Player> all_players, int playerIndex, ArrayList<Integer> lastChosenCard, Orientation lastChosenOrientation, Coordinate coord) {
+        //al primo round metto 2 carte insieme (la starter + la risorsa)
+        if(first_round){
+            String StarterImagePath;
+            Player player_without_me = players_list.get(playerIndex);
+            int player_without_me_index = getPlayerIndex(players_without_me, player_without_me.getNickname());
+            String formattedCardId = String.format("%03d", all_players.get(playerIndex).getStarterCard().getId());
+            if(all_players.get(playerIndex).getStarterCard().getOrientation() == Orientation.FRONT){
+                StarterImagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
+            }else if(all_players.get(playerIndex).getStarterCard().getOrientation()  == Orientation.BACK){
+                StarterImagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
+            } else {
+                System.out.println("Orientation non valida.");
+                return;
+            }
+            ImageView StarterCardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(StarterImagePath))));
+            StarterCardPic.setFitWidth(90); // Imposta la larghezza desiderata
+            StarterCardPic.setFitHeight(65); // Imposta l'altezza desiderata
+
+            String resultString = String.format("%d,%d", 0 , 0);
+
+            int[] position = inverseMapper.getInverseMappedPosition(resultString);
+
+            StarterCardPic.setLayoutX((double)position[0]);
+            StarterCardPic.setLayoutY((double)position[1]);
+
+
+            switch (player_without_me_index) {
+                case 0 -> {
+                    pb0.getChildren().add(StarterCardPic);
+                }
+                case 1 -> {
+                    pb1.getChildren().add(StarterCardPic);
+                }
+                case 2 -> {
+                    pb2.getChildren().add(StarterCardPic);
+                }
+            }
+            first_round = false;
+        }
+
         String imagePath;
-        //System.out.println("lastChosenCardId: " + lastChosenCard);
         String formattedCardId = String.format("%03d", lastChosenCard.getFirst());
         if(lastChosenOrientation == Orientation.FRONT){
             imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";

@@ -247,4 +247,5 @@ public abstract class UI {
     protected abstract void show_othersPersonalBoard(ModelView modelView, int playerIndex);
 
     protected abstract void playerLeft(ModelView modelView, String nick);
+
 }

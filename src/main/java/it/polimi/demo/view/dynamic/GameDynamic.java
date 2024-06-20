@@ -314,6 +314,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                         askWhichObjectiveCard();
                         ui.show_starterCards(model);
                         askStarterCardOrientationAndPlace();
+                        //ui.show_StarterCardPB(nickname, model);
                     }
                 }
         );
