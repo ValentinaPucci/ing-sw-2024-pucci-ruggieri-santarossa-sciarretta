@@ -15,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class RunningController extends GenericController {
+public class RunningController extends GuiInputReaderController {
     @FXML public Label myPoints;
     @FXML public Label playerLabel1;
     @FXML public Label playerLabel2;
@@ -119,7 +118,9 @@ public class RunningController extends GenericController {
     private ArrayList<Player> players_without_me = new ArrayList<>();
     int players_without_me_size = 0;
     private ArrayList<Integer> personalObjectiveIds = new ArrayList<>();
-    private boolean first_round = true;
+    private int rounds = 0;
+
+    private int firstPlayerIndex = 0;
     public void initialize() {
 
         personalObjectivesBox = new HBox();
@@ -275,7 +276,9 @@ public class RunningController extends GenericController {
 
     public void setPlayersPointsAndNicknames(ModelView model, String nickname) {
         ArrayList<Player> players_list = model.getAllPlayers();
+
         this.players_list = players_list;
+        this.firstPlayerIndex = model.getAllPlayers().indexOf(model.getFirstPlayer());
 
         recipientComboBox.getItems().clear();
         recipientComboBox.getItems().add("Everyone");
@@ -314,6 +317,7 @@ public class RunningController extends GenericController {
                 Button goButton = new Button("GO");
                 goButton.setPrefHeight(26.0);
                 goButton.setPrefWidth(188.0);
+                goButton.setFont(javafx.scene.text.Font.font("Luminari", 11));
                 goButton.setEffect(new javafx.scene.effect.ColorAdjust(0.17, 0.3, 0.0, 0.0));
                 goButton.setOnAction((ActionEvent event) ->{
                     showOthersPersonalBoard(getPlayerIndex(players_list, player.getNickname()));});
@@ -508,7 +512,6 @@ public class RunningController extends GenericController {
         }else{
             System.out.println("Image not found: " + imagePath);
         }
-
     }
 
     public void flipStarterCard() {
@@ -802,10 +805,11 @@ public class RunningController extends GenericController {
 
     private void placeOthersPlayersCard(ArrayList<Player> all_players, int playerIndex, ArrayList<Integer> lastChosenCard, Orientation lastChosenOrientation, Coordinate coord) {
         //al primo round metto 2 carte insieme (la starter + la risorsa)
-        if(first_round){
+        Player player_without_me = players_list.get(playerIndex);
+        int player_without_me_index = getPlayerIndex(players_without_me, player_without_me.getNickname());
+        if(rounds < players_list.size()){
             String StarterImagePath;
-            Player player_without_me = players_list.get(playerIndex);
-            int player_without_me_index = getPlayerIndex(players_without_me, player_without_me.getNickname());
+
             String formattedCardId = String.format("%03d", all_players.get(playerIndex).getStarterCard().getId());
             if(all_players.get(playerIndex).getStarterCard().getOrientation() == Orientation.FRONT){
                 StarterImagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
@@ -816,8 +820,8 @@ public class RunningController extends GenericController {
                 return;
             }
             ImageView StarterCardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(StarterImagePath))));
-            StarterCardPic.setFitWidth(90); // Imposta la larghezza desiderata
-            StarterCardPic.setFitHeight(65); // Imposta l'altezza desiderata
+            StarterCardPic.setFitWidth(90);
+            StarterCardPic.setFitHeight(65);
 
             String resultString = String.format("%d,%d", 0 , 0);
 
@@ -825,7 +829,6 @@ public class RunningController extends GenericController {
 
             StarterCardPic.setLayoutX((double)position[0]);
             StarterCardPic.setLayoutY((double)position[1]);
-
 
             switch (player_without_me_index) {
                 case 0 -> {
@@ -838,7 +841,44 @@ public class RunningController extends GenericController {
                     pb2.getChildren().add(StarterCardPic);
                 }
             }
-            first_round = false;
+
+            ImageView piecePic = pieces.get(playerIndex);
+            piecePic.setFitWidth(20);
+            piecePic.setFitHeight(20);
+            piecePic.setLayoutX((double) position[0]+20);
+            piecePic.setLayoutY((double) position[1]+22.5);
+            switch (player_without_me_index) {
+                case 0 -> {
+                    pb0.getChildren().add(piecePic);
+                }
+                case 1 -> {
+                    pb1.getChildren().add(piecePic);
+                }
+                case 2 -> {
+                    pb2.getChildren().add(piecePic);
+                }
+            }
+
+
+            if(playerIndex == firstPlayerIndex) {
+                ImageView BlackPiecePic = pieceBlackImageView;
+                BlackPiecePic.setFitWidth(20);
+                BlackPiecePic.setFitHeight(20);
+                BlackPiecePic.setLayoutX((double) position[0] + 50);
+                BlackPiecePic.setLayoutY((double) position[1] + 22.5);
+                switch (player_without_me_index) {
+                    case 0 -> {
+                        pb0.getChildren().add(BlackPiecePic);
+                    }
+                    case 1 -> {
+                        pb1.getChildren().add(BlackPiecePic);
+                    }
+                    case 2 -> {
+                        pb2.getChildren().add(BlackPiecePic);
+                    }
+                }
+            }
+            rounds ++;
         }
 
         String imagePath;
@@ -852,8 +892,8 @@ public class RunningController extends GenericController {
             return;
         }
         ImageView CardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
-        CardPic.setFitWidth(90); // Imposta la larghezza desiderata
-        CardPic.setFitHeight(65); // Imposta l'altezza desiderata
+        CardPic.setFitWidth(90);
+        CardPic.setFitHeight(65);
 
         int[] result = {lastChosenCard.get(1) - 250, lastChosenCard.get(2) - 250};
 
@@ -880,8 +920,6 @@ public class RunningController extends GenericController {
         double newWidth = position[0] + CardPic.getFitWidth();
         double newHeight = position[1]  + CardPic.getFitHeight();
 
-        Player player_without_me = players_list.get(playerIndex);
-        int player_without_me_index = getPlayerIndex(players_without_me, player_without_me.getNickname());
         switch (player_without_me_index){
             case 0 -> {
                 if (newWidth > pb0.getPrefWidth()) {
@@ -916,16 +954,18 @@ public class RunningController extends GenericController {
         }
     }
 
+    String glowBorder = "-fx-effect: dropshadow(three-pass-box, blue, 10, 0, 0, 0);";
+
     private void placeCard(int index) {
         cardIndex = index;
         if(index ==  0){
-            handCard0.setStyle("-fx-border-color: blue; -fx-border-width: 3;");
+            handCard0.setStyle(glowBorder);
             chosenCard = cardHand.getFirst();
         } else if (index ==  1) {
-            handCard1.setStyle("-fx-border-color: blue; -fx-border-width: 3;");
+            handCard1.setStyle(glowBorder);
             chosenCard = cardHand.get(1);
         } else {
-            handCard2.setStyle("-fx-border-color: blue; -fx-border-width: 3;");
+            handCard2.setStyle(glowBorder);
             chosenCard = cardHand.get(2);
         }
         handCard0.setDisable(true);
@@ -941,7 +981,7 @@ public class RunningController extends GenericController {
         double xCenter = (double)position[0];
         double yCenter = (double)position[1];
         String imagePath;
-        // Posiziona la carta iniziale al centro
+
         String formattedCardId = String.format("%03d", starterCard);
         if(starterCardOrientation == Orientation.FRONT){
             imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
@@ -952,11 +992,27 @@ public class RunningController extends GenericController {
             return;
         }
         ImageView StarterCardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
-        StarterCardPic.setFitWidth(90); // Imposta la larghezza desiderata
-        StarterCardPic.setFitHeight(65); // Imposta l'altezza desiderata
+        StarterCardPic.setFitWidth(90);
+        StarterCardPic.setFitHeight(65);
         StarterCardPic.setLayoutX(xCenter);
         StarterCardPic.setLayoutY(yCenter);
         personalBoardAnchorPane.getChildren().add(StarterCardPic);
+
+        ImageView piecePic = pieces.get(my_index);
+        piecePic.setFitWidth(20);
+        piecePic.setFitHeight(20);
+        piecePic.setLayoutX(xCenter+20);
+        piecePic.setLayoutY(yCenter+22.5);
+        personalBoardAnchorPane.getChildren().add(piecePic);
+
+        if(my_index == firstPlayerIndex){
+            ImageView pieceBlackPic = pieceBlackImageView;
+            pieceBlackPic.setFitWidth(20);
+            pieceBlackPic.setFitHeight(20);
+            pieceBlackPic.setLayoutX(xCenter+50);
+            pieceBlackPic.setLayoutY(yCenter+22.5);
+            personalBoardAnchorPane.getChildren().add(pieceBlackPic);
+        }
         setMsgToShow("StarterCard placed", true);
     }
 
@@ -986,12 +1042,6 @@ public class RunningController extends GenericController {
         }
     }
 
-    public void setPlayerDrawnCard(ModelView model, String nickname) {
-        setCommonCards(model);
-        setCardHand(model, nickname);
-    }
-
-
     public void changeTurn(ModelView model, String nickname) {
         setMsgToShow("Next turn is up to: " + model.getCurrentPlayerNickname(), true);
     }
@@ -1013,10 +1063,8 @@ public class RunningController extends GenericController {
         int[] result = mapper.getMappedPosition(clickX, clickY);
 
         if (result != null) {
-            //System.out.println("coordinate selezionate: (" + result[0] + ", " + result[1] + ")");
             LinkedBlockingQueue<String> reader = getInputReaderGUI();
             if (reader != null) {
-                //System.out.println("(x,y): " + result[0] + ", " + result[1]);
                 reader.add(String.valueOf(result[0]));
                 reader.add(String.valueOf(result[1]));
             } else {
@@ -1056,18 +1104,11 @@ public class RunningController extends GenericController {
                 // it's correct
             }
         }
-        //System.out.println("coordinate selezionate result: (" + result[0] + ", " + result[1] + ")");
-
         String resultString = String.format("%d,%d", result[0], result[1]);
-        //System.out.println(resultString);
-
         int[] position = inverseMapper.getInverseMappedPosition(resultString);
-        //System.out.println("coordinate selezionate position: (" + position[0] + ", " + position[1] + ")");
-
         CardPic.setLayoutX((double)position[0]);
         CardPic.setLayoutY((double)position[1]);
 
-        // Verifica e aggiorna le dimensioni dell'AnchorPane
         double newWidth = position[0] + CardPic.getFitWidth();
         double newHeight = position[1] + CardPic.getFitHeight();
 
@@ -1215,8 +1256,6 @@ public class RunningController extends GenericController {
         my_sp.setVisible(true);
     }
 
-
-
     //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
 
 
@@ -1237,9 +1276,14 @@ public class RunningController extends GenericController {
     }
 
 
-    public void updateChat(ModelView model, String sender) {
+    public void updateChat(ModelView model, String nickname) {
         Message message = model.getChat().getLastMessage();
-        chatArea.appendText(sender + ": " + message.text() + "\n");
+        if(nickname.equals("Everyone")){
+            chatArea.appendText(message.sender().getNickname() + "(to everyone): " + message.text() + "\n");
+        }else{
+            chatArea.appendText(message.sender().getNickname() + "(to you): " + message.text() + "\n");
+        }
+
     }
 
 
@@ -1263,8 +1307,4 @@ public class RunningController extends GenericController {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
     }
-
-
 }
-
-

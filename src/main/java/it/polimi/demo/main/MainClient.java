@@ -5,7 +5,7 @@ import it.polimi.demo.main.utils.BoolAdd;
 import it.polimi.demo.main.utils.StaticPromptValidator;
 import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.GameDynamic;
-import it.polimi.demo.view.gui.ApplicationGUI;
+import it.polimi.demo.view.gui.FXApplication;
 import javafx.application.Application;
 
 import static java.lang.Integer.valueOf;
@@ -37,7 +37,7 @@ public class MainClient {
 
         Runnable action_2 = (ui_selection == 1)
                 ? () -> new GameDynamic(connection)
-                : () -> Application.launch(ApplicationGUI.class, connection.toString());
+                : () -> Application.launch(FXApplication.class, connection.toString());
 
         action_2.run();
     }
