@@ -28,6 +28,4 @@ module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
     exports it.polimi.demo.network.utils to java.rmi;
     exports it.polimi.demo.view.gui to javafx.fxml, javafx.graphics;
     opens it.polimi.demo.view.gui to javafx.fxml;
-    exports it.polimi.demo.view.gui.utils to javafx.fxml, javafx.graphics;
-    opens it.polimi.demo.view.gui.utils to javafx.fxml;
 }

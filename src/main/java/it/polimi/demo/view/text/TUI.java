@@ -459,7 +459,7 @@ public class TUI extends UI {
      * shows options
      */
     @Override
-    public void show_options() {
+    public void startFirstScene() {
         this.clearScreen();
         this.show_title();
         StaticPrinterTUI.print(ansi().cursor(9, 0).a("""

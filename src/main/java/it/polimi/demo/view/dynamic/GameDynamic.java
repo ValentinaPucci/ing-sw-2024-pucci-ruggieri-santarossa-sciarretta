@@ -460,7 +460,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * @return `true` if the selection was successful, `false` otherwise.
      */
     private boolean askSelectGame() {
-        ui.show_options();
+        ui.startFirstScene();
         String optionChoose = getProcessedData();
         if (optionChoose.equals(".")) System.exit(1);
 

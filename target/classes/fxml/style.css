@@ -10,7 +10,7 @@
 
 
 #personalBoardAnchorPane {
-    -fx-background-image: url("/pb2.jpg");
+    -fx-background-image: url("/Background.jpg");
     -fx-background-size: cover;
     -fx-background-position: center center;
 }

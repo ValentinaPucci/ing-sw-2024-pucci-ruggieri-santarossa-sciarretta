@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Point3D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.demo.view.gui.controllers.StartGameController">
+   <children>
+      <ImageView fitHeight="850.0" fitWidth="1500.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@/Background.jpg" />
+         </image>
+      </ImageView>
+      <Label layoutX="48.0" layoutY="120.0" text="Choose the number of players" textFill="#4d0202">
+         <font>
+            <Font name="Luminari" size="38.0" />
+         </font>
+      </Label>
+      <Button fx:id="numPlayers2" layoutX="73.0" layoutY="221.0" mnemonicParsing="false" nodeOrientation="RIGHT_TO_LEFT" onAction="#twoPLayers" prefHeight="83.0" prefWidth="114.0" text="2" textFill="#4d0202" textOverrun="LEADING_ELLIPSIS">
+         <font>
+            <Font name="Luminari" size="36.0" />
+         </font>
+         <rotationAxis>
+            <Point3D />
+         </rotationAxis>
+         <effect>
+            <ColorAdjust hue="0.17" saturation="0.3" />
+         </effect>
+      </Button>
+      <Button fx:id="numPlayers3" layoutX="243.0" layoutY="221.0" mnemonicParsing="false" onAction="#threePLayers" prefHeight="83.0" prefWidth="114.0" text="3" textFill="#4d0202">
+         <font>
+            <Font name="Luminari" size="36.0" />
+         </font>
+         <effect>
+            <ColorAdjust hue="0.17" saturation="0.3" />
+         </effect>
+      </Button>
+      <Button fx:id="numPlayers4" layoutX="409.0" layoutY="221.0" mnemonicParsing="false" onAction="#fourPLayers" prefHeight="83.0" prefWidth="114.0" text="4" textFill="#4d0202">
+         <font>
+            <Font name="Luminari" size="36.0" />
+         </font>
+         <effect>
+            <ColorAdjust hue="0.17" saturation="0.3" />
+         </effect>
+      </Button>
+      <ImageView fitHeight="109.0" fitWidth="109.0" layoutX="12.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@/logo.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

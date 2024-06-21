@@ -1,11 +1,10 @@
 package it.polimi.demo.view.gui.controllers;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.ModelView;
-import it.polimi.demo.view.gui.GuiInputReaderController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class RunningController extends GuiInputReaderController {
     @FXML public Label myPoints;
@@ -246,8 +246,8 @@ public class RunningController extends GuiInputReaderController {
         sp2.setVisible(false);
     }
 
-    private void setComponentsDisable(List<? extends javafx.scene.Node> components, boolean disable) {
-        for (javafx.scene.Node component : components) {
+    private void setComponentsDisable(List<? extends Node> components, boolean disable) {
+        for (Node component : components) {
             component.setDisable(disable);
         }
     }
@@ -335,6 +335,7 @@ public class RunningController extends GuiInputReaderController {
         players_without_me_size = players_without_me.size();
     }
     public void showOthersPersonalBoard(int index) {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             switch (index) {
                 case 0:
@@ -618,6 +619,7 @@ public class RunningController extends GuiInputReaderController {
         setMsgToShow("personalObjective0 clicked" , true);
         flipPersonalObjective(personalObjectiveIds.getFirst(), 0);
 
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("2");
         } else {
@@ -629,6 +631,7 @@ public class RunningController extends GuiInputReaderController {
     public void onPersonalObjective0Clicked(MouseEvent event) {
         setMsgToShow("personalObjective1 clicked" , true);
         flipPersonalObjective(personalObjectiveIds.get(1), 1);
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("1");
         } else {
@@ -648,6 +651,7 @@ public class RunningController extends GuiInputReaderController {
         FlipStarter.setVisible(false);
         StarterCardImage.setVisible(false);
 
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             if(starterCardOrientation == Orientation.FRONT)
                 reader.add("f");
@@ -673,6 +677,7 @@ public class RunningController extends GuiInputReaderController {
 
         FlipHand.setDisable(true);
 
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("1");
         } else {
@@ -705,6 +710,7 @@ public class RunningController extends GuiInputReaderController {
 
         FlipHand.setDisable(true);
 
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("2");
         } else {
@@ -737,6 +743,7 @@ public class RunningController extends GuiInputReaderController {
 
         FlipHand.setDisable(true);
 
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("3");
         } else {
@@ -1022,6 +1029,7 @@ public class RunningController extends GuiInputReaderController {
     }
 
     public void whichOrientationToPlace() {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             if(cardHandOrientation == Orientation.FRONT)
                 reader.add("f");
@@ -1055,6 +1063,7 @@ public class RunningController extends GuiInputReaderController {
         int[] result = mapper.getMappedPosition(clickX, clickY);
 
         if (result != null) {
+            LinkedBlockingQueue<String> reader = getInputReaderGUI();
             if (reader != null) {
                 reader.add(String.valueOf(result[0]));
                 reader.add(String.valueOf(result[1]));
@@ -1136,7 +1145,8 @@ public class RunningController extends GuiInputReaderController {
     }
 
     @FXML
-    public void commonCard1Clicked() {
+    public void commonCard1Clicked(MouseEvent mouseEvent) {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("1");
         } else {
@@ -1146,7 +1156,8 @@ public class RunningController extends GuiInputReaderController {
         commonIndex = 1;
     }
     @FXML
-    public void commonCard2Clicked() {
+    public void commonCard2Clicked(MouseEvent mouseEvent) {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("2");
         } else {
@@ -1156,7 +1167,8 @@ public class RunningController extends GuiInputReaderController {
         commonIndex = 2;
     }
     @FXML
-    public void commonCard3Clicked() {
+    public void commonCard3Clicked(MouseEvent mouseEvent) {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("3");
         } else {
@@ -1166,7 +1178,8 @@ public class RunningController extends GuiInputReaderController {
         commonIndex = 3;
     }
     @FXML
-    public void commonCard4Clicked() {
+    public void commonCard4Clicked(MouseEvent mouseEvent) {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("4");
         } else {
@@ -1176,7 +1189,8 @@ public class RunningController extends GuiInputReaderController {
         commonIndex = 4;
     }
     @FXML
-    public void commonCard5Clicked() {
+    public void commonCard5Clicked(MouseEvent mouseEvent) {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("5");
         } else {
@@ -1186,7 +1200,8 @@ public class RunningController extends GuiInputReaderController {
         commonIndex = 5;
     }
     @FXML
-    public void commonCard6Clicked() {
+    public void commonCard6Clicked(MouseEvent mouseEvent) {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("6");
         } else {
@@ -1241,7 +1256,7 @@ public class RunningController extends GuiInputReaderController {
         my_sp.setVisible(true);
     }
 
-    //-------------------------------------CHAT and Mex------------------------------------
+    //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
 
 
     @FXML
@@ -1250,11 +1265,11 @@ public class RunningController extends GuiInputReaderController {
         String recipient = recipientComboBox.getValue();
         if (!message.trim().isEmpty()) {
             if ("Everyone".equals(recipient)) {
-                reader.add("/c " + chatInput.getText());
+                getInputReaderGUI().add("/c " + chatInput.getText());
                 chatArea.appendText("Me (to everyone): " + message + "\n");
             } else {
                 chatArea.appendText("Me (to " + recipient + "): " + message + "\n");
-                reader.add("/cs " + recipientComboBox.getValue().toString() + " " + chatInput.getText());
+                getInputReaderGUI().add("/cs " + recipientComboBox.getValue().toString() + " " + chatInput.getText());
             }
             chatInput.clear();
         }
@@ -1271,12 +1286,20 @@ public class RunningController extends GuiInputReaderController {
 
     }
 
+
     public void setMsgToShow(String msg, Boolean success) {
         labelMessage.setText(msg);
-        labelMessage.setTextFill(success == null ? Color.WHITE : (success ? Color.GREEN : Color.RED));
+        if (success == null) {
+            labelMessage.setTextFill(Color.WHITE);
+        } else if (success) {
+            labelMessage.setTextFill(Color.GREEN);
+        } else {
+            labelMessage.setTextFill(Color.RED);
+        }
     }
 
-    public void exitGame() {
+    public void exitGame(ActionEvent actionEvent) {
+        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("/quit");
             reader.add("/leave");
