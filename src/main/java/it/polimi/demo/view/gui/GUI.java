@@ -139,7 +139,6 @@ public class GUI extends UI {
 
     @Override
     protected void show_personalBoard(String nick, ModelView gameModel) {
-
     }
 
     @Override

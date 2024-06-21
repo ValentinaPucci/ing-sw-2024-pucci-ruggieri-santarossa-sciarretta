@@ -21,6 +21,10 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.demo.model.enumerations.Coordinate.NE;
+import static it.polimi.demo.model.enumerations.Orientation.BACK;
+import static it.polimi.demo.model.enumerations.Orientation.FRONT;
+
 /**
  * This class represents the model of the game. It contains all the logic of the game.
  * It is responsible for managing the players, the game status, the chat, the game board, and the game cards.
@@ -383,15 +387,11 @@ public class Model implements Serializable {
 
         if (o == Orientation.FRONT) {
             p.setStarterCard(p.getStarterCardToChose().getFirst());
-            last_chosen_card.set(0, p.getStarterCardToChose().getFirst().getId());
+
         }
         else {
             p.setStarterCard(p.getStarterCardToChose().get(1));
-            last_chosen_card.set(0, p.getStarterCardToChose().get(1).getId());
         }
-        last_chosen_card.set(1, 250);
-        last_chosen_card.set(2, 250);
-        last_chosen_orientation = o;
 
         personal_board.placeStarterCard(p.getStarterCard());
 
