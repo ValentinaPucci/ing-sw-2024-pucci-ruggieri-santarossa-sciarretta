@@ -19,7 +19,6 @@ public class GameOverController extends InputReaderController {
         player1.setVisible(false);
         player2.setVisible(false);
         player3.setVisible(false);
-        buttonMenu.setVisible(true);
 
         int i=0;
         Label tmp = null;
