@@ -1029,8 +1029,13 @@ public class PersonalBoard implements Serializable {
         return true;
     }
 
-
-    
+    /**
+     * Place a card with known coordinates
+     * @param game_card is the card already on the PersonalBoard
+     * @param card_to_play is the card to put on the PersonalBoard
+     * @param coord is the coordinate of the card_to_play
+     * @return true iff the card can be placed
+     */
     public boolean placeCardAt(ResourceCard game_card, ResourceCard card_to_play, Coordinate coord) {
 
         if (coord == Coordinate.NE)
@@ -1046,6 +1051,13 @@ public class PersonalBoard implements Serializable {
 
     }
 
+    /**
+     * Place a card with known coordinates
+     * @param game_card is the card already on the PersonalBoard
+     * @param card_to_play is the card to put on the PersonalBoard
+     * @param coord is the coordinate of the card_to_play
+     * @return true iff the card can be placed
+     */
     public boolean placeCardAt(ResourceCard game_card, GoldCard card_to_play, Coordinate coord) {
 
         if (coord == Coordinate.NE)
@@ -1060,6 +1072,13 @@ public class PersonalBoard implements Serializable {
             return false;
     }
 
+    /**
+     * Place a card with known coordinates
+     * @param game_card is the card already on the PersonalBoard
+     * @param card_to_play is the card to put on the PersonalBoard
+     * @param coord is the coordinate of the card_to_play
+     * @return true iff the card can be placed
+     */
     public boolean placeCardAt(StarterCard game_card, ResourceCard card_to_play, Coordinate coord) {
 
         if (coord == Coordinate.NE)
@@ -1074,6 +1093,13 @@ public class PersonalBoard implements Serializable {
             return false;
     }
 
+    /**
+     * Place a card with known coordinates
+     * @param game_card is the card already on the PersonalBoard
+     * @param card_to_play is the card to put on the PersonalBoard
+     * @param coord is the coordinate of the card_to_play
+     * @return true iff the card can be placed
+     */
     public boolean placeCardAt(StarterCard game_card, GoldCard card_to_play, Coordinate coord) {
 
         if (coord == Coordinate.NE)
@@ -1128,10 +1154,16 @@ public class PersonalBoard implements Serializable {
             addFixedResource(card_to_play.color);
     }
 
+    /**
+     * Retrieves the player's board.
+     */
     public Cell[][] getBoard() {
         return board;
     }
 
+    /**
+     * equals override
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

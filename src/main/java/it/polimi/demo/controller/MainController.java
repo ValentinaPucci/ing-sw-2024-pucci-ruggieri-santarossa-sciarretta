@@ -1,7 +1,7 @@
 package it.polimi.demo.controller;
 
-import it.polimi.demo.network.interfaces.GameControllerInterface;
-import it.polimi.demo.network.interfaces.MainControllerInterface;
+import it.polimi.demo.network.GameControllerInterface;
+import it.polimi.demo.network.MainControllerInterface;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.Constants;
 import it.polimi.demo.model.chat.Message;
@@ -117,6 +117,9 @@ public class MainController implements MainControllerInterface, Serializable {
         } else if (games.get(gameId).getNumPlayersToPlay() == games.get(gameId).getNumPlayers()) {
             listener.genericErrorWhenEnteringGame("Game is full");
             return null;
+        } else if (games.get(gameId).getConnectedPlayers().stream().anyMatch(p -> p.getNickname().equals(nickname))) {
+            listener.genericErrorWhenEnteringGame("Nickname already in use in this game");
+            return null;
         }
 
         aux_adder(games.get(gameId), player, listener);
@@ -137,6 +140,7 @@ public class MainController implements MainControllerInterface, Serializable {
             throws RemoteException {
         Optional<GameController> av_game = games.values().stream()
                 .filter(game -> game.getStatus() == GameStatus.WAIT && game.getNumPlayers() < Constants.MaxNumOfPlayer)
+                .filter(game -> game.getConnectedPlayers().stream().noneMatch(p -> p.getNickname().equals(nickname)))
                 .findFirst();
         if (av_game.isPresent()) {
             GameController game = av_game.get();

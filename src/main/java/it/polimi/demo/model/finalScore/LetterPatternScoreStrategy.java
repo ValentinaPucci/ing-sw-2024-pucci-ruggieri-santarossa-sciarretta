@@ -11,27 +11,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class implements the ScoreStrategy interface and is used to calculate the score of a player
+ */
 public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
 
     /**
-     * @param objectiveCard
-     * @param l
-     * @param m
-     * @return true iff we recognised a letter pattern
+     * This method checks if a 5x3 submatrix of the personal board is a letter pattern
+     * @param objectiveCard The objective card that the player is trying to achieve
+     * @param personal_board The personal board of the player
+     * @param l The row index of the top-left corner of the submatrix
+     * @param m The column index of the top-left corner of the submatrix
+     * @return True if the submatrix is a letter pattern, false otherwise
      */
     public boolean isSubMatrixLetterPattern(LetterPatternObjectiveCard objectiveCard,
                                             PersonalBoard personal_board, int l, int m) {
 
-
-
         for (int i = 0; i < 5; i++) {
             for (int j = 0; j < 3; j++) {
-//                if (l + i >= 250  && m + j >= 250 && l + i <= 251 && m + j <= 251) {
-//                    return false;
-//                }
                 if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-//                    if (personal_board.board[l + i][m + j].cell_of_a_found_pattern)
-//                        return false;
                     if (!personal_board.board[l + i][m + j].is_full)
                         return false;
                     else if (!personal_board.board[l + i][m + j].equals(objectiveCard.aux_personal_board.board[i][j]))
@@ -39,14 +37,6 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
                 }
             }
         }
-
-//        for (int i = 0; i < 5; i++) {
-//            for (int j = 0; j < 3; j++) {
-//                if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-//                    personal_board.board[l + i][m + j].setCellAsPatternFound();
-//                }
-//            }
-//        }
 
         Color target_1 = null;
         Color target_2 = null;
@@ -162,8 +152,10 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
     }
 
     /**
-     * @param objectiveCard
-     * @return
+     * This method calculates the number of letter patterns recognised by the player
+     * @param objectiveCard The objective card that the player is trying to achieve
+     * @param personal_board The personal board of the player
+     * @return The number of letter patterns recognised by the player
      */
     public int counterOfRecognisedLetterPatterns(LetterPatternObjectiveCard objectiveCard,
                                                  PersonalBoard personal_board) {
@@ -179,6 +171,12 @@ public class LetterPatternScoreStrategy implements ScoreStrategy, Serializable {
         return count;
     }
 
+    /**
+     * This method calculates the score of a player
+     * @param card The objective card that the player is trying to achieve
+     * @param personal_board The personal board of the player
+     * @return The score of the player
+     */
     @Override
     public int calculateScore(ObjectiveCard card, PersonalBoard personal_board) {
         return counterOfRecognisedLetterPatterns((LetterPatternObjectiveCard) card, personal_board)

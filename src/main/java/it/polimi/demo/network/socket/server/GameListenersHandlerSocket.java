@@ -95,39 +95,6 @@ public class GameListenersHandlerSocket implements Listener, Serializable {
     }
 
     @Override
-    public void joinUnableGameFull(Player p, ModelView gamemodel) throws RemoteException {
-        writeObject(ob_out -> {
-            try {
-                ob_out.writeObject(new msgJoinUnableGameFull(p, gamemodel));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    @Override
-    public void joinUnableNicknameAlreadyIn(Player wantedToJoin) throws RemoteException {
-        writeObject(ob_out -> {
-            try {
-                ob_out.writeObject(new msgJoinUnableNicknameAlreadyIn(wantedToJoin));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    @Override
-    public void gameIdNotExists(int gameid) throws RemoteException {
-        writeObject(ob_out -> {
-            try {
-                ob_out.writeObject(new msgGameIdNotExists(gameid));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    @Override
     public void genericErrorWhenEnteringGame(String why) throws RemoteException {
         writeObject(ob_out -> {
             try {

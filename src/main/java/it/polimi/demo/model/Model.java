@@ -21,6 +21,10 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.demo.model.enumerations.Coordinate.NE;
+import static it.polimi.demo.model.enumerations.Orientation.BACK;
+import static it.polimi.demo.model.enumerations.Orientation.FRONT;
+
 /**
  * This class represents the model of the game. It contains all the logic of the game.
  * It is responsible for managing the players, the game status, the chat, the game board, and the game cards.
@@ -45,11 +49,13 @@ public class Model implements Serializable {
     private int num_required_players_to_start;
     private GameStatus status;
     private Chat chat;
-    private final Map<Player, Integer> leaderboard;
+    private final LinkedHashMap<Player, Integer> leaderboard;
     private final ObserverManager observers;
     private ArrayList<Integer> last_chosen_card;
     private Coordinate last_coord;
     private Orientation last_chosen_orientation;
+    private Player first_player = null;
+
 
     /**
      * Constructor for the model.
@@ -67,7 +73,7 @@ public class Model implements Serializable {
         gameId = -1;
         num_required_players_to_start = -1; // invalid value on purpose
         status = GameStatus.WAIT;
-        leaderboard = new HashMap<>();
+        leaderboard = new LinkedHashMap<>();
         observers = new ObserverManager();
     }
 
@@ -90,7 +96,7 @@ public class Model implements Serializable {
         gameId = gameID;
         status = GameStatus.WAIT;
         chat = new Chat();
-        leaderboard = new HashMap<>();
+        leaderboard = new LinkedHashMap<>();
         observers = new ObserverManager();
     }
 
@@ -103,18 +109,6 @@ public class Model implements Serializable {
      */
     public List<Player> getAllPlayers() {
         return aux_order_players;
-    }
-
-
-    /**
-     * Retrieves the list of nicknames of the players participating in the game.
-     *
-     * @return The list of nicknames.
-     */
-    public List<String> getAllNicknames() {
-        return aux_order_players.stream()
-                .map(Player::getNickname)
-                .collect(Collectors.toList());
     }
 
     /**
@@ -146,11 +140,13 @@ public class Model implements Serializable {
      */
     public synchronized void extractFirstPlayerToPlay() {
         Player first_player = players_connected.get(random.nextInt(players_connected.size()));
+        this.first_player = first_player;
         aux_order_players.remove(first_player);
         aux_order_players.addFirst(first_player);
         players_connected.remove(first_player);
         players_connected.addFirst(first_player);
     }
+
 
     /**
      * determine if all players are ready to start and if there are enough players to start
@@ -203,6 +199,10 @@ public class Model implements Serializable {
         return this.last_coord;
     }
 
+    public Player getFirstPlayer() {
+        return first_player;
+    }
+
     /**
      * Adds a new player to the game. Recall that if a player was previously playing,
      * then we are able to retrieve him/her from the auxiliary ordered list.
@@ -210,24 +210,9 @@ public class Model implements Serializable {
      * Statical offer.
      */
     public void addPlayer(Player p) {
-
-        List<String> nicknames = this.getAllNicknames();
-        String nickname = p.getNickname();
-
-        if (nicknames.contains(nickname)) {
-            observers.notify_joinUnableNicknameAlreadyIn(getIdentityOfPlayer(nickname));
-            throw new PlayerAlreadyConnectedException();
-        }
-        else if (aux_order_players.size() >= num_required_players_to_start ||
-                aux_order_players.size() >= Constants.MaxNumOfPlayer) {
-            observers.notify_joinUnableGameFull(getIdentityOfPlayer(nickname), this);
-            throw new MaxPlayersLimitException();
-        }
-        else {
-            aux_order_players.add(p);
-            players_connected.offer(p);
-            observers.notify_playerJoined(this);
-        }
+        aux_order_players.add(p);
+        players_connected.offer(p);
+        observers.notify_playerJoined(this);
     }
 
     /**
@@ -410,15 +395,11 @@ public class Model implements Serializable {
 
         if (o == Orientation.FRONT) {
             p.setStarterCard(p.getStarterCardToChose().getFirst());
-            last_chosen_card.set(0, p.getStarterCardToChose().getFirst().getId());
+
         }
         else {
             p.setStarterCard(p.getStarterCardToChose().get(1));
-            last_chosen_card.set(0, p.getStarterCardToChose().get(1).getId());
         }
-        last_chosen_card.set(1, 250);
-        last_chosen_card.set(2, 250);
-        last_chosen_orientation = o;
 
         personal_board.placeStarterCard(p.getStarterCard());
 
@@ -724,6 +705,7 @@ public class Model implements Serializable {
      * Updates the leaderboard and the list of winners accordingly.
      * It is called by getWinners() method.
      */
+    // todo: leaderboard to check
     public void declareWinners() {
 
         List<Player> aux_final_scores_tie = new ArrayList<>();
@@ -747,19 +729,19 @@ public class Model implements Serializable {
         leaderboard.clear(); // Clear the leaderboard before adding new entries
 
         if (aux_final_scores_tie.size() == 1) {
-            for (Player player : orderedPlayers) {
-                leaderboard.put(player, player.getFinalScore());
+            for (Player orderedPlayer : orderedPlayers) {
+                leaderboard.put(orderedPlayer, orderedPlayer.getFinalScore());
             }
         }
         else {
             // aux_final_scores_tie.size() >= 2
             // another filtering:
             aux_final_scores_tie.sort(Comparator.comparingInt(Player::scoreOnlyObjectiveCards).reversed());
-            StringBuilder aux = new StringBuilder(aux_final_scores_tie.getFirst().getNickname());
+            StringBuilder aux = new StringBuilder();
             int counter = 0;
             for (Player p : aux_final_scores_tie) {
                 if (p.scoreOnlyObjectiveCards() == aux_final_scores_tie.getFirst().scoreOnlyObjectiveCards()) {
-                    aux.append(p.getNickname());
+                    aux.append(p.getNickname() + " ");
                     counter++;
                 }
             }
@@ -788,7 +770,7 @@ public class Model implements Serializable {
      * getter for the leaderboard
      * @return the leaderboard
      */
-    public Map<Player, Integer> getLeaderboard() {
+    public LinkedHashMap<Player, Integer> getLeaderboard() {
         return leaderboard;
     }
 

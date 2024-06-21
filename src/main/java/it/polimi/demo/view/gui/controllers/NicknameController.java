@@ -4,10 +4,9 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class NicknameController extends GenericController {
+public class NicknameController extends GuiInputReaderController {
 
-    @FXML
-    private TextField nickname;
+    @FXML private TextField nickname;
 
     @FXML
     void enter(ActionEvent event) {
@@ -15,6 +14,4 @@ public class NicknameController extends GenericController {
             getInputReaderGUI().add(nickname.getText());
         }
     }
-
-
 }

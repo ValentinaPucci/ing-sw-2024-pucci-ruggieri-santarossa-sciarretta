@@ -55,11 +55,6 @@ public class Cell implements Serializable {
         this.is_full = true;
     }
 
-    public void setCellAsPatternFound() {
-        this.cell_of_a_found_pattern = true;
-    }
-
-
     /**
      * Remark: this method is crucial since it implement
      * the mapping between Cell and Corner classes
