@@ -23,6 +23,6 @@ public class Constants implements Serializable {
     public final static int row_gameID = 15;
 
     //GAME INFO
-    public final static int num_points_for_second_last_round = 1;
+    public final static int num_points_for_second_last_round = 3;
 
 }

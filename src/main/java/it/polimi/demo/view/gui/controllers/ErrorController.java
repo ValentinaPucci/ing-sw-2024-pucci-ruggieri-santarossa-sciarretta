@@ -1,5 +1,6 @@
 package it.polimi.demo.view.gui.controllers;
 
+import it.polimi.demo.view.gui.GuiInputReaderController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;

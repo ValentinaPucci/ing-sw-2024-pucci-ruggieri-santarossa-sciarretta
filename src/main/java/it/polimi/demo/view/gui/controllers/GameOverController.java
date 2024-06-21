@@ -1,40 +1,52 @@
 package it.polimi.demo.view.gui.controllers;
-import it.polimi.demo.model.ModelView;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.view.gui.GuiInputReaderController;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
+import java.util.List;
+import java.util.stream.IntStream;
+
+/**
+ * Controller for the game over screen.
+ */
 public class GameOverController extends GuiInputReaderController {
 
-    @FXML private Button buttonMenu;
     @FXML private Label player0;
     @FXML private Label player1;
     @FXML private Label player2;
     @FXML private Label player3;
 
-     public void show(ModelView model) {
-        player0.setVisible(false);
-        player1.setVisible(false);
-        player2.setVisible(false);
-        player3.setVisible(false);
+    /**
+     * List of labels for the players.
+     */
+    private List<Label> playerLabels;
 
-        int i=0;
-        Label tmp = null;
+    /**
+     * Initializes the controller.
+     */
+    @FXML
+    private void initialize() {
+        playerLabels = List.of(player0, player1, player2, player3);
+        playerLabels.forEach(label -> label.setVisible(false));
+    }
 
-        for (Player p:model.getClassification()){
-            switch (i){
-                case 0-> tmp=player0;
-                case 1-> tmp=player1;
-                case 2-> tmp=player2;
-                case 3-> tmp=player3;
-            }
+    /**
+     * Shows the game over screen.
+     * @param model the model to show
+     */
+    public void show(ModelView model) {
+        List<Player> players = model.getClassification();
 
-            tmp.setText(p.getNickname()+": "+p.getFinalScore()+" points");
-            tmp.setVisible(true);
-            i++;
-        }
-
+        IntStream.range(0, Math.min(players.size(), playerLabels.size()))
+                .forEach(i -> {
+                    Label label = playerLabels.get(i);
+                    Player player = players.get(i);
+                    label.setText(player.getNickname() + ": " + player.getFinalScore() + " points");
+                    label.setVisible(true);
+                });
     }
 }
+
