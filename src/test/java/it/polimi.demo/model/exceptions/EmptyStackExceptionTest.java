@@ -15,4 +15,10 @@ public class EmptyStackExceptionTest {
     public void testEmptyStackException() {
         Assertions.assertNotNull(this.emptyStackException);
     }
+
+    @Test
+    public void testEmptyStackExceptionMessage() {
+        this.emptyStackException = new EmptyStackException("Test message");
+        Assertions.assertEquals("Test message", this.emptyStackException.getMessage());
+    }
 }
