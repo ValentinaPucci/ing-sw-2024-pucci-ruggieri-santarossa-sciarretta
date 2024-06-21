@@ -11,8 +11,8 @@ public class LobbyController extends GuiInputReaderController {
     @FXML private Button buttonReady;
     @FXML private Text nicknameLabel;
     @FXML
-    void actionIamReady(ActionEvent event) {
-        getInputReaderGUI().add("y");
+    void actionIamReady() {
+        reader.add("y");
     }
 
     public void setGameId(int id) {

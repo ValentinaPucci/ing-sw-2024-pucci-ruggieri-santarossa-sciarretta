@@ -8,8 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class numPlayersController extends GuiInputReaderController {
 
     @FXML
-    public void twoPLayers(ActionEvent actionEvent) {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
+    public void twoPLayers() {
         if (reader != null) {
             reader.add("2");
         } else {
@@ -18,8 +17,7 @@ public class numPlayersController extends GuiInputReaderController {
     }
 
     @FXML
-    public void threePLayers(ActionEvent actionEvent) {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
+    public void threePLayers() {
         if (reader != null) {
             reader.add("3");
         } else {
@@ -27,8 +25,7 @@ public class numPlayersController extends GuiInputReaderController {
         }
     }
     @FXML
-    public void fourPLayers(ActionEvent actionEvent) {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
+    public void fourPLayers() {
         if (reader != null) {
             reader.add("4");
         } else {

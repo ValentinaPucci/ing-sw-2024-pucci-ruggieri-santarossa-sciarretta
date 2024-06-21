@@ -61,7 +61,7 @@ public class FXApplication extends Application {
         int index = getSceneIndex(sceneType);
         if (index != -1) {
             SceneClass sceneInfo = sceneCollection.get(index);
-            this.mainStage.setScene(sceneInfo.getCurrentScene());
+            this.mainStage.setScene(sceneInfo.currentScene());
             this.mainStage.show();
 
             previousWidth = mainStage.getScene().getWidth();
@@ -93,12 +93,12 @@ public class FXApplication extends Application {
 
     public GuiInputReaderController getSceneController(SceneType sceneType) {
         int index = getSceneIndex(sceneType);
-        return index != -1 ? sceneCollection.get(index).getSceneController() : null;
+        return index != -1 ? sceneCollection.get(index).sceneController() : null;
     }
 
     private int getSceneIndex(SceneType sceneType) {
         for (int i = 0; i < sceneCollection.size(); i++) {
-            if (sceneCollection.get(i).getSceneType() == sceneType) {
+            if (sceneCollection.get(i).sceneType() == sceneType) {
                 return i;
             }
         }
@@ -134,9 +134,9 @@ public class FXApplication extends Application {
 
         int sceneIndex = getSceneIndex(sceneType);
         SceneClass sceneDetails = sceneCollection.get(sceneIndex);
-        Pane newPaneRoot = (Pane) sceneDetails.getCurrentScene().getRoot();
+        Pane newPaneRoot = (Pane) sceneDetails.currentScene().getRoot();
 
-        PlayerLobbyController lobbyController = (PlayerLobbyController) sceneDetails.getSceneController();
+        PlayerLobbyController lobbyController = (PlayerLobbyController) sceneDetails.sceneController();
         lobbyController.setNickname(nickname);
 
         Pane targetPane = (Pane) this.mainStage.getScene().getRoot().lookup("#pane" + playerIndex);

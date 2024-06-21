@@ -5,34 +5,25 @@ import javafx.scene.Scene;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class SceneClass {
+public record SceneClass(Scene currentScene, SceneType sceneType, GuiInputReaderController sceneController) {
 
-    private Scene currentScene;
-    private SceneType sceneType;
-    private GuiInputReaderController sceneController;
-
-    public SceneClass(Scene currentScene, SceneType sceneType, GuiInputReaderController sceneController) {
-        this.currentScene = currentScene;
-        this.sceneType = sceneType;
-        this.sceneController = sceneController;
-    }
-
-    public Scene getCurrentScene() {
-        return currentScene;
-    }
-
-    public SceneType getSceneType() {
-        return sceneType;
-    }
-
-
-    public void setInputReaderGUI(LinkedBlockingQueue<String> GuiReader){
-        if(sceneController !=null) {
-            sceneController.setInputReaderGUI(GuiReader);
+    public SceneClass {
+        // Null checks
+        if (currentScene == null) {
+            throw new IllegalArgumentException("currentScene cannot be null");
+        }
+        if (sceneType == null) {
+            throw new IllegalArgumentException("sceneType cannot be null");
+        }
+        if (sceneController == null) {
+            throw new IllegalArgumentException("sceneController cannot be null");
         }
     }
 
-    public GuiInputReaderController getSceneController(){
-        return sceneController;
+    public void setInputReaderGUI(LinkedBlockingQueue<String> guiReader) {
+        if (sceneController != null) {
+            sceneController.reader = guiReader;
+        }
     }
 }
+

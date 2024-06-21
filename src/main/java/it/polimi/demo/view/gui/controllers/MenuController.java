@@ -8,8 +8,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class MenuController extends GuiInputReaderController {
 
     @FXML
-    public void CreateGame(ActionEvent event) {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
+    public void CreateGame() {
         if (reader != null) {
             reader.add("c");
         } else {
@@ -18,8 +17,7 @@ public class MenuController extends GuiInputReaderController {
     }
 
     @FXML
-    public void JoinGame(ActionEvent event) {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
+    public void JoinGame() {
         if (reader != null) {
             reader.add("js");
         } else {
@@ -28,8 +26,7 @@ public class MenuController extends GuiInputReaderController {
     }
 
     @FXML
-    public void RandomGame(ActionEvent event) {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
+    public void RandomGame() {
         if (reader != null) {
             reader.add("j");
         } else {
