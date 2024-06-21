@@ -3,7 +3,7 @@ package it.polimi.demo.view.gui.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 
-public class PlayerLobbyController extends GenericController {
+public class PlayerLobbyController extends SceneController {
     @FXML
     private Text nickname;
 

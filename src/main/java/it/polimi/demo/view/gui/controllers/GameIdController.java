@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class GameIdController extends GenericController{
+public class GameIdController extends SceneController {
 
     @FXML
     private TextField GameId;

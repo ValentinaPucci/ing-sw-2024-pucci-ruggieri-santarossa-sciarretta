@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class GameOverController extends GenericController{
+public class GameOverController extends SceneController {
 
     @FXML
     private Button buttonMenu;

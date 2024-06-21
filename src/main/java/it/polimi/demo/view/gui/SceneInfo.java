@@ -1,64 +1,38 @@
 package it.polimi.demo.view.gui;
 
-import it.polimi.demo.view.gui.controllers.GenericController;
-import it.polimi.demo.view.gui.scene.SceneType;
+import it.polimi.demo.view.gui.controllers.SceneController;
 import javafx.scene.Scene;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class SceneInfo {
-    /**
-     * Attributes.
-     */
-    private Scene scene;
-    private SceneType sceneEnum;
-    private GenericController genericController;
 
-    /**
-     * Constructor of the class.
-     * @param scene the scene {@link Scene}
-     * @param sceneEnum the scene enum {@link SceneType}
-     * @param gc the generic controller {@link GenericController}
-     */
-    public SceneInfo(Scene scene, SceneType sceneEnum, GenericController gc) {
-        this.scene = scene;
-        this.sceneEnum = sceneEnum;
-        this.genericController=gc;
+    private Scene currentScene;
+    private SceneType sceneType;
+    private SceneController sceneController;
+
+    public SceneInfo(Scene currentScene, SceneType sceneType, SceneController sceneController) {
+        this.currentScene = currentScene;
+        this.sceneType = sceneType;
+        this.sceneController = sceneController;
     }
 
-    /**
-     * Method to get the scene.
-     * @return the scene {@link Scene}
-     */
-    public Scene getScene() {
-        return scene;
+    public Scene getCurrentScene() {
+        return currentScene;
     }
 
-
-    /**
-     * Method to get the scene enum.
-     * @return the scene enum {@link SceneType}
-     */
     public SceneType getSceneType() {
-        return sceneEnum;
+        return sceneType;
     }
 
-    /**
-     * Method to set the input reader_queue GUI.
-     * @param GuiReader the input reader_queue GUI
-     */
+
     public void setInputReaderGUI(LinkedBlockingQueue<String> GuiReader){
-        //System.out.println("setInputReaderGUI: "+ inputReaderGUI);
-        if(genericController!=null) {
-            genericController.setInputReaderGUI(GuiReader);
+        if(sceneController !=null) {
+            sceneController.setInputReaderGUI(GuiReader);
         }
     }
 
-    /**
-     * Method to get the generic controller.
-     * @return the generic controller {@link GenericController}
-     */
-    public GenericController getGenericController(){
-        return genericController;
+    public SceneController getSceneController(){
+        return sceneController;
     }
 }

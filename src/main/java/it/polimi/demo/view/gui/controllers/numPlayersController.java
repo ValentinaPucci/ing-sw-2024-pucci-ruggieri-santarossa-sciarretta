@@ -6,7 +6,7 @@ import javafx.scene.control.Button;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class numPlayersController extends GenericController {
+public class numPlayersController extends SceneController {
 
     @FXML
     private Button numPlayers2;

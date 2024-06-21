@@ -2,7 +2,7 @@ package it.polimi.demo.view.gui.controllers;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-public abstract class GenericController {
+public abstract class SceneController {
 
     private LinkedBlockingQueue<String> GuiReader;
 

@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
-public class LobbyController extends GenericController {
+public class LobbyController extends SceneController {
 
     public Text gameidLabel;
 

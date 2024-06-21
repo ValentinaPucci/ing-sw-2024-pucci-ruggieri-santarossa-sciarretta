@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
 
-public class ErrorController extends GenericController {
+public class ErrorController extends SceneController {
 
     @FXML
     private Button button;

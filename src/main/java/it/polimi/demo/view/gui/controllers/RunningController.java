@@ -15,7 +15,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Text;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class RunningController extends GenericController {
+public class RunningController extends SceneController {
     @FXML public Label myPoints;
     @FXML public Label playerLabel1;
     @FXML public Label playerLabel2;

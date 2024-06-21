@@ -1,4 +1,4 @@
-package it.polimi.demo.view.gui.scene;
+package it.polimi.demo.view.gui;
 
 public enum SceneType {
     MENU("/fxml/Menu.fxml"),
@@ -14,13 +14,13 @@ public enum SceneType {
     ERROR("/fxml/Error.fxml"),
     NUM_PLAYERS("/fxml/NumPlayers.fxml");
 
-    private final String value;
+    private final String SceneType;
 
-    SceneType(final String value) {
-        this.value = value;
+    SceneType(final String sceneType) {
+        this.SceneType = sceneType;
     }
 
-    public String value() {
-        return value;
+    public String getType() {
+        return SceneType;
     }
 }
