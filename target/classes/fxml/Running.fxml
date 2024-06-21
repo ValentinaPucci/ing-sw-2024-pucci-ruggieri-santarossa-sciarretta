@@ -21,6 +21,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import java.net.URL?>
 <AnchorPane fx:id="mainAnchor" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="850.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.demo.view.gui.controllers.RunningController">
     <children>
 
@@ -291,6 +292,9 @@
                         </content>
                     </ScrollPane>
                 </children>
+                <stylesheets>
+                    <URL value="@style.css" />
+                </stylesheets>
             </Pane>
 
             <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
@@ -301,6 +305,9 @@
                         </content>
                     </ScrollPane>
                 </children>
+                <stylesheets>
+                    <URL value="@style.css" />
+                </stylesheets>
             </Pane>
             <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
                 <children>
@@ -310,9 +317,12 @@
                         </content>
                     </ScrollPane>
                 </children>
+                <stylesheets>
+                    <URL value="@style.css" />
+                </stylesheets>
             </Pane>
 
-            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
+            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
                 <children>
                     <ScrollPane fx:id="my_sp" layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
                         <content>
@@ -320,6 +330,9 @@
                         </content>
                     </ScrollPane>
                 </children>
+                <stylesheets>
+                    <URL value="@style.css" />
+                </stylesheets>
             </Pane>
 
             <Button fx:id="hideAllButton" layoutX="1235.0" layoutY="729.0" onAction="#hideAllPersonalBoards" prefHeight="30.0" prefWidth="68.0" text="HIDE ALL">
