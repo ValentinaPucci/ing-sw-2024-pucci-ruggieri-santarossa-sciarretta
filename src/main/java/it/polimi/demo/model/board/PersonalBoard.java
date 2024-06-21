@@ -10,19 +10,52 @@ import java.io.Serializable;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+/**
+ * This class represents the personal board of a player.
+ */
+
 public class PersonalBoard implements Serializable {
 
+    /**
+     * Board matrix
+     */
     public Cell[][] board;
     private final int dim1;
     private final int dim2;
     private int points;
+
+    /**
+     * Number of mushrooms in the personal board.
+     */
     private int num_mushrooms;
+    /**
+     * Number of leaves in the personal board.
+     */
     private int num_leaves;
+    /**
+     * Number of butterflies in the personal board.
+     */
     private int num_butterflies;
+    /**
+     * Number of wolves in the personal board.
+     */
     private int num_wolves;
+    /**
+     * Number of parchments in the personal board.
+     */
     private int num_parchments;
+    /**
+     * Number of feathers in the personal board.
+     */
     private int num_feathers;
+    /**
+     * Number of potions in the personal board.
+     */
     private int num_potions;
+
+    /**
+     * Constructor.
+     */
 
     public PersonalBoard() {
         this.dim1 = 500;

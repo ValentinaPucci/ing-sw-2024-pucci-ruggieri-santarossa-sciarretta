@@ -9,7 +9,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
-
+/**
+ * This class represents the message sent by the client to the main controller to create a new game.
+ */
 public class SocketClientMsgGameCreation extends SocketClientGenericMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = 1564655861858986913L;
@@ -27,6 +29,6 @@ public class SocketClientMsgGameCreation extends SocketClientGenericMessage impl
 
     @Override
     public void performOnGameController(GameControllerInterface mainController) throws RemoteException {
-
+        // Do nothing
     }
 }

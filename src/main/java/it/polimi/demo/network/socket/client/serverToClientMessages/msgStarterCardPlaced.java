@@ -19,6 +19,11 @@ public class msgStarterCardPlaced extends SocketServerGenericMessage{
         this.orientation = orientation;
     }
 
+    /**
+     * Method to perform action on the listener.
+     * @param lis
+     * @throws RemoteException
+     */
     @Override
     public void perform(Listener lis) throws RemoteException {
         lis.starterCardPlaced(gameModel, orientation, gameModel.getCurrentPlayerNickname());

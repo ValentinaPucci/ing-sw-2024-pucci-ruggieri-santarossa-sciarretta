@@ -2,7 +2,19 @@ package it.polimi.demo.model;
 
 import java.io.Serializable;
 
+/**
+ * Class the implements the Factory design pattern to create the different types of decks, given the different paths of the JSON
+ * files of the different types of cards.
+
+ */
+
 public class DeckFactory implements Serializable {
+
+    /**
+     * Method that creates the deck of the specified type.
+     * @param type
+     * @return
+     */
     public CardsCollection createDeck(String type) {
         CardsCollection cardsCollection = new CardsCollection();
         switch (type) {

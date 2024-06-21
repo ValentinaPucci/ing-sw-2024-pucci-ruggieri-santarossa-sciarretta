@@ -20,12 +20,30 @@ import it.polimi.demo.model.enumerations.*;
 import java.io.File;
 
 // TODO: Correct Gold card upload.
+
+/**
+ * This class is used to create a collection of cards. It is used to populate the deck of cards.
+ * It reads the JSON file and creates the cards collections.
+ */
 public  class CardsCollection implements Serializable {
+    /**
+     * List of cards.
+     */
     public List<Card> cards;
+
+    /**
+     * Constructor.
+     */
 
     public CardsCollection() {
         cards = new ArrayList<>();
     }
+
+    /**
+     * Method for adding a card to the List("Collection").
+     * @param card
+     * @throws NullPointerException
+     */
 
     public void addCard(Card card) throws NullPointerException{
         if( card == null) {
@@ -35,16 +53,18 @@ public  class CardsCollection implements Serializable {
         }
     }
 
+    /**
+     * Size of the List
+     * @return size of the List
+     */
     public int size() {
         return cards.size();
     }
 
-    // In this case we are creating only the FRONT, but we need also the back of the card.
-
     /**
-     *
+     * Method for populating the generic deck of Resource Cards or Gold Cards.
      * @param jsonFilePath
-     * @param type
+     * @param type of Card, either "Resource" or "Gold"
      */
     public void populateDeck(String jsonFilePath, String type) {
         cards.clear();
@@ -206,7 +226,11 @@ public  class CardsCollection implements Serializable {
         }
     }
 
-    // populate objective cards draft
+    /**
+     * Method for populating the deck of Objective Cards.
+     * @param jsonFilePath
+     */
+
     public void populateDeckObjective(String jsonFilePath) {
         cards.clear();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -286,10 +310,13 @@ public  class CardsCollection implements Serializable {
         }
     }
 
-    // populate starter cards draft: it create the starter card collection, both front and back of the card. At the end
-    // we have a collections of starter cards, that has size X2.
+    /**
+     * Method for populating the deck of Starter Cards.
+     * @param jsonFilePath
+     */
 
     // Remark: at the moment the same deck has both front and back of stater cards. Use the flag Orientation.
+
     public void populateDeckStarterFrontAndBack(String jsonFilePath) {
         cards.clear();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -447,6 +474,11 @@ public  class CardsCollection implements Serializable {
         }
 
     }
+
+    /**
+     * Getter for the List of cards.
+     * @return List of cards
+     */
 
     public List<Card> getCards() {
         return cards;

@@ -21,6 +21,9 @@ import java.rmi.NotBoundException;
 
 import static it.polimi.demo.network.utils.StaticPrinter.staticPrinter;
 
+/**
+ * Client socket is together with clientConnection the main class for the client side of the socket connection.
+ */
 public class ClientSocket extends Thread implements ClientInterface {
 
     /**

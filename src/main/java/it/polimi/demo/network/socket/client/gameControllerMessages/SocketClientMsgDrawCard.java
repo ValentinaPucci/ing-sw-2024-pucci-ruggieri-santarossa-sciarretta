@@ -10,6 +10,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+/**
+ * Class to send the draw card message to the server.
+ */
 public class SocketClientMsgDrawCard extends SocketClientGenericMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = 7272108078804819811L;

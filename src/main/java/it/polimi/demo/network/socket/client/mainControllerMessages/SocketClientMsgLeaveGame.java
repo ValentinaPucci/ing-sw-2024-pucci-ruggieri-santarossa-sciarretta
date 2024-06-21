@@ -9,6 +9,9 @@ import java.io.Serial;
 import java.rmi.RemoteException;
 //TODO: Check if it works
 
+/**
+ * This class represents the message sent by the client to the main controller to leave a game.
+ */
 public class SocketClientMsgLeaveGame extends SocketClientGenericMessage {
 
     @Serial
@@ -21,6 +24,13 @@ public class SocketClientMsgLeaveGame extends SocketClientGenericMessage {
         this.setMainControllerTarget(true);
     }
 
+    /**
+     * This method used to call on the main controller the leaveGame method
+     * @param lis the listener
+     * @param mainController the main controller interface
+     * @return the game controller interface
+     * @throws RemoteException
+     */
     @Override
     public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
         mainController.leaveGame(lis, getUserNickname(), game_id);
