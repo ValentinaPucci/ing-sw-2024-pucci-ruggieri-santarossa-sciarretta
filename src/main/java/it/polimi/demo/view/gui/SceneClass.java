@@ -5,13 +5,13 @@ import javafx.scene.Scene;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class SceneInfo {
+public class SceneClass {
 
     private Scene currentScene;
     private SceneType sceneType;
     private SceneController sceneController;
 
-    public SceneInfo(Scene currentScene, SceneType sceneType, SceneController sceneController) {
+    public SceneClass(Scene currentScene, SceneType sceneType, SceneController sceneController) {
         this.currentScene = currentScene;
         this.sceneType = sceneType;
         this.sceneController = sceneController;

@@ -25,9 +25,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ApplicationGUI extends Application {
 
     private Stage mainStage;
-    private StackPane root;
+    private StackPane rootContainer;
     private GameDynamic gameDynamics;
-    private ArrayList<SceneInfo> sceneCollection;
+    private ArrayList<SceneClass> sceneCollection;
     private double previousWidth, previousHeight;
     private boolean isResized = true;
 
@@ -37,7 +37,7 @@ public class ApplicationGUI extends Application {
         initializeScenes();
         this.mainStage = mainStage;
         this.mainStage.setTitle("Codex Naturalis");
-        root = new StackPane();
+        rootContainer = new StackPane();
     }
 
     private void initializeScenes() {
@@ -47,9 +47,9 @@ public class ApplicationGUI extends Application {
         SceneController sceneController;
 
         for (SceneType sceneType : SceneType.values()) {
-            String fxmlPath = sceneType.getType();
+            String fxmlPath = sceneType.getFxmlPath();
             if (fxmlPath == null || fxmlPath.isEmpty()) {
-                System.err.println("Percorso FXML non impostato per: " + sceneType.getType());
+                System.err.println("Percorso FXML non impostato per: " + sceneType.getFxmlPath());
                 continue;
             }
             fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
@@ -59,7 +59,7 @@ public class ApplicationGUI extends Application {
             } catch (IOException e) {
                 throw new RuntimeException("Errore nel caricamento di " + fxmlPath, e);
             }
-            sceneCollection.add(new SceneInfo(new Scene(sceneRoot), sceneType, sceneController));
+            sceneCollection.add(new SceneClass(new Scene(sceneRoot), sceneType, sceneController));
         }
     }
 
@@ -68,7 +68,7 @@ public class ApplicationGUI extends Application {
         isResized = false;
         int index = getSceneIndex(scene);
         if (index != -1) {
-            SceneInfo sceneInfo = sceneCollection.get(index);
+            SceneClass sceneInfo = sceneCollection.get(index);
             this.mainStage.setScene(sceneInfo.getCurrentScene());
             this.mainStage.show();
         }
@@ -87,8 +87,8 @@ public class ApplicationGUI extends Application {
 
     public void assignGUIReaderToControllers(LinkedBlockingQueue<String> GuiReader) {
         initializeScenes();
-        for (SceneInfo s : sceneCollection) {
-            s.setInputReaderGUI(GuiReader);
+        for (SceneClass sceneCollection : sceneCollection) {
+            sceneCollection.setInputReaderGUI(GuiReader);
         }
     }
 
@@ -135,7 +135,6 @@ public class ApplicationGUI extends Application {
     }
 
     //-----------------------------LOBBY------------------------------------------------------------------------
-
     private void hidePanesInLobby() {
         for (int i = 0; i < 4; i++) {
             Pane panePlayerLobby = (Pane) this.mainStage.getScene().getRoot().lookup("#pane" + i);
@@ -152,7 +151,7 @@ public class ApplicationGUI extends Application {
             case 3 -> sceneType = SceneType.PLAYER_LOBBY_4;
         }
         Pane newPane;
-        SceneInfo sceneToLoad = sceneCollection.get(getSceneIndex(sceneType));
+        SceneClass sceneToLoad = sceneCollection.get(getSceneIndex(sceneType));
         newPane = (Pane) sceneToLoad.getCurrentScene().getRoot();
         ((PlayerLobbyController) sceneToLoad.getSceneController()).setNickname(nick);
         Pane panePlayerLobby = (Pane) this.mainStage.getScene().getRoot().lookup("#pane" + playerIndex);
@@ -178,22 +177,5 @@ public class ApplicationGUI extends Application {
 
     public void disableBtnReadyToStart() {
         ((LobbyController) sceneCollection.get(getSceneIndex(SceneType.LOBBY)).getSceneController()).setVisibleBtnReady(false);
-    }
-
-    //---------------------------------RUNNING----------------------------------------------
-
-    public void changeTurn(ModelView model, String nickname) {
-        RunningController controller = (RunningController) sceneCollection.get(getSceneIndex(SceneType.RUNNING)).getSceneController();
-        controller.changeTurn(model, nickname);
-    }
-
-    public void initializeRunning(ModelView model, String nickname) {
-        RunningController controller = (RunningController) sceneCollection.get(getSceneIndex(SceneType.RUNNING)).getSceneController();
-        controller.setCardHand(model, nickname);
-        controller.setStarterCardFront(model, nickname);
-        controller.setScoreBoardPosition(model);
-        controller.setPlayersPointsAndNicknames(model, nickname);
-        controller.setCommonCards(model);
-        controller.setPersonalObjectives(model, nickname);
     }
 }
