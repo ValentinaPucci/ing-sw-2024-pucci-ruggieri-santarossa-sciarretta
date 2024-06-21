@@ -3,7 +3,7 @@ package it.polimi.demo.network.socket.server;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
-import it.polimi.demo.network.interfaces.GameControllerInterface;
+import it.polimi.demo.network.GameControllerInterface;
 
 import java.io.*;
 import java.net.Socket;

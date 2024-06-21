@@ -1,4 +1,4 @@
-package it.polimi.demo.network.interfaces;
+package it.polimi.demo.network;
 
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.chat.Message;

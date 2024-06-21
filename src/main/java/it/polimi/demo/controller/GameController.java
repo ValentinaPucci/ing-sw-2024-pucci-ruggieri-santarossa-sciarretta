@@ -8,7 +8,7 @@ import it.polimi.demo.model.*;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.*;
-import it.polimi.demo.network.interfaces.GameControllerInterface;
+import it.polimi.demo.network.GameControllerInterface;
 
 import java.io.Serial;
 import java.io.Serializable;

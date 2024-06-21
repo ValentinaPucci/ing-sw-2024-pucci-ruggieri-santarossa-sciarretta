@@ -1,7 +1,7 @@
 package it.polimi.demo.controller;
 
-import it.polimi.demo.network.interfaces.GameControllerInterface;
-import it.polimi.demo.network.interfaces.MainControllerInterface;
+import it.polimi.demo.network.GameControllerInterface;
+import it.polimi.demo.network.MainControllerInterface;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.Constants;
 import it.polimi.demo.model.chat.Message;
