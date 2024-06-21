@@ -5,6 +5,9 @@ import it.polimi.demo.model.cards.objectiveCards.ObjectiveCard;
 
 import java.io.Serializable;
 
+/**
+ * This interface is used to calculate the score of a player: strategy pattern
+ */
 public interface ScoreStrategy extends Serializable {
     int calculateScore(ObjectiveCard card, PersonalBoard personal_board);
 }

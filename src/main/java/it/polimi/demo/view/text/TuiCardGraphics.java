@@ -11,19 +11,18 @@ import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.enumerations.Resource;
 import java.util.ArrayList;
 
+/**
+ * This class is used to print the graphics of the cards in the terminal.
+ */
 public class TuiCardGraphics {
 
-    // Sequenze di escape ANSI per colorare il testo e lo sfondo
     public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
     public static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
     public static final String ANSI_RED_BACKGROUND = "\u001B[41m";
     public static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
     public static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
     public static final String ANSI_BEIGE_BACKGROUND = "\u001B[48;5;230m";
 
-    // Rappresentazione grafica della carta
     private static final String[] CARD_GRAPHICS = {
             "╭──────────────╮",
             "│ %s          %s │",
@@ -69,7 +68,13 @@ public class TuiCardGraphics {
     private String el3;
 
 
-    //Resource Card creation
+    /**
+     * Constructor for the TuiCardGraphics class.
+     * @param corner1 the first corner of the card
+     * @param corner2 the second corner of the card
+     * @param corner3 the third corner of the card
+     * @param corner4 the fourth corner of the card
+     */
     public TuiCardGraphics(String corner1, String corner2, String corner3, String corner4) {
         this.corner1 = corner1;
         this.corner2 = corner2;
@@ -78,7 +83,14 @@ public class TuiCardGraphics {
         this.points = 0;
     }
 
-    //Gold Card creation
+    /**
+     * Constructor for the TuiCardGraphics class.
+     * @param corner1 the first corner of the card
+     * @param corner2 the second corner of the card
+     * @param corner3 the third corner of the card
+     * @param corner4 the fourth corner of the card
+     * @param points the points of the card
+     */
     public TuiCardGraphics(String corner1, String corner2, String corner3, String corner4, int points) {
         this.corner1 = corner1;
         this.corner2 = corner2;
@@ -87,7 +99,16 @@ public class TuiCardGraphics {
         this.points = points;
     }
 
-    // Starter Card constructor
+    /**
+     * Constructor for the TuiCardGraphics class.
+     * @param corner1 the first corner of the card
+     * @param corner2 the second corner of the card
+     * @param corner3 the third corner of the card
+     * @param corner4 the fourth corner of the card
+     * @param front_resource1 the first front resource of the card
+     * @param front_resource2 the second front resource of the card
+     * @param front_resource3 the third front resource of the card
+     */
     public TuiCardGraphics(String corner1, String corner2, String corner3, String corner4, String front_resource1, String front_resource2, String front_resource3) {
         this.corner1 = corner1;
         this.corner2 = corner2;
@@ -98,7 +119,13 @@ public class TuiCardGraphics {
         this.front_resource3 = front_resource3;
     }
 
-    // Normal objective card constructor
+    /**
+     * Constructor for the TuiCardGraphics class.
+     * @param el1 the first element of the card
+     * @param el2 the second element of the card
+     * @param el3 the third element of the card
+     * @param points the points of the card
+     */
     public TuiCardGraphics(String el1, String el2, String el3, int points) {
         this.el1 = el1;
         this.el2 = el2;
@@ -106,13 +133,20 @@ public class TuiCardGraphics {
         this.points = points;
     }
 
-    // Objective card constructor with id pattern
+    /**
+     * Constructor for the TuiCardGraphics class.
+     * @param id the id of the card
+     * @param points the points of the card
+     */
     public TuiCardGraphics(int id, int points) {
         this.points = points;
         this.objective_pattern_id = id;
     }
 
-
+    /**
+     * Method to print the card.
+     * @param Color the color of the card
+     */
     public void printCard(String Color) {
         System.out.println(ANSI_RESET + CARD_GRAPHICS[0] + ANSI_RESET);
         for (int i = 1; i < CARD_GRAPHICS.length - 1; i++) {
@@ -135,6 +169,10 @@ public class TuiCardGraphics {
         }
     }
 
+    /**
+     * Method to print the starter card.
+     * @param Color the color of the card
+     */
     public void printStarterCard(String Color) {
         System.out.println(ANSI_RESET + STARTER_CARD_GRAPHICS[0] + ANSI_RESET);
         for (int i = 1; i < STARTER_CARD_GRAPHICS.length - 1; i++) {
@@ -154,6 +192,9 @@ public class TuiCardGraphics {
         System.out.println("\n");
     }
 
+    /**
+     * Method to print the objective card.
+     */
     public void printObjectiveCard() {
         System.out.println(OBJECTIVE_CARD_GRAPHICS[0]);
         for (int i = 1; i < CARD_GRAPHICS.length - 1; i++) {
@@ -170,6 +211,10 @@ public class TuiCardGraphics {
 
     }
 
+    /**
+     * Method to print the pattern objective card.
+     * @param color the color of the card
+     */
     public void printIncrDiagPatternObjectiveCard(String color) {
         System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[0] + ANSI_RESET);
         for (int i = 1; i < STARTER_CARD_GRAPHICS.length - 1; i++) {
@@ -189,6 +234,10 @@ public class TuiCardGraphics {
 
     }
 
+    /**
+     * Method to print the pattern objective card.
+     * @param color the color of the card
+     */
     public void printDecrDiagPatternObjectiveCard(String color) {
         System.out.println(ANSI_RESET + PATTERN_OBJECTIVE_CARD_GRAPHICS[0] + ANSI_RESET);
         for (int i = 1; i < STARTER_CARD_GRAPHICS.length - 1; i++) {
@@ -209,7 +258,9 @@ public class TuiCardGraphics {
     }
 
 
-    // Geberal method to print all objective cards
+    /**
+     * Method to print the pattern objective card.
+     */
     public void printPatternObjectivecard() {
         if (objective_pattern_id == 87) {
             printIncrDiagPatternObjectiveCard(ANSI_RED_BACKGROUND);
@@ -258,7 +309,10 @@ public class TuiCardGraphics {
         }
     }
 
-
+    /**
+     * Method to print the resource card.
+     * @param resource_card the resource card to print
+     */
     public static void showResourceCard(ResourceCard resource_card) {
 
         Color card_color = resource_card.getColor();
@@ -316,7 +370,10 @@ public class TuiCardGraphics {
         }
     }
 
-
+    /**
+     * Method to print the gold card.
+     * @param gold_card the gold card to print
+     */
     public static void showGoldCard(GoldCard gold_card) {
         Color card_color = gold_card.getColor();
         String graphic_color = null;
@@ -389,6 +446,10 @@ public class TuiCardGraphics {
         }
     }
 
+    /**
+     * Method to print the starter card.
+     * @param starter_card the starter card to print
+     */
     public static void showStarterCardFront(StarterCard starter_card) {
         ArrayList<Corner> corners = new ArrayList<>();
         corners.add(starter_card.getCornerAtNW());
@@ -472,6 +533,10 @@ public class TuiCardGraphics {
         graphic_card.printStarterCard(ANSI_BEIGE_BACKGROUND);
     }
 
+    /**
+     * Method to print the starter card.
+     * @param starter_card the starter card to print
+     */
     public static void showStarterCardBack(StarterCard starter_card) {
         ArrayList<Corner> corners = new ArrayList<>();
         corners.add(starter_card.getCornerAtNW());
@@ -517,7 +582,10 @@ public class TuiCardGraphics {
         graphic_card.printCard(ANSI_BEIGE_BACKGROUND);
     }
 
-
+    /**
+     * Method to print the objective card.
+     * @param objective_card the objective card to print
+     */
     public static void showObjectiveCard(ObjectiveCard objective_card) {
         if (objective_card instanceof LetterPatternObjectiveCard || objective_card instanceof DiagonalPatternObjectiveCard) {
             TuiCardGraphics ob_card = new TuiCardGraphics(objective_card.getId(), objective_card.getPoints());
@@ -566,43 +634,4 @@ public class TuiCardGraphics {
         }
 
     }
-
-
-    // this is the method for starter card
-    public static void showStarterCard(StarterCard starterCard) {
-        if (starterCard.getOrientation() == Orientation.FRONT) {
-            showStarterCardFront(starterCard);
-        } else {
-            showStarterCardBack(starterCard);
-        }
-    }
-
 }
-
-//
-//public static void main(String[] args) {
-////        ResourceCard resource_card = new ResourceCard(11, Orientation.FRONT, Color.GREEN);
-////        resource_card.getCornerAtNW().setEmpty();
-////        resource_card.getCornerAtNW().is_visible = false;
-////        resource_card.getCornerAtSW().setCornerResource(Resource.LEAF);
-////        resource_card.getCornerAtSE().setCornerResource(Resource.LEAF);
-//    //showResourceCard(resource_card);    <------------------------------------------method to use in TUI
-//
-//    //  <-----------------------------------------------method to use in TUI
-//     String ANSI_GREEN_BACKGROUND = "\u001B[42m";
-//
-//    TuiCardGraphics card = new TuiCardGraphics("FE", "PA", "LE", "BU");
-//    card.printCard(ANSI_GREEN_BACKGROUND);
-//
-//
-//
-////
-////        ConcreteDeck deck_starter = new ConcreteDeck("Starter");
-////        for (int i = 0; i < 12; i++) {
-////            StarterCard starterCard = (StarterCard) deck_starter.pop();
-////            System.out.println("Starter card: " + starterCard.getId());
-////            System.out.println("Starter card orientation: " + starterCard.getOrientation());
-////            System.out.println(starterCard.toString());
-////            showStarterCard(starterCard); <-----------------------------------------------method to use in TUI
-//}
-//

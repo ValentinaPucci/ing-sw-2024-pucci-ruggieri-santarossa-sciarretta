@@ -1,7 +1,6 @@
 package it.polimi.demo.view.dynamic;
 
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;

@@ -230,6 +230,11 @@ public abstract class UI {
      */
     protected abstract void show_othersPersonalBoard(ModelView modelView, int playerIndex);
 
+    /**
+     * Shows the message indicating the player has left the game.
+     * @param modelView The model view containing game state information.
+     * @param nick The nickname of the player who left the game.
+     */
     protected abstract void playerLeft(ModelView modelView, String nick);
 
 }
