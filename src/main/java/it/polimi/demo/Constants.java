@@ -2,6 +2,9 @@ package it.polimi.demo;
 
 import java.io.Serializable;
 
+/**
+ * Constants class contains all the constants used in the game
+ */
 public class Constants implements Serializable {
 
     public final static int MaxNumOfPlayer = 4;

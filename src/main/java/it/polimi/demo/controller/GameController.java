@@ -24,6 +24,11 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     private final Model model;
     private final Map<Listener, Ping> pings;
 
+    /**
+     * Constructor of the class
+     * @param gameID the ID of the game
+     * @param numberOfPlayers the number of players
+     */
     public GameController(int gameID, int numberOfPlayers) {
         model = new Model(gameID, numberOfPlayers);
         pings = new ConcurrentHashMap<>();
@@ -210,11 +215,10 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * Check if it's your turn
-     *
+     * check if it's the turn of the player
      * @param nick the nickname of the player
-     * @return true if it's your turn, false else
-     * @throws RemoteException if there is a connection error (RMI)
+     * @return true if it's the turn of the player, false otherwise
+     * @throws RemoteException if there is an error
      */
     @Override
     public synchronized boolean isMyTurn(String nick) throws RemoteException {
@@ -222,8 +226,10 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * @return the number of online players
-     * @throws RemoteException if there is an error
+     * Get the number of connected players
+     *
+     * @return the number of connected players
+     * @throws RemoteException if there is a connection error (RMI)
      */
     @Override
     public int getNumConnectedPlayers() throws RemoteException {
@@ -270,6 +276,11 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
 
+    /**
+     * Show the personal board of the player
+     * @param player_nickname the nickname of the player
+     * @throws RemoteException if there is an error
+     */
     @Override
     public void showOthersPersonalBoard(String player_nickname,int playerIndex) throws RemoteException {
         model.showOthersPersonalBoard(player_nickname, playerIndex);
@@ -316,7 +327,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * @return the ID of the game
+     * getter for the id of the game
+     * @return the id of the game
      */
     @Override
     public int getGameId() {

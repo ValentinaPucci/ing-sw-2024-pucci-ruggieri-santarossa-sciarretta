@@ -6,6 +6,10 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.NotBoundException;
 
+/**
+ * Sends a ping to the server to keep the connection alive.
+
+ */
 public class PingSender extends Thread implements Serializable {
 
     @Serial
@@ -13,10 +17,17 @@ public class PingSender extends Thread implements Serializable {
 
     private final ClientInterface server;
 
+    /**
+     * Creates a new PingSender.
+     * @param server The server to which to send the ping.
+     */
     public PingSender(ClientInterface server) {
         this.server = server;
     }
 
+    /**
+     * Sends a ping to the server every second.
+     */
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {

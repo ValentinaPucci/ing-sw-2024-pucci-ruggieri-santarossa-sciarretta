@@ -171,15 +171,26 @@ public class ModelView implements Serializable {
         return players_connected;
     }
 
-
+    /**
+     * Retrieves the last chosen card and position.
+     * @return An ArrayList containing the last chosen card and position.
+     */
     public ArrayList<Integer> getLastChosenCardAndPosition(){
         return last_chosen_card;
     }
 
+    /**
+     * Retrieves the last chosen orientation.
+     * @return The last chosen Orientation.
+     */
     public Orientation getLastChosenOrientation(){
         return last_chosen_orientation;
     }
 
+    /**
+     * Retrieves the last coordinate.
+     * @return The last Coordinate.
+     */
     public Coordinate getLastCoordinate(){
         return last_coordinate;
     }

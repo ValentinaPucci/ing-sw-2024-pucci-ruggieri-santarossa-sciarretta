@@ -27,10 +27,13 @@ import static org.fusesource.jansi.Ansi.ansi;
  */
 public class TUI extends UI {
 
+    /**
+     * The nickname of the player.
+     */
     private String nickname;
 
     /**
-     * constructor
+     * constructor for textual user interface
      */
     public TUI() { AnsiConsole.systemInstall(); }
 
@@ -86,7 +89,7 @@ public class TUI extends UI {
     }
 
     /**
-     * shows the game ended
+     * show game ended
      * @param model The model view containing game state information.
      */
     @Override
@@ -144,6 +147,11 @@ public class TUI extends UI {
 
     // *********************** SHOW METHODS  *********************** //
 
+    /**
+     * show the player hand
+     * @param gameModel The model view containing game state information.
+     * @param nickname The nickname of the player.
+     */
     @Override
     public void show_playerHand(ModelView gameModel, String nickname) {
         List<ResourceCard> player_hand = gameModel.getPlayerEntity(nickname).getHand();
@@ -159,6 +167,10 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * show the objective cards
+     * @param gameModel The model view containing game state information.
+     */
     @Override
     public void show_objectiveCards(ModelView gameModel) {
         clearScreen();
@@ -169,6 +181,10 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    /**
+     * show the starter cards
+     * @param gameModel The model view containing game state information.
+     */
     @Override
     public void show_starterCards(ModelView gameModel) {
         clearScreen();
@@ -178,6 +194,11 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    /**
+     * show the card chosen
+     * @param nickname The nickname of the player.
+     * @param model The model view containing game state information.
+     */
     @Override
     public void show_cardChosen(String nickname, ModelView model) {
         clearScreen();
@@ -192,6 +213,9 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    /**
+     * show the illegal move
+     */
     @Override
     public void show_illegalMove() {
         clearScreen();
@@ -199,6 +223,10 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    /**
+     * show the illegal move
+     * @param message The reason for the illegal move.
+     */
     @Override
     public void show_illegalMoveBecauseOf(String message) {
         clearScreen();
@@ -206,9 +234,16 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    /**
+     * show the successful move
+     * @param coord The coordinates of the successful move.
+     */
     @Override
     public void show_successfulMove(Coordinate coord) {}
 
+    /**
+     * show where to draw from and associate an index to each option
+     */
     @Override
     public void show_whereToDrawFrom() {
         clearScreen();
@@ -234,6 +269,9 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    /**
+     * show that my turn is finished
+     */
     @Override
     public void show_myTurnIsFinished() {
         clearScreen();
@@ -253,6 +291,11 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    /**
+     * show the other players' personal boards
+     * @param model The model view containing game state information.
+     * @param playerIndex The index of the player whose personal board is to be shown.
+     */
     @Override
     public void show_othersPersonalBoard(ModelView model, int playerIndex) {
         clearScreen();
@@ -261,9 +304,18 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    /**
+     * show the player joined
+     * @param modelView The model view containing game state information.
+     * @param nick The nickname of the player who joined.
+     */
     @Override
     protected void playerLeft(ModelView modelView, String nick) {}
 
+    /**
+     * show the personal objective card
+     * @param gameModel The model view containing game state information.
+     */
     @Override
     public void show_personalObjectiveCard(ModelView gameModel) {
         clearScreen();
@@ -272,6 +324,11 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    /**
+     * show the player joined
+     * @param gameModel The model view containing game state information.
+     * @param nick The nickname of the player who joined.
+     */
     @Override
     public void show_playerJoined(ModelView gameModel, String nick) {
         clearScreen();
@@ -285,27 +342,53 @@ public class TUI extends UI {
         clearScreen();
     }
 
+    /**
+     * shoe a connection error
+     */
     @Override
     public void show_noConnectionError() {
         StaticPrinterTUI.print("CONNECTION TO SERVER LOST!");
         System.exit(-1);
     }
 
+    /**
+     * show the chosen nickname
+     * @param nickname The chosen nickname.
+     */
     @Override
     public void show_chosenNickname(String nickname) {}
 
+    /**
+     * show the next turn
+     * @param model The model view containing game state information.
+     * @param nickname The nickname of the player who has the next turn.
+     */
     @Override
     public void show_nextTurn(ModelView model, String nickname) {}
 
+    /**
+     * show the card drawn
+     * @param model The model view containing game state information.
+     * @param nickname The nickname of the player who drew the card.
+     */
     @Override
     public void show_cardDrawn(ModelView model, String nickname) {}
 
+    /**
+     * show the orientation
+     * @param message The message indicating orientation.
+     */
     @Override
     public void show_orientation(String message) {
         StaticPrinterTUI.print(message + "\n" + "\t> Choose card orientation (f:FRONT / b:BACK): ");
         StaticPrinterTUI.printNoNewLine(ansi().cursorDownLine().a(""));
     }
 
+    /**
+     * show the message sent
+     * @param model The model view containing game state information.
+     * @param nickname The nickname of the player who sent the message.
+     */
     @Override
     public void show_messageSent(ModelView model, String nickname) {
         Message mess = model.getChat().getLastMessage();
@@ -316,35 +399,56 @@ public class TUI extends UI {
         }
     }
 
+    /**
+     * show the game started
+     * @param model The model view containing game state information.
+     */
     @Override
     public void show_gameStarted(ModelView model) {
         clearScreen();
         show_title();
     }
 
+    /**
+     * show the menu
+     */
     @Override
     public void show_menu() {
         StaticPrinterTUI.print("\nPress any key to return to the menu");
     }
 
+    /**
+     * show generic message
+     * @param msg The message to show.
+     */
     @Override
     public void show_genericMessage(String msg) {
         clearScreen();
         StaticPrinterTUI.print(Ansi.ansi().bold().fg(Ansi.Color.MAGENTA).a(msg).reset());
     }
 
+    /**
+     * show generic error
+     * @param msg The error message to show.
+     */
     @Override
     public void show_genericError(String msg) {
         clearScreen();
         StaticPrinterTUI.print(Ansi.ansi().bold().fg(Ansi.Color.RED).a("\n> Select which card from your hand you want to place (1 / 2 / 3):").reset().toString());
     }
 
+    /**
+     * show insert nickname
+     */
     @Override
     public void show_insertNickname() {
         clearScreen();
         StaticPrinterTUI.printNoNewLine(ansi().cursor(Constants.row_gameID, 0).a("> Insert your nickname: "));
     }
 
+    /**
+     * shows the number of players to insert
+     */
     @Override
     public void show_insertNumOfPlayers() {
         clearScreen();
@@ -443,9 +547,18 @@ public class TUI extends UI {
         StaticPrinterTUI.print("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
     }
 
+    /**
+     * show ready to start
+     * @param gameModel The model view containing game state information.
+     * @param s The nickname of the player who is ready to start.
+     */
     @Override
     public void show_readyToStart(ModelView gameModel, String s) {}
 
+    /**
+     * show pawn positions
+     * @param model The model view containing game state information.
+     */
     @Override
     public void show_pawnPositions(ModelView model) {}
 }
