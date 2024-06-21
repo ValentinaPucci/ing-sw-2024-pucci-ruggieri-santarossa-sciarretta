@@ -32,8 +32,8 @@ public class GUI extends UI {
 
     @Override
     protected void show_options() {
-        runOnThread(() -> this.guiApplication.assignGUIReaderToControllers(this.GuiReader));
-        runOnThread(() -> this.guiApplication.createNewWindowWithStyle());
+        runOnThread(() -> this.guiApplication.setGUIReaderToScenes(this.GuiReader));
+        runOnThread(guiApplication::newWindow);
         runOnThread(() -> this.guiApplication.setActiveScene(SceneType.MENU));
     }
 
@@ -91,7 +91,7 @@ public class GUI extends UI {
 
     @Override
     protected void show_readyToStart(ModelView gameModel, String nickname) {
-        runOnThread(() -> this.guiApplication.disableBtnReadyToStart());
+        runOnThread(() -> ((LobbyController)this.guiApplication.getSceneController(SceneType.LOBBY)).setVisibleBtnReady(false));
     }
 
     protected void show_gameEnded(ModelView model) {
@@ -117,7 +117,6 @@ public class GUI extends UI {
             });
             alreadyShowedLobby = true;
         } else {
-            // The player is in lobby and another player has joined
             runOnThread(() -> this.guiApplication.showPlayerToLobby(gameModel));
         }
     }

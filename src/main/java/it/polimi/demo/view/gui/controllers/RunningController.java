@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class RunningController extends SceneController {
+public class RunningController extends InputReaderController {
     @FXML public Label myPoints;
     @FXML public Label playerLabel1;
     @FXML public Label playerLabel2;

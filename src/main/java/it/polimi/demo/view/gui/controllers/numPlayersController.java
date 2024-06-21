@@ -2,20 +2,10 @@ package it.polimi.demo.view.gui.controllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class numPlayersController extends SceneController {
-
-    @FXML
-    private Button numPlayers2;
-
-    @FXML
-    private Button numPlayers3;
-
-    @FXML
-    private Button numPlayers4;
+public class numPlayersController extends InputReaderController {
 
     @FXML
     public void twoPLayers(ActionEvent actionEvent) {

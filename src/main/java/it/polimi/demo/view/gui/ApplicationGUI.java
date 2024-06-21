@@ -25,101 +25,87 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class ApplicationGUI extends Application {
 
     private Stage mainStage;
-    private StackPane rootContainer;
-    private GameDynamic gameDynamics;
     private ArrayList<SceneClass> sceneCollection;
     private double previousWidth, previousHeight;
     private boolean isResized = true;
 
     @Override
     public void start(Stage mainStage) {
-        gameDynamics = new GameDynamic(this, TypeConnection.valueOf(getParameters().getUnnamed().getFirst()));
-        initializeScenes();
+        new GameDynamic(this, TypeConnection.valueOf(getParameters().getUnnamed().getFirst()));
         this.mainStage = mainStage;
-        this.mainStage.setTitle("Codex Naturalis");
-        rootContainer = new StackPane();
+        initializeScenes();
     }
 
     private void initializeScenes() {
         sceneCollection = new ArrayList<>();
-        FXMLLoader fxmlLoader;
-        Parent sceneRoot;
-        SceneController sceneController;
-
         for (SceneType sceneType : SceneType.values()) {
             String fxmlPath = sceneType.getFxmlPath();
             if (fxmlPath == null || fxmlPath.isEmpty()) {
-                System.err.println("Percorso FXML non impostato per: " + sceneType.getFxmlPath());
+                System.err.println("FXML path not valid for: " + sceneType.name());
                 continue;
             }
-            fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+
             try {
-                sceneRoot = fxmlLoader.load();
-                sceneController = fxmlLoader.getController();
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
+                Parent sceneRoot = fxmlLoader.load();
+                InputReaderController sceneController = fxmlLoader.getController();
+                sceneCollection.add(new SceneClass(new Scene(sceneRoot), sceneType, sceneController));
             } catch (IOException e) {
-                throw new RuntimeException("Errore nel caricamento di " + fxmlPath, e);
+                throw new RuntimeException("Error occurred while loading " + fxmlPath, e);
             }
-            sceneCollection.add(new SceneClass(new Scene(sceneRoot), sceneType, sceneController));
         }
     }
 
-    public void setActiveScene(SceneType scene) {
-        this.mainStage.setTitle("Codex Naturalis - "+scene.name());
+    public void setActiveScene(SceneType sceneType) {
         isResized = false;
-        int index = getSceneIndex(scene);
+        int index = getSceneIndex(sceneType);
         if (index != -1) {
             SceneClass sceneInfo = sceneCollection.get(index);
             this.mainStage.setScene(sceneInfo.getCurrentScene());
             this.mainStage.show();
-        }
 
-        previousWidth = mainStage.getScene().getWidth();
-        previousHeight = mainStage.getScene().getHeight();
-        this.mainStage.widthProperty().addListener((obs, oldVal, newVal) -> {
-            rescale((double)newVal-16, previousHeight);
-        });
+            previousWidth = mainStage.getScene().getWidth();
+            previousHeight = mainStage.getScene().getHeight();
 
-        this.mainStage.heightProperty().addListener((obs, oldVal, newVal) -> {
-            rescale(previousWidth,(double)newVal-39);
-        });
-        isResized =true;
-    }
+            this.mainStage.widthProperty().addListener((obs, oldVal, newVal) -> resize((double) newVal - 30, previousHeight));
+            this.mainStage.heightProperty().addListener((obs, oldVal, newVal) -> resize(previousWidth, (double) newVal - 60));
 
-    public void assignGUIReaderToControllers(LinkedBlockingQueue<String> GuiReader) {
-        initializeScenes();
-        for (SceneClass sceneCollection : sceneCollection) {
-            sceneCollection.setInputReaderGUI(GuiReader);
+            isResized = true;
         }
     }
 
-    public void rescale(double width, double heigh) {
-        if(isResized) {
+    public void setGUIReaderToScenes(LinkedBlockingQueue<String> guiReader) {
+        for (SceneClass scene : sceneCollection) {
+            scene.setInputReaderGUI(guiReader);
+        }
+    }
+
+    public void resize(double width, double height) {
+        if (isResized) {
             double w = width / previousWidth;
-            double h = heigh / previousHeight;
+            double h = height / previousHeight;
             previousWidth = width;
-            previousHeight = heigh;
+            previousHeight = height;
             Scale scale = new Scale(w, h, 0, 0);
             mainStage.getScene().getRoot().getTransforms().add(scale);
         }
     }
 
-    public SceneController getSceneController(SceneType scene) {
-        int index = getSceneIndex(scene);
-        if (index != -1) {
-            return sceneCollection.get(index).getSceneController();
-        }
-        return null;
+    public InputReaderController getSceneController(SceneType sceneType) {
+        int index = getSceneIndex(sceneType);
+        return index != -1 ? sceneCollection.get(index).getSceneController() : null;
     }
 
-    private int getSceneIndex(SceneType sceneName) {
+    private int getSceneIndex(SceneType sceneType) {
         for (int i = 0; i < sceneCollection.size(); i++) {
-            if (sceneCollection.get(i).getSceneType() == sceneName)
+            if (sceneCollection.get(i).getSceneType() == sceneType) {
                 return i;
+            }
         }
         return -1;
     }
 
-    public void createNewWindowWithStyle() {
+    public void newWindow() {
         Stage newStage = new Stage();
         newStage.setScene(this.mainStage.getScene());
         newStage.show();
@@ -130,40 +116,43 @@ public class ApplicationGUI extends Application {
 
         this.mainStage.setOnCloseRequest(event -> {
             System.out.println("Closing all");
-            System.exit(1);
+            System.exit(0);
         });
     }
 
     //-----------------------------LOBBY------------------------------------------------------------------------
-    private void hidePanesInLobby() {
-        for (int i = 0; i < 4; i++) {
-            Pane panePlayerLobby = (Pane) this.mainStage.getScene().getRoot().lookup("#pane" + i);
-            panePlayerLobby.setVisible(false);
-        }
-    }
 
-    private void showLobbyPlayerPane(String nick, int playerIndex) {
-        SceneType sceneType = null;
-        switch (playerIndex) {
-            case 0 -> sceneType = SceneType.PLAYER_LOBBY_1;
-            case 1 -> sceneType = SceneType.PLAYER_LOBBY_2;
-            case 2 -> sceneType = SceneType.PLAYER_LOBBY_3;
-            case 3 -> sceneType = SceneType.PLAYER_LOBBY_4;
-        }
-        Pane newPane;
-        SceneClass sceneToLoad = sceneCollection.get(getSceneIndex(sceneType));
-        newPane = (Pane) sceneToLoad.getCurrentScene().getRoot();
-        ((PlayerLobbyController) sceneToLoad.getSceneController()).setNickname(nick);
-        Pane panePlayerLobby = (Pane) this.mainStage.getScene().getRoot().lookup("#pane" + playerIndex);
-        panePlayerLobby.setVisible(true);
-        panePlayerLobby.getChildren().clear();
-        newPane.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        StackPane stackPane = new StackPane();
-        stackPane.getChildren().add(newPane);
-        StackPane.setAlignment(newPane, Pos.CENTER);
-        newPane.prefWidthProperty().bind(panePlayerLobby.widthProperty());
-        newPane.prefHeightProperty().bind(panePlayerLobby.heightProperty());
-        panePlayerLobby.getChildren().add(stackPane);
+
+    private void showLobbyPlayerPane(String nickname, int playerIndex) {
+        SceneType sceneType = switch (playerIndex) {
+            case 0 -> SceneType.PLAYER_LOBBY_1;
+            case 1 -> SceneType.PLAYER_LOBBY_2;
+            case 2 -> SceneType.PLAYER_LOBBY_3;
+            case 3 -> SceneType.PLAYER_LOBBY_4;
+            default -> throw new IllegalArgumentException("Invalid player index: " + playerIndex);
+        };
+
+        int sceneIndex = getSceneIndex(sceneType);
+        SceneClass sceneDetails = sceneCollection.get(sceneIndex);
+        Pane newPaneRoot = (Pane) sceneDetails.getCurrentScene().getRoot();
+
+        PlayerLobbyController lobbyController = (PlayerLobbyController) sceneDetails.getSceneController();
+        lobbyController.setNickname(nickname);
+
+        Pane targetPane = (Pane) this.mainStage.getScene().getRoot().lookup("#pane" + playerIndex);
+        targetPane.setVisible(true);
+        targetPane.getChildren().clear();
+
+        newPaneRoot.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+
+        StackPane stackPaneWrapper = new StackPane();
+        stackPaneWrapper.getChildren().add(newPaneRoot);
+        StackPane.setAlignment(newPaneRoot, Pos.CENTER);
+
+        newPaneRoot.prefWidthProperty().bind(targetPane.widthProperty());
+        newPaneRoot.prefHeightProperty().bind(targetPane.heightProperty());
+
+        targetPane.getChildren().add(stackPaneWrapper);
     }
 
     public void showPlayerToLobby(ModelView model) {
@@ -174,8 +163,10 @@ public class ApplicationGUI extends Application {
             i++;
         }
     }
-
-    public void disableBtnReadyToStart() {
-        ((LobbyController) sceneCollection.get(getSceneIndex(SceneType.LOBBY)).getSceneController()).setVisibleBtnReady(false);
+    private void hidePanesInLobby() {
+        for (int i = 0; i < 4; i++) {
+            Pane panePlayerLobby = (Pane) this.mainStage.getScene().getRoot().lookup("#pane" + i);
+            panePlayerLobby.setVisible(false);
+        }
     }
 }

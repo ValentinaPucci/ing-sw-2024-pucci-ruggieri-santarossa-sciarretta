@@ -36,14 +36,6 @@
             <Image url="@/logo.png" />
          </image>
       </ImageView>
-      <Button fx:id="buttonMenu" layoutX="465.0" layoutY="322.0" mnemonicParsing="false" onAction="#goToMenu" text="Menu" textFill="#4d0202">
-         <font>
-            <Font name="Luminari" size="22.0" />
-         </font>
-         <effect>
-            <ColorAdjust hue="0.17" saturation="0.3" />
-         </effect>
-      </Button>
       <Label fx:id="player3" layoutX="59.0" layoutY="304.0" text="Player4 : 0 points" textFill="#4d0202">
          <font>
             <Font name="Luminari" size="30.0" />

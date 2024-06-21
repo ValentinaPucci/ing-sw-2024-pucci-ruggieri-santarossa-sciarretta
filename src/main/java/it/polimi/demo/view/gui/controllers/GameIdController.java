@@ -4,7 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-public class GameIdController extends SceneController {
+public class GameIdController extends InputReaderController {
 
     @FXML
     private TextField GameId;
@@ -15,7 +15,5 @@ public class GameIdController extends SceneController {
         if(!GameId.getText().isEmpty()){
             getInputReaderGUI().add(GameId.getText());
         }
-
     }
-
 }

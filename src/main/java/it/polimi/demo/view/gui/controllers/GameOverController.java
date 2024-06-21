@@ -2,27 +2,17 @@ package it.polimi.demo.view.gui.controllers;
 import it.polimi.demo.model.ModelView;
 
 import it.polimi.demo.model.Player;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class GameOverController extends SceneController {
+public class GameOverController extends InputReaderController {
 
-    @FXML
-    private Button buttonMenu;
-
-    @FXML
-    private Label player0;
-
-    @FXML
-    private Label player1;
-
-    @FXML
-    private Label player2;
-
-    @FXML
-    private Label player3;
+    @FXML private Button buttonMenu;
+    @FXML private Label player0;
+    @FXML private Label player1;
+    @FXML private Label player2;
+    @FXML private Label player3;
 
      public void show(ModelView model) {
         player0.setVisible(false);
@@ -48,17 +38,4 @@ public class GameOverController extends SceneController {
         }
 
     }
-
-    /**
-     * Show the button to return to the menu.
-     */
-    public void showBtnReturnToMenu() {
-        buttonMenu.setVisible(true);//not necessary
-    }
-
-    @FXML
-    void goToMenu(ActionEvent event) {
-        getInputReaderGUI().add("a");
-    }
-
 }

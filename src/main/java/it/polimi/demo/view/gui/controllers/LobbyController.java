@@ -5,20 +5,14 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
-public class LobbyController extends SceneController {
+public class LobbyController extends InputReaderController {
 
-    public Text gameidLabel;
-
-    @FXML
-    private Button buttonReady;
-
-    @FXML
-    private Text nicknameLabel;
-
+    @FXML public Text gameidLabel;
+    @FXML private Button buttonReady;
+    @FXML private Text nicknameLabel;
     @FXML
     void actionIamReady(ActionEvent event) {
         getInputReaderGUI().add("y");
-        System.out.println("READY!");
     }
 
     public void setGameId(int id) {
@@ -32,6 +26,4 @@ public class LobbyController extends SceneController {
     public void setVisibleBtnReady(boolean visibility){
         buttonReady.setVisible(visibility);
     }
-
-
 }

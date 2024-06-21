@@ -294,8 +294,6 @@ public class InverseMapper {
         inverseMappableAreas.put("-12,4", new int[]{680, -180});
         inverseMappableAreas.put("-12,5", new int[]{750, -180});
 
-
-
     }
 
 
