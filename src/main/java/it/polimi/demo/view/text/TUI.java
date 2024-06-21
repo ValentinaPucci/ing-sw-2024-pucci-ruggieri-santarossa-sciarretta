@@ -309,7 +309,11 @@ public class TUI extends UI {
     @Override
     public void show_messageSent(ModelView model, String nickname) {
         Message mess = model.getChat().getLastMessage();
-        StaticPrinterTUI.print(ansi().a(mess.sender().getNickname() + ": " + mess.text()));
+        if(nickname.equals("Everyone")){
+            StaticPrinterTUI.print(ansi().a(mess.sender().getNickname() + "(to everyone): "+ mess.text()));
+        }else{
+            StaticPrinterTUI.print(ansi().a(mess.sender().getNickname() + "(to you): " + mess.text()));
+        }
     }
 
     @Override

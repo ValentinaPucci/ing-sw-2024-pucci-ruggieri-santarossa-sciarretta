@@ -317,6 +317,7 @@ public class RunningController extends GuiInputReaderController {
                 Button goButton = new Button("GO");
                 goButton.setPrefHeight(26.0);
                 goButton.setPrefWidth(188.0);
+                goButton.setFont(javafx.scene.text.Font.font("Luminari", 11));
                 goButton.setEffect(new javafx.scene.effect.ColorAdjust(0.17, 0.3, 0.0, 0.0));
                 goButton.setOnAction((ActionEvent event) ->{
                     showOthersPersonalBoard(getPlayerIndex(players_list, player.getNickname()));});
@@ -1275,9 +1276,14 @@ public class RunningController extends GuiInputReaderController {
     }
 
 
-    public void updateChat(ModelView model, String sender) {
+    public void updateChat(ModelView model, String nickname) {
         Message message = model.getChat().getLastMessage();
-        chatArea.appendText(sender + ": " + message.text() + "\n");
+        if(nickname.equals("Everyone")){
+            chatArea.appendText(message.sender().getNickname() + "(to everyone): " + message.text() + "\n");
+        }else{
+            chatArea.appendText(message.sender().getNickname() + "(to you): " + message.text() + "\n");
+        }
+
     }
 
 
