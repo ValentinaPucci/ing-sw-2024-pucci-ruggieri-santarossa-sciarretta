@@ -4,6 +4,11 @@ import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.enumerations.Resource;
 
+/**
+ * The following is a subclass of ObjectiveCard and describes the Resource Objective Cards.
+ * That are objective cards that only have RESOURCE as requirements to achieve the objective.
+ *
+ */
 public class ResourceObjectiveCard extends ObjectiveCard {
     private int num_mushrooms;
     private int num_leaves;

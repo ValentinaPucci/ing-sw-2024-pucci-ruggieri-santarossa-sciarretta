@@ -11,7 +11,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
-
+/**
+ * Class to send the placeStarterCard message to the server.
+ */
 public class SocketClientMsgPlaceStarterCard extends SocketClientGenericMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = -1739537774448253366L;

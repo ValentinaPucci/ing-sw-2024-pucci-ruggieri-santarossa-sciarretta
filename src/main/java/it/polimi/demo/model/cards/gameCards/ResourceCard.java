@@ -7,10 +7,20 @@ import it.polimi.demo.model.board.Corner;
 import it.polimi.demo.model.enumerations.Color;
 import it.polimi.demo.model.enumerations.Orientation;
 
+/**
+ * This class represents the ResourceCard. It extends the Card class. It is also the super class of the Gold Cards.
+ */
+
 public class ResourceCard extends Card {
 
+    /**
+     * points of the card
+     */
     public int points;
     private Corner[][] corners;
+    /**
+     * color of the card
+     */
     public Color color;
 
     /**

@@ -920,4 +920,20 @@ public class PersonalBoardTest {
 
     }
 
+    @Test
+    void ResourceObjectiveCardTest(){
+        ResourceObjectiveCard card = new ResourceObjectiveCard(1, Orientation.FRONT, 1, 1, 1, 1, 1);
+        card.getResourceType();
+        card.getNumResource(Resource.LEAF);
+        card.getNumResource(Resource.MUSHROOM);
+        card.getNumResource(Resource.BUTTERFLY);
+        card.getNumResource(Resource.WOLF);
+        card.getNumResource(Resource.LEAF);
+        card.getNumResource(Resource.MUSHROOM);
+        card.getNumResource(Resource.BUTTERFLY);
+        card.getNumResource(Resource.WOLF);
+
+    }
+
+
 }

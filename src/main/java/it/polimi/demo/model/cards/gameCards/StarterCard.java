@@ -8,6 +8,10 @@ import it.polimi.demo.model.board.Corner;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.enumerations.Resource;
 
+/**
+ * This class represents the starter card of the game.
+ */
+
 public class StarterCard extends Card {
 
     public Resource front_resource1;
@@ -38,7 +42,7 @@ public class StarterCard extends Card {
     }
 
     /**
-     *
+     * Set the front of the starter card
      * @param resource1
      * @param resource2
      */
@@ -54,6 +58,10 @@ public class StarterCard extends Card {
         }
     }
 
+    /**
+     * Set the back of the starter card
+     * @param actual_corners
+     */
     public void setStarterCardBack(Corner[][] actual_corners){
         this.orientation = Orientation.BACK;
         for (int i = 0; i < 2; i++) {
@@ -90,6 +98,13 @@ public class StarterCard extends Card {
     public Corner getCornerAtNW () {
         return corners[0][0];
     }
+
+    /**
+     * Get the corner at the given indexes
+     * @param i
+     * @param j
+     * @return
+     */
 
     public Corner getCornerAt(int i, int j) {
         if (i == 0 && j == 0)

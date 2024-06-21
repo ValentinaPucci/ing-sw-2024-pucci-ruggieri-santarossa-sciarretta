@@ -4,9 +4,23 @@ import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.enumerations.Item;
 import it.polimi.demo.model.enumerations.Orientation;
 
+/**
+ * The following is a subclass of ObjectiveCard and describes the Item Objective Cards.
+ * That are objective cards that only have ITEMS as requirements to achieve the objective.
+ *
+ */
 public class ItemObjectiveCard extends ObjectiveCard {
+    /**
+     * Number of featherss required to achieve the objective.
+     */
     private int num_feathers;
+    /**
+     * Number of potions required to achieve the objective.
+     */
     private int num_potions;
+    /**
+     * Number of parchments required to achieve the objective.
+     */
     private int num_parchments;
 
     /**
@@ -44,6 +58,11 @@ public class ItemObjectiveCard extends ObjectiveCard {
             return Item.PARCHMENT;
     }
 
+    /**
+     * This method calculates the score of the player according to the personal board configuration.
+     * @param personal_board the personal board of the player
+     * @return
+     */
     @Override
     public int calculateScore(PersonalBoard personal_board) {
 

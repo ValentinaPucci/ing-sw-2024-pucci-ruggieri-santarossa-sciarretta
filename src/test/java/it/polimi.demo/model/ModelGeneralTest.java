@@ -10,6 +10,8 @@ import it.polimi.demo.view.text.TUI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class ModelGeneralTest {
 
     private Model model = new Model();
@@ -191,6 +193,15 @@ public class ModelGeneralTest {
 
         tui.show_gameEnded(model_view);
 
+
+        // Test model view methods
+        model_view.getObjectiveCards("Player1");
+        model_view.getStarterCards("Player1");
+        model_view.getChat();
+        model_view.getLeaderBoard();
+        model_view.getLastCoordinate();
+
+
     }
 
     @Test
@@ -229,5 +240,22 @@ public class ModelGeneralTest {
 
         model_view = new ModelView(model);
         tui.show_gameEnded(model_view);
+
+
+        //Test model view methods
+
+        model_view.getPlayerEntity("Player1");
+        assertEquals(model_view.getPlayerEntity("Player1").getNickname(), "Player1");
+        model_view.getAllPlayers();
+        assertEquals(model_view.getAllPlayers().size(), 3);
+        model_view.getStatus();
+        model_view.getCurrentPlayerNickname();
+        model_view.getGameId();
+        assertEquals(model_view.getGameId(), -1);
+        model_view.getCommonBoard();
+        model_view.getPlayersConnected();
+        assertEquals(model_view.getPlayersConnected().size(), 3);
+        model_view.getLastChosenOrientation();
+//        model_view.getLastChosenCard();
     }
 }

@@ -8,12 +8,34 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Stack;
 
+/**
+ * ConcreteDeck class is a class that represents a concrete deck of cards.
+ */
+
 public class ConcreteDeck implements Serializable {
 
+
+    /**
+     * The type of the deck.
+     */
     public String type;
+    /**
+     * The concrete cards bunch.
+     */
     private CardsCollection concrete_cards_bunch;
+    /**
+     * The deck factory.
+     */
     private DeckFactory deck_factory;
+    /**
+     * The deck, a stack of Cards.
+     */
     private Stack<Card> deck;
+
+    /**
+     * Constructor for the ConcreteDeck class.
+     * @param type
+     */
 
     // To Use this class you call the constructor with the path to the json and the "type" of cards you want in the deck.
     // Then you can use on it methods such as shuffle or pop.
@@ -28,41 +50,76 @@ public class ConcreteDeck implements Serializable {
         this.deck.addAll(this.concrete_cards_bunch.cards);
     }
 
-    // Second constructor to use for another type of card besides Resources cards that use the first one.
 
+    /**
+     * Push a card into the deck.
+     * @param card
+     */
     public void push(Card card) {
         this.deck.push(card);
     }
 
+    /**
+     * Pop a card from the deck.
+     * @return
+     */
     public Card pop() {
         return this.deck.pop();
     }
 
+    /**
+     * Pop a ResourceCard from the deck.
+     * @return
+     */
     public ResourceCard popResourceCard() {
         return (ResourceCard) this.deck.pop();
     }
 
+    /**
+     * Select the first ResourceCard from the deck.
+     * @return
+     */
     public ResourceCard selectFirstResourceCard() {
         return (ResourceCard) this.deck.peek();
     }
 
+    /**
+     * Pop a GoldCard from the deck.
+     * @return
+     */
     public GoldCard popGoldCard() {
         return (GoldCard) this.deck.pop();
     }
 
+    /**
+     * Select the first GoldCard from the deck.
+     * @return
+     */
     public GoldCard selectFirstGoldCard() {
         return (GoldCard) this.deck.peek();
     }
 
     // TODO: Implement this method in other classes.
+
+    /**
+     * Shuffle the deck.
+     */
     public void shuffle() {
         Collections.shuffle(this.deck);
     }
 
+    /**
+     * Check if the deck is empty.
+     * @return
+     */
     public boolean isEmpty(){
         return deck.isEmpty();
     }
 
+    /**
+     * Get the size of the deck.
+     * @return
+     */
     public int size(){return deck.size();}
 
 }
