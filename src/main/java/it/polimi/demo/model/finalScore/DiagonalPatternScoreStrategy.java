@@ -12,13 +12,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class implements the ScoreStrategy interface and is used to calculate the score of a player
+ */
 public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable {
 
     /**
-     * @param objectiveCard
-     * @param l
-     * @param m
-     * @return
+     * This method checks if a 4x4 submatrix of the personal board is a diagonal pattern
+     * @param objectiveCard The objective card that the player is trying to achieve
+     * @param personal_board The personal board of the player
+     * @param l The row index of the top-left corner of the submatrix
+     * @param m The column index of the top-left corner of the submatrix
+     * @return True if the submatrix is a diagonal pattern, false otherwise
      */
     public boolean isSubMatrixDiagonalPattern(DiagonalPatternObjectiveCard objectiveCard,
                                               PersonalBoard personal_board, int l, int m) {
@@ -27,15 +32,8 @@ public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-//                if (l + i >= 250  && m + j >= 250 && l + i <= 251 && m + j <= 251) {
-//                    // if it is only the starter card, it is not a pattern
-//                    if (personal_board.board[l + i][m + j].level < 2)
-//                        return false;
-//                }
                 if (objectiveCard.aux_personal_board.board[i][j].is_full) {
                     targetColor = objectiveCard.aux_personal_board.board[i][j].getCornerFromCell().reference_card.color;
-//                    if (personal_board.board[l + i][m + j].cell_of_a_found_pattern)
-//                        return false;
                     if (!personal_board.board[l + i][m + j].is_full)
                         return false;
                     else if (!personal_board.board[l + i][m + j].equals(objectiveCard.aux_personal_board.board[i][j]))
@@ -43,16 +41,6 @@ public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable
                 }
             }
         }
-
-        // it is a possible pattern!
-
-//        for (int i = 0; i < 4; i++) {
-//            for (int j = 0; j < 4; j++) {
-//                if (objectiveCard.aux_personal_board.board[i][j].is_full) {
-//                    personal_board.board[l + i][m + j].setCellAsPatternFound();
-//                }
-//            }
-//        }
 
         // Here we populate the hypercube
 
@@ -106,8 +94,10 @@ public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable
     }
 
     /**
-     * @param objectiveCard
-     * @return
+     * This method counts the number of 4x4 submatrices of the personal board that are diagonal patterns
+     * @param objectiveCard The objective card that the player is trying to achieve
+     * @param personal_board The personal board of the player
+     * @return The number of 4x4 submatrices that are diagonal patterns
      */
     public int counterOfRecognisedDiagonalPatterns(DiagonalPatternObjectiveCard objectiveCard,
                                                    PersonalBoard personal_board) {
@@ -122,6 +112,12 @@ public class DiagonalPatternScoreStrategy implements ScoreStrategy, Serializable
         return count;
     }
 
+    /**
+     * This method calculates the score of a player
+     * @param card The objective card that the player is trying to achieve
+     * @param personal_board The personal board of the player
+     * @return The score of the player
+     */
     @Override
     public int calculateScore(ObjectiveCard card, PersonalBoard personal_board) {
         return counterOfRecognisedDiagonalPatterns((DiagonalPatternObjectiveCard) card, personal_board)

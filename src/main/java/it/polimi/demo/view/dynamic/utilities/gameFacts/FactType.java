@@ -1,5 +1,8 @@
 package it.polimi.demo.view.dynamic.utilities.gameFacts;
 
+/**
+ * This enum represents the type of fact that can be sent to the view
+ */
 public enum FactType {
     LOBBY_INFO,
     PLAYER_JOINED,

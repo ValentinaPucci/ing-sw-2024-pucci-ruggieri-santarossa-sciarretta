@@ -4,7 +4,9 @@ import it.polimi.demo.model.board.Cell;
 import it.polimi.demo.model.board.PersonalBoard;
 import it.polimi.demo.model.enumerations.Color;
 
-
+/**
+ * This class is used to print the Personal Board of a player in the console.
+ */
 public class TuiPersonalBoardGraphics {
 
     private static final String ANSI_GREEN = "\u001B[32m ";
@@ -13,8 +15,10 @@ public class TuiPersonalBoardGraphics {
     private static final String ANSI_CYAN = "\u001B[34m ";
     private static final String ANSI_RST = "\u001B[0m";
 
-
-
+    /**
+     * This method prints the Personal Board of a player in the console.
+     * @param personal_board the Personal Board to be printed
+     */
     public static void showPersonalBoard(PersonalBoard personal_board) {
 
         showObjectsCount(personal_board);
@@ -56,6 +60,10 @@ public class TuiPersonalBoardGraphics {
         }
     }
 
+    /**
+     * This method prints a horizontal line in the console.
+     * @param columns the number of columns of the line
+     */
     public static void printHorizontalLine(int columns) {
         //System.out.print("+");
         for (int i = 240 ; i < 257; i++) {
@@ -64,7 +72,10 @@ public class TuiPersonalBoardGraphics {
         System.out.println();
     }
 
-
+    /**
+     * This method prints the number of objects on the Personal Board of a player in the console.
+     * @param personal_board the Personal Board to be printed
+     */
     public static void showObjectsCount(PersonalBoard personal_board) {
         System.out.println("Your currents point counter is: *** [" + personal_board.getPoints() + "] *** points.");
         System.out.println("These are the objects on your Personal Board:");
@@ -76,11 +87,4 @@ public class TuiPersonalBoardGraphics {
         System.out.println("Feathers: " + personal_board.getNum_feathers());
         System.out.println("Potions: " + personal_board.getNum_potions());
     }
-
-
-//    public static void main(String[] args) {
-////        PersonalBoard personal_board = new PersonalBoard();
-////        showPersonalBoard(personal_board);
-//
-//    }
 }
