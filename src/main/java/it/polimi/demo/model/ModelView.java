@@ -34,6 +34,7 @@ public class ModelView implements Serializable {
     private final ArrayList<Integer> last_chosen_card;
     private final Orientation last_chosen_orientation;
     private final Coordinate last_coordinate;
+    private final Player first_player;
 
     /**
      * Constructs a ModelView object based on the provided game model.
@@ -53,6 +54,7 @@ public class ModelView implements Serializable {
         this.last_chosen_card = model.getLastChosenCardAndPosition();
         this.last_chosen_orientation = model.getLastChosenOrientation();
         this.last_coordinate = model.getLastCoordinate();
+        this.first_player = model.getFirstPlayer();
     }
 
     /**
@@ -180,5 +182,9 @@ public class ModelView implements Serializable {
 
     public Coordinate getLastCoordinate(){
         return last_coordinate;
+    }
+
+    public Player getFirstPlayer(){
+        return first_player;
     }
 }

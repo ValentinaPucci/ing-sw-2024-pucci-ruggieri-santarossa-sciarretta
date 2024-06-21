@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
-public class ApplicationGUI extends Application {
+public class FXApplication extends Application {
 
     private Stage mainStage;
     private ArrayList<SceneClass> sceneCollection;
@@ -48,7 +48,7 @@ public class ApplicationGUI extends Application {
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
                 Parent sceneRoot = fxmlLoader.load();
-                InputReaderController sceneController = fxmlLoader.getController();
+                GuiInputReaderController sceneController = fxmlLoader.getController();
                 sceneCollection.add(new SceneClass(new Scene(sceneRoot), sceneType, sceneController));
             } catch (IOException e) {
                 throw new RuntimeException("Error occurred while loading " + fxmlPath, e);
@@ -91,7 +91,7 @@ public class ApplicationGUI extends Application {
         }
     }
 
-    public InputReaderController getSceneController(SceneType sceneType) {
+    public GuiInputReaderController getSceneController(SceneType sceneType) {
         int index = getSceneIndex(sceneType);
         return index != -1 ? sceneCollection.get(index).getSceneController() : null;
     }

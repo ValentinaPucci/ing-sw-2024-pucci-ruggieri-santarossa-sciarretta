@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.text.Text;
 
-public class LobbyController extends InputReaderController {
+public class LobbyController extends GuiInputReaderController {
 
     @FXML public Text gameidLabel;
     @FXML private Button buttonReady;

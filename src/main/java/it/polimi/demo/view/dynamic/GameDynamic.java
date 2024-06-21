@@ -1,7 +1,6 @@
 package it.polimi.demo.view.dynamic;
 
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
@@ -11,7 +10,7 @@ import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.utilities.gameFacts.FactQueue;
 import it.polimi.demo.view.dynamic.utilities.gameFacts.FactType;
 import it.polimi.demo.view.dynamic.utilities.QueueParser;
-import it.polimi.demo.view.gui.ApplicationGUI;
+import it.polimi.demo.view.gui.FXApplication;
 import it.polimi.demo.view.gui.GUI;
 import it.polimi.demo.network.socket.client.ClientSocket;
 import it.polimi.demo.view.text.StaticPrinterTUI;
@@ -61,7 +60,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * @param guiApplication The GUI application instance.
      * @param selection The type of connection (RMI or Socket).
      */
-    public GameDynamic(ApplicationGUI guiApplication, TypeConnection selection) {
+    public GameDynamic(FXApplication guiApplication, TypeConnection selection) {
         this(selection, guiApplication);
     }
 
@@ -70,7 +69,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * @param selection The type of connection (RMI or Socket).
      * @param guiApplication The GUI application instance (null for TUI).
      */
-    public GameDynamic(TypeConnection selection, ApplicationGUI guiApplication) {
+    public GameDynamic(TypeConnection selection, FXApplication guiApplication) {
         startConnection(selection);
         reader_queue = new LinkedBlockingQueue<>();
 
@@ -979,7 +978,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void messageSent(ModelView gameModel, String nick, Message msg) {
-        if (!msg.sender().getNickname().equals(nickname) && (nickname.equals(nick) || "all".equals(nick))) {
+        if (!msg.sender().getNickname().equals(nickname) && (nickname.equals(nick) || "Everyone".equals(nick))) {
             ui.show_messageSent(gameModel, nick);
         }
     }

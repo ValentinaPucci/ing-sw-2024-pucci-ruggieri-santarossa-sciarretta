@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
-public class GameOverController extends InputReaderController {
+public class GameOverController extends GuiInputReaderController {
 
     @FXML private Button buttonMenu;
     @FXML private Label player0;

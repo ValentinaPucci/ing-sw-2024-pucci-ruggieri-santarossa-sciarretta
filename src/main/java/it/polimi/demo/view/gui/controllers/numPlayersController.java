@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class numPlayersController extends InputReaderController {
+public class numPlayersController extends GuiInputReaderController {
 
     @FXML
     public void twoPLayers(ActionEvent actionEvent) {

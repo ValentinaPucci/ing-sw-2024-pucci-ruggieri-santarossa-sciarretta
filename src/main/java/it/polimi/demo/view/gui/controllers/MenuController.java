@@ -5,7 +5,7 @@ import javafx.fxml.FXML;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class MenuController extends InputReaderController {
+public class MenuController extends GuiInputReaderController {
 
     @FXML
     public void CreateGame(ActionEvent event) {

@@ -1,6 +1,6 @@
 package it.polimi.demo.view.gui;
 
-import it.polimi.demo.view.gui.controllers.InputReaderController;
+import it.polimi.demo.view.gui.controllers.GuiInputReaderController;
 import javafx.scene.Scene;
 
 import java.util.concurrent.LinkedBlockingQueue;
@@ -9,9 +9,9 @@ public class SceneClass {
 
     private Scene currentScene;
     private SceneType sceneType;
-    private InputReaderController sceneController;
+    private GuiInputReaderController sceneController;
 
-    public SceneClass(Scene currentScene, SceneType sceneType, InputReaderController sceneController) {
+    public SceneClass(Scene currentScene, SceneType sceneType, GuiInputReaderController sceneController) {
         this.currentScene = currentScene;
         this.sceneType = sceneType;
         this.sceneController = sceneController;
@@ -32,7 +32,7 @@ public class SceneClass {
         }
     }
 
-    public InputReaderController getSceneController(){
+    public GuiInputReaderController getSceneController(){
         return sceneController;
     }
 }

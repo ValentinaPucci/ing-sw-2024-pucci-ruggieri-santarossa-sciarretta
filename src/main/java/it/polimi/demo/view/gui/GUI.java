@@ -13,12 +13,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 public class GUI extends UI {
 
-    private ApplicationGUI guiApplication;
+    private FXApplication guiApplication;
     private LinkedBlockingQueue<String> GuiReader;
     private boolean alreadyShowedLobby = false;
     private String nickname;
 
-    public GUI(ApplicationGUI guiApplication, LinkedBlockingQueue<String> GuiReader) {
+    public GUI(FXApplication guiApplication, LinkedBlockingQueue<String> GuiReader) {
         this.guiApplication = guiApplication;
         this.GuiReader = GuiReader;
         nickname = null;

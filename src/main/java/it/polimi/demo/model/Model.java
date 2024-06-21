@@ -54,6 +54,8 @@ public class Model implements Serializable {
     private ArrayList<Integer> last_chosen_card;
     private Coordinate last_coord;
     private Orientation last_chosen_orientation;
+    private Player first_player = null;
+
 
     /**
      * Constructor for the model.
@@ -138,11 +140,13 @@ public class Model implements Serializable {
      */
     public synchronized void extractFirstPlayerToPlay() {
         Player first_player = players_connected.get(random.nextInt(players_connected.size()));
+        this.first_player = first_player;
         aux_order_players.remove(first_player);
         aux_order_players.addFirst(first_player);
         players_connected.remove(first_player);
         players_connected.addFirst(first_player);
     }
+
 
     /**
      * determine if all players are ready to start and if there are enough players to start
@@ -193,6 +197,10 @@ public class Model implements Serializable {
 
     public Coordinate getLastCoordinate(){
         return this.last_coord;
+    }
+
+    public Player getFirstPlayer() {
+        return first_player;
     }
 
     /**

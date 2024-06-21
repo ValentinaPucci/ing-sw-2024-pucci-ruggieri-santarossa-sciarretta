@@ -2,7 +2,7 @@ package it.polimi.demo.view.gui.controllers;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-public abstract class InputReaderController {
+public abstract class GuiInputReaderController {
     private LinkedBlockingQueue<String> GuiReader;
     public LinkedBlockingQueue<String> getInputReaderGUI() {
         return GuiReader;

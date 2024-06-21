@@ -145,7 +145,7 @@ public class QueueParser extends Thread {
         Matcher matcher = PUBLIC_MESSAGE_PATTERN.matcher(command);
         if (matcher.matches()) {
             String messageContent = matcher.group(1);
-            gameDynamic.sendMessage("all", new Message(messageContent, currentPlayer));
+            gameDynamic.sendMessage("Everyone", new Message(messageContent, currentPlayer));
         } else {
             System.err.println("Public message command format is incorrect: " + command);
         }
