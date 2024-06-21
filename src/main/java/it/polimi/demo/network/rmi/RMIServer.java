@@ -7,8 +7,8 @@ import it.polimi.demo.Constants;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.network.interfaces.GameControllerInterface;
-import it.polimi.demo.network.interfaces.MainControllerInterface;
+import it.polimi.demo.network.GameControllerInterface;
+import it.polimi.demo.network.MainControllerInterface;
 
 import java.io.Serial;
 import java.rmi.RemoteException;

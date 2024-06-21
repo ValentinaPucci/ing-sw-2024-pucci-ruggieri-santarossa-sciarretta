@@ -16,7 +16,6 @@ module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
 
     exports it.polimi.demo.network.rmi to java.rmi;
     exports it.polimi.demo.network to java.rmi;
-    exports it.polimi.demo.network.interfaces to java.rmi;
     exports it.polimi.demo;
     opens it.polimi.demo to javafx.fxml;
     exports it.polimi.demo.observer to java.rmi;

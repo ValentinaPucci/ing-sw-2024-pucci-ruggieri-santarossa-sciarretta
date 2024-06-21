@@ -6,11 +6,10 @@ import it.polimi.demo.Constants;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.network.ObserverManagerClient;
 import it.polimi.demo.network.utils.PingSender;
 import it.polimi.demo.view.dynamic.ClientInterface;
-import it.polimi.demo.network.interfaces.GameControllerInterface;
-import it.polimi.demo.network.interfaces.MainControllerInterface;
+import it.polimi.demo.network.GameControllerInterface;
+import it.polimi.demo.network.MainControllerInterface;
 import it.polimi.demo.view.dynamic.GameDynamic;
 
 import java.io.IOException;
@@ -62,7 +61,7 @@ public class RMIClient implements ClientInterface {
     /**
      * The observer manager for handling game listeners
      */
-    private final ObserverManagerClient observer_manager_client;
+    private final GameDynamic dynamic;
 
     /**
      * The listener for RMI callbacks
@@ -83,7 +82,7 @@ public class RMIClient implements ClientInterface {
      * Constructor that initializes the RMIClient.
      */
     public RMIClient(GameDynamic dynamic) {
-        this.observer_manager_client = new ObserverManagerClient(dynamic);
+        this.dynamic = dynamic;
         this.ping = new PingSender(this);
         this.ping.start();
         initialize();
@@ -96,7 +95,7 @@ public class RMIClient implements ClientInterface {
         try {
             registry = LocateRegistry.getRegistry(Constants.serverIp, Constants.RMI_port);
             asks = (MainControllerInterface) registry.lookup(Constants.RMI_server_name);
-            lis = (Listener) UnicastRemoteObject.exportObject(observer_manager_client, 0);
+            lis = (Listener) UnicastRemoteObject.exportObject(dynamic, 0);
             StaticPrinter.staticPrinter("Client RMI ready");
         } catch (Exception e) {
             StaticPrinter.staticPrinter("Connection failed");
