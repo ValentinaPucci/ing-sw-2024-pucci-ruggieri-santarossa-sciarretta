@@ -13,7 +13,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static it.polimi.demo.network.utils.StaticPrinter.staticPrinter;
 
-
+/**
+ * Class representing the connection with a client. Here we handle the client connection, we read messages and we add them to the queue.
+ * Moreover, we decide where to send the messages, to the main controller or to the game controller.
+ */
 public class ClientConnection extends Thread implements Serializable {
     /**
      * Serial Version UID

@@ -9,6 +9,10 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+/**
+ * Class that represents the message sent by the client to the game controller to notify that the player is ready to start the game.
+
+ */
 public class SocketClientMsgSetReady extends SocketClientGenericMessage implements Serializable {
 
 

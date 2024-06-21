@@ -8,6 +8,9 @@ import java.util.List;
 
 import static it.polimi.demo.network.utils.StaticPrinter.staticPrinter;
 
+/**
+ * Server class that represents the server socket
+ */
 public class Server extends Thread implements Serializable {
     /**
      * Socket that represents the Server

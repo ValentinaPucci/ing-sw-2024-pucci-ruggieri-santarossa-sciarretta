@@ -20,6 +20,11 @@ public class msgShowOthersPersonalBoards extends SocketServerGenericMessage{
         this.playerIndex = playerIndex;
         this.playerNickname = playerNickname;
     }
+    /**
+     * Method to perform action on the listener.
+     * @param lis
+     * @throws RemoteException
+     */
     @Override
     public void perform(Listener lis) throws RemoteException {
         lis.showOthersPersonalBoard(gameModel, playerNickname, playerIndex);

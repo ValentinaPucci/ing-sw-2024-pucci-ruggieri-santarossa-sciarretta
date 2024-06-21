@@ -6,6 +6,9 @@ import it.polimi.demo.model.enumerations.Orientation;
 
 import java.io.Serializable;
 
+/**
+ * Abstract class for the Objective Cards.
+ */
 public abstract class ObjectiveCard extends Card implements Serializable {
     private int points;
 

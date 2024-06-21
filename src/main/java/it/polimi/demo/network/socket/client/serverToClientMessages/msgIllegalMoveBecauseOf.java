@@ -21,6 +21,11 @@ public class msgIllegalMoveBecauseOf extends SocketServerGenericMessage {
     }
 
 
+    /**
+     * Method to perform action on the listener.
+     * @param lis
+     * @throws RemoteException
+     */
     @Override
     public void perform(Listener lis) throws RemoteException {
         lis.illegalMoveBecauseOf(gamemodel, message);

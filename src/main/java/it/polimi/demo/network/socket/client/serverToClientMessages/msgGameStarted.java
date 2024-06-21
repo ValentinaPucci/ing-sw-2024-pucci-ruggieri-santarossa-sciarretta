@@ -18,6 +18,11 @@ public class msgGameStarted extends SocketServerGenericMessage {
         this.model = model;
     }
 
+    /**
+     * Method to perform action on the listener.
+     * @param lis
+     * @throws RemoteException
+     */
     @Override
     public void perform(Listener lis) throws RemoteException {
         //logMessage();

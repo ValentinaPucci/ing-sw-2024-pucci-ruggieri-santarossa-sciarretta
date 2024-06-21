@@ -9,6 +9,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
+/**
+ * This abstract class represents a generic message that can be sent by the client to the server.
+ */
 public abstract class SocketClientGenericMessage implements Serializable {
 
     @Serial

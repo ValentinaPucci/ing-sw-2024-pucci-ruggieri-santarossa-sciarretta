@@ -9,7 +9,6 @@ import it.polimi.demo.observer.Listener;
 import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
-
 public class SocketClientMsgShowOthersPersonalBoard extends SocketClientGenericMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = 7272108078804819811L;

@@ -5,6 +5,7 @@ import it.polimi.demo.model.ModelView;
 
 import java.io.IOException;
 import java.io.Serial;
+import java.rmi.RemoteException;
 
 public class msgPlayerIsReadyToStart extends SocketServerGenericMessage {
     @Serial
@@ -18,6 +19,11 @@ public class msgPlayerIsReadyToStart extends SocketServerGenericMessage {
         this.nick = nick;
     }
 
+    /**
+     * Method to perform action on the listener.
+     * @param lis
+     * @throws RemoteException
+     */
     @Override
     public void perform(Listener lis) throws IOException, InterruptedException {
         lis.playerIsReadyToStart(model, nick);

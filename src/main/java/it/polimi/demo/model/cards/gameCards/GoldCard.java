@@ -4,11 +4,25 @@ import it.polimi.demo.model.board.Corner;
 import it.polimi.demo.model.enumerations.Color;
 import it.polimi.demo.model.enumerations.Orientation;
 
+/**
+ * Represents a GoldCard, which is a subclass of Resource.
+ * This class includes requirements needed to play the card.
+ * */
+
 public class GoldCard extends ResourceCard {
 
 
+    /**
+     * Corner coverage required
+     */
     private boolean isCornerCoverageRequired;
+    /**
+     * Potion required
+     */
     private boolean isPotionRequired;
+    /**
+     * Feather required
+     */
     private boolean isFeatherRequired;
     private boolean isParchmentRequired;
     private int mushroom_required;
@@ -69,6 +83,7 @@ public class GoldCard extends ResourceCard {
         this.isParchmentRequired = isParchmentRequired;
 
     }
+
 
     public boolean getIsCornerCoverageRequired() {
         return isCornerCoverageRequired;

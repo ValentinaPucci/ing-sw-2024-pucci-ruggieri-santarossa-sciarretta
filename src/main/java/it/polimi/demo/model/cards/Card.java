@@ -5,6 +5,11 @@ import it.polimi.demo.model.enumerations.Orientation;
 import java.io.Serial;
 import java.io.Serializable;
 
+/**
+ * This abstract class represents a generic card of the game.
+ * It has an id, an orientation and a type . The Orientation is an enum that can be either FRONT or BACK.
+ * The type is either "Resource", "Gold" or "Starter".
+ */
 public abstract class Card implements Serializable {
 
     @Serial
@@ -13,6 +18,11 @@ public abstract class Card implements Serializable {
     public Orientation orientation;
     public String type;
 
+    /**
+     * Constructor of the class Card.
+     * @param id the id of the card
+     * @param orientation the orientation of the card
+     */
     public Card(int id, Orientation orientation) {
         this.id = id;
         this.orientation = orientation;

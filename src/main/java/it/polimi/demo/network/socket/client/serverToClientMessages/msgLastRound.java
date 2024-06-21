@@ -16,6 +16,11 @@ public class msgLastRound extends SocketServerGenericMessage {
         this.gamemodel = gamemodel;
     }
 
+    /**
+     * Method to perform action on the listener.
+     * @param lis
+     * @throws RemoteException
+     */
     @Override
     public void perform(Listener lis) throws RemoteException {
        lis.lastRound(gamemodel);

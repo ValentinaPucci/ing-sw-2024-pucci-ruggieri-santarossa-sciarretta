@@ -11,7 +11,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
-
+/**
+ * Class to send a message in the CHAT.
+ */
 public class SocketClientMsgSendMessage extends SocketClientGenericMessage implements Serializable {
 
     @Serial
