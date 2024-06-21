@@ -7,24 +7,24 @@ import javafx.scene.text.Text;
 
 public class LobbyController extends GuiInputReaderController {
 
-    @FXML public Text gameIdLabel;
+    @FXML public Text gameidLabel;
     @FXML private Button buttonReady;
     @FXML private Text nicknameLabel;
-
     @FXML
     void actionIamReady() {
         reader.add("y");
     }
 
     public void setGameId(int id) {
-        gameIdLabel.setText("GameID: " + id);
+        gameidLabel.setText("GameID: "+id);
     }
 
-    public void setNicknameLabel(String nick) {
-        nicknameLabel.setText(nick);
+    public void setNicknameLabel(String nickname) {
+        nicknameLabel.setText(nickname);
     }
 
-    public void setVisibleBtnReady(boolean bool) {
-        buttonReady.setVisible(bool);
+    public void setVisibleBtnReady(boolean visibility) {
+        buttonReady.setVisible(visibility);
     }
+
 }
