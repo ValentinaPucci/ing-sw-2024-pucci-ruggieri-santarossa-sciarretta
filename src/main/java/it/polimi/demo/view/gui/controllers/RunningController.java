@@ -5,6 +5,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.ModelView;
+import it.polimi.demo.view.gui.GuiInputReaderController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +22,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class RunningController extends GuiInputReaderController {
     @FXML public Label myPoints;
@@ -1241,7 +1241,7 @@ public class RunningController extends GuiInputReaderController {
         my_sp.setVisible(true);
     }
 
-    //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
+    //-------------------------------------CHAT and Mex------------------------------------
 
 
     @FXML
@@ -1271,16 +1271,9 @@ public class RunningController extends GuiInputReaderController {
 
     }
 
-
     public void setMsgToShow(String msg, Boolean success) {
         labelMessage.setText(msg);
-        if (success == null) {
-            labelMessage.setTextFill(Color.WHITE);
-        } else if (success) {
-            labelMessage.setTextFill(Color.GREEN);
-        } else {
-            labelMessage.setTextFill(Color.RED);
-        }
+        labelMessage.setTextFill(success == null ? Color.WHITE : (success ? Color.GREEN : Color.RED));
     }
 
     public void exitGame() {

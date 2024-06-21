@@ -1,9 +1,7 @@
 package it.polimi.demo.view.gui.controllers;
 
-import javafx.event.ActionEvent;
+import it.polimi.demo.view.gui.GuiInputReaderController;
 import javafx.fxml.FXML;
-
-import java.util.concurrent.LinkedBlockingQueue;
 
 public class MenuController extends GuiInputReaderController {
 

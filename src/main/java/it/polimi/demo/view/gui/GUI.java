@@ -7,6 +7,7 @@ import it.polimi.demo.view.dynamic.UI;
 import it.polimi.demo.view.gui.controllers.GameOverController;
 import it.polimi.demo.view.gui.controllers.LobbyController;
 import it.polimi.demo.view.gui.controllers.RunningController;
+import it.polimi.demo.view.gui.utils.SceneType;
 import javafx.application.Platform;
 
 import java.util.concurrent.LinkedBlockingQueue;

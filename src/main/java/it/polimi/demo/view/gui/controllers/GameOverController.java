@@ -2,8 +2,8 @@ package it.polimi.demo.view.gui.controllers;
 
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
+import it.polimi.demo.view.gui.GuiInputReaderController;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 
 import java.util.List;

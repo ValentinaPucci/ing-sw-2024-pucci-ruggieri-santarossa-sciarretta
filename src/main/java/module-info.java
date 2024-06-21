@@ -10,6 +10,7 @@ module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
     requires java.logging;
     requires java.desktop;
     requires json.simple;
+    requires java.scripting;
 
     opens it.polimi.demo.model to javafx.fxml;
     exports it.polimi.demo.model;
@@ -21,9 +22,12 @@ module it.polimi.demo.ingsw2024pucciruggierisantarossasciarretta {
     exports it.polimi.demo.observer to java.rmi;
     exports it.polimi.demo.main to java.rmi;
 
-    exports it.polimi.demo.view.gui to javafx.graphics;
     exports it.polimi.demo.view.gui.controllers to javafx.fxml;
     opens it.polimi.demo.view.gui.controllers to javafx.fxml;
     exports it.polimi.demo.main.utils to java.rmi;
     exports it.polimi.demo.network.utils to java.rmi;
+    exports it.polimi.demo.view.gui to javafx.fxml, javafx.graphics;
+    opens it.polimi.demo.view.gui to javafx.fxml;
+    exports it.polimi.demo.view.gui.utils to javafx.fxml, javafx.graphics;
+    opens it.polimi.demo.view.gui.utils to javafx.fxml;
 }
