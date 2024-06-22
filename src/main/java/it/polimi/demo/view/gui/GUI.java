@@ -95,7 +95,6 @@ public class GUI extends UI {
 
     @Override
     protected void show_gameEnded(ModelView model) {
-        System.out.println("Sono in Game ended");
         executeOnPlatform(() -> {
             ((EndGameController) this.app.getSceneController("GameOver")).show(model);
             switchScene("GameOver");
