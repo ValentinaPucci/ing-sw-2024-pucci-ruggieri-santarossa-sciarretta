@@ -665,11 +665,6 @@ public class RunningController extends GuiInputReaderController {
     }
 
     public void onCardHand0Clicked() {
-        if (cardHandOrientation == Orientation.FRONT) {
-            setMsgToShow("Card 1 from hand clicked with orientation: FRONT", true);
-        } else {
-            setMsgToShow("Card 1 from hand clicked with orientation: BACK", true);
-        }
         cardHandVBox.setDisable(true);
         handCard1.setDisable(true);
         handCard2.setDisable(true);
@@ -699,11 +694,6 @@ public class RunningController extends GuiInputReaderController {
 
     @FXML
     public void onCardHand1Clicked() {
-        if (cardHandOrientation == Orientation.FRONT) {
-            setMsgToShow("Card 2 from hand clicked with orientation: FRONT", true);
-        } else {
-            setMsgToShow("Card 2 from hand clicked with orientation: BACK", true);
-        }
         cardHandVBox.setDisable(true);
 
         handCard1.setDisable(true);
@@ -733,12 +723,7 @@ public class RunningController extends GuiInputReaderController {
     }
 
     @FXML
-    public void onCardHand2Clicked(MouseEvent mouseEvent) {
-        if (cardHandOrientation == Orientation.FRONT) {
-            setMsgToShow("Card 3 from hand clicked with orientation: FRONT", true);
-        } else {
-            setMsgToShow("Card 3 from hand clicked with orientation: BACK", true);
-        }
+    public void onCardHand2Clicked() {
         cardHandVBox.setDisable(true);
         handCard1.setDisable(true);
         handCard2.setDisable(true);
@@ -1026,7 +1011,15 @@ public class RunningController extends GuiInputReaderController {
         handCard1.setDisable(false);
         handCard2.setDisable(false);
         FlipHand.setDisable(false);
+        personalBoardAnchorPane.setDisable(false);
         setMsgToShow("Choose a card to place from your hand: ", true);
+        cardHandVBox.setDisable(false);
+        cardHandVBox.setMouseTransparent(false);
+        handCard0.setDisable(false);
+        handCard1.setDisable(false);
+        handCard2.setDisable(false);
+        FlipHand.setDisable(false);
+        personalBoardAnchorPane.setDisable(false);
     }
 
     public void whichOrientationToPlace() {
@@ -1135,6 +1128,7 @@ public class RunningController extends GuiInputReaderController {
         handCard2.setDisable(true);
         handCard1.setDisable(true);
         handCard0.setDisable(true);
+        FlipHand.setDisable(true);
 
         if (index == 0) {
             handCard0.getChildren().clear();
@@ -1229,11 +1223,10 @@ public class RunningController extends GuiInputReaderController {
     }
 
     public void illegalMovePlace() {
-        cardHandVBox.setDisable(false);
-        cardHandVBox.setMouseTransparent(false);
-        handCard0.setDisable(false);
-        handCard1.setDisable(false);
-        handCard2.setDisable(false);
+        cardHandVBox.setDisable(true);
+        handCard0.setDisable(true);
+        handCard1.setDisable(true);
+        handCard2.setDisable(true);
         FlipHand.setDisable(false);
         personalBoardAnchorPane.setDisable(false);
     }

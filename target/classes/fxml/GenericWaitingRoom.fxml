@@ -78,7 +78,7 @@
                         <Font name="Luminari" size="30.0" />
                     </font>
                 </Text>
-                <Text fx:id="nicknameLabel" fill="#4d0202" layoutX="225.0" layoutY="710.0" strokeType="OUTSIDE" strokeWidth="0.0" text="username" wrappingWidth="179.66716154871494">
+                <Text fx:id="nicknameLabel" fill="#4d0202" layoutX="225.0" layoutY="710.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" " wrappingWidth="179.66716154871494">
                     <font>
                         <Font name="Luminari" size="30.0" />
                     </font>
