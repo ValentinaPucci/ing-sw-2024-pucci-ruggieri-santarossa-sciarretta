@@ -70,6 +70,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * @param guiApplication The GUI application instance (null for TUI).
      */
     public GameDynamic(TypeConnection selection, FXApplication guiApplication) {
+        // Here we start the connection based on the selection
         startConnection(selection);
         reader_queue = new LinkedBlockingQueue<>();
 

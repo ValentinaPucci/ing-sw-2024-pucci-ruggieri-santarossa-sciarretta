@@ -95,6 +95,7 @@ public class RMIClient implements ClientInterface {
         try {
             registry = LocateRegistry.getRegistry(Constants.serverIp, Constants.RMI_port);
             asks = (MainControllerInterface) registry.lookup(Constants.RMI_server_name);
+            // Create the listener for the client, we deduce it by dynamic which implements Listener
             lis = (Listener) UnicastRemoteObject.exportObject(dynamic, 0);
             StaticPrinter.staticPrinter("Client RMI ready");
         } catch (Exception e) {
