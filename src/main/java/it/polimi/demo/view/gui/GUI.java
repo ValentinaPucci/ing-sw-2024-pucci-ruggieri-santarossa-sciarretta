@@ -23,10 +23,10 @@ public class GUI extends UI {
         nickname = null;
     }
 
-    private void setSceneWithController(SceneClass.SceneType sceneType, Runnable controllerSetup) {
+    private void setSceneWithController(FXApplication.SceneType sceneType, Runnable controllerSetup) {
         Platform.runLater(() -> {
             controllerSetup.run();
-            this.fxApplication.setCurrentScene(sceneType);
+            this.fxApplication.changeScene(sceneType);
         });
     }
 
@@ -34,36 +34,36 @@ public class GUI extends UI {
     protected void startFirstScene() {
         Platform.runLater(() -> {
             this.fxApplication.setGUIReaderToScenes(this.GuiReader);
-            this.fxApplication.setCurrentScene(SceneClass.SceneType.MENU);
+            this.fxApplication.changeScene(FXApplication.SceneType.MENU);
         });
     }
 
 
     @Override
     protected void show_join(int idGame, String nickname) {
-        setSceneWithController(SceneClass.SceneType.ID_GAME, () -> {});
+        setSceneWithController(FXApplication.SceneType.ID_GAME, () -> {});
     }
 
     @Override
     protected void show_insertGameId() {
-        setSceneWithController(SceneClass.SceneType.ID_GAME, () -> {});
+        setSceneWithController(FXApplication.SceneType.ID_GAME, () -> {});
     }
 
     @Override
     protected void show_insertNickname() {
-        setSceneWithController(SceneClass.SceneType.NICKNAME, () -> {});
+        setSceneWithController(FXApplication.SceneType.NICKNAME, () -> {});
     }
 
     @Override
     protected void show_insertNumOfPlayers() {
-        setSceneWithController(SceneClass.SceneType.NUM_PLAYERS, () -> {});
+        setSceneWithController(FXApplication.SceneType.NUM_PLAYERS, () -> {});
     }
 
 
     @Override
     protected void show_gameStarted(ModelView model) {
-        setSceneWithController(SceneClass.SceneType.RUNNING, () -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+        setSceneWithController(FXApplication.SceneType.RUNNING, () -> {
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.setCardHand(model, nickname);
             runningController.setStarterCardFront(model, nickname);
             runningController.setScoreBoardPosition(model);
@@ -76,13 +76,13 @@ public class GUI extends UI {
     @Override
     protected void show_chosenNickname(String nickname) {
         this.nickname = nickname;
-        setSceneWithController(SceneClass.SceneType.GENERIC_WAITING_ROOM, () -> {});
+        setSceneWithController(FXApplication.SceneType.GENERIC_WAITING_ROOM, () -> {});
     }
 
     @Override
     protected void show_nextTurn(ModelView model, String nickname) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.changeTurn(model, nickname);
         });
     }
@@ -90,15 +90,15 @@ public class GUI extends UI {
     @Override
     protected void show_readyToStart(ModelView gameModel, String nickname) {
         Platform.runLater(() -> {
-            StartGameController waitingRoomController = (StartGameController) this.fxApplication.getSceneController(SceneClass.SceneType.GENERIC_WAITING_ROOM);
+            StartGameController waitingRoomController = (StartGameController) this.fxApplication.getSceneController(FXApplication.SceneType.GENERIC_WAITING_ROOM);
             waitingRoomController.setReadyButton(false);
         });
     }
 
     @Override
     protected void show_gameEnded(ModelView model) {
-        setSceneWithController(SceneClass.SceneType.GAME_OVER, () -> {
-            EndGameController gameOverController = (EndGameController) this.fxApplication.getSceneController(SceneClass.SceneType.GAME_OVER);
+        setSceneWithController(FXApplication.SceneType.GAME_OVER, () -> {
+            EndGameController gameOverController = (EndGameController) this.fxApplication.getSceneController(FXApplication.SceneType.GAME_OVER);
             gameOverController.show(model);
         });
     }
@@ -107,8 +107,8 @@ public class GUI extends UI {
     protected void show_playerJoined(ModelView gameModel, String nick) {
         if (!gameStarted) {
             this.nickname = nick;
-            setSceneWithController(SceneClass.SceneType.GENERIC_WAITING_ROOM, () -> {
-                StartGameController waitingRoomController = (StartGameController) this.fxApplication.getSceneController(SceneClass.SceneType.GENERIC_WAITING_ROOM);
+            setSceneWithController(FXApplication.SceneType.GENERIC_WAITING_ROOM, () -> {
+                StartGameController waitingRoomController = (StartGameController) this.fxApplication.getSceneController(FXApplication.SceneType.GENERIC_WAITING_ROOM);
                 waitingRoomController.setMyNicknameLabel(nick);
                 waitingRoomController.setGameId(gameModel.getGameId());
                 waitingRoomController.showPlayerToWaitingRoom(gameModel);
@@ -116,7 +116,7 @@ public class GUI extends UI {
             gameStarted = true;
         } else {
             Platform.runLater(() -> {
-                StartGameController waitingRoomController = (StartGameController) this.fxApplication.getSceneController(SceneClass.SceneType.GENERIC_WAITING_ROOM);
+                StartGameController waitingRoomController = (StartGameController) this.fxApplication.getSceneController(FXApplication.SceneType.GENERIC_WAITING_ROOM);
                 waitingRoomController.showPlayerToWaitingRoom(gameModel);
             });
         }
@@ -126,7 +126,7 @@ public class GUI extends UI {
     @Override
     protected void show_objectiveCards(ModelView gameModel) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.ableObjectiveCardsClick();
         });
     }
@@ -134,7 +134,7 @@ public class GUI extends UI {
     @Override
     protected void show_commonBoard(ModelView gameModel) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.setCommonCards(gameModel);
             runningController.setScoreBoardPosition(gameModel);
             runningController.setPoints(gameModel);
@@ -144,7 +144,7 @@ public class GUI extends UI {
     @Override
     protected void show_myTurnIsFinished() {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.myTurnIsFinished();
         });
     }
@@ -152,7 +152,7 @@ public class GUI extends UI {
     @Override
     protected void show_playerHand(ModelView gameModel, String nickname) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.setCardHand(gameModel, nickname);
             runningController.ableCommonCardsClick();
         });
@@ -161,7 +161,7 @@ public class GUI extends UI {
     @Override
     protected void show_cardDrawn(ModelView gameModel, String nickname) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.setCommonCards(gameModel);
             runningController.setCardHand(gameModel, nickname);
             runningController.setScoreBoardPosition(gameModel);
@@ -173,20 +173,20 @@ public class GUI extends UI {
     @Override
     protected void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.setOthersPersonalBoard(playerIndex);
         });
     }
 
     @Override
     protected void playerLeft(ModelView model, String nick) {
-        Platform.runLater(() -> this.fxApplication.setCurrentScene(SceneClass.SceneType.ERROR));
+        Platform.runLater(() -> this.fxApplication.changeScene(FXApplication.SceneType.ERROR));
     }
 
     @Override
     protected void show_cardChosen(String nickname, ModelView model) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.illegalMovePlace();
         });
     }
@@ -194,7 +194,7 @@ public class GUI extends UI {
     @Override
     public void show_illegalMove() {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.illegalMove();
         });
     }
@@ -202,7 +202,7 @@ public class GUI extends UI {
     @Override
     protected void show_illegalMoveBecauseOf(String message) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.illegalMoveBecauseOf(message);
         });
     }
@@ -210,7 +210,7 @@ public class GUI extends UI {
     @Override
     protected void show_successfulMove(Coordinate coord) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.successfulMove(coord);
         });
     }
@@ -218,7 +218,7 @@ public class GUI extends UI {
     @Override
     protected void show_whereToDrawFrom() {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.ableCommonCardsClick();
         });
     }
@@ -226,7 +226,7 @@ public class GUI extends UI {
     @Override
     public void show_whichCardToPlace() {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.whichCardToPlace();
         });
     }
@@ -234,7 +234,7 @@ public class GUI extends UI {
     @Override
     public void show_pawnPositions(ModelView model) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.setScoreBoardPosition(model);
             runningController.setPoints(model);
         });
@@ -243,7 +243,7 @@ public class GUI extends UI {
     @Override
     protected void show_orientation(String message) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             if (message.equals("Choose the orientation of the card to place")) {
                 runningController.whichOrientationToPlace();
             } else if (message.equals("Choose the orientation of the starter card")) {
@@ -254,13 +254,13 @@ public class GUI extends UI {
 
     @Override
     protected void show_noConnectionError() {
-        Platform.runLater(() -> this.fxApplication.setCurrentScene(SceneClass.SceneType.ERROR));
+        Platform.runLater(() -> this.fxApplication.changeScene(FXApplication.SceneType.ERROR));
     }
 
     @Override
     protected void show_messageSent(ModelView gameModel, String nickname) {
         Platform.runLater(() -> {
-            RunningController runningController = (RunningController) this.fxApplication.getSceneController(SceneClass.SceneType.RUNNING);
+            RunningController runningController = (RunningController) this.fxApplication.getSceneController(FXApplication.SceneType.RUNNING);
             runningController.updateChat(gameModel, nickname);
         });
     }
