@@ -1,10 +1,10 @@
 package it.polimi.demo.view.gui.controllers;
 
+import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.model.enumerations.Orientation;
-import it.polimi.demo.model.ModelView;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -246,8 +246,8 @@ public class RunningController extends GuiInputReaderController {
         sp2.setVisible(false);
     }
 
-    private void setComponentsDisable(List<? extends javafx.scene.Node> components, boolean disable) {
-        for (javafx.scene.Node component : components) {
+    private void setComponentsDisable(List<? extends Node> components, boolean disable) {
+        for (Node component : components) {
             component.setDisable(disable);
         }
     }

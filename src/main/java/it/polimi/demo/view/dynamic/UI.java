@@ -3,8 +3,6 @@ package it.polimi.demo.view.dynamic;
 import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.enumerations.Coordinate;
 
-import java.util.List;
-
 /**
  * Abstract class defining the interface for the User Interface (ui) of the application.
  */
@@ -13,7 +11,7 @@ public abstract class UI {
     /**
      * Shows the options available to the user.
      */
-    protected abstract void show_options();
+    protected abstract void startFirstScene();
 
     /**
      * Shows the message indicating the creation of a game with the specified nickname.

@@ -4,244 +4,229 @@ import it.polimi.demo.model.ModelView;
 import it.polimi.demo.model.enumerations.Coordinate;
 import it.polimi.demo.view.dynamic.UI;
 
-import it.polimi.demo.view.gui.controllers.GameOverController;
-import it.polimi.demo.view.gui.controllers.LobbyController;
+import it.polimi.demo.view.gui.controllers.EndGameController;
 import it.polimi.demo.view.gui.controllers.RunningController;
+import it.polimi.demo.view.gui.controllers.StartGameController;
 import javafx.application.Platform;
 
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 
 public class GUI extends UI {
 
-    private FXApplication guiApplication;
+    private boolean gameStarted = false;
+    private String myNickname;
+    private FXApplication app;
     private LinkedBlockingQueue<String> GuiReader;
-    private boolean alreadyShowedLobby = false;
-    private String nickname;
 
-    public GUI(FXApplication guiApplication, LinkedBlockingQueue<String> GuiReader) {
-        this.guiApplication = guiApplication;
+    public GUI(FXApplication guiApp, LinkedBlockingQueue<String> GuiReader) {
+        this.app = guiApp;
         this.GuiReader = GuiReader;
-        nickname = null;
+        myNickname = null;
     }
 
-    //Need to use this method to call any methods inside the GuiApplication
-    //Doing so, the method requested will be executed on the JavaFX Thread (else exception)
-    public void runOnThread(Runnable r) {
-        Platform.runLater(r);
+    private void executeOnPlatform(Runnable action) {
+        Platform.runLater(action);
+    }
+
+    private void modifyRunningController(Consumer<RunningController> action) {
+        executeOnPlatform(() -> action.accept((RunningController) app.getSceneController("Running")));
+    }
+
+    private void switchScene(String sceneType) {
+        executeOnPlatform(() -> app.changeScene(sceneType));
     }
 
     @Override
-    protected void show_options() {
-        runOnThread(() -> this.guiApplication.setGUIReaderToScenes(this.GuiReader));
-        runOnThread(guiApplication::newWindow);
-        runOnThread(() -> this.guiApplication.setActiveScene(SceneType.MENU));
+    protected void startFirstScene() {
+        executeOnPlatform(() -> {
+            this.app.setGUIReaderToScenes(this.GuiReader);
+            this.app.changeScene("Menu");
+        });
     }
-
 
     @Override
     protected void show_join(int idGame, String nickname) {
-        show_insertGameId();
+        switchScene("InsertIDgame");
     }
 
     @Override
     protected void show_insertGameId() {
-        runOnThread(() -> this.guiApplication.setActiveScene(SceneType.ID_GAME));
+        switchScene("InsertIDgame");
     }
 
     @Override
     protected void show_insertNickname() {
-        runOnThread(() -> this.guiApplication.setActiveScene(SceneType.NICKNAME));
+        switchScene("InsertNickname");
     }
 
     @Override
     protected void show_insertNumOfPlayers() {
-        runOnThread(() -> this.guiApplication.setActiveScene(SceneType.NUM_PLAYERS));
+        switchScene("InsertNumPlayers");
     }
-
 
     @Override
     protected void show_gameStarted(ModelView model) {
-        runOnThread(() -> {
-            RunningController runningController = (RunningController) this.guiApplication.getSceneController(SceneType.RUNNING);
-            this.guiApplication.setActiveScene(SceneType.RUNNING);
-
-            runningController.setCardHand(model, nickname);
-            runningController.setStarterCardFront(model, nickname);
-            runningController.setScoreBoardPosition(model);
-            runningController.setPlayersPointsAndNicknames(model, nickname);
-            runningController.setCommonCards(model);
-            runningController.setPersonalObjectives(model, nickname);
+        modifyRunningController(controller -> {
+            switchScene("Running");
+            controller.setCardHand(model, myNickname);
+            controller.setStarterCardFront(model, myNickname);
+            controller.setScoreBoardPosition(model);
+            controller.setPlayersPointsAndNicknames(model, myNickname);
+            controller.setCommonCards(model);
+            controller.setPersonalObjectives(model, myNickname);
         });
     }
 
     @Override
     protected void show_chosenNickname(String nickname) {
-        this.nickname = nickname;
-        runOnThread(() -> this.guiApplication.setActiveScene(SceneType.LOBBY));
+        this.myNickname = nickname;
+        switchScene("GenericWaitingRoom");
     }
 
     @Override
     protected void show_nextTurn(ModelView model, String nickname) {
-        if (!alreadyShowedLobby) {
-            show_gameStarted(model);
-            alreadyShowedLobby = true;
-        }
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).changeTurn(model, nickname));
+        modifyRunningController(controller -> controller.changeTurn(model, nickname));
     }
 
     @Override
     protected void show_readyToStart(ModelView gameModel, String nickname) {
-        runOnThread(() -> ((LobbyController)this.guiApplication.getSceneController(SceneType.LOBBY)).setVisibleBtnReady(false));
+        executeOnPlatform(() -> ((StartGameController) this.app.getSceneController("GenericWaitingRoom")).setReadyButton(false));
     }
 
+    @Override
     protected void show_gameEnded(ModelView model) {
-        runOnThread(() -> {
-            GameOverController gameOverController = (GameOverController) this.guiApplication.getSceneController(SceneType.GAME_OVER);
-
-            gameOverController.show(model);
-            this.guiApplication.setActiveScene(SceneType.GAME_OVER);
+        System.out.println("Sono in Game ended");
+        executeOnPlatform(() -> {
+            ((EndGameController) this.app.getSceneController("GameOver")).show(model);
+            switchScene("GameOver");
         });
     }
 
     @Override
     protected void show_playerJoined(ModelView gameModel, String nick) {
-        if (!alreadyShowedLobby) {
-            this.nickname = nick;
-            runOnThread(() -> {
-                LobbyController lobbyController = (LobbyController) this.guiApplication.getSceneController(SceneType.LOBBY);
-
-                lobbyController.setNicknameLabel(nick);
-                lobbyController.setGameId(gameModel.getGameId());
-                this.guiApplication.setActiveScene(SceneType.LOBBY);
-                this.guiApplication.showPlayerToLobby(gameModel);
+        if (!gameStarted) {
+            executeOnPlatform(() -> {
+                StartGameController waitingRoomController = (StartGameController) app.getSceneController("GenericWaitingRoom");
+                waitingRoomController.setMyNicknameLabel(nick);
+                waitingRoomController.setGameId(gameModel.getGameId());
+                waitingRoomController.showPlayerToWaitingRoom(gameModel);
             });
-            alreadyShowedLobby = true;
+            gameStarted = true;
         } else {
-            runOnThread(() -> this.guiApplication.showPlayerToLobby(gameModel));
+            executeOnPlatform(() -> {
+                StartGameController waitingRoomController = (StartGameController) this.app.getSceneController("GenericWaitingRoom");
+                waitingRoomController.showPlayerToWaitingRoom(gameModel);
+            });
         }
     }
 
 
     @Override
     protected void show_objectiveCards(ModelView gameModel) {
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).ableObjectiveCardsClick());
-
+        modifyRunningController(RunningController::ableObjectiveCardsClick);
     }
 
     @Override
     protected void show_commonBoard(ModelView gameModel) {
-        runOnThread(() -> {
-            RunningController runningController = (RunningController) this.guiApplication.getSceneController(SceneType.RUNNING);
-
-            runningController.setCommonCards(gameModel);
-            runningController.setScoreBoardPosition(gameModel);
-            runningController.setPoints(gameModel);
+        modifyRunningController(controller -> {
+            controller.setCommonCards(gameModel);
+            controller.setScoreBoardPosition(gameModel);
+            controller.setPoints(gameModel);
         });
     }
 
     @Override
     protected void show_myTurnIsFinished() {
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).myTurnIsFinished());
+        modifyRunningController(RunningController::myTurnIsFinished);
     }
 
     @Override
     protected void show_playerHand(ModelView gameModel, String nickname) {
-        runOnThread(() -> {
-            RunningController runningController = (RunningController) this.guiApplication.getSceneController(SceneType.RUNNING);
-
-            runningController.setCardHand(gameModel, nickname);
-            runningController.ableCommonCardsClick();
+        modifyRunningController(controller -> {
+            controller.setCardHand(gameModel, nickname);
+            controller.ableCommonCardsClick();
         });
     }
 
-
     @Override
     protected void show_cardDrawn(ModelView gameModel, String nickname) {
-        runOnThread(() -> {
-            RunningController runningController = (RunningController) this.guiApplication.getSceneController(SceneType.RUNNING);
-
-            runningController.setCommonCards(gameModel);
-            runningController.setCardHand(gameModel, nickname);
-            runningController.setScoreBoardPosition(gameModel);
-            runningController.setPersonalBoard(gameModel);
-            runningController.setPoints(gameModel);
+        modifyRunningController(controller -> {
+            controller.setCommonCards(gameModel);
+            controller.setCardHand(gameModel, nickname);
+            controller.setScoreBoardPosition(gameModel);
+            controller.setPersonalBoard(gameModel);
+            controller.setPoints(gameModel);
         });
     }
 
     @Override
     protected void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).setOthersPersonalBoard(playerIndex));
-
+        modifyRunningController(controller -> controller.setOthersPersonalBoard(playerIndex));
     }
 
     @Override
     protected void playerLeft(ModelView model, String nick) {
-        runOnThread(() -> this.guiApplication.setActiveScene(SceneType.ERROR));
+        switchScene("Error");
     }
-
 
     @Override
     protected void show_cardChosen(String nickname, ModelView model) {
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).illegalMovePlace());
+        modifyRunningController(RunningController::illegalMovePlace);
     }
 
     @Override
     public void show_illegalMove() {
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).illegalMove());
+        modifyRunningController(RunningController::illegalMove);
     }
 
     @Override
     protected void show_illegalMoveBecauseOf(String message) {
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).illegalMoveBecauseOf(message));
+        modifyRunningController(controller -> controller.illegalMoveBecauseOf(message));
     }
 
     @Override
     protected void show_successfulMove(Coordinate coord) {
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).successfulMove(coord));
-
+        modifyRunningController(controller -> controller.successfulMove(coord));
     }
 
     @Override
     protected void show_whereToDrawFrom() {
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).ableCommonCardsClick());
+        modifyRunningController(RunningController::ableCommonCardsClick);
     }
 
     @Override
     public void show_whichCardToPlace() {
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).whichCardToPlace());
+        modifyRunningController(RunningController::whichCardToPlace);
     }
 
     @Override
     public void show_pawnPositions(ModelView model) {
-        runOnThread(() -> {
-            RunningController runningController = (RunningController) this.guiApplication.getSceneController(SceneType.RUNNING);
-
-            runningController.setScoreBoardPosition(model);
-            runningController.setPoints(model);
+        modifyRunningController(controller -> {
+            controller.setScoreBoardPosition(model);
+            controller.setPoints(model);
         });
     }
 
     @Override
     protected void show_orientation(String message) {
-        runOnThread(() -> {
-            RunningController runningController = (RunningController) this.guiApplication.getSceneController(SceneType.RUNNING);
-
-            if (message.equals("Choose the orientation of the card to place")) {
-                runningController.whichOrientationToPlace();
-            } else if (message.equals("Choose the orientation of the starter card")) {
-                runningController.ableStarterCardClick();
+        modifyRunningController(controller -> {
+            if ("Choose the orientation of the card to place".equals(message)) {
+                controller.whichOrientationToPlace();
+            } else if ("Choose the orientation of the starter card".equals(message)) {
+                controller.ableStarterCardClick();
             }
         });
     }
 
     @Override
     protected void show_noConnectionError() {
-        runOnThread(() -> this.guiApplication.setActiveScene(SceneType.ERROR));
+        switchScene("Error");
     }
 
     @Override
     protected void show_messageSent(ModelView gameModel, String nickname) {
-        runOnThread(() -> ((RunningController) this.guiApplication.getSceneController(SceneType.RUNNING)).updateChat(gameModel, nickname));
+        modifyRunningController(controller -> controller.updateChat(gameModel, nickname));
     }
 
     //------------------------------------used only in TUI----------------------------------------------
@@ -287,3 +272,4 @@ public class GUI extends UI {
     protected void show_joinRandom(String nickname) {
     }
 }
+

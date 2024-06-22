@@ -7,6 +7,8 @@ import it.polimi.demo.view.dynamic.GameDynamic;
 import it.polimi.demo.view.gui.controllers.*;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -19,154 +21,120 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class FXApplication extends Application {
 
     private Stage mainStage;
-    private ArrayList<SceneClass> sceneCollection;
+    private Map<String, Scene> sceneMap;
+    private Map<String, GuiInputReaderController> controllerMap;
     private double previousWidth, previousHeight;
     private boolean isResized = true;
+    private final Scale scaleTransform = new Scale(1, 1);
+    private final ChangeListener<Number> resizeListener = this::resizeListener;
 
     @Override
     public void start(Stage mainStage) {
-        new GameDynamic(this, TypeConnection.valueOf(getParameters().getUnnamed().getFirst()));
+        new GameDynamic(this, TypeConnection.valueOf(getParameters().getUnnamed().get(0)));
         this.mainStage = mainStage;
+        this.sceneMap = new HashMap<>();
+        this.controllerMap = new HashMap<>();
         initializeScenes();
     }
 
     private void initializeScenes() {
-        sceneCollection = new ArrayList<>();
-        for (SceneType sceneType : SceneType.values()) {
-            String fxmlPath = sceneType.getFxmlPath();
-            if (fxmlPath == null || fxmlPath.isEmpty()) {
-                System.err.println("FXML path not valid for: " + sceneType.name());
-                continue;
-            }
+        String[] sceneTypes = {
+                "/fxml/Menu.fxml", "/fxml/InsertNickname.fxml", "/fxml/InsertIDgame.fxml",
+                "/fxml/InsertNumPlayers.fxml", "/fxml/GenericWaitingRoom.fxml", "/fxml/Running.fxml",
+                "/fxml/GameOver.fxml", "/fxml/Error.fxml"
+        };
 
+        for (String type : sceneTypes) {
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlPath));
-                Parent sceneRoot = fxmlLoader.load();
-                GuiInputReaderController sceneController = fxmlLoader.getController();
-                sceneCollection.add(new SceneClass(new Scene(sceneRoot), sceneType, sceneController));
+                createAndStoreScene(type);
             } catch (IOException e) {
-                throw new RuntimeException("Error occurred while loading " + fxmlPath, e);
+                System.err.println("Failed to load scene for type: " + type + ", error: " + e.getMessage());
             }
         }
     }
 
-    public void setActiveScene(SceneType sceneType) {
+    private void createAndStoreScene(String fxmlPath) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+        Parent root = loader.load();
+        GuiInputReaderController controller = loader.getController();
+        Scene scene = new Scene(root);
+        root.getTransforms().add(scaleTransform);
+        String sceneType = extractSceneTypeFromPath(fxmlPath); // Custom method to extract scene type from path
+        sceneMap.put(sceneType, scene);
+        controllerMap.put(sceneType, controller);
+    }
+
+    private String extractSceneTypeFromPath(String fxmlPath) {
+        String[] parts = fxmlPath.split("/");
+        String fileName = parts[parts.length - 1];
+        return fileName.substring(0, fileName.lastIndexOf("."));
+    }
+
+    public void changeScene(String sceneType) {
         isResized = false;
-        int index = getSceneIndex(sceneType);
-        if (index != -1) {
-            SceneClass sceneInfo = sceneCollection.get(index);
-            this.mainStage.setScene(sceneInfo.getCurrentScene());
-            this.mainStage.show();
+        Scene newScene = sceneMap.get(sceneType);
+        if (newScene != null) {
+            newScene.getRoot().getTransforms().add(scaleTransform);
 
-            previousWidth = mainStage.getScene().getWidth();
-            previousHeight = mainStage.getScene().getHeight();
+            mainStage.setScene(newScene);
+            mainStage.show();
 
-            this.mainStage.widthProperty().addListener((obs, oldVal, newVal) -> resize((double) newVal - 30, previousHeight));
-            this.mainStage.heightProperty().addListener((obs, oldVal, newVal) -> resize(previousWidth, (double) newVal - 60));
+            updatePreviousDimensions();
+            removeResizeListeners();
+            addResizeListeners();
 
             isResized = true;
+        } else {
+            System.err.println("Scene not found for type: " + sceneType);
         }
     }
 
-    public void setGUIReaderToScenes(LinkedBlockingQueue<String> guiReader) {
-        for (SceneClass scene : sceneCollection) {
-            scene.setInputReaderGUI(guiReader);
-        }
+    private void updatePreviousDimensions() {
+        previousWidth = mainStage.getScene().getWidth();
+        previousHeight = mainStage.getScene().getHeight();
+    }
+
+    private void removeResizeListeners() {
+        mainStage.widthProperty().removeListener(resizeListener);
+        mainStage.heightProperty().removeListener(resizeListener);
+    }
+
+    private void addResizeListeners() {
+        mainStage.widthProperty().addListener(resizeListener);
+        mainStage.heightProperty().addListener(resizeListener);
+    }
+
+    private void resizeListener(ObservableValue<? extends Number> obs, Number oldVal, Number newVal) {
+        resize(mainStage.getWidth(), mainStage.getHeight());
     }
 
     public void resize(double width, double height) {
         if (isResized) {
-            double w = width / previousWidth;
-            double h = height / previousHeight;
             previousWidth = width;
             previousHeight = height;
-            Scale scale = new Scale(w, h, 0, 0);
-            mainStage.getScene().getRoot().getTransforms().add(scale);
+            scaleTransform.setX(width / previousWidth);
+            scaleTransform.setY(height / previousHeight);
         }
     }
 
-    public GuiInputReaderController getSceneController(SceneType sceneType) {
-        int index = getSceneIndex(sceneType);
-        return index != -1 ? sceneCollection.get(index).getSceneController() : null;
-    }
-
-    private int getSceneIndex(SceneType sceneType) {
-        for (int i = 0; i < sceneCollection.size(); i++) {
-            if (sceneCollection.get(i).getSceneType() == sceneType) {
-                return i;
+    public void setGUIReaderToScenes(LinkedBlockingQueue<String> guiReader) {
+        for (GuiInputReaderController controller : controllerMap.values()) {
+            if (controller != null) {
+                controller.setInputReaderGUI(guiReader);
             }
         }
-        return -1;
     }
 
-    public void newWindow() {
-        Stage newStage = new Stage();
-        newStage.setScene(this.mainStage.getScene());
-        newStage.show();
-        this.mainStage.close();
-        this.mainStage = newStage;
-        this.mainStage.centerOnScreen();
-        this.mainStage.setAlwaysOnTop(true);
-
-        this.mainStage.setOnCloseRequest(event -> {
-            System.out.println("Closing all");
-            System.exit(0);
-        });
+    public GuiInputReaderController getSceneController(String type) {
+        return controllerMap.get(type);
     }
 
-    //-----------------------------LOBBY------------------------------------------------------------------------
-
-
-    private void showLobbyPlayerPane(String nickname, int playerIndex) {
-        SceneType sceneType = switch (playerIndex) {
-            case 0 -> SceneType.PLAYER_LOBBY_1;
-            case 1 -> SceneType.PLAYER_LOBBY_2;
-            case 2 -> SceneType.PLAYER_LOBBY_3;
-            case 3 -> SceneType.PLAYER_LOBBY_4;
-            default -> throw new IllegalArgumentException("Invalid player index: " + playerIndex);
-        };
-
-        int sceneIndex = getSceneIndex(sceneType);
-        SceneClass sceneDetails = sceneCollection.get(sceneIndex);
-        Pane newPaneRoot = (Pane) sceneDetails.getCurrentScene().getRoot();
-
-        PlayerLobbyController lobbyController = (PlayerLobbyController) sceneDetails.getSceneController();
-        lobbyController.setNickname(nickname);
-
-        Pane targetPane = (Pane) this.mainStage.getScene().getRoot().lookup("#pane" + playerIndex);
-        targetPane.setVisible(true);
-        targetPane.getChildren().clear();
-
-        newPaneRoot.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-
-        StackPane stackPaneWrapper = new StackPane();
-        stackPaneWrapper.getChildren().add(newPaneRoot);
-        StackPane.setAlignment(newPaneRoot, Pos.CENTER);
-
-        newPaneRoot.prefWidthProperty().bind(targetPane.widthProperty());
-        newPaneRoot.prefHeightProperty().bind(targetPane.heightProperty());
-
-        targetPane.getChildren().add(stackPaneWrapper);
-    }
-
-    public void showPlayerToLobby(ModelView model) {
-        hidePanesInLobby();
-        int i = 0;
-        for (Player p : model.getPlayersConnected()) {
-            showLobbyPlayerPane(p.getNickname(), i);
-            i++;
-        }
-    }
-    private void hidePanesInLobby() {
-        for (int i = 0; i < 4; i++) {
-            Pane panePlayerLobby = (Pane) this.mainStage.getScene().getRoot().lookup("#pane" + i);
-            panePlayerLobby.setVisible(false);
-        }
-    }
 }
