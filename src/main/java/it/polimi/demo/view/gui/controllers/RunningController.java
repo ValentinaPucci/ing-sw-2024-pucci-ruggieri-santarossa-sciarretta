@@ -671,7 +671,8 @@ public class RunningController extends GuiInputReaderController {
             setMsgToShow("Card 1 from hand clicked with orientation: BACK", true);
         }
         cardHandVBox.setDisable(true);
-
+        handCard1.setDisable(true);
+        handCard2.setDisable(true);
         handCard0.setDisable(true);
 
         FlipHand.setDisable(true);
@@ -706,6 +707,8 @@ public class RunningController extends GuiInputReaderController {
         cardHandVBox.setDisable(true);
 
         handCard1.setDisable(true);
+        handCard2.setDisable(true);
+        handCard0.setDisable(true);
 
         FlipHand.setDisable(true);
 
@@ -737,8 +740,9 @@ public class RunningController extends GuiInputReaderController {
             setMsgToShow("Card 3 from hand clicked with orientation: BACK", true);
         }
         cardHandVBox.setDisable(true);
-
+        handCard1.setDisable(true);
         handCard2.setDisable(true);
+        handCard0.setDisable(true);
 
         FlipHand.setDisable(true);
 
@@ -1127,6 +1131,11 @@ public class RunningController extends GuiInputReaderController {
     }
 
     private void removeFromHand(int index) {
+        cardHandVBox.setDisable(true);
+        handCard2.setDisable(true);
+        handCard1.setDisable(true);
+        handCard0.setDisable(true);
+
         if (index == 0) {
             handCard0.getChildren().clear();
         } else if (index == 1) {
