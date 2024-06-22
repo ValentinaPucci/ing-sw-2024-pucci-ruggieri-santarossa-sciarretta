@@ -67,7 +67,7 @@ public class FXApplication extends Application {
         GuiInputReaderController controller = loader.getController();
         Scene scene = new Scene(root);
         root.getTransforms().add(scaleTransform);
-        String sceneType = extractSceneTypeFromPath(fxmlPath); // Custom method to extract scene type from path
+        String sceneType = extractSceneTypeFromPath(fxmlPath);
         sceneMap.put(sceneType, scene);
         controllerMap.put(sceneType, controller);
     }

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.demo.view.gui.controllers.EndGameController">
+   <children>
+      <ImageView fitHeight="850.0" fitWidth="1500.0" pickOnBounds="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <image>
+            <Image url="@/Background.jpg" />
+         </image>
+      </ImageView>
+      <Label fx:id="player0" layoutX="63.0" layoutY="102.0" prefHeight="50.0" prefWidth="297.0" text="Player1 : 0 points" textFill="#4d0202" wrapText="true">
+         <font>
+            <Font name="Luminari" size="30.0" />
+         </font>
+      </Label>
+      <Label fx:id="player2" layoutX="60.0" layoutY="238.0" text="Player3 : 0 points" textFill="#4d0202">
+         <font>
+            <Font name="Luminari" size="30.0" />
+         </font>
+      </Label>
+      <Text fill="#4d0202" fontSmoothingType="LCD" layoutX="136.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GAME OVER" wrappingWidth="328.77001953125">
+         <font>
+            <Font name="Luminari" size="51.0" />
+         </font>
+      </Text>
+      <ImageView fitHeight="83.0" fitWidth="91.0" layoutX="14.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@/logo.png" />
+         </image>
+      </ImageView>
+      <Label fx:id="player3" layoutX="59.0" layoutY="304.0" text="Player4 : 0 points" textFill="#4d0202">
+         <font>
+            <Font name="Luminari" size="30.0" />
+         </font>
+      </Label>
+      <Label fx:id="player1" layoutX="63.0" layoutY="168.0" text="Player2: 0 points" textFill="#4d0202">
+         <font>
+            <Font name="Luminari" size="30.0" />
+         </font>
+      </Label>
+      <ImageView fitHeight="77.0" fitWidth="83.0" layoutX="326.0" layoutY="89.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@/crown.png" />
+         </image>
+      </ImageView>
+   </children>
+</AnchorPane>

@@ -1,0 +1,284 @@
+
+{
+  "cards": [
+    {
+      "id": 87,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "pattern": "increasing_diagonal",
+      "color1": "RED",
+      "color2": "RED",
+      "color3": "RED"
+    },
+
+    {
+      "id": 88,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "decreasing_diagonal",
+      "color1": "GREEN",
+      "color2": "GREEN",
+      "color3": "GREEN"
+    },
+
+    {
+      "id": 89,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "pattern": "increasing_diagonal",
+      "color1": "BLUE",
+      "color2": "BLUE",
+      "color3": "BLUE"
+    },
+
+
+
+    {
+      "id": 90,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "pattern": "decreasing_diagonal",
+      "color1": "PURPLE",
+      "color2": "PURPLE",
+      "color3": "PURPLE"
+    },
+
+
+    {
+      "id": 91,
+      "type": "Objective",
+      "points": 3,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "L",
+      "color1": "Red",
+      "color2": "Red",
+      "color3": "Green"
+    },
+
+    {
+      "id": 92,
+      "type": "Objective",
+      "points": 3,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "J",
+      "color1": "Green",
+      "color2": "Green",
+      "color3": "Purple"
+    },
+
+
+    {
+      "id": 93,
+      "type": "Objective",
+      "points": 3,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "P",
+      "color1": "Red",
+      "color2": "Blue",
+      "color3": "Blue"
+    },
+
+
+    {
+      "id": 94,
+      "type": "Objective",
+      "points": 3,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "Q",
+      "color1": "Blue",
+      "color2": "Purple",
+      "color3": "Purple"
+    },
+
+
+    {
+      "id": 95,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 3,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "None",
+      "color1": null,
+      "color2": null,
+      "color3": null
+    },
+
+
+    {
+      "id": 96,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 3,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "None",
+      "color1": null,
+      "color2": null,
+      "color3": null
+    },
+
+    {
+      "id": 97,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 3,
+      "pattern": "None",
+      "color1": null,
+      "color2": null,
+      "color3": null
+    },
+
+
+    {
+      "id": 98,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 3,
+      "numWolves": 0,
+      "pattern": "None",
+      "color1": null,
+      "color2": null,
+      "color3": null
+    },
+
+    {
+      "id": 99,
+      "type": "Objective",
+      "points": 3,
+      "numFeathers": 1,
+      "numParchments": 1,
+      "numPotions": 1,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "None",
+      "color1": null,
+      "color2": null,
+      "color3": null
+    },
+
+
+    {
+      "id": 100,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 0,
+      "numParchments": 2,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "None",
+      "color1": null,
+      "color2": null,
+      "color3": null
+    },
+
+
+    {
+      "id": 101,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 0,
+      "numParchments": 0,
+      "numPotions": 2,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "None",
+      "color1": null,
+      "color2": null,
+      "color3": null
+    },
+
+
+    {
+      "id": 102,
+      "type": "Objective",
+      "points": 2,
+      "numFeathers": 2,
+      "numParchments": 0,
+      "numPotions": 0,
+      "numMushrooms": 0,
+      "numLeaves": 0,
+      "numButterflies": 0,
+      "numWolves": 0,
+      "pattern": "None",
+      "color1": null,
+      "color2": null,
+      "color3": null
+    }
+  ]
+}

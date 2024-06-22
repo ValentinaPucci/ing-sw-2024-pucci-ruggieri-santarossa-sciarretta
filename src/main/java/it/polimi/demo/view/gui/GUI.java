@@ -47,7 +47,6 @@ public class GUI extends UI {
 
     @Override
     protected void show_join(int idGame, String nickname) {
-        switchScene("InsertIDgame");
     }
 
     @Override

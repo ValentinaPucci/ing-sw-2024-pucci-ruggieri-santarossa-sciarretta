@@ -1,0 +1,16 @@
+.anchor-pane {
+    -fx-background-image: url("/Background.jpg");
+    -fx-background-size: cover;
+    -fx-background-repeat: no-repeat;
+}
+
+.backgroundTransparent{
+    -fx-background-color: transparent !important;
+}
+
+
+#personalBoardAnchorPane, #pb0, #pb1, #pb2{
+    -fx-background-image: url("/Background.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center center;
+}

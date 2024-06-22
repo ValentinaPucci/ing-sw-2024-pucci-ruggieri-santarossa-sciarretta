@@ -75,22 +75,6 @@ public class StartGameController extends GuiInputReaderController{
         }
     }
 
-    @FXML void playerIsReady() {
-        getInputReaderGUI().add("y");
-    }
-
-    public void setGameId(int id) {
-        gameidLabel.setText("GameID: "+id);
-    }
-
-    public void setMyNicknameLabel(String nickname){
-        nicknameLabel.setText(nickname);
-    }
-
-    public void setReadyButton(boolean visible){
-        buttonReady.setVisible(visible);
-    }
-
     @FXML
     public void twoPLayers() {
         LinkedBlockingQueue<String> reader = getInputReaderGUI();
@@ -158,6 +142,22 @@ public class StartGameController extends GuiInputReaderController{
             }
             default -> throw new IllegalArgumentException("Invalid player index: " + playerIndex);
         }
+    }
+
+    @FXML void playerIsReady() {
+        getInputReaderGUI().add("y");
+    }
+
+    public void setGameId(int id) {
+        gameidLabel.setText("GameID: "+id);
+    }
+
+    public void setMyNicknameLabel(String nickname){
+        nicknameLabel.setText(nickname);
+    }
+
+    public void setReadyButton(boolean visible){
+        buttonReady.setVisible(visible);
     }
 
     public void showPlayerToWaitingRoom(ModelView model) {
