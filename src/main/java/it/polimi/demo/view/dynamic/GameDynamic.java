@@ -20,10 +20,7 @@ import java.io.IOException;
 import java.io.Serial;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
@@ -941,8 +938,8 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void playerJoined(ModelView gameModel) {
-        facts.offer(gameModel, FactType.PLAYER_JOINED);
         ui.show_playerJoined(gameModel, nickname);
+        facts.offer(gameModel, FactType.PLAYER_JOINED);
     }
 
     /**
@@ -953,11 +950,13 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void playerIsReadyToStart(ModelView gameModel, String nick) {
         ui.show_playerJoined(gameModel, nickname);
-        if (nick.equals(nickname)) {
-            ui.show_readyToStart(gameModel, nickname);
-        }
+        Runnable showReadyToStart = () -> ui.show_readyToStart(gameModel, nickname);
+        Optional.of(nick)
+                .filter(nickname::equals)
+                .ifPresent(n -> showReadyToStart.run());
         facts.offer(gameModel, FactType.PLAYER_IS_READY_TO_START);
     }
+
 
     /**
      * Handles the event when a player leaves the game, showing a relevant game fact.
