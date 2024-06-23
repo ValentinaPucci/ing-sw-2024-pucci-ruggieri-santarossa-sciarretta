@@ -23,6 +23,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * RunningController is the controller class for the running phase of the game.
+ */
 public class RunningController extends GuiInputReaderController {
     @FXML public Label myPoints;
     @FXML public Label playerLabel1;
@@ -32,9 +35,9 @@ public class RunningController extends GuiInputReaderController {
     @FXML public GridPane otherPlayers;
     @FXML public ImageView StarterCardImage;
     @FXML public Pane starterCardPane;
-    public Button FlipStarter;
-    public Pane personalObjective0Pane;
-    public Pane personalObjective1Pane;
+    @FXML public Button FlipStarter;
+    @FXML public Pane personalObjective0Pane;
+    @FXML public Pane personalObjective1Pane;
     @FXML public HBox personalObjectivesBox;
     @FXML public VBox cardHandVBox;
     @FXML public Pane handCard0;
@@ -120,6 +123,10 @@ public class RunningController extends GuiInputReaderController {
     private int rounds = 0;
 
     private int firstPlayerIndex = 0;
+
+    /**
+     * Method that initializes every structure on the screen
+     */
     public void initialize() {
 
         personalObjectivesBox = new HBox();
@@ -245,12 +252,18 @@ public class RunningController extends GuiInputReaderController {
         sp2.setVisible(false);
     }
 
+    /**
+    *    Method that is used to disable a group of components in a single call
+    * */
     private void setComponentsDisable(List<? extends Node> components, boolean disable) {
         for (Node component : components) {
             component.setDisable(disable);
         }
     }
 
+    /**
+     * Method that move pieces into the scoreboard according to the players' points in the model
+     * */
     public void setScoreBoardPosition(ModelView model) {
         for (int i = 0; i < model.getAllPlayers().size(); i++) {
             int player_position = model.getCommonBoard().getPlayerPosition(i);
@@ -258,7 +271,9 @@ public class RunningController extends GuiInputReaderController {
         }
     }
 
-    // Method to move a piece to a new Pane
+    /**
+     * Method that move a piece in a given position of the scoreboard
+     * */
     private void movePieceToPosition(int player_index, int indexToGo) {
 
         ImageView pieceToMove = pieces.get(player_index);
@@ -273,7 +288,10 @@ public class RunningController extends GuiInputReaderController {
     }
 
 
-    public void setPlayersPointsAndNicknames(ModelView model, String nickname) {
+    /**
+     * method that sets names and points of the others players, and creates the button GO to see their personaBoards
+     * */
+    public void setGridPane(ModelView model, String nickname) {
         ArrayList<Player> players_list = model.getAllPlayers();
 
         this.players_list = players_list;
@@ -333,6 +351,9 @@ public class RunningController extends GuiInputReaderController {
         }
         players_without_me_size = players_without_me.size();
     }
+    /**
+     * Method that binds the click on the GO button with the command to send to the model
+     * */
     public void showOthersPersonalBoard(int index) {
         LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
@@ -690,6 +711,7 @@ public class RunningController extends GuiInputReaderController {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
         placeCard(0);
+        FlipHand.setDisable(true);
     }
 
     @FXML
@@ -720,6 +742,7 @@ public class RunningController extends GuiInputReaderController {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
         placeCard(1);
+        FlipHand.setDisable(true);
     }
 
     @FXML
@@ -749,6 +772,7 @@ public class RunningController extends GuiInputReaderController {
             System.out.println("L'oggetto inputReaderGUI è null.");
         }
         placeCard(2);
+        FlipHand.setDisable(true);
     }
 
     //-------------------------------------------------------------------------------------------------------------------------
