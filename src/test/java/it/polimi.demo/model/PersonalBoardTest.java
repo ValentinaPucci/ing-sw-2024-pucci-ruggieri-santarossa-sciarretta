@@ -933,6 +933,12 @@ public class PersonalBoardTest {
         card.getNumResource(Resource.BUTTERFLY);
         card.getNumResource(Resource.WOLF);
 
+        ResourceObjectiveCard card2 = new ResourceObjectiveCard(1, Orientation.FRONT, 1, 0, 1, 1, 1);
+        card2.getResourceType();
+        ResourceObjectiveCard card3 = new ResourceObjectiveCard(1, Orientation.FRONT, 1, 0, 0, 1, 1);
+        card3.getResourceType();
+        ResourceObjectiveCard card4 = new ResourceObjectiveCard(1, Orientation.FRONT, 1, 0, 0, 0, 1);
+        card4.getResourceType();
     }
 
 
