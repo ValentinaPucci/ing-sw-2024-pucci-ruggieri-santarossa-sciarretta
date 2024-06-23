@@ -18,7 +18,6 @@ import javafx.scene.paint.Color;
 
 import java.io.InputStream;
 import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Function;
 
 /**
@@ -1375,7 +1374,7 @@ public class RunningController extends GuiInputReaderController {
 
     /** Method that disable all cards on the hand after an illegal move, the only move allowed is to flip the card
      * */
-    public void illegalMovePlace() {
+    public void disableAllOtherCardsInHand() {
         cardHandVBox.setDisable(true);
         handCard0.setDisable(true);
         handCard1.setDisable(true);
@@ -1421,7 +1420,7 @@ public class RunningController extends GuiInputReaderController {
      * Method that shows the end of your turn
      * */
     public void myTurnIsFinished() {
-        setMsgToShow("Your turn is finished. Now, wait until it is again your turn! ", true);
+        setMsgToShow("Your turn is finished. Wait until it is again your turn! ", true);
     }
 
 
