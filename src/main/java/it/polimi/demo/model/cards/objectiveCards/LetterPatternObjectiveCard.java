@@ -55,6 +55,17 @@ public class LetterPatternObjectiveCard extends it.polimi.demo.model.cards.objec
         aux_personal_board.placeCardAtNW(card3, card2);
     }
 
+    /**
+     * This method is an initializer; in fact we initialize auxiliary
+     * cards that are out of the deck. In general their id does not make
+     * any sense. For the sake of simplicity, we assume that those cards
+     * have id set to -1;
+     *
+     * Remark: color is not a parameter anymore.
+     *
+     * @requires
+     *      color == GREEN || color == PURPLE
+     */
     public void init_obj_J() {
 
         ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, Color.GREEN);
@@ -66,6 +77,17 @@ public class LetterPatternObjectiveCard extends it.polimi.demo.model.cards.objec
         aux_personal_board.placeCardAtNE(card3, card2);
     }
 
+    /**
+     * This method is an initializer; in fact we initialize auxiliary
+     * cards that are out of the deck. In general their id does not make
+     * any sense. For the sake of simplicity, we assume that those cards
+     * have id set to -1;
+     *
+     * Remark: color is not a parameter anymore.
+     *
+     * @requires
+     *      color == RED || color == BLUE
+     */
     public void init_obj_P() {
 
         ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, Color.RED);
@@ -77,6 +99,17 @@ public class LetterPatternObjectiveCard extends it.polimi.demo.model.cards.objec
         aux_personal_board.placeCardAtSW(card1, card2);
     }
 
+    /**
+     * This method is an initializer; in fact we initialize auxiliary
+     * cards that are out of the deck. In general their id does not make
+     * any sense. For the sake of simplicity, we assume that those cards
+     * have id set to -1;
+     *
+     * Remark: color is not a parameter anymore.
+     *
+     * @requires
+     *      color == BLUE || color == PURPLE
+     */
     public void init_obj_Q() {
 
         ResourceCard card1 = new ResourceCard(-1, Orientation.FRONT, Color.BLUE);
@@ -88,6 +121,11 @@ public class LetterPatternObjectiveCard extends it.polimi.demo.model.cards.objec
         aux_personal_board.placeCardAtSE(card1, card2);
     }
 
+    /**
+     * calculateScore is a method that is used to calculate the score of the player
+     * @param personal_board the personal board of the player
+     * @return the score of the player
+     */
     @Override
     public int calculateScore(PersonalBoard personal_board) {
         return score_strategy.calculateScore(this, personal_board);

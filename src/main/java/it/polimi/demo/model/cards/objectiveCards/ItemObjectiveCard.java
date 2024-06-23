@@ -24,8 +24,13 @@ public class ItemObjectiveCard extends ObjectiveCard {
     private int num_parchments;
 
     /**
-     * @param id
-     * @param orientation
+     * Constructor of the class.
+     * @param id the id of the card
+     * @param orientation the orientation of the card
+     * @param points the points of the card
+     * @param num_feathers the number of feathers required to achieve the objective
+     * @param num_potions the number of potions required to achieve the objective
+     * @param num_parchments the number of parchments required to achieve the objective
      */
     public ItemObjectiveCard(int id, Orientation orientation, int points, int num_feathers, int num_potions, int num_parchments) {
         super(id, orientation, points);
@@ -34,6 +39,11 @@ public class ItemObjectiveCard extends ObjectiveCard {
         this.num_parchments = num_parchments;
     }
 
+    /**
+     * This method returns the number of items.
+     * @param item the type of item
+     * @return the number of items
+     */
     public int getNumItem(Item item) {
         switch (item) {
             case FEATHER:
@@ -48,7 +58,10 @@ public class ItemObjectiveCard extends ObjectiveCard {
     }
 
 
-    //TODO: è SBAGLIATO --> BISOGNA CONTROLLARE I SUOI UTILIZZI
+    /**
+     * This method returns the type of item required to achieve the objective.
+     * @return the type of item required to achieve the objective.
+     */
     public Item getItemType() {
         if (num_feathers > 0)
             return Item.FEATHER;
@@ -61,7 +74,7 @@ public class ItemObjectiveCard extends ObjectiveCard {
     /**
      * This method calculates the score of the player according to the personal board configuration.
      * @param personal_board the personal board of the player
-     * @return
+     * @return the score of the player
      */
     @Override
     public int calculateScore(PersonalBoard personal_board) {

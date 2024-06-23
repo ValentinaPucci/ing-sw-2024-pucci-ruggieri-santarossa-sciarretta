@@ -195,6 +195,10 @@ public class ModelView implements Serializable {
         return last_coordinate;
     }
 
+    /**
+     * Retrieves the first player of the game.
+     * @return The first Player object.
+     */
     public Player getFirstPlayer(){
         return first_player;
     }

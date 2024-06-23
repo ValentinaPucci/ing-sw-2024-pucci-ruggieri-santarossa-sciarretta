@@ -4,6 +4,9 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.util.Arrays;
 
+/**
+ * Class to represent a node of the common board
+ */
 public class CommonBoardNode implements Serializable {
 
     @Serial

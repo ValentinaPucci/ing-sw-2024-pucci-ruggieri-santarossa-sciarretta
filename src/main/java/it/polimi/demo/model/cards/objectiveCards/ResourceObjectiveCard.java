@@ -16,8 +16,14 @@ public class ResourceObjectiveCard extends ObjectiveCard {
     private int num_wolves;
 
     /**
-     * @param id
-     * @param orientation
+     * Constructor for the ResourceObjectiveCard class
+     * @param id the id of the card
+     * @param orientation the orientation of the card
+     * @param points the points of the card
+     * @param num_mushrooms the number of mushrooms required
+     * @param num_leaves the number of leaves required
+     * @param num_butterflies the number of butterflies required
+     * @param num_wolves the number of wolves required
      */
     public ResourceObjectiveCard(int id, Orientation orientation, int points,
                                  int num_mushrooms, int num_leaves, int num_butterflies, int num_wolves) {
@@ -28,6 +34,11 @@ public class ResourceObjectiveCard extends ObjectiveCard {
         this.num_wolves = num_wolves;
     }
 
+    /**
+     * generic getter for the number of resources
+     * @param resource the resource to get the number of
+     * @return the number of the resource
+     */
     public int getNumResource(Resource resource) {
         switch (resource) {
             case MUSHROOM:
@@ -43,6 +54,10 @@ public class ResourceObjectiveCard extends ObjectiveCard {
         }
     }
 
+    /**
+     * generic getter for the resource type
+     * @return the resource type
+     */
     public Resource getResourceType() {
         if (num_mushrooms > 0)
             return Resource.MUSHROOM;
@@ -54,6 +69,11 @@ public class ResourceObjectiveCard extends ObjectiveCard {
             return Resource.WOLF;
     }
 
+    /**
+     * This method calculates the score of the card
+     * @param personal_board the personal board of the player
+     * @return the score of the card
+     */
     @Override
     public int calculateScore(PersonalBoard personal_board) {
         return (personal_board.getNumResource(this.getResourceType()) / this.getNumResource(this.getResourceType()))

@@ -111,6 +111,10 @@ public class ResourceCard extends Card {
             return this.getCornerAtSE();
     }
 
+    /**
+     * getter for the back of the card
+     * @return the back of the card
+     */
     public ResourceCard getBack() {
         Corner[][] corners_back = new Corner[2][2];
         for (int i = 0; i < 2; i++) {
@@ -134,10 +138,18 @@ public class ResourceCard extends Card {
         return card;
     }
 
+    /**
+     * getter for the color of the card
+     * @return the color of the card
+     */
     public Color getColor() {
         return this.color;
     }
 
+    /**
+     * getter for the points of the card
+     * @return the points of the card
+     */
     public int getPoints() {
         return this.points;
     }
