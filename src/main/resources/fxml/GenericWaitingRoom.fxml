@@ -44,7 +44,7 @@
                                 <Font name="Luminari" size="51.0" />
                             </font>
                         </Text>
-                        <Text fx:id="gameidLabel" fill="#4d0202" layoutX="999.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameID: 000000" wrappingWidth="259.0">
+                        <Text fx:id="gameidLabel" fill="#4d0202" layoutX="999.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GameID: " wrappingWidth="259.0">
                             <font>
                                 <Font name="Luminari" size="30.0" />
                             </font>
@@ -78,16 +78,16 @@
                         <Font name="Luminari" size="30.0" />
                     </font>
                 </Text>
-                <Text fx:id="nicknameLabel" fill="#4d0202" layoutX="225.0" layoutY="710.0" strokeType="OUTSIDE" strokeWidth="0.0" text="username" wrappingWidth="179.66716154871494">
+                <Text fx:id="nicknameLabel" fill="#4d0202" layoutX="225.0" layoutY="710.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" " wrappingWidth="179.66716154871494">
                     <font>
                         <Font name="Luminari" size="30.0" />
                     </font>
                 </Text>
 
-                <Pane fx:id="pane0" layoutX="50.0" layoutY="200.0" prefHeight="418.0" prefWidth="286.0" style="-fx-background-color: white;" />
-                <Pane fx:id="pane1" layoutX="360.0" layoutY="200.0" prefHeight="418.0" prefWidth="286.0" style="-fx-background-color: white;" />
-                <Pane fx:id="pane2" layoutX="670.0" layoutY="200.0" prefHeight="418.0" prefWidth="286.0" style="-fx-background-color: white;" />
-                <Pane fx:id="pane3" layoutX="980.0" layoutY="200.0" prefHeight="418.0" prefWidth="286.0" style="-fx-background-color: white;" />
+                <Pane fx:id="pane0" layoutX="50.0" layoutY="200.0" prefHeight="418.0" prefWidth="286.0"/>
+                <Pane fx:id="pane1" layoutX="360.0" layoutY="200.0" prefHeight="418.0" prefWidth="286.0"/>
+                <Pane fx:id="pane2" layoutX="670.0" layoutY="200.0" prefHeight="418.0" prefWidth="286.0"/>
+                <Pane fx:id="pane3" layoutX="980.0" layoutY="200.0" prefHeight="418.0" prefWidth="286.0" />
 
             </children>
         </Pane>
