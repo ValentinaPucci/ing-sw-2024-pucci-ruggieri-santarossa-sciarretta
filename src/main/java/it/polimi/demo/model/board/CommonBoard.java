@@ -10,19 +10,51 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the common board of the game.
+ * Here we have the decks, and the common board, represented with an array of nodes.
+ */
 public class CommonBoard implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -2215860359422495618L;
+    /**
+     * Deck of resource cards.
+     */
     private ConcreteDeck resource_concrete_deck; // resource_concrete_deck
-    private ConcreteDeck gold_concrete_deck; // gold_concrete_deck
+    /**
+     * Deck of gold cards.
+     */
+    private ConcreteDeck gold_concrete_deck; // gold_concrete_decks
+    /**
+     * Deck of starter cards.
+     */
     private ConcreteDeck starter_concrete_deck;
+    /**
+     * Deck of objective cards.
+     */
     private ConcreteDeck objective_concrete_deck; // objective_concrete_deck
+    /**
+     * List of decks.
+     */
     private List<ConcreteDeck> decks;
     int num_players;
+    /**
+     * Array of nodes representing the board
+     */
     private CommonBoardNode[] board_nodes; // Array of nodes representing the board
+    /**
+     * Cards on the table.
+     */
     private Card[][] table_cards; // Cards on the table
+    /**
+     * Index of the player who reached 20 points first.
+     */
     private int partial_winner = -1;
+
+    /**
+     * Constructor for the CommonBoard class.
+     */
 
     public CommonBoard() {
         this.resource_concrete_deck = new ConcreteDeck("Resource"); //resource_concrete_deck
@@ -40,7 +72,7 @@ public class CommonBoard implements Serializable {
      public ConcreteDeck getObjectiveConcreteDeck() {return objective_concrete_deck;}
 
     /**
-     * Board initializer
+     * Board initializer. It initializes the board with the decks and the cards on the table.
      */
     public void initializeBoard() {
         setInitialPosition();
@@ -79,6 +111,11 @@ public class CommonBoard implements Serializable {
     }
 
 
+    /**
+     * Method to draw a card from a ConcreteDeck.
+     * @param concrete_deck_index : 0 = resource_concrete_deck, 1 = gold_concrete_deck, 2 = objective_concrete_deck
+     * @return
+     */
     // Method to draw a card directly from a ConcreteDeck
     //        decks[0] = this.resource_concrete_deck;
     //        decks[1] = this.gold_concrete_deck;
@@ -95,7 +132,13 @@ public class CommonBoard implements Serializable {
         return null;
     }
 
-    // Method to draw a card from the table and replace it with a card from the corresponding ConcreteDeck
+    /**
+     * Method to draw a card from the table and replace it with a card from the corresponding ConcreteDeck.
+     * @param row
+     * @param col
+     * @param concrete_deck_index
+     * @return
+     */
     public Card drawFromTable(int row, int col, int concrete_deck_index) {
         if (row >= 0 && row < 2 && col >= 0 && col < 2 && concrete_deck_index >= 0 && concrete_deck_index < 2) {
             // Remove the card from the table and store it
@@ -113,7 +156,11 @@ public class CommonBoard implements Serializable {
     }
 
 
-    // Method to get the position of a player
+    /**
+     * Method to get the position of a player.
+     * @param player_index
+     * @return
+     */
     public int getPlayerPosition(int player_index) {
         for (CommonBoardNode node : board_nodes) {
             if (node.isPlayerPresent(player_index)) {
@@ -124,7 +171,12 @@ public class CommonBoard implements Serializable {
     }
 
 
-    // Method to move a player by a specified delta
+
+    /**
+     * Method to move a player by a specified delta.
+     * @param playerIndex
+     * @param delta : the number of nodes to move
+     */
     public void movePlayer(int playerIndex, int delta) {
         // Get the current position of the player
         int current_position = getPlayerPosition(playerIndex);
@@ -151,6 +203,10 @@ public class CommonBoard implements Serializable {
         }
     }
 
+    /**
+     * Method to get the board nodes array.
+     * @return
+     */
     public CommonBoardNode[] getBoardNodes() {
         return board_nodes;
     }
@@ -181,10 +237,18 @@ public class CommonBoard implements Serializable {
         return num_players;
     }
 
+    /**
+     * Method to set the number of players.
+     * @param num_players
+     */
     public void setPlayerCount(int num_players){
         this.num_players = num_players;
     }
 
+
+    /**
+     * Method to set the initial position of the players on the board.
+     */
     public void setInitialPosition() {
         for (int i = 0; i <= 29; i++) {
             board_nodes[i] = new CommonBoardNode(i);

@@ -193,6 +193,8 @@ public class ModelGeneralTest {
 
         tui.show_gameEnded(model_view);
 
+        p1.getCardHandIds();
+
 
         // Test model view methods
         model_view.getObjectiveCards("Player1");
