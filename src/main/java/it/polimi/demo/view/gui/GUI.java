@@ -85,7 +85,7 @@ public class GUI extends UI {
 
     @Override
     protected void show_nextTurn(ModelView model, String nickname) {
-        modifyRunningController(controller -> controller.changeTurn(model, nickname));
+        modifyRunningController(controller -> controller.changeTurn(model));
     }
 
     @Override
@@ -179,11 +179,6 @@ public class GUI extends UI {
     }
 
     @Override
-    protected void show_illegalMoveBecauseOf(String message) {
-        modifyRunningController(controller -> controller.illegalMoveBecauseOf(message));
-    }
-
-    @Override
     protected void show_successfulMove(Coordinate coord) {
         modifyRunningController(controller -> controller.successfulMove(coord));
     }
@@ -269,5 +264,10 @@ public class GUI extends UI {
     @Override
     protected void show_joinRandom(String nickname) {
     }
+
+    @Override
+    protected void show_illegalMoveBecauseOf(String message) {
+    }
+
 }
 

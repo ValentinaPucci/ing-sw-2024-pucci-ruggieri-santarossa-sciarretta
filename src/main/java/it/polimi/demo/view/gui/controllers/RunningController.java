@@ -259,6 +259,23 @@ public class RunningController extends GuiInputReaderController {
         }
     }
 
+
+    /**
+     * Method that get the player index in the given array, based on his nickname
+     * */
+    public int getPlayerIndex(ArrayList<Player> players_list, String nickname) {
+        for (int i = 0; i < players_list.size(); i++) {
+            if (players_list.get(i).getNickname().equals(nickname)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+
+
+    //---------------------------------------SCOREBOARD----------------------------------------------------
+
     /**
      * Method that move pieces into the scoreboard according to the players' points in the model
      * */
@@ -286,6 +303,7 @@ public class RunningController extends GuiInputReaderController {
     }
 
 
+    //-------------------------------OTHER PLAYERS--------------------------------------------
     /**
      * method that sets names and points of the others players, and creates the button GO to see their personaBoards
      * */
@@ -375,6 +393,9 @@ public class RunningController extends GuiInputReaderController {
         }
     }
 
+    /**
+     * Method that shows the personal board of the given player
+     * */
     public void setOthersPersonalBoard(int player_index) {
         Player player = players_list.get(player_index);
         int playerIndex = getPlayerIndex(players_without_me, player.getNickname());
@@ -405,369 +426,8 @@ public class RunningController extends GuiInputReaderController {
         }
     }
 
-
-    public int getPlayerIndex(ArrayList<Player> players_list, String nickname) {
-        for (int i = 0; i < players_list.size(); i++) {
-            if (players_list.get(i).getNickname().equals(nickname)) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-
-
-    public void setCommonCards(ModelView model) {
-        Integer[] cardIds = model.getCommonBoard().getCommonCardsId();
-        for (int i = 0; i < cardIds.length; i++) {
-            int cardId = cardIds[i];
-            String imagePath;
-            if (i == 0 || i == 3 || i == 6) {
-                imagePath = "/images/cards/cards_back/" + String.format("%03d", cardId) + ".png";
-            } else {
-                imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
-            }
-            InputStream imageStream = getClass().getResourceAsStream(imagePath);
-            if (imageStream == null) {
-                System.out.println("Image not found: " + imagePath);
-                continue;
-            }
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90); 
-            imageView.setFitHeight(65); 
-
-            if (i == 0) {
-                commonCard1.getChildren().add(imageView); 
-            } else if (i == 1) {
-                commonCard2.getChildren().add(imageView); 
-            } else if (i == 2) {
-                commonCard3.getChildren().add(imageView); 
-            } else if (i == 3) {
-                commonCard4.getChildren().add(imageView); 
-            } else if (i == 4) {
-                commonCard5.getChildren().add(imageView); 
-            } else if (i == 5) {
-                commonCard6.getChildren().add(imageView); 
-            } else if (i == 6) {
-                commonCard7.getChildren().add(imageView); 
-            } else if (i == 7) {
-                commonCard8.getChildren().add(imageView); 
-            } else {
-                commonCard9.getChildren().add(imageView); 
-            }
-        }
-    }
-
-
-    public void setPersonalObjectives(ModelView model, String nickname) {
-        Integer[] cardIds = model.getPlayerEntity(nickname).getSecretObjectiveCardsIds();
-        this.personalObjectiveIds = new ArrayList<>(Arrays.asList(cardIds));
-        for (int i = 0; i < cardIds.length; i++) {
-            int cardId = cardIds[i];
-            String imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
-            InputStream imageStream = getClass().getResourceAsStream(imagePath);
-            if (imageStream == null) {
-                System.out.println("Image not found: " + imagePath);
-                continue;
-            }
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90); 
-            imageView.setFitHeight(65);
-
-            if (i == 0) {
-                personalObjective0Pane.getChildren().add(imageView);
-            } else {
-                personalObjective1Pane.getChildren().add(imageView); 
-            }
-        }
-    }
-
-    public void setStarterCardFront(ModelView model, String nickname) {
-        this.starterCard = model.getPlayerEntity(nickname).getStarterCardToChose().getFirst().getId();
-        String imagePath = "/images/cards/cards_back/" + String.format("%03d", starterCard) + ".png";
-        InputStream imageStream = getClass().getResourceAsStream(imagePath);
-        if (imageStream != null) {
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90);
-            imageView.setFitHeight(65); 
-
-            StarterCardImage.setImage(imageView.getImage());
-            starterCardOrientation = Orientation.FRONT;
-
-        }else{
-            System.out.println("Image not found: " + imagePath);
-        }
-    }
-
-    public void setStarterCardFront() {
-        String imagePath = "/images/cards/cards_back/"+ String.format("%03d", starterCard) + ".png";
-        InputStream imageStream = getClass().getResourceAsStream(imagePath);
-        if (imageStream != null) {
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90);
-            imageView.setFitHeight(65); 
-
-            StarterCardImage.setImage(imageView.getImage());
-            starterCardOrientation = Orientation.FRONT;
-
-        }else{
-            System.out.println("Image not found: " + imagePath);
-        }
-    }
-
-    public void setStarterCardBack() {
-        String imagePath = "/images/cards/cards_front/" + String.format("%03d", starterCard) + ".png";
-        InputStream imageStream = getClass().getResourceAsStream(imagePath);
-        if (imageStream != null) {
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90);
-            imageView.setFitHeight(65);
-
-            StarterCardImage.setImage(imageView.getImage());
-            starterCardOrientation = Orientation.BACK;
-
-        }else{
-            System.out.println("Image not found: " + imagePath);
-        }
-    }
-
-    public void flipStarterCard() {
-        if (starterCardOrientation == Orientation.BACK)
-            setStarterCardFront();
-        else
-            setStarterCardBack();
-    }
-
-    public void flipPersonalObjective(int cardId, int i) {
-        String imagePath = "/images/cards/cards_back/"+String.format("%03d", cardId) + ".png";
-        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
-        imageView.setFitWidth(90); 
-        imageView.setFitHeight(65); 
-        if (i == 0) {
-            personalObjective0Pane.getChildren().add(imageView); 
-        } else {
-            personalObjective1Pane.getChildren().add(imageView); 
-        }
-        personalObjective1Pane.setDisable(true);
-        personalObjective0Pane.setDisable(true);
-    }
-
-    public void setCardHand(ModelView model, String nickname) {
-        setCardHandFront(model.getPlayerEntity(nickname).getCardHandIds());
-    }
-
-    public void setCardHandFront(ArrayList<Integer> cardIds) {
-        for (int i = 0; i < cardIds.size(); i++) {
-            cardHand.set(i, cardIds.get(i));
-            String formattedCardId = String.format("%03d", cardIds.get(i));
-            String imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
-            InputStream imageStream = getClass().getResourceAsStream(imagePath);
-            if (imageStream == null) {
-                System.out.println("Image not found: " + imagePath);
-                continue;
-            }
-
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90); 
-            imageView.setFitHeight(65); 
-
-            if(i==0) {
-                handCard0.getChildren().add(imageView);
-            } else if (i==1) {
-                handCard1.getChildren().add(imageView);
-            } else {
-                handCard2.getChildren().add(imageView);
-            }
-        }
-        cardHandOrientation = Orientation.FRONT;
-    }
-
-    public void setCardHandBack(ArrayList<Integer> cardIds) {
-        for (int i = 0; i < cardIds.size(); i++) {
-            cardHand.set(i, cardIds.get(i));
-            String formattedCardId = String.format("%03d", cardIds.get(i));
-            String imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
-            InputStream imageStream = getClass().getResourceAsStream(imagePath);
-            if (imageStream == null) {
-                System.out.println("Image not found: " + imagePath);
-                continue;
-            }
-
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90); 
-            imageView.setFitHeight(65); 
-            if(i==0) {
-                handCard0.getChildren().add(imageView);
-            } else if (i==1) {
-                handCard1.getChildren().add(imageView);
-            } else {
-                handCard2.getChildren().add(imageView);
-            }
-        }
-        cardHandOrientation = Orientation.BACK;
-    }
-
-    public void flipCardHand() {
-        if (cardHandOrientation == Orientation.BACK)
-            setCardHandFront(cardHand);
-        else
-            setCardHandBack(cardHand);
-    }
-
-
-    //--------------------------------------DYNAMIC GAME-------------------------------------------
-
-    public void ableStarterCardClick() {
-        starterCardPane.setDisable(false);
-        FlipStarter.setDisable(false);
-        setMsgToShow("Choose the orientation of your starter card: ", true);
-    }
-
-    public void ableObjectiveCardsClick() {
-        personalObjective0Pane.setDisable(false);
-        personalObjective1Pane.setDisable(false);
-        personalObjective0Pane.setMouseTransparent(false);
-        personalObjective1Pane.setMouseTransparent(false);
-        setMsgToShow("Choose one objective card: " , true);
-    }
-
-    @FXML
-    public void onPersonalObjective1Clicked() {
-        setMsgToShow("personalObjective0 clicked" , true);
-        flipPersonalObjective(personalObjectiveIds.getFirst(), 0);
-
-        if (reader != null) {
-            reader.add("2");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-    }
-
-    @FXML
-    public void onPersonalObjective0Clicked() {
-        setMsgToShow("personalObjective1 clicked" , true);
-        flipPersonalObjective(personalObjectiveIds.get(1), 1);
-        if (reader != null) {
-            reader.add("1");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-    }
-
-    @FXML
-    private void onStarterCardClicked() {
-        if (starterCardOrientation == Orientation.FRONT) {
-            setMsgToShow("Starter card clicked with orientation: FRONT", true);
-        } else {
-            setMsgToShow("Starter card clicked with orientation: BACK", true);
-        }
-        starterCardPane.setDisable(true);
-        FlipStarter.setDisable(true);
-        FlipStarter.setVisible(false);
-        StarterCardImage.setVisible(false);
-
-        if (reader != null) {
-            if(starterCardOrientation == Orientation.FRONT)
-                reader.add("f");
-            else if(starterCardOrientation == Orientation.BACK)
-                reader.add("b");
-            else
-                System.out.println("Orientation non valida.");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-        placeStarterCard();
-    }
-
-    public void onCardHand0Clicked() {
-        cardHandVBox.setDisable(true);
-        handCard1.setDisable(true);
-        handCard2.setDisable(true);
-        handCard0.setDisable(true);
-
-        FlipHand.setDisable(true);
-
-        if (reader != null) {
-            reader.add("1");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-
-        if (reader != null) {
-            if(cardHandOrientation == Orientation.FRONT)
-                reader.add("f");
-            else if(cardHandOrientation == Orientation.BACK)
-                reader.add("b");
-            else
-                System.out.println("Orientation non valida.");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-        placeCard(0);
-        FlipHand.setDisable(true);
-    }
-
-    @FXML
-    public void onCardHand1Clicked() {
-        cardHandVBox.setDisable(true);
-
-        handCard1.setDisable(true);
-        handCard2.setDisable(true);
-        handCard0.setDisable(true);
-
-        FlipHand.setDisable(true);
-
-        if (reader != null) {
-            reader.add("2");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-
-        if (reader != null) {
-            if(cardHandOrientation == Orientation.FRONT)
-                reader.add("f");
-            else if(cardHandOrientation == Orientation.BACK)
-                reader.add("b");
-            else
-                System.out.println("Orientation non valida.");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-        placeCard(1);
-        FlipHand.setDisable(true);
-    }
-
-    @FXML
-    public void onCardHand2Clicked() {
-        cardHandVBox.setDisable(true);
-        handCard1.setDisable(true);
-        handCard2.setDisable(true);
-        handCard0.setDisable(true);
-
-        FlipHand.setDisable(true);
-
-        if (reader != null) {
-            reader.add("3");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-
-        if (reader != null) {
-            if(cardHandOrientation == Orientation.FRONT)
-                reader.add("f");
-            else if(cardHandOrientation == Orientation.BACK)
-                reader.add("b");
-            else
-                System.out.println("Orientation non valida.");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-        placeCard(2);
-        FlipHand.setDisable(true);
-    }
-
-    //-------------------------------------------------------------------------------------------------------------------------
-
+    /** Method that sets the points of the players in the grid pane
+     * */
     public void setPoints(ModelView gameModel) {
         int j = 0;
         for(Player player : players_without_me){
@@ -785,6 +445,9 @@ public class RunningController extends GuiInputReaderController {
         myPoints.setText(gameModel.getCommonBoard().getPlayerPosition(my_index) + "");
     }
 
+
+    /** Method that helps to set the points of the players in the grid pane
+     * */
     private void removeNodeByRowColumnIndex(final int row, final int column, GridPane gridPane) {
         ObservableList<Node> children = gridPane.getChildren();
         for (Node node : children) {
@@ -793,10 +456,14 @@ public class RunningController extends GuiInputReaderController {
 
             if (rowIndex != null && rowIndex == row && colIndex != null && colIndex == column) {
                 gridPane.getChildren().remove(node);
-                break; 
+                break;
             }
         }
     }
+
+    /**
+     * Method that updates the personal boards of the other players
+     * */
     public void setPersonalBoard(ModelView gameModel) {
         Player player = gameModel.getPlayersConnected().getFirst();
         int playerIndex = getPlayerIndex(gameModel.getAllPlayers(), player.getNickname());
@@ -806,6 +473,9 @@ public class RunningController extends GuiInputReaderController {
         placeOthersPlayersCard(gameModel.getAllPlayers(), playerIndex, last_chosen_card, last_chosen_orientation, gameModel.getLastCoordinate());
     }
 
+    /**
+     * Method that places the card of the other players in his personal board
+     * */
     private void placeOthersPlayersCard(ArrayList<Player> all_players, int playerIndex, ArrayList<Integer> lastChosenCard, Orientation lastChosenOrientation, Coordinate coord) {
         Player player_without_me = players_list.get(playerIndex);
         int player_without_me_index = getPlayerIndex(players_without_me, player_without_me.getNickname());
@@ -955,8 +625,591 @@ public class RunningController extends GuiInputReaderController {
         }
     }
 
+
+    /**
+      Method that hides all the personal boards that are showed, and make your personal board visible
+     */
+    @FXML
+    private void hideAllPersonalBoards() {
+        pb0.setVisible(false);
+        sp0.setVisible(false);
+        pb1.setVisible(false);
+        sp1.setVisible(false);
+        pb2.setVisible(false);
+        sp2.setVisible(false);
+        personalBoardAnchorPane.setVisible(true);
+        my_sp.setVisible(true);
+    }
+
+    //-------------------------------------------------COMMON CARDS--------------------------------------------
+    /**
+     * Method that sets the grid pane of common cards
+     * */
+    public void setCommonCards(ModelView model) {
+        Integer[] cardIds = model.getCommonBoard().getCommonCardsId();
+        for (int i = 0; i < cardIds.length; i++) {
+            int cardId = cardIds[i];
+            String imagePath;
+            if (i == 0 || i == 3 || i == 6) {
+                imagePath = "/images/cards/cards_back/" + String.format("%03d", cardId) + ".png";
+            } else {
+                imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
+            }
+            InputStream imageStream = getClass().getResourceAsStream(imagePath);
+            if (imageStream == null) {
+                System.out.println("Image not found: " + imagePath);
+                continue;
+            }
+            ImageView imageView = new ImageView(new Image(imageStream));
+            imageView.setFitWidth(90); 
+            imageView.setFitHeight(65); 
+
+            if (i == 0) {
+                commonCard1.getChildren().add(imageView); 
+            } else if (i == 1) {
+                commonCard2.getChildren().add(imageView); 
+            } else if (i == 2) {
+                commonCard3.getChildren().add(imageView); 
+            } else if (i == 3) {
+                commonCard4.getChildren().add(imageView); 
+            } else if (i == 4) {
+                commonCard5.getChildren().add(imageView); 
+            } else if (i == 5) {
+                commonCard6.getChildren().add(imageView); 
+            } else if (i == 6) {
+                commonCard7.getChildren().add(imageView); 
+            } else if (i == 7) {
+                commonCard8.getChildren().add(imageView); 
+            } else {
+                commonCard9.getChildren().add(imageView); 
+            }
+        }
+    }
+
+
+    /**
+     * Method that ables the click on the common cards
+     * */
+    public void ableCommonCardsClick() {
+        commonCardsVbox.setDisable(false);
+        setMsgToShow("Choose a common card ", true);
+    }
+
+    /**
+     * Method that binds the click on the common cards with the command to send to the model
+     * The user has chosen the resource deck
+     * */
+    @FXML
+    public void commonCard1Clicked() {
+        if (reader != null) {
+            reader.add("1");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 1;
+    }
+
+    /**
+     * Method that binds the click on the common cards with the command to send to the model
+     * The user has chosen the resource card in the first position
+     * */
+    @FXML
+    public void commonCard2Clicked() {
+        if (reader != null) {
+            reader.add("2");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 2;
+    }
+    /**
+     * Method that binds the click on the common cards with the command to send to the model
+     * The user has chosen the resource card in the second position
+     * */
+    @FXML
+    public void commonCard3Clicked() {
+        if (reader != null) {
+            reader.add("3");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 3;
+    }
+
+    /**
+     * Method that binds the click on the common cards with the command to send to the model
+     * The user has chosen the gold deck
+     * */
+    @FXML
+    public void commonCard4Clicked() {
+        if (reader != null) {
+            reader.add("4");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 4;
+    }
+    /**
+     * Method that binds the click on the common cards with the command to send to the model
+     * The user has chosen the gold card in the first position
+     * */
+    @FXML
+    public void commonCard5Clicked() {
+        if (reader != null) {
+            reader.add("5");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 5;
+    }
+
+    /**
+     * Method that binds the click on the common cards with the command to send to the model
+     * The user has chosen the gold card in the second position
+     * */
+    @FXML
+    public void commonCard6Clicked() {
+        if (reader != null) {
+            reader.add("6");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        commonCardsVbox.setDisable(true);
+        commonIndex = 6;
+    }
+
+
+    //-----------------------------------PERSONAL OBJECTIVES--------------------------------------------
+    /**
+     * Method that sets the personal objective cards of the player
+     * */
+    public void setPersonalObjectives(ModelView model, String nickname) {
+        Integer[] cardIds = model.getPlayerEntity(nickname).getSecretObjectiveCardsIds();
+        this.personalObjectiveIds = new ArrayList<>(Arrays.asList(cardIds));
+        for (int i = 0; i < cardIds.length; i++) {
+            int cardId = cardIds[i];
+            String imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
+            InputStream imageStream = getClass().getResourceAsStream(imagePath);
+            if (imageStream == null) {
+                System.out.println("Image not found: " + imagePath);
+                continue;
+            }
+            ImageView imageView = new ImageView(new Image(imageStream));
+            imageView.setFitWidth(90); 
+            imageView.setFitHeight(65);
+
+            if (i == 0) {
+                personalObjective0Pane.getChildren().add(imageView);
+            } else {
+                personalObjective1Pane.getChildren().add(imageView); 
+            }
+        }
+    }
+
+
+    /**
+     * Method that flips the personal objective that has not been chosen from the user
+     * */
+    public void flipPersonalObjective(int cardId, int i) {
+        String imagePath = "/images/cards/cards_back/"+String.format("%03d", cardId) + ".png";
+        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+        imageView.setFitWidth(90);
+        imageView.setFitHeight(65);
+        if (i == 0) {
+            personalObjective0Pane.getChildren().add(imageView);
+        } else {
+            personalObjective1Pane.getChildren().add(imageView);
+        }
+        personalObjective1Pane.setDisable(true);
+        personalObjective0Pane.setDisable(true);
+    }
+
+
+    /**
+     * Method that ables the click on the personal objective cards
+     * */
+    public void ableObjectiveCardsClick() {
+        personalObjective0Pane.setDisable(false);
+        personalObjective1Pane.setDisable(false);
+        personalObjective0Pane.setMouseTransparent(false);
+        personalObjective1Pane.setMouseTransparent(false);
+        setMsgToShow("Choose one objective card: " , true);
+    }
+
+    /**
+     * Method that binds the click on the first personal objective card with the command to send to the model
+     * The user has chosen the first personal objective card
+     * */
+    @FXML
+    public void onPersonalObjective1Clicked() {
+        flipPersonalObjective(personalObjectiveIds.getFirst(), 0);
+        if (reader != null) {
+            reader.add("2");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+    }
+
+    /**
+     * Method that binds the click on the second personal objective card with the command to send to the model
+     * The user has chosen the second personal objective card
+     * */
+    @FXML
+    public void onPersonalObjective0Clicked() {
+        flipPersonalObjective(personalObjectiveIds.get(1), 1);
+        if (reader != null) {
+            reader.add("1");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+    }
+
+    //-----------------------------------STARTER CARD--------------------------------------------
+    /**
+     * Method that sets the starter card on the front (it comes from GUI)
+     * */
+    public void setStarterCardFront(ModelView model, String nickname) {
+        this.starterCard = model.getPlayerEntity(nickname).getStarterCardToChose().getFirst().getId();
+        String imagePath = "/images/cards/cards_back/" + String.format("%03d", starterCard) + ".png";
+        InputStream imageStream = getClass().getResourceAsStream(imagePath);
+        if (imageStream != null) {
+            ImageView imageView = new ImageView(new Image(imageStream));
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(65); 
+
+            StarterCardImage.setImage(imageView.getImage());
+            starterCardOrientation = Orientation.FRONT;
+
+        }else{
+            System.out.println("Image not found: " + imagePath);
+        }
+    }
+
+
+    /**
+     * Method that sets the starter card on the front (it comes from the FLIP button)
+     * */
+    public void setStarterCardFront() {
+        String imagePath = "/images/cards/cards_back/"+ String.format("%03d", starterCard) + ".png";
+        InputStream imageStream = getClass().getResourceAsStream(imagePath);
+        if (imageStream != null) {
+            ImageView imageView = new ImageView(new Image(imageStream));
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(65); 
+
+            StarterCardImage.setImage(imageView.getImage());
+            starterCardOrientation = Orientation.FRONT;
+
+        }else{
+            System.out.println("Image not found: " + imagePath);
+        }
+    }
+
+    /**
+     * Method that sets the starter card on the back (it comes from the FLIP button)
+     * */
+    public void setStarterCardBack() {
+        String imagePath = "/images/cards/cards_front/" + String.format("%03d", starterCard) + ".png";
+        InputStream imageStream = getClass().getResourceAsStream(imagePath);
+        if (imageStream != null) {
+            ImageView imageView = new ImageView(new Image(imageStream));
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(65);
+
+            StarterCardImage.setImage(imageView.getImage());
+            starterCardOrientation = Orientation.BACK;
+
+        }else{
+            System.out.println("Image not found: " + imagePath);
+        }
+    }
+
+    /**
+     * Method that flips the starter card (it is the method of the FLIP button)
+     * */
+    public void flipStarterCard() {
+        if (starterCardOrientation == Orientation.BACK)
+            setStarterCardFront();
+        else
+            setStarterCardBack();
+    }
+
+
+    /**
+     * Method that ables the click on the starter card
+     * */
+    public void ableStarterCardClick() {
+        starterCardPane.setDisable(false);
+        FlipStarter.setDisable(false);
+        setMsgToShow("Choose the orientation of your starter card: ", true);
+    }
+
+
+
+    /**
+     * Method that binds the click on the starter card with the command to send to the model
+     * */
+    @FXML
+    private void onStarterCardClicked() {
+        starterCardPane.setDisable(true);
+        FlipStarter.setDisable(true);
+        FlipStarter.setVisible(false);
+        StarterCardImage.setVisible(false);
+
+        if (reader != null) {
+            if(starterCardOrientation == Orientation.FRONT)
+                reader.add("f");
+            else if(starterCardOrientation == Orientation.BACK)
+                reader.add("b");
+            else
+                System.out.println("Orientation non valida.");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        placeStarterCard();
+    }
+
+
+    //-----------------------------------CARD HAND--------------------------------------------
+    /**
+     * Method that sets the card hand of the player (on the front), it comes from GUI
+     * */
+    public void setCardHand(ModelView model, String nickname) {
+        setCardHandFront(model.getPlayerEntity(nickname).getCardHandIds());
+    }
+
+    /**
+     * Method that sets the card hand of the player (on the back), it comes from the FLIP button
+     * */
+    public void setCardHandFront(ArrayList<Integer> cardIds) {
+        for (int i = 0; i < cardIds.size(); i++) {
+            cardHand.set(i, cardIds.get(i));
+            String formattedCardId = String.format("%03d", cardIds.get(i));
+            String imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
+            InputStream imageStream = getClass().getResourceAsStream(imagePath);
+            if (imageStream == null) {
+                System.out.println("Image not found: " + imagePath);
+                continue;
+            }
+
+            ImageView imageView = new ImageView(new Image(imageStream));
+            imageView.setFitWidth(90); 
+            imageView.setFitHeight(65); 
+
+            if(i==0) {
+                handCard0.getChildren().add(imageView);
+            } else if (i==1) {
+                handCard1.getChildren().add(imageView);
+            } else {
+                handCard2.getChildren().add(imageView);
+            }
+        }
+        cardHandOrientation = Orientation.FRONT;
+    }
+
+    /**
+     * Method that sets the card hand of the player (on the back), it comes from the FLIP button
+     * */
+    public void setCardHandBack(ArrayList<Integer> cardIds) {
+        for (int i = 0; i < cardIds.size(); i++) {
+            cardHand.set(i, cardIds.get(i));
+            String formattedCardId = String.format("%03d", cardIds.get(i));
+            String imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
+            InputStream imageStream = getClass().getResourceAsStream(imagePath);
+            if (imageStream == null) {
+                System.out.println("Image not found: " + imagePath);
+                continue;
+            }
+
+            ImageView imageView = new ImageView(new Image(imageStream));
+            imageView.setFitWidth(90); 
+            imageView.setFitHeight(65); 
+            if(i==0) {
+                handCard0.getChildren().add(imageView);
+            } else if (i==1) {
+                handCard1.getChildren().add(imageView);
+            } else {
+                handCard2.getChildren().add(imageView);
+            }
+        }
+        cardHandOrientation = Orientation.BACK;
+    }
+
+    /**
+     * Method that flips the card hand (it is the method of the FLIP button)
+     * */
+    public void flipCardHand() {
+        if (cardHandOrientation == Orientation.BACK)
+            setCardHandFront(cardHand);
+        else
+            setCardHandBack(cardHand);
+    }
+
+    /**
+     * Method that binds the click on first card in the card hand with the command to send to the model
+     * The user has chosen the first card in the hand
+     * */
+    public void onCardHand0Clicked() {
+        cardHandVBox.setDisable(true);
+        handCard1.setDisable(true);
+        handCard2.setDisable(true);
+        handCard0.setDisable(true);
+
+        FlipHand.setDisable(true);
+
+        if (reader != null) {
+            reader.add("1");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+
+        if (reader != null) {
+            if(cardHandOrientation == Orientation.FRONT)
+                reader.add("f");
+            else if(cardHandOrientation == Orientation.BACK)
+                reader.add("b");
+            else
+                System.out.println("Orientation non valida.");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        placeCard(0);
+        FlipHand.setDisable(true);
+    }
+
+    /**
+     * Method that binds the click on second card in the card hand with the command to send to the model
+     * The user has chosen the second card in the hand
+     * */
+    @FXML
+    public void onCardHand1Clicked() {
+        cardHandVBox.setDisable(true);
+
+        handCard1.setDisable(true);
+        handCard2.setDisable(true);
+        handCard0.setDisable(true);
+
+        FlipHand.setDisable(true);
+
+        if (reader != null) {
+            reader.add("2");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+
+        if (reader != null) {
+            if(cardHandOrientation == Orientation.FRONT)
+                reader.add("f");
+            else if(cardHandOrientation == Orientation.BACK)
+                reader.add("b");
+            else
+                System.out.println("Orientation non valida.");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        placeCard(1);
+        FlipHand.setDisable(true);
+    }
+
+    /**
+     * Method that binds the click on third card in the card hand with the command to send to the model
+     * The user has chosen the third card in the hand
+     * */
+    @FXML
+    public void onCardHand2Clicked() {
+        cardHandVBox.setDisable(true);
+        handCard1.setDisable(true);
+        handCard2.setDisable(true);
+        handCard0.setDisable(true);
+
+        FlipHand.setDisable(true);
+
+        if (reader != null) {
+            reader.add("3");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+
+        if (reader != null) {
+            if(cardHandOrientation == Orientation.FRONT)
+                reader.add("f");
+            else if(cardHandOrientation == Orientation.BACK)
+                reader.add("b");
+            else
+                System.out.println("Orientation non valida.");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+        placeCard(2);
+        FlipHand.setDisable(true);
+    }
+
+    /**
+     * Method that removes from the hand the card played
+     * */
+    private void removeFromHand(int index) {
+        cardHandVBox.setDisable(true);
+        handCard2.setDisable(true);
+        handCard1.setDisable(true);
+        handCard0.setDisable(true);
+        FlipHand.setDisable(true);
+
+        if (index == 0) {
+            handCard0.getChildren().clear();
+        } else if (index == 1) {
+            handCard1.getChildren().clear();
+        } else {
+            handCard2.getChildren().clear();
+        }
+    }
+
+    /**
+     * Method that ables the click on the card hand
+     * */
+    public void whichCardToPlace() {
+        cardHandVBox.setDisable(false);
+        cardHandVBox.setMouseTransparent(false);
+        handCard0.setDisable(false);
+        handCard1.setDisable(false);
+        handCard2.setDisable(false);
+        FlipHand.setDisable(false);
+        personalBoardAnchorPane.setDisable(false);
+        setMsgToShow("Choose a card to place from your hand: ", true);
+        cardHandVBox.setDisable(false);
+        cardHandVBox.setMouseTransparent(false);
+        handCard0.setDisable(false);
+        handCard1.setDisable(false);
+        handCard2.setDisable(false);
+        FlipHand.setDisable(false);
+        personalBoardAnchorPane.setDisable(false);
+    }
+
+    /**
+     * Method that binds the click on the chosen card with the orientation to send to the model
+     * */
+    public void whichOrientationToPlace() {
+        if (reader != null) {
+            if(cardHandOrientation == Orientation.FRONT)
+                reader.add("f");
+            else if(cardHandOrientation == Orientation.BACK)
+                reader.add("b");
+            else
+                System.out.println("Orientation non valida.");
+        } else {
+            System.out.println("L'oggetto inputReaderGUI è null.");
+        }
+    }
+    //-----------------------------------PLACE CARD ON MY PERSONAL BOARD--------------------------------------------
     String glowBorder = "-fx-effect: dropshadow(three-pass-box, blue, 10, 0, 0, 0);";
 
+    /**
+     * Method that places the card on my personal board
+     * */
     private void placeCard(int index) {
         cardIndex = index;
         if(index ==  0){
@@ -975,6 +1228,10 @@ public class RunningController extends GuiInputReaderController {
         setMsgToShow("Select where to put the chosen card", true);
         personalBoardAnchorPane.setDisable(false);
     }
+
+    /**
+     * Method that places the starter card on my personal board
+     * */
     private void placeStarterCard() {
         String resultString = String.format("%d,%d", 0, 0);
         int[] position = inverseMapper.getInverseMappedPosition(resultString);
@@ -1017,48 +1274,10 @@ public class RunningController extends GuiInputReaderController {
         setMsgToShow("StarterCard placed", true);
     }
 
-    //-------------------------------------------------------------------------------------------------------------------------
 
-    public void whichCardToPlace() {
-        cardHandVBox.setDisable(false);
-        cardHandVBox.setMouseTransparent(false);
-        handCard0.setDisable(false);
-        handCard1.setDisable(false);
-        handCard2.setDisable(false);
-        FlipHand.setDisable(false);
-        personalBoardAnchorPane.setDisable(false);
-        setMsgToShow("Choose a card to place from your hand: ", true);
-        cardHandVBox.setDisable(false);
-        cardHandVBox.setMouseTransparent(false);
-        handCard0.setDisable(false);
-        handCard1.setDisable(false);
-        handCard2.setDisable(false);
-        FlipHand.setDisable(false);
-        personalBoardAnchorPane.setDisable(false);
-    }
-
-    public void whichOrientationToPlace() {
-        if (reader != null) {
-            if(cardHandOrientation == Orientation.FRONT)
-                reader.add("f");
-            else if(cardHandOrientation == Orientation.BACK)
-                reader.add("b");
-            else
-                System.out.println("Orientation non valida.");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-    }
-
-    public void changeTurn(ModelView model, String nickname) {
-        setMsgToShow("Next turn is up to: " + model.getCurrentPlayerNickname(), true);
-    }
-
-
-    public void myTurnIsFinished() {
-        setMsgToShow("Your turn is finished. Now, wait until it is again your turn! ", true);
-    }
-
+    /**
+     * Method that handles the click on the scroll pane (personal board)
+     * */
     @FXML
     private void handleMouseClick(MouseEvent event) {
         personalBoardAnchorPane.setDisable(true);
@@ -1083,6 +1302,9 @@ public class RunningController extends GuiInputReaderController {
     }
 
 
+    /**
+     * Method that places the card on my personal board
+     * */
     private void reallyPlaceCard(double clickX, double clickY, Coordinate coord) {
         String imagePath;
         String formattedCardId = String.format("%03d", chosenCard);
@@ -1136,88 +1358,10 @@ public class RunningController extends GuiInputReaderController {
         removeFromHand(cardIndex);
     }
 
-    private void removeFromHand(int index) {
-        cardHandVBox.setDisable(true);
-        handCard2.setDisable(true);
-        handCard1.setDisable(true);
-        handCard0.setDisable(true);
-        FlipHand.setDisable(true);
 
-        if (index == 0) {
-            handCard0.getChildren().clear();
-        } else if (index == 1) {
-            handCard1.getChildren().clear();
-        } else {
-            handCard2.getChildren().clear();
-        }
-    }
-
-    public void ableCommonCardsClick() {
-        commonCardsVbox.setDisable(false);
-        setMsgToShow("Choose a common card ", true);
-    }
-
-    @FXML
-    public void commonCard1Clicked() {
-        if (reader != null) {
-            reader.add("1");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 1;
-    }
-    @FXML
-    public void commonCard2Clicked() {
-        if (reader != null) {
-            reader.add("2");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 2;
-    }
-    @FXML
-    public void commonCard3Clicked() {
-        if (reader != null) {
-            reader.add("3");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 3;
-    }
-    @FXML
-    public void commonCard4Clicked() {
-        if (reader != null) {
-            reader.add("4");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 4;
-    }
-    @FXML
-    public void commonCard5Clicked() {
-        if (reader != null) {
-            reader.add("5");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 5;
-    }
-    @FXML
-    public void commonCard6Clicked() {
-        if (reader != null) {
-            reader.add("6");
-        } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
-        }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 6;
-    }
-
+    //-----------------------------------FEEDBACKS--------------------------------------------
+    /** Method that shows the illegal attempt to place the card
+     * */
     public void illegalMove() {
         setMsgToShow("Illegal move! Choose different coordinates or flip card! \n", false);
         cardHandVBox.setDisable(false);
@@ -1229,6 +1373,8 @@ public class RunningController extends GuiInputReaderController {
         personalBoardAnchorPane.setDisable(false);
     }
 
+    /** Method that disable all cards on the hand after an illegal move, the only move allowed is to flip the card
+     * */
     public void illegalMovePlace() {
         cardHandVBox.setDisable(true);
         handCard0.setDisable(true);
@@ -1238,32 +1384,52 @@ public class RunningController extends GuiInputReaderController {
         personalBoardAnchorPane.setDisable(false);
     }
 
-    public void illegalMoveBecauseOf(String message) {
-    }
-
-
-
+    /** Method that shows the successful attempt to place the card (it comes from the model), and places the card
+     * */
     public void successfulMove(Coordinate coord) {
         reallyPlaceCard(mapper.getMinCorner(chosenX,chosenY)[0], (mapper.getMinCorner(chosenX,chosenY)[1]), coord);
         setMsgToShow("Valid position!", true);
         personalBoardAnchorPane.setDisable(true);
     }
 
-    @FXML
-    private void hideAllPersonalBoards() {
-        pb0.setVisible(false);
-        sp0.setVisible(false);
-        pb1.setVisible(false);
-        sp1.setVisible(false);
-        pb2.setVisible(false);
-        sp2.setVisible(false);
-        personalBoardAnchorPane.setVisible(true);
-        my_sp.setVisible(true);
+
+    /**Methods that show messages on the screen
+     * */
+    private final Map<Boolean, Color> colorMap = Map.of(
+            true, Color.GREEN,
+            false, Color.RED
+    );
+
+    private final Function<Boolean, Color> getColor = success -> success == null
+            ? Color.WHITE : colorMap.get(success);
+
+    public void setMsgToShow(String msg, Boolean success) {
+        labelMessage.setText(msg);
+        labelMessage.setTextFill(getColor.apply(success));
     }
 
-    //-------------------------------------CHAT, EVENTI E MESSAGI------------------------------------
+
+    /**
+     * Method that shows who is the first to play
+     * */
+    public void changeTurn(ModelView model) {
+        setMsgToShow("Next turn is up to: " + model.getCurrentPlayerNickname(), true);
+    }
 
 
+    /**
+     * Method that shows the end of your turn
+     * */
+    public void myTurnIsFinished() {
+        setMsgToShow("Your turn is finished. Now, wait until it is again your turn! ", true);
+    }
+
+
+    //-------------------------------------CHAT------------------------------------
+
+
+    /**Method that binds the chat on the GUI with the command to send to the model
+     * */
     @FXML
     private void ActionSendMessage() {
         String message = chatInput.getText();
@@ -1280,7 +1446,9 @@ public class RunningController extends GuiInputReaderController {
         }
     }
 
-
+    /**
+     * Method that updates the chat, showing the last message that comes from the model
+     * */
     public void updateChat(ModelView model, String nickname) {
         Message message = model.getChat().getLastMessage();
         if(nickname.equals("Everyone")){
@@ -1291,19 +1459,10 @@ public class RunningController extends GuiInputReaderController {
 
     }
 
-    private final Map<Boolean, Color> colorMap = Map.of(
-            true, Color.GREEN,
-            false, Color.RED
-    );
+//--------------------------------------EXIT--------------------------------------------
 
-    private final Function<Boolean, Color> getColor = success -> success == null
-            ? Color.WHITE : colorMap.get(success);
-
-    public void setMsgToShow(String msg, Boolean success) {
-        labelMessage.setText(msg);
-        labelMessage.setTextFill(getColor.apply(success));
-    }
-
+    /** EXIT button that permits to exit the game
+     * */
     public void exitGame() {
         if (reader != null) {
             reader.add("/quit");
