@@ -71,6 +71,10 @@ public class StarterCard extends Card {
         }
     }
 
+    /**
+     *
+     * @return NE corner
+     */
     public Corner getCornerAtNE() {
         return corners[0][1];
     }
@@ -100,12 +104,12 @@ public class StarterCard extends Card {
     }
 
     /**
-     * Get the corner at the given indexes
+     * @requires
+     *      0 <= i < 2 && 0 <= j < 2;
      * @param i
      * @param j
-     * @return
+     * @return the corner indexed by the couple (i, j)
      */
-
     public Corner getCornerAt(int i, int j) {
         if (i == 0 && j == 0)
             return this.getCornerAtNW();
@@ -131,6 +135,10 @@ public class StarterCard extends Card {
             throw new IndexOutOfBoundsException("Invalid index");
     }
 
+    /**
+     * get the orientation of the card
+     * @return the orientation of the card
+     */
     public Orientation getOrientation() {
         return orientation;
     }

@@ -12,8 +12,8 @@ public class DeckFactory implements Serializable {
 
     /**
      * Method that creates the deck of the specified type.
-     * @param type
-     * @return
+     * @param type the type of deck to create
+     * @return the deck of the specified type
      */
     public CardsCollection createDeck(String type) {
         CardsCollection cardsCollection = new CardsCollection();
