@@ -8,7 +8,6 @@ import it.polimi.demo.model.enumerations.Orientation;
  * Represents a GoldCard, which is a subclass of Resource.
  * This class includes requirements needed to play the card.
  * */
-
 public class GoldCard extends ResourceCard {
 
 
@@ -31,9 +30,10 @@ public class GoldCard extends ResourceCard {
     private int wolf_required;
 
     /**
-     *
-     * @param id
-     * @param orientation
+     * Constructor
+     * @param id card id
+     * @param orientation card orientation
+     * @param color card color
      */
     public GoldCard(int id, Orientation orientation, Color color) {
 
@@ -49,12 +49,20 @@ public class GoldCard extends ResourceCard {
 
     }
 
+    /**
+     * Constructor
+     * @param id card id
+     * @param orientation card orientation
+     * @param color card color
+     * @param points card points
+     * @param actual_corners card corners
+     */
     public GoldCard(int id, Orientation orientation, Color color, int points, Corner[][] actual_corners) {
         super(id, orientation, color, points, actual_corners);
     }
 
     /**
-     *
+     * setter for the requirements
      * @param mushroom_required
      * @param leaf_required
      * @param butterfly_required
@@ -84,44 +92,68 @@ public class GoldCard extends ResourceCard {
 
     }
 
-
+    /**
+     * getter for the requirements
+     * @return requirements
+     */
     public boolean getIsCornerCoverageRequired() {
         return isCornerCoverageRequired;
     }
 
+    /**
+     * getter for the requirements
+     * @return requirements
+     */
     public boolean getIsPotionRequired() {
         return isPotionRequired;
     }
 
+    /**
+     * getter for the requirements
+     * @return requirements
+     */
     public boolean getIsFeatherRequired() {
         return isFeatherRequired;
     }
 
+    /**
+     * getter for the requirements
+     * @return requirements
+     */
     public boolean getIsParchmentRequired() {
         return isParchmentRequired;
     }
 
+    /**
+     * getter for the requirements
+     * @return requirements
+     */
     public int getMushroomRequired() {
         return mushroom_required;
     }
 
+    /**
+     * getter for the requirements
+     * @return requirements
+     */
     public int getLeafRequired() {
         return leaf_required;
     }
 
+    /**
+     * getter for the requirements
+     * @return requirements
+     */
     public int getButterflyRequired() {
         return butterfly_required;
     }
 
+    /**
+     * getter for the requirements
+     * @return requirements
+     */
     public int getWolfRequired() {
         return wolf_required;
-    }
-
-
-    // TODO: override updatePoints to adapt it to this class
-
-    public void setCornerCoverageRequired(){
-        this.isCornerCoverageRequired = true;
     }
 
 }

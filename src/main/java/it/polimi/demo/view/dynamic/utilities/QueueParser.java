@@ -8,6 +8,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * QueueParser is a thread that continuously processes input commands from a queue.
+ */
 public class QueueParser extends Thread {
 
     private final LinkedBlockingQueue<String> inputQueue;

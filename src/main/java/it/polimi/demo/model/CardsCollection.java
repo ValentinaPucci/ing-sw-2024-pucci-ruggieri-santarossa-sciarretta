@@ -479,7 +479,6 @@ public  class CardsCollection implements Serializable {
      * Getter for the List of cards.
      * @return List of cards
      */
-
     public List<Card> getCards() {
         return cards;
     }

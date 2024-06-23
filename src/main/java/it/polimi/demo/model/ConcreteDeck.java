@@ -34,7 +34,7 @@ public class ConcreteDeck implements Serializable {
 
     /**
      * Constructor for the ConcreteDeck class.
-     * @param type
+     * @param type the type of the deck.
      */
 
     // To Use this class you call the constructor with the path to the json and the "type" of cards you want in the deck.
@@ -53,7 +53,7 @@ public class ConcreteDeck implements Serializable {
 
     /**
      * Push a card into the deck.
-     * @param card
+     * @param card the card to push.
      */
     public void push(Card card) {
         this.deck.push(card);
@@ -61,7 +61,7 @@ public class ConcreteDeck implements Serializable {
 
     /**
      * Pop a card from the deck.
-     * @return
+     * @return the card popped.
      */
     public Card pop() {
         return this.deck.pop();
@@ -69,7 +69,7 @@ public class ConcreteDeck implements Serializable {
 
     /**
      * Pop a ResourceCard from the deck.
-     * @return
+     * @return the ResourceCard popped.
      */
     public ResourceCard popResourceCard() {
         return (ResourceCard) this.deck.pop();
@@ -77,7 +77,7 @@ public class ConcreteDeck implements Serializable {
 
     /**
      * Select the first ResourceCard from the deck.
-     * @return
+     * @return the first ResourceCard from the deck.
      */
     public ResourceCard selectFirstResourceCard() {
         return (ResourceCard) this.deck.peek();
@@ -85,7 +85,7 @@ public class ConcreteDeck implements Serializable {
 
     /**
      * Pop a GoldCard from the deck.
-     * @return
+     * @return the GoldCard popped.
      */
     public GoldCard popGoldCard() {
         return (GoldCard) this.deck.pop();
@@ -93,13 +93,12 @@ public class ConcreteDeck implements Serializable {
 
     /**
      * Select the first GoldCard from the deck.
-     * @return
+     * @return the first GoldCard from the deck.
      */
     public GoldCard selectFirstGoldCard() {
         return (GoldCard) this.deck.peek();
     }
 
-    // TODO: Implement this method in other classes.
 
     /**
      * Shuffle the deck.
@@ -110,7 +109,7 @@ public class ConcreteDeck implements Serializable {
 
     /**
      * Check if the deck is empty.
-     * @return
+     * @return true if the deck is empty, false otherwise.
      */
     public boolean isEmpty(){
         return deck.isEmpty();
@@ -118,7 +117,7 @@ public class ConcreteDeck implements Serializable {
 
     /**
      * Get the size of the deck.
-     * @return
+     * @return the size of the deck.
      */
     public int size(){return deck.size();}
 

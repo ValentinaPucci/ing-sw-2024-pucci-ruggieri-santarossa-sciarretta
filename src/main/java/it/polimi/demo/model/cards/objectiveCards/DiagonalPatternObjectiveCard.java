@@ -77,6 +77,11 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
         aux_personal_board.placeCardAtNE(card2, card3);
     }
 
+    /**
+     * Calculate the score of the player with respect to the objective card
+     * @param personal_board the personal board of the player
+     * @return the score of the player
+     */
     @Override
     public int calculateScore(PersonalBoard personal_board) {
         return score_strategy.calculateScore(this, personal_board);
