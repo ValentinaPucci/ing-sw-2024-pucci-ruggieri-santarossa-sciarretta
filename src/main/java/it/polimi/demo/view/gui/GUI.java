@@ -107,7 +107,7 @@ public class GUI extends UI {
             controller.setCardHand(model, myNickname);
             controller.setStarterCardFront(model, myNickname);
             controller.setScoreBoardPosition(model);
-            controller.setGridPane(model, myNickname);
+            controller.setGridPaneAndChat(model, myNickname);
             controller.setCommonCards(model);
             controller.setPersonalObjectives(model, myNickname);
         });

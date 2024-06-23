@@ -306,7 +306,7 @@ public class RunningController extends GuiInputReaderController {
     /**
      * method that sets names and points of the others players, and creates the button GO to see their personaBoards
      * */
-    public void setGridPane(ModelView model, String nickname) {
+    public void setGridPaneAndChat(ModelView model, String nickname) {
         ArrayList<Player> players_list = model.getAllPlayers();
 
         this.players_list = players_list;
@@ -320,6 +320,8 @@ public class RunningController extends GuiInputReaderController {
         while (otherPlayers.getRowConstraints().size() > 1) {
             otherPlayers.getRowConstraints().remove(1);
         }
+
+        myPoints.setText("0");
 
         int j = 0;
         for (Player player : players_list) {
