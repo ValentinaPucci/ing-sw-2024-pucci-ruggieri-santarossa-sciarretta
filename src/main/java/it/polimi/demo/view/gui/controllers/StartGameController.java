@@ -33,7 +33,6 @@ public class StartGameController extends GuiInputReaderController{
 
     @FXML
     public void CreateGame() {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("c");
         } else {
@@ -43,7 +42,6 @@ public class StartGameController extends GuiInputReaderController{
 
     @FXML
     public void JoinGame() {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("js");
         } else {
@@ -53,7 +51,6 @@ public class StartGameController extends GuiInputReaderController{
 
     @FXML
     public void RandomGame() {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("j");
         } else {
@@ -64,20 +61,19 @@ public class StartGameController extends GuiInputReaderController{
     @FXML
     void insertGameId() {
         if(!GameId.getText().isEmpty()){
-            getInputReaderGUI().add(GameId.getText());
+            reader.add(GameId.getText());
         }
     }
 
     @FXML
     void insertNickname() {
         if(!myNickname.getText().isEmpty()) {
-            getInputReaderGUI().add(myNickname.getText());
+            reader.add(myNickname.getText());
         }
     }
 
     @FXML
     public void twoPLayers() {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("2");
         } else {
@@ -87,7 +83,6 @@ public class StartGameController extends GuiInputReaderController{
 
     @FXML
     public void threePLayers() {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("3");
         } else {
@@ -96,7 +91,6 @@ public class StartGameController extends GuiInputReaderController{
     }
     @FXML
     public void fourPLayers() {
-        LinkedBlockingQueue<String> reader = getInputReaderGUI();
         if (reader != null) {
             reader.add("4");
         } else {
@@ -145,7 +139,7 @@ public class StartGameController extends GuiInputReaderController{
     }
 
     @FXML void playerIsReady() {
-        getInputReaderGUI().add("y");
+        reader.add("y");
     }
 
     public void setGameId(int id) {

@@ -1,7 +1,5 @@
 package it.polimi.demo.view.gui;
 
-import it.polimi.demo.model.ModelView;
-import it.polimi.demo.model.Player;
 import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.GameDynamic;
 import it.polimi.demo.view.gui.controllers.*;
@@ -10,17 +8,13 @@ import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -128,7 +122,7 @@ public class FXApplication extends Application {
     public void setGUIReaderToScenes(LinkedBlockingQueue<String> guiReader) {
         for (GuiInputReaderController controller : controllerMap.values()) {
             if (controller != null) {
-                controller.setInputReaderGUI(guiReader);
+                controller.setBuffer(guiReader);
             }
         }
     }
