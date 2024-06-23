@@ -8,6 +8,9 @@ import javafx.scene.control.Label;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * Controller class for the end game scene
+ */
 public class EndGameController extends GuiInputReaderController {
 
     @FXML private Label player0;
@@ -15,6 +18,10 @@ public class EndGameController extends GuiInputReaderController {
     @FXML private Label player2;
     @FXML private Label player3;
 
+    /**
+     * Method that shows the final classification of the players (leaderboard)
+     * @param model the model to show
+     */
     public void show(ModelView model) {
         List<Label> players = List.of(player0, player1, player2, player3);
 

@@ -20,6 +20,9 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 
+/**
+ * FXApplication is the main class for the GUI side of the application.
+ */
 public class FXApplication extends Application {
 
     private Stage mainStage;
@@ -30,6 +33,9 @@ public class FXApplication extends Application {
     private final Scale scaleTransform = new Scale(1, 1);
     private final ChangeListener<Number> resizeListener = this::resizeListener;
 
+    /**
+     * Method that creates the right Gamedynamic object and initializes the scenes.
+     * */
     @Override
     public void start(Stage mainStage) {
         new GameDynamic(this, TypeConnection.valueOf(getParameters().getUnnamed().get(0)));
@@ -39,6 +45,8 @@ public class FXApplication extends Application {
         initializeScenes();
     }
 
+    /** Method that initializes the scenes, loading them from the path.
+     * */
     private void initializeScenes() {
         String[] sceneTypes = {
                 "/fxml/Menu.fxml", "/fxml/InsertNickname.fxml", "/fxml/InsertIDgame.fxml",
@@ -55,6 +63,8 @@ public class FXApplication extends Application {
         }
     }
 
+    /** Method that creates and stores the scene, loading it from the path.
+     * */
     private void createAndStoreScene(String fxmlPath) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
         Parent root = loader.load();
@@ -66,12 +76,16 @@ public class FXApplication extends Application {
         controllerMap.put(sceneType, controller);
     }
 
+    /** Method that extracts the scene type from the path.
+     * */
     private String extractSceneTypeFromPath(String fxmlPath) {
         String[] parts = fxmlPath.split("/");
         String fileName = parts[parts.length - 1];
         return fileName.substring(0, fileName.lastIndexOf("."));
     }
 
+    /** Method that changes the scene.
+     * */
     public void changeScene(String sceneType) {
         isResized = false;
         Scene newScene = sceneMap.get(sceneType);
@@ -91,25 +105,35 @@ public class FXApplication extends Application {
         }
     }
 
+    /** Method that updates the previous dimensions of the scene.
+     * */
     private void updatePreviousDimensions() {
         previousWidth = mainStage.getScene().getWidth();
         previousHeight = mainStage.getScene().getHeight();
     }
 
+    /** Method that removes the resize listeners.
+     * */
     private void removeResizeListeners() {
         mainStage.widthProperty().removeListener(resizeListener);
         mainStage.heightProperty().removeListener(resizeListener);
     }
 
+    /** Method that adds the resize listeners.
+     * */
     private void addResizeListeners() {
         mainStage.widthProperty().addListener(resizeListener);
         mainStage.heightProperty().addListener(resizeListener);
     }
 
+    /** Method that resizes the listener.
+     * */
     private void resizeListener(ObservableValue<? extends Number> obs, Number oldVal, Number newVal) {
         resize(mainStage.getWidth(), mainStage.getHeight());
     }
 
+    /** Method that resizes the scene.
+     * */
     public void resize(double width, double height) {
         if (isResized) {
             previousWidth = width;
@@ -119,6 +143,8 @@ public class FXApplication extends Application {
         }
     }
 
+    /** Method that sets the GUI reader to all the scenes.
+     * */
     public void setGUIReaderToScenes(LinkedBlockingQueue<String> guiReader) {
         for (GuiInputReaderController controller : controllerMap.values()) {
             if (controller != null) {
@@ -127,8 +153,9 @@ public class FXApplication extends Application {
         }
     }
 
+    /** Method that gets the corresponding controller of the given scene.
+     * */
     public GuiInputReaderController getSceneController(String type) {
         return controllerMap.get(type);
     }
-
 }

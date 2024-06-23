@@ -13,6 +13,8 @@ import javafx.scene.text.Text;
 import java.util.Objects;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/** Class that manages all the actions that happen before the main running scene
+ * */
 public class StartGameController extends GuiInputReaderController{
 
     @FXML public Pane pane0;
@@ -30,34 +32,43 @@ public class StartGameController extends GuiInputReaderController{
     @FXML private Text nicknameLabel;
 
 
-
+    //------------------------------------MENU SCENE-----------------------------------------------------------
+    /** Method that binds the create game button of the menu to the action of creating a new game.
+     * */
     @FXML
     public void CreateGame() {
         if (reader != null) {
             reader.add("c");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
 
+    /** Method that binds the join specific game button of the menu to the action of joining a specific game.
+     * */
     @FXML
     public void JoinGame() {
         if (reader != null) {
             reader.add("js");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
 
+    /** Method that binds the join random game button of the menu to the action of joining a random game.
+     * */
     @FXML
     public void RandomGame() {
         if (reader != null) {
             reader.add("j");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
 
+    //------------------------------------INSERT GAME ID SCENE----------------------------------------------------------
+    /** Method that binds the insert game id button of the insert game id scene to the action of inserting the game id.
+     * */
     @FXML
     void insertGameId() {
         if(!GameId.getText().isEmpty()){
@@ -65,6 +76,9 @@ public class StartGameController extends GuiInputReaderController{
         }
     }
 
+    //------------------------------------INSERT NICKNAME SCENE----------------------------------------------------------
+    /** Method that binds the insert nickname button of the insert nickname scene to the action of inserting the nickname.
+     * */
     @FXML
     void insertNickname() {
         if(!myNickname.getText().isEmpty()) {
@@ -72,32 +86,83 @@ public class StartGameController extends GuiInputReaderController{
         }
     }
 
+    //------------------------------------INSERT NUMBER OF PLAYERS----------------------------------------------------------
+    /** Method that binds the two players button of the insert number of players scene to the action of selecting two players.
+     * */
     @FXML
     public void twoPLayers() {
         if (reader != null) {
             reader.add("2");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
 
+    /** Method that binds the three players button of the insert number of players scene to the action of selecting three players.
+     * */
     @FXML
     public void threePLayers() {
         if (reader != null) {
             reader.add("3");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
+
+    /** Method that binds the four players button of the insert number of players scene to the action of selecting four players.
+     * */
     @FXML
     public void fourPLayers() {
         if (reader != null) {
             reader.add("4");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
 
+    //------------------------------------WAITING ROOM SCENE----------------------------------------------------------
+
+
+    /** Method that binds the ready button of the waiting room scene to the action of setting the player as ready.
+     * */
+    @FXML void playerIsReady() {
+        reader.add("y");
+    }
+
+    /** Method that sets the game id in the waiting room scene
+     * */
+    public void setGameId(int id) {
+        gameidLabel.setText("GameID: "+id);
+    }
+
+    /** Method that sets the nickname of the player in the waiting room scene
+     * */
+    public void setMyNicknameLabel(String nickname){
+        nicknameLabel.setText(nickname);
+    }
+
+    /** Method that sets the ready button visible in the waiting room scene
+     * */
+    public void setReadyButton(boolean visible){
+        buttonReady.setVisible(visible);
+    }
+
+    /** Method that inserts players in the waiting room scene
+     * */
+    public void showPlayerToWaitingRoom(ModelView model) {
+        pane0.setVisible(false);
+        pane1.setVisible(false);
+        pane2.setVisible(false);
+        pane3.setVisible(false);
+        int i = 0;
+        for (Player p : model.getPlayersConnected()) {
+            showWaitingRoomSpecific(p.getNickname(), i);
+            i++;
+        }
+    }
+
+    /** Method that sets the players in waiting room scene
+     * */
     private void showWaitingRoomSpecific(String nickname, int playerIndex) {
         switch (playerIndex) {
             case 0 -> {
@@ -138,31 +203,4 @@ public class StartGameController extends GuiInputReaderController{
         }
     }
 
-    @FXML void playerIsReady() {
-        reader.add("y");
-    }
-
-    public void setGameId(int id) {
-        gameidLabel.setText("GameID: "+id);
-    }
-
-    public void setMyNicknameLabel(String nickname){
-        nicknameLabel.setText(nickname);
-    }
-
-    public void setReadyButton(boolean visible){
-        buttonReady.setVisible(visible);
-    }
-
-    public void showPlayerToWaitingRoom(ModelView model) {
-        pane0.setVisible(false);
-        pane1.setVisible(false);
-        pane2.setVisible(false);
-        pane3.setVisible(false);
-        int i = 0;
-        for (Player p : model.getPlayersConnected()) {
-            showWaitingRoomSpecific(p.getNickname(), i);
-            i++;
-        }
-    }
 }

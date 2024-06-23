@@ -390,7 +390,7 @@ public class RunningController extends GuiInputReaderController {
                     break;
             }
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
 
@@ -705,7 +705,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("1");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
         commonCardsVbox.setDisable(true);
         commonIndex = 1;
@@ -720,7 +720,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("2");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
         commonCardsVbox.setDisable(true);
         commonIndex = 2;
@@ -734,7 +734,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("3");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
         commonCardsVbox.setDisable(true);
         commonIndex = 3;
@@ -749,7 +749,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("4");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
         commonCardsVbox.setDisable(true);
         commonIndex = 4;
@@ -763,7 +763,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("5");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
         commonCardsVbox.setDisable(true);
         commonIndex = 5;
@@ -778,7 +778,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("6");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
         commonCardsVbox.setDisable(true);
         commonIndex = 6;
@@ -852,7 +852,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("2");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
 
@@ -866,7 +866,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("1");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
 
@@ -970,7 +970,7 @@ public class RunningController extends GuiInputReaderController {
             else
                 System.out.println("Orientation non valida.");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
         placeStarterCard();
     }
@@ -1066,7 +1066,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("1");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
 
         if (reader != null) {
@@ -1077,7 +1077,7 @@ public class RunningController extends GuiInputReaderController {
             else
                 System.out.println("Orientation non valida.");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
         placeCard(0);
         FlipHand.setDisable(true);
@@ -1100,7 +1100,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("2");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
 
         if (reader != null) {
@@ -1111,7 +1111,7 @@ public class RunningController extends GuiInputReaderController {
             else
                 System.out.println("Orientation non valida.");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
         placeCard(1);
         FlipHand.setDisable(true);
@@ -1133,7 +1133,7 @@ public class RunningController extends GuiInputReaderController {
         if (reader != null) {
             reader.add("3");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
 
         if (reader != null) {
@@ -1144,7 +1144,7 @@ public class RunningController extends GuiInputReaderController {
             else
                 System.out.println("Orientation non valida.");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
         placeCard(2);
         FlipHand.setDisable(true);
@@ -1202,7 +1202,7 @@ public class RunningController extends GuiInputReaderController {
             else
                 System.out.println("Orientation non valida.");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
     //-----------------------------------PLACE CARD ON MY PERSONAL BOARD--------------------------------------------
@@ -1295,7 +1295,7 @@ public class RunningController extends GuiInputReaderController {
                 reader.add(String.valueOf(result[0]));
                 reader.add(String.valueOf(result[1]));
             } else {
-                System.out.println("L'oggetto inputReaderGUI è null.");
+                System.out.println("inputReaderGUI object is null");
             }
         } else {
             System.out.println("posizione non valida");
@@ -1469,7 +1469,7 @@ public class RunningController extends GuiInputReaderController {
             reader.add("/quit");
             reader.add("/leave");
         } else {
-            System.out.println("L'oggetto inputReaderGUI è null.");
+            System.out.println("inputReaderGUI object is null");
         }
     }
 }

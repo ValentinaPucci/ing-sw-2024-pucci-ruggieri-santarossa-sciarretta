@@ -22,6 +22,10 @@ public class GUI extends UI {
     private FXApplication app;
     private LinkedBlockingQueue<String> GuiReader;
 
+    /** Constructor for the GUI class.
+     * @param guiApp the FXApplication object
+     * @param GuiReader the LinkedBlockingQueue object that allows to read the input from the GUI
+     * */
     public GUI(FXApplication guiApp, LinkedBlockingQueue<String> GuiReader) {
         this.app = guiApp;
         this.GuiReader = GuiReader;
