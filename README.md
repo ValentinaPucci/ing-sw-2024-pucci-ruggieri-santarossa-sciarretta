@@ -16,6 +16,6 @@ We have implemented the following features:
 | Multiple Games   | :heavy_check_mark:    |
 | Chat  | :heavy_check_mark:    |
 
-Requirements: <a href="https://github.com/TheFedelino01/ing-sw-2023-saccani-spangaro-sanvito-pedersoli/blob/main/Documents/Requirements/requirements.pdf">requirements.pdf</a> <br>
+<!-- Requirements: <a href="https://github.com/TheFedelino01/ing-sw-2023-saccani-spangaro-sanvito-pedersoli/blob/main/Documents/Requirements/requirements.pdf">requirements.pdf</a> <br>
 Rulebook: <a href="https://github.com/TheFedelino01/ing-sw-2023-saccani-spangaro-sanvito-pedersoli/blob/main/Documents/Requirements/MyShelfie_Rulebook_ITA.pdf">rulebook.pdf</a> <br>
-Official Site: <a href="https://www.craniocreations.it/prodotto/my-shelfie">producer site</a>
+Official Site: <a href="https://www.craniocreations.it/prodotto/my-shelfie">producer site</a> -->
