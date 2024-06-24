@@ -7,10 +7,10 @@
 - [Margherita Santarossa](https://github.com/margherita-santarossa)
 - [Lorenzo Sciarretta](https://github.com/L-Neur0)
 
-## Funzionalità
-- Regole complete
+## Functionalities
+- Complete Rules
 - RMI
 - Socket
 - TUI
 - GUI 
-- FA: Partite multiple 
+- FA: Multiple matches
