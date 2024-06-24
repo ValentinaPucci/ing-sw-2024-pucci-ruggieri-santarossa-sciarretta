@@ -12,7 +12,8 @@ We have implemented the following features:
 |:--------|:----|
 | Complete rules  | :heavy_check_mark:    |
 | Socket and RMI  | :heavy_check_mark:    |
-| TUI + GUI  | :heavy_check_mark:    |
+| TUI | :heavy_check_mark:    |
+| GUI  | :heavy_check_mark:    |
 | Multiple Games   | :heavy_check_mark:    |
 | Chat  | :heavy_check_mark:    |
 
