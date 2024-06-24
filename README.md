@@ -1,5 +1,3 @@
-ing-sw-2024-pucci-ruggieri-santarossa-sciarretta
-
 # Prova Finale - Ingegneria del Software - A.A. 2023/24
 ![Logo](src/main/resources/Codex.png)
 
@@ -9,3 +7,10 @@ ing-sw-2024-pucci-ruggieri-santarossa-sciarretta
 - [Margherita Santarossa](https://github.com/margherita-santarossa)
 - [Lorenzo Sciarretta](https://github.com/L-Neur0)
 
+## Funzionalità
+- Regole complete
+- RMI
+- Socket
+- TUI
+- GUI 
+- funzionalità avanzata: Partite multiple 
