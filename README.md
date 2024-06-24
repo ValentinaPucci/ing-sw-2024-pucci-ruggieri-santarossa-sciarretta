@@ -13,4 +13,4 @@
 - Socket
 - TUI
 - GUI 
-- funzionalità avanzata: Partite multiple 
+- FA: Partite multiple 
