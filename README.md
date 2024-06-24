@@ -5,7 +5,7 @@ ing-sw-2024-pucci-ruggieri-santarossa-sciarretta
 
 ### Gruppo GC02
 - [Valentina Pucci](https://github.com/ValentinaPucci)
-- [Riccardo Ruggieri](https://github.com/RiccardoRuggeri)
+- [Riccardo Ruggieri](https://github.com/RiccardoRuggieri)
 - [Margherita Santarossa](https://github.com/margherita-santarossa)
 - [Lorenzo Sciarretta](https://github.com/L-Neur0)
 
