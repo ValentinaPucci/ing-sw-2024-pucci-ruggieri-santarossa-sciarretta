@@ -11,7 +11,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import java.util.Objects;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /** Class that manages all the actions that happen before the main running scene
  * */
@@ -27,9 +26,9 @@ public class StartGameController extends GuiInputReaderController{
     @FXML public Text nicknameLabel4;
     @FXML private TextField myNickname;
     @FXML private TextField GameId;
-    @FXML public Text gameidLabel;
+    @FXML public Text gameID;
     @FXML private Button buttonReady;
-    @FXML private Text nicknameLabel;
+    @FXML private Text myNick;
 
 
     //------------------------------------MENU SCENE-----------------------------------------------------------
@@ -125,26 +124,8 @@ public class StartGameController extends GuiInputReaderController{
 
     /** Method that binds the ready button of the waiting room scene to the action of setting the player as ready.
      * */
-    @FXML void playerIsReady() {
+    @FXML void onPress() {
         reader.add("y");
-    }
-
-    /** Method that sets the game id in the waiting room scene
-     * */
-    public void setGameId(int id) {
-        gameidLabel.setText("GameID: "+id);
-    }
-
-    /** Method that sets the nickname of the player in the waiting room scene
-     * */
-    public void setMyNicknameLabel(String nickname){
-        nicknameLabel.setText(nickname);
-    }
-
-    /** Method that sets the ready button visible in the waiting room scene
-     * */
-    public void setReadyButton(boolean visible){
-        buttonReady.setVisible(visible);
     }
 
     /** Method that inserts players in the waiting room scene
@@ -159,6 +140,11 @@ public class StartGameController extends GuiInputReaderController{
             showWaitingRoomSpecific(p.getNickname(), i);
             i++;
         }
+    }
+    /** Method that sets the game id in the waiting room scene
+     * */
+    public void setGameId(int id) {
+        gameID.setText("GameID: "+id);
     }
 
     /** Method that sets the players in waiting room scene
@@ -201,6 +187,20 @@ public class StartGameController extends GuiInputReaderController{
             }
             default -> throw new IllegalArgumentException("Invalid player index: " + playerIndex);
         }
+    }
+
+
+    /** Method that sets the nickname of the player in the waiting room scene
+     * */
+    public void setMyNickname(String nick){
+        myNick.setText(nick);
+    }
+
+
+    /** Method that sets the ready button visible in the waiting room scene
+     * */
+    public void ReadyButtonVisibility(boolean visible){
+        buttonReady.setVisible(visible);
     }
 
 }

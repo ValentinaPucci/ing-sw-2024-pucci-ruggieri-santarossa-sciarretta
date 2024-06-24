@@ -128,7 +128,7 @@ public class GUI extends UI {
      * */
     @Override
     protected void show_readyToStart(ModelView gameModel, String nickname) {
-        executeOnPlatform(() -> ((StartGameController) this.app.getSceneController("GenericWaitingRoom")).setReadyButton(false));
+        executeOnPlatform(() -> ((StartGameController) this.app.getSceneController("GenericWaitingRoom")).ReadyButtonVisibility(false));
     }
 
     /** Method that shows the player that joined the game.
@@ -139,7 +139,7 @@ public class GUI extends UI {
         if (!gameStarted) {
             executeOnPlatform(() -> {
                 StartGameController waitingRoomController = (StartGameController) app.getSceneController("GenericWaitingRoom");
-                waitingRoomController.setMyNicknameLabel(nick);
+                waitingRoomController.setMyNickname(nick);
                 waitingRoomController.setGameId(gameModel.getGameId());
                 waitingRoomController.showPlayerToWaitingRoom(gameModel);
             });
