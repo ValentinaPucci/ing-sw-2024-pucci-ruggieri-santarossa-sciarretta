@@ -576,16 +576,6 @@ public class Model implements Serializable {
         // auxiliary variables for special cases at the end of the game
         boolean illegal_draw = false;
 
-        if (common_board.getResourceConcreteDeck().isEmpty() &&
-                common_board.getGoldConcreteDeck().isEmpty() &&
-                !getStatus().equals(GameStatus.SECOND_LAST_ROUND)) {
-            setStatus(GameStatus.SECOND_LAST_ROUND);
-            if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
-                setStatus(GameStatus.LAST_ROUND);
-            }
-            return;
-        }
-
         switch (index) {
             case 1:
                 // Draw from Resource Deck
@@ -598,7 +588,7 @@ public class Model implements Serializable {
                 break;
             case 2:
                 // Draw first Resource Card from table
-                if (!common_board.getResourceConcreteDeck().isEmpty())
+                if (common_board.getTableCards()[0][0] != null)
                     p.getHand().add((ResourceCard) common_board.drawFromTable(0, 0, 0));
                 else {
                     illegal_draw = true;
@@ -607,7 +597,7 @@ public class Model implements Serializable {
                 break;
             case 3:
                 // Draw second Resource Card from table
-                if (!common_board.getResourceConcreteDeck().isEmpty())
+                if (common_board.getTableCards()[0][1] != null)
                     p.getHand().add((ResourceCard) common_board.drawFromTable(0, 1, 0));
                 else {
                     illegal_draw = true;
@@ -625,7 +615,7 @@ public class Model implements Serializable {
                 break;
             case 5:
                 // Draw first Gold Card from table
-                if (!common_board.getGoldConcreteDeck().isEmpty())
+                if (common_board.getTableCards()[1][0] != null)
                     p.getHand().add((GoldCard) common_board.drawFromTable(1, 0, 1));
                 else {
                     illegal_draw = true;
@@ -634,7 +624,7 @@ public class Model implements Serializable {
                 break;
             case 6:
                 // Draw second Gold Card from table
-                if (!common_board.getGoldConcreteDeck().isEmpty())
+                if (common_board.getTableCards()[1][1] != null)
                     p.getHand().add((GoldCard) common_board.drawFromTable(1, 1, 1));
                 else {
                     illegal_draw = true;
@@ -646,9 +636,10 @@ public class Model implements Serializable {
         if (!illegal_draw) {
             observers.notify_cardDrawn(this, index);
             // at the end of every player round, we check for her/his points
-            if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p)) {
+            if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p))
                 setStatus(GameStatus.LAST_ROUND);
-            }
+            else if (common_board.getResourceConcreteDeck().isEmpty() && common_board.getGoldConcreteDeck().isEmpty())
+                setStatus(GameStatus.LAST_ROUND);
             else if (p.getCurrentPoints() >= Constants.num_points_for_second_last_round) {
                 if (aux_order_players.getLast().equals(p)) {
                     setStatus(GameStatus.LAST_ROUND);

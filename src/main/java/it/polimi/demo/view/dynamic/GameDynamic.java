@@ -886,16 +886,6 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     }
 
     /**
-     * Handles the event when a move is successfully executed, showing a success message if it's the current player's turn.
-     * @param model The model view containing game state information.
-     * @param coord The coordinates of the successful move.
-     */
-    @Override
-    public void successfulMove(ModelView model, Coordinate coord) {
-        ifAmI(model, m -> ui.show_successfulMove(coord));
-    }
-
-    /**
      * Handles the event when an illegal move is attempted due to a specific reason, showing an error message and the personal board if it's the current player's turn.
      * @param model The model view containing game state information.
      * @param reason_why The reason why the move is illegal.
@@ -907,6 +897,16 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
             ui.show_personalBoard(nickname, m);
             facts.offer(m, FactType.ILLEGAL_MOVE);
         });
+    }
+
+    /**
+     * Handles the event when a move is successfully executed, showing a success message if it's the current player's turn.
+     * @param model The model view containing game state information.
+     * @param coord The coordinates of the successful move.
+     */
+    @Override
+    public void successfulMove(ModelView model, Coordinate coord) {
+        ifAmI(model, m -> ui.show_successfulMove(coord));
     }
 
     /**
