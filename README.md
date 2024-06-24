@@ -16,9 +16,9 @@ We have implemented the following features:
 | Multiple Games   | :heavy_check_mark:    |
 | Chat  | :heavy_check_mark:    |
 
-Requirements: <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/DOC/Requirements/requirements.pdf">requirements.pdf</a> <br>
-Rulebook_ITA:  <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/DOC/Requirements/CODEX_Rulebook_IT.pdf">requirements.pdf</a> <br>
-Rulebook_ENG: <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/DOC/Requirements/CODEX_Rulebook_EN.pdf">requirements.pdf</a> <br>
+Requirements: <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/requirements.pdf">requirements.pdf</a> <br>
+Rulebook_ITA:  <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/CODEX_Rulebook_EN.pdf">requirements.pdf</a> <br>
+Rulebook_ENG: <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/CODEX_Rulebook_EN.pdf">requirements.pdf</a> <br>
 Official Site: <a href="https://www.craniocreations.it/prodotto/codex-naturalis">producer site</a> -->
 
 # How to Use 
