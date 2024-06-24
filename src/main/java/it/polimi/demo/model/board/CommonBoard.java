@@ -143,12 +143,11 @@ public class CommonBoard implements Serializable {
         if (row >= 0 && row < 2 && col >= 0 && col < 2 && concrete_deck_index >= 0 && concrete_deck_index < 2) {
             // Remove the card from the table and store it
             Card drawnCard = table_cards[row][col];
-            try {
-                // Draw a card from the corresponding ConcreteDeck and replace it on the table
-                table_cards[row][col] = decks.get(concrete_deck_index).pop();
-            } catch (EmptyStackException e) {
-                System.err.println("Empty deck: " + e.getMessage());
+            if (decks.get(concrete_deck_index).isEmpty()) {
+                table_cards[row][col] = null;
             }
+            else
+                table_cards[row][col] = decks.get(concrete_deck_index).pop();
             // Return the drawn card
             return drawnCard;
         }
@@ -280,12 +279,30 @@ public class CommonBoard implements Serializable {
     //necessary for the GUI
     public Integer[] getCommonCardsId() {
         Integer[] cards = new Integer[9];
-        cards[0] = getResourceConcreteDeck().pop().getId(); //deck resource
-        cards[1] = table_cards[0][0].getId(); //card resource
-        cards[2] = table_cards[0][1].getId(); //card resource
-        cards[3] = getGoldConcreteDeck().pop().getId(); //deck gold
-        cards[4] = table_cards[1][0].getId(); //card gold
-        cards[5] = table_cards[1][1].getId(); //card gold
+        if (!getResourceConcreteDeck().isEmpty())
+            cards[0] = getResourceConcreteDeck().pop().getId();
+        else
+            cards[0] = -1; //deck resource
+        if (table_cards[0][0] != null)
+            cards[1] = table_cards[0][0].getId();
+        else
+            cards[1] = -1; //card resource
+        if (table_cards[0][1] != null)
+            cards[2] = table_cards[0][1].getId(); //card resource
+        else
+            cards[2] = -1; //card resource
+        if (!getGoldConcreteDeck().isEmpty())
+            cards[3] = getGoldConcreteDeck().pop().getId();
+        else
+            cards[3] = -1; //deck gold
+        if (table_cards[1][0] != null)
+            cards[4] = table_cards[1][0].getId(); //card gold
+        else
+            cards[4] = -1; //card gold
+        if (table_cards[1][1] != null)
+            cards[5] = table_cards[1][1].getId(); //card gold
+        else
+            cards[5] = -1; //card gold
         cards[6] = getObjectiveConcreteDeck().pop().getId(); //objective deck
         cards[7] = table_cards[2][0].getId(); //objective card
         cards[8] = table_cards[2][1].getId(); //objective card
