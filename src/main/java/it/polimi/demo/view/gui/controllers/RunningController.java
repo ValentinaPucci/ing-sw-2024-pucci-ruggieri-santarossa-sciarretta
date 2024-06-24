@@ -121,6 +121,16 @@ public class RunningController extends GuiInputReaderController {
 
     private int firstPlayerIndex = 0;
 
+    boolean cc1_ended = false;
+    boolean cc2_ended = false;
+    boolean cc3_ended = false;
+    boolean cc4_ended = false;
+    boolean cc5_ended = false;
+    boolean cc6_ended = false;
+    boolean cc7_ended = false;
+    boolean cc8_ended = false;
+    boolean cc9_ended = false;
+
     /**
      * Method that initializes every structure on the screen
      */
@@ -258,7 +268,6 @@ public class RunningController extends GuiInputReaderController {
         }
     }
 
-
     /**
      * Method that get the player index in the given array, based on his nickname
      * */
@@ -270,8 +279,6 @@ public class RunningController extends GuiInputReaderController {
         }
         return -1;
     }
-
-
 
     //---------------------------------------SCOREBOARD----------------------------------------------------
 
@@ -301,8 +308,8 @@ public class RunningController extends GuiInputReaderController {
         bnImageViews[indexToGo].setImage(pieceToMove.getImage());
     }
 
-
     //-------------------------------OTHER PLAYERS--------------------------------------------
+
     /**
      * method that sets names and points of the others players, and creates the button GO to see their personaBoards
      * */
@@ -368,6 +375,7 @@ public class RunningController extends GuiInputReaderController {
         }
         players_without_me_size = players_without_me.size();
     }
+
     /**
      * Method that binds the click on the GO button with the command to send to the model
      * */
@@ -445,7 +453,6 @@ public class RunningController extends GuiInputReaderController {
         }
         myPoints.setText(gameModel.getCommonBoard().getPlayerPosition(my_index) + "");
     }
-
 
     /** Method that helps to set the points of the players in the grid pane
      * */
@@ -643,6 +650,7 @@ public class RunningController extends GuiInputReaderController {
     }
 
     //-------------------------------------------------COMMON CARDS--------------------------------------------
+
     /**
      * Method that sets the grid pane of common cards
      * */
@@ -650,43 +658,83 @@ public class RunningController extends GuiInputReaderController {
         Integer[] cardIds = model.getCommonBoard().getCommonCardsId();
         for (int i = 0; i < cardIds.length; i++) {
             int cardId = cardIds[i];
-            String imagePath;
-            if (i == 0 || i == 3 || i == 6) {
-                imagePath = "/images/cards/cards_back/" + String.format("%03d", cardId) + ".png";
-            } else {
-                imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
-            }
-            InputStream imageStream = getClass().getResourceAsStream(imagePath);
-            if (imageStream == null) {
-                System.out.println("Image not found: " + imagePath);
-                continue;
-            }
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90); 
-            imageView.setFitHeight(65); 
+            if(cardId != -1){
+                String imagePath;
+                if (i == 0 || i == 3 || i == 6) {
+                    imagePath = "/images/cards/cards_back/" + String.format("%03d", cardId) + ".png";
+                } else {
+                    imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
+                }
+                InputStream imageStream = getClass().getResourceAsStream(imagePath);
+                if (imageStream == null) {
+                    System.out.println("Image not found: " + imagePath);
+                    continue;
+                }
+                ImageView imageView = new ImageView(new Image(imageStream));
+                imageView.setFitWidth(90);
+                imageView.setFitHeight(65);
 
-            if (i == 0) {
-                commonCard1.getChildren().add(imageView); 
-            } else if (i == 1) {
-                commonCard2.getChildren().add(imageView); 
-            } else if (i == 2) {
-                commonCard3.getChildren().add(imageView); 
-            } else if (i == 3) {
-                commonCard4.getChildren().add(imageView); 
-            } else if (i == 4) {
-                commonCard5.getChildren().add(imageView); 
-            } else if (i == 5) {
-                commonCard6.getChildren().add(imageView); 
-            } else if (i == 6) {
-                commonCard7.getChildren().add(imageView); 
-            } else if (i == 7) {
-                commonCard8.getChildren().add(imageView); 
-            } else {
-                commonCard9.getChildren().add(imageView); 
+                if (i == 0) {
+                    commonCard1.getChildren().add(imageView);
+                } else if (i == 1) {
+                    commonCard2.getChildren().add(imageView);
+                } else if (i == 2) {
+                    commonCard3.getChildren().add(imageView);
+                } else if (i == 3) {
+                    commonCard4.getChildren().add(imageView);
+                } else if (i == 4) {
+                    commonCard5.getChildren().add(imageView);
+                } else if (i == 5) {
+                    commonCard6.getChildren().add(imageView);
+                } else if (i == 6) {
+                    commonCard7.getChildren().add(imageView);
+                } else if (i == 7) {
+                    commonCard8.getChildren().add(imageView);
+                } else {
+                    commonCard9.getChildren().add(imageView);
+                }
+            }else{
+                String placeholderImagePath = "/images/placeholder.jpg";
+                InputStream placeholderImageStream = getClass().getResourceAsStream(placeholderImagePath);
+                if (placeholderImageStream == null) {
+                    System.out.println("Image not found: " + placeholderImagePath);
+                    continue;
+                }
+                ImageView placeholderImageView = new ImageView(new Image(placeholderImageStream));
+                placeholderImageView.setFitWidth(90);
+                placeholderImageView.setFitHeight(65);
+
+                if(i == 0){
+                    commonCard1.getChildren().add(placeholderImageView);
+                    cc1_ended = true;
+                } else if(i == 1){
+                    commonCard2.getChildren().add(placeholderImageView);
+                    cc2_ended = true;
+                } else if(i == 2){
+                    commonCard3.getChildren().add(placeholderImageView);
+                    cc3_ended = true;
+                } else if(i == 3){
+                    commonCard4.getChildren().add(placeholderImageView);
+                    cc4_ended = true;
+                } else if(i == 4){
+                    commonCard5.getChildren().add(placeholderImageView);
+                    cc5_ended = true;
+                } else if(i == 5){
+                    commonCard6.getChildren().add(placeholderImageView);
+                    cc6_ended = true;
+                } else if(i == 6){
+                    commonCard7.getChildren().add(placeholderImageView);
+                    cc7_ended = true;
+                } else if(i == 7){
+                    commonCard8.getChildren().add(placeholderImageView);
+                    cc8_ended = true;
+                } else if(i == 8){
+                    commonCard9.getChildren().add(placeholderImageView);
+                    cc9_ended = true;
+                }
             }
         }
     }
-
 
     /**
      * Method that ables the click on the common cards
@@ -702,13 +750,15 @@ public class RunningController extends GuiInputReaderController {
      * */
     @FXML
     public void commonCard1Clicked() {
-        if (reader != null) {
-            reader.add("1");
-        } else {
-            System.out.println("inputReaderGUI object is null");
+        if(!cc1_ended){
+            if (reader != null) {
+                reader.add("1");
+            } else {
+                System.out.println("inputReaderGUI object is null");
+            }
+            commonCardsVbox.setDisable(true);
+            commonIndex = 1;
         }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 1;
     }
 
     /**
@@ -717,27 +767,32 @@ public class RunningController extends GuiInputReaderController {
      * */
     @FXML
     public void commonCard2Clicked() {
-        if (reader != null) {
-            reader.add("2");
-        } else {
-            System.out.println("inputReaderGUI object is null");
+        if(!cc2_ended){
+            if (reader != null) {
+                reader.add("2");
+            } else {
+                System.out.println("inputReaderGUI object is null");
+            }
+            commonCardsVbox.setDisable(true);
+            commonIndex = 2;
         }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 2;
     }
+
     /**
      * Method that binds the click on the common cards with the command to send to the model
      * The user has chosen the resource card in the second position
      * */
     @FXML
     public void commonCard3Clicked() {
-        if (reader != null) {
-            reader.add("3");
-        } else {
-            System.out.println("inputReaderGUI object is null");
+        if(!cc3_ended){
+            if (reader != null) {
+                reader.add("3");
+            } else {
+                System.out.println("inputReaderGUI object is null");
+            }
+            commonCardsVbox.setDisable(true);
+            commonIndex = 3;
         }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 3;
     }
 
     /**
@@ -746,27 +801,32 @@ public class RunningController extends GuiInputReaderController {
      * */
     @FXML
     public void commonCard4Clicked() {
-        if (reader != null) {
-            reader.add("4");
-        } else {
-            System.out.println("inputReaderGUI object is null");
+        if(!cc4_ended){
+            if (reader != null) {
+                reader.add("4");
+            } else {
+                System.out.println("inputReaderGUI object is null");
+            }
+            commonCardsVbox.setDisable(true);
+            commonIndex = 4;
         }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 4;
     }
+
     /**
      * Method that binds the click on the common cards with the command to send to the model
      * The user has chosen the gold card in the first position
      * */
     @FXML
     public void commonCard5Clicked() {
-        if (reader != null) {
-            reader.add("5");
-        } else {
-            System.out.println("inputReaderGUI object is null");
+        if(!cc5_ended){
+            if (reader != null) {
+                reader.add("5");
+            } else {
+                System.out.println("inputReaderGUI object is null");
+            }
+            commonCardsVbox.setDisable(true);
+            commonIndex = 5;
         }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 5;
     }
 
     /**
@@ -775,17 +835,19 @@ public class RunningController extends GuiInputReaderController {
      * */
     @FXML
     public void commonCard6Clicked() {
-        if (reader != null) {
-            reader.add("6");
-        } else {
-            System.out.println("inputReaderGUI object is null");
+        if(!cc6_ended){
+            if (reader != null) {
+                reader.add("6");
+            } else {
+                System.out.println("inputReaderGUI object is null");
+            }
+            commonCardsVbox.setDisable(true);
+            commonIndex = 6;
         }
-        commonCardsVbox.setDisable(true);
-        commonIndex = 6;
     }
 
-
     //-----------------------------------PERSONAL OBJECTIVES--------------------------------------------
+
     /**
      * Method that sets the personal objective cards of the player
      * */
@@ -811,7 +873,6 @@ public class RunningController extends GuiInputReaderController {
             }
         }
     }
-
 
     /**
      * Method that flips the personal objective that has not been chosen from the user
@@ -871,6 +932,7 @@ public class RunningController extends GuiInputReaderController {
     }
 
     //-----------------------------------STARTER CARD--------------------------------------------
+
     /**
      * Method that sets the starter card on the front (it comes from GUI)
      * */
@@ -890,7 +952,6 @@ public class RunningController extends GuiInputReaderController {
             System.out.println("Image not found: " + imagePath);
         }
     }
-
 
     /**
      * Method that sets the starter card on the front (it comes from the FLIP button)
@@ -940,7 +1001,6 @@ public class RunningController extends GuiInputReaderController {
             setStarterCardBack();
     }
 
-
     /**
      * Method that ables the click on the starter card
      * */
@@ -949,8 +1009,6 @@ public class RunningController extends GuiInputReaderController {
         FlipStarter.setDisable(false);
         setMsgToShow("Choose the orientation of your starter card: ", true);
     }
-
-
 
     /**
      * Method that binds the click on the starter card with the command to send to the model
@@ -975,8 +1033,8 @@ public class RunningController extends GuiInputReaderController {
         placeStarterCard();
     }
 
-
     //-----------------------------------CARD HAND--------------------------------------------
+
     /**
      * Method that sets the card hand of the player (on the front), it comes from GUI
      * */
@@ -1206,6 +1264,7 @@ public class RunningController extends GuiInputReaderController {
         }
     }
     //-----------------------------------PLACE CARD ON MY PERSONAL BOARD--------------------------------------------
+
     String glowBorder = "-fx-effect: dropshadow(three-pass-box, blue, 10, 0, 0, 0);";
 
     /**
@@ -1275,7 +1334,6 @@ public class RunningController extends GuiInputReaderController {
         setMsgToShow("StarterCard placed", true);
     }
 
-
     /**
      * Method that handles the click on the scroll pane (personal board)
      * */
@@ -1301,7 +1359,6 @@ public class RunningController extends GuiInputReaderController {
             System.out.println("posizione non valida");
         }
     }
-
 
     /**
      * Method that places the card on my personal board
@@ -1359,8 +1416,8 @@ public class RunningController extends GuiInputReaderController {
         removeFromHand(cardIndex);
     }
 
-
     //-----------------------------------FEEDBACKS--------------------------------------------
+
     /** Method that shows the illegal attempt to place the card
      * */
     public void illegalMove() {
@@ -1393,7 +1450,6 @@ public class RunningController extends GuiInputReaderController {
         personalBoardAnchorPane.setDisable(true);
     }
 
-
     /**Methods that show messages on the screen
      * */
     private final Map<Boolean, Color> colorMap = Map.of(
@@ -1409,14 +1465,12 @@ public class RunningController extends GuiInputReaderController {
         labelMessage.setTextFill(getColor.apply(success));
     }
 
-
     /**
      * Method that shows who is the first to play
      * */
     public void changeTurn(ModelView model) {
         setMsgToShow("Next turn is up to: " + model.getCurrentPlayerNickname(), true);
     }
-
 
     /**
      * Method that shows the end of your turn
@@ -1425,9 +1479,7 @@ public class RunningController extends GuiInputReaderController {
         setMsgToShow("Your turn is finished. Wait until it is again your turn! ", true);
     }
 
-
     //-------------------------------------CHAT------------------------------------
-
 
     /**Method that binds the chat on the GUI with the command to send to the model
      * */
