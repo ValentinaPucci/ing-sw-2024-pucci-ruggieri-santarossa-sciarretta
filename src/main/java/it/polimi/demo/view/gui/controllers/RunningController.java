@@ -246,23 +246,32 @@ public class RunningController extends GuiInputReaderController {
         setComponentsDisable(cardPanes, true);
 
         personalBoardAnchorPane.setOnMouseClicked(this::handleMouseClick);
-        personalBoardAnchorPane.setPrefHeight(1500);
-        personalBoardAnchorPane.setPrefWidth(1500);
-        pb0.setPrefHeight(1500);
-        pb0.setPrefWidth(1500);
-        pb1.setPrefHeight(1500);
-        pb1.setPrefWidth(1500);
-        pb2.setPrefHeight(1500);
-        pb2.setPrefWidth(1500);
 
+        double initialHValue = 600.0 / (1500 - my_sp.getViewportBounds().getWidth());
+        double initialVValue = 400.0 / (1500 - my_sp.getViewportBounds().getHeight());
+        my_sp.setHvalue(initialHValue);
+        my_sp.setVvalue(initialVValue);
         personalBoardAnchorPane.setVisible(true);
         my_sp.setVisible(true);
+
+        sp0.setHvalue(initialHValue);
+        sp0.setVvalue(initialVValue);
         pb0.setVisible(false);
         sp0.setVisible(false);
+
+        sp1.setHvalue(initialHValue);
+        sp1.setVvalue(initialVValue);
         pb1.setVisible(false);
         sp1.setVisible(false);
+
+        sp2.setHvalue(initialHValue);
+        sp2.setVvalue(initialVValue);
         pb2.setVisible(false);
         sp2.setVisible(false);
+
+        pb0.setDisable(false);
+        pb1.setDisable(false);
+        pb2.setDisable(false);
     }
 
     /**
@@ -417,28 +426,12 @@ public class RunningController extends GuiInputReaderController {
         personalBoardAnchorPane.setVisible(false);
         my_sp.setVisible(false);
 
-        if(playerIndex == 0){
-            pb0.setVisible(true);
-            sp0.setVisible(true);
-            pb1.setVisible(false);
-            sp1.setVisible(false);
-            pb2.setVisible(false);
-            sp2.setVisible(false);
-        } else if(playerIndex == 1){
-            pb0.setVisible(false);
-            sp0.setVisible(false);
-            pb1.setVisible(true);
-            sp1.setVisible(true);
-            pb2.setVisible(false);
-            sp2.setVisible(false);
-        } else {
-            pb0.setVisible(false);
-            sp0.setVisible(false);
-            pb1.setVisible(false);
-            sp1.setVisible(false);
-            pb2.setVisible(true);
-            sp2.setVisible(true);
-        }
+        pb0.setVisible(playerIndex == 0);
+        sp0.setVisible(playerIndex == 0);
+        pb1.setVisible(playerIndex == 1);
+        sp1.setVisible(playerIndex == 1);
+        pb2.setVisible(playerIndex == 2);
+        sp2.setVisible(playerIndex == 2);
     }
 
     /** Method that sets the points of the players in the grid pane

@@ -284,11 +284,11 @@
             </GridPane>
 
 
-            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
+            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0"  xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
                 <children>
                     <ScrollPane fx:id="sp0" layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
                         <content>
-                            <AnchorPane fx:id="pb0" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
+                            <AnchorPane fx:id="pb0" minHeight="0.0" minWidth="0.0" prefHeight="1500.0" prefWidth="1500.0" />
                         </content>
                     </ScrollPane>
                 </children>
@@ -297,11 +297,11 @@
                 </stylesheets>
             </Pane>
 
-            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
+            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0"  xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
                 <children>
                     <ScrollPane fx:id="sp1" layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
                         <content>
-                            <AnchorPane fx:id="pb1" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
+                            <AnchorPane fx:id="pb1" minHeight="0.0" minWidth="0.0" prefHeight="1500.0" prefWidth="1500.0" />
                         </content>
                     </ScrollPane>
                 </children>
@@ -309,11 +309,11 @@
                     <URL value="@style.css" />
                 </stylesheets>
             </Pane>
-            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0">
+            <Pane layoutX="592.0" layoutY="70.0" prefHeight="578.0" prefWidth="865.0"  xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
                 <children>
                     <ScrollPane fx:id="sp2" layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
                         <content>
-                            <AnchorPane fx:id="pb2" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
+                            <AnchorPane fx:id="pb2" minHeight="0.0" minWidth="0.0" prefHeight="1500.0" prefWidth="1500.0" />
                         </content>
                     </ScrollPane>
                 </children>
@@ -326,7 +326,7 @@
                 <children>
                     <ScrollPane fx:id="my_sp" layoutX="50.0" layoutY="-2.0" prefHeight="589.0" prefWidth="815.0">
                         <content>
-                            <AnchorPane fx:id="personalBoardAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="600.0" prefWidth="800.0" />
+                            <AnchorPane fx:id="personalBoardAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="1500.0" prefWidth="1500.0" />
                         </content>
                     </ScrollPane>
                 </children>
