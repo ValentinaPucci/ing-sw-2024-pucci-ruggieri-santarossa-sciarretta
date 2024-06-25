@@ -24,7 +24,6 @@ public class SocketClientMsgDrawCard extends SocketClientGameControllerMex imple
      */
     public SocketClientMsgDrawCard(int index) {
          this.index = index;
-         this.setMainControllerTarget(false);
     }
 
     /**

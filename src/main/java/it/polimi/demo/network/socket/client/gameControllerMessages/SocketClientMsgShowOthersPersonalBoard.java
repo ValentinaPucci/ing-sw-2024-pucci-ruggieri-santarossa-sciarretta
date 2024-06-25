@@ -18,7 +18,6 @@ public class SocketClientMsgShowOthersPersonalBoard extends SocketClientGameCont
     public SocketClientMsgShowOthersPersonalBoard(String nickname, int index) {
         this.index = index;
         this.nickname = nickname;
-        this.setMainControllerTarget(false);
     }
 
     @Override

@@ -32,7 +32,6 @@ public class SocketClientMsgPlaceCard extends SocketClientGameControllerMex impl
         this.x = x;
         this.y = y;
         this.orientation = orientation;
-        this.setMainControllerTarget(false);
     }
 
     /**

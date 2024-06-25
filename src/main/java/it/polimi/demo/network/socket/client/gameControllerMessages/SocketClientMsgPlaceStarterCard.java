@@ -25,7 +25,6 @@ public class SocketClientMsgPlaceStarterCard extends SocketClientGameControllerM
      */
     public SocketClientMsgPlaceStarterCard(Orientation orientation) {
         this.orientation = orientation;
-        this.setMainControllerTarget(false);
     }
 
     /**

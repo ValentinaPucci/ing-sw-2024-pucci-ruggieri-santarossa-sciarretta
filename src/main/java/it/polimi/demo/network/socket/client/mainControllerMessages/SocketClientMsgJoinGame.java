@@ -24,8 +24,6 @@ public class SocketClientMsgJoinGame extends SocketClientMainControllerMex imple
     public SocketClientMsgJoinGame(String nick, int game_id) {
         this.game_id = game_id;
         this.setUserNickname(nick);
-        this.setMainControllerTarget(true);
-
     }
 
     /**

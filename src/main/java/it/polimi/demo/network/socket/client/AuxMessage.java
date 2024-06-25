@@ -28,16 +28,4 @@ public class AuxMessage implements Serializable {
             this.data = new MessageData(userNickname, false);
         }
     }
-
-    /**
-     * Sets whether the message is aimed at the main controller.
-     * @param mainControllerTarget true if the message is for the main controller, false otherwise
-     */
-    public void setMainControllerTarget(boolean mainControllerTarget) {
-        if (data != null) {
-            this.data = new MessageData(data.nickname(), mainControllerTarget);
-        } else {
-            this.data = new MessageData(null, mainControllerTarget);
-        }
-    }
 }

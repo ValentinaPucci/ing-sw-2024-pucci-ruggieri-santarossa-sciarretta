@@ -39,12 +39,4 @@ public abstract class SocketClientMainControllerMex extends GenericControllerMes
     public void setUserNickname(String userNickname) {
         data.setUserNickname(userNickname);
     }
-
-    /**
-     * Sets whether the message is aimed at the main controller.
-     * @param mainControllerTarget true if the message is for the main controller, false otherwise
-     */
-    public void setMainControllerTarget(boolean mainControllerTarget) {
-        data.setMainControllerTarget(mainControllerTarget);
-    }
 }
