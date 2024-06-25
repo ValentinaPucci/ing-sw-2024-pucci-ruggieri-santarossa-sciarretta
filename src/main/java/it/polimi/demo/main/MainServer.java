@@ -4,7 +4,7 @@ import it.polimi.demo.Constants;
 import it.polimi.demo.main.utils.BoolAdd;
 import it.polimi.demo.main.utils.StaticPromptValidator;
 import it.polimi.demo.network.rmi.RMIServer;
-import it.polimi.demo.network.socket.server.Server;
+import it.polimi.demo.network.socket.server.ServerSocket;
 
 import java.io.IOException;
 
@@ -28,9 +28,9 @@ public class MainServer {
         else
             System.setProperty("java.rmi.server.hostname", Constants.Remote_ip);
 
-        // Here we start Socket Server
-        new Server(Constants.Socket_port);
-        // Here we bind RMI Server
+        // Here we start Socket ServerSocket
+        new ServerSocket(Constants.Socket_port);
+        // Here we bind RMI ServerSocket
         new RMIServer();
     }
 }

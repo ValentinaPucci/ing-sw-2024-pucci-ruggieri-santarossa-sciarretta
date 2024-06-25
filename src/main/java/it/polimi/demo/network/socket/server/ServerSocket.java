@@ -3,7 +3,6 @@ package it.polimi.demo.network.socket.server;
 import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;
-import java.net.ServerSocket;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -11,17 +10,17 @@ import java.util.function.Consumer;
 import static it.polimi.demo.network.utils.StaticPrinter.staticPrinter;
 
 /**
- * Server class that represents the server socket
+ * ServerSocket class that represents the server socket
  */
-public class Server extends Thread implements Serializable {
+public class ServerSocket extends Thread implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -3450892858052318586L;
 
     /**
-     * Socket that represents the Server
+     * Socket that represents the ServerSocket
      */
-    private final transient ServerSocket serverSocket;
+    private final transient java.net.ServerSocket serverSocket;
 
     /**
      * List of client handlers for each connection
@@ -32,11 +31,11 @@ public class Server extends Thread implements Serializable {
      * Constructor that starts the server with the specified port
      * @param serverPort the port on which the server will listen
      */
-    public Server(int serverPort) {
+    public ServerSocket(int serverPort) {
         handlers = new ArrayList<>();
         try {
-            serverSocket = new ServerSocket(serverPort);
-            staticPrinter("Server Socket READY");
+            serverSocket = new java.net.ServerSocket(serverPort);
+            staticPrinter("ServerSocket Socket READY");
 
             // Start listening for client connections
             this.start();
@@ -54,7 +53,7 @@ public class Server extends Thread implements Serializable {
             Consumer<ClientConnection> handleClient = client -> {
                 handlers.add(client);
                 client.start();
-                staticPrinter("[SOCKET] New client connection accepted");
+                staticPrinter(" New client  SOCKET connection accepted");
             };
 
             while (!Thread.interrupted()) {
@@ -64,7 +63,7 @@ public class Server extends Thread implements Serializable {
                 }
             }
         } catch (Exception e) {
-            System.err.println("[ERROR] Server run method: " + e.getMessage());
+            System.err.println("Error in ServerSocket run method: " + e.getMessage());
         } finally {
             closeServerSocket();
         }
@@ -78,7 +77,7 @@ public class Server extends Thread implements Serializable {
         try {
             return new ClientConnection(serverSocket.accept());
         } catch (IOException e) {
-            System.err.println("[ERROR] Accepting client connection: " + e.getMessage());
+            System.err.println("Error accepting client connection: " + e.getMessage());
             return null;
         }
     }
@@ -92,9 +91,10 @@ public class Server extends Thread implements Serializable {
                 serverSocket.close();
             }
         } catch (IOException e) {
-            System.err.println("[ERROR] Closing server socket: " + e.getMessage());
+            System.err.println("Error closing server socket: " + e.getMessage());
             throw new RuntimeException(e);
         }
     }
+
 }
 
