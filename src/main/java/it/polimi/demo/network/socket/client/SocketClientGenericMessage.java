@@ -16,11 +16,8 @@ public abstract class SocketClientGenericMessage implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -5886817470118365739L;
-    private String nickname;
-    // The main controller target is the main controller if true, the message is for the MainController
-    // and not for the gameController
-    private boolean isMainControllerTarget;
-    private boolean heartbeatMessage = false;
+
+    private MessageData data;
 
     /**
      * Processes the message with the main controller and observer.
@@ -44,49 +41,41 @@ public abstract class SocketClientGenericMessage implements Serializable {
      * @return true if the message is for the main controller, false otherwise
      */
     public boolean isMainControllerTarget() {
-        return isMainControllerTarget;
+        return data != null && Boolean.TRUE.equals(data.isMainControllerTarget());
     }
 
     /**
      * Retrieves the user's nickname associated with the message.
-     * @return the user's nickname
+     * @return the user's nickname, or null if data is null
      */
     public String getUserNickname() {
-        return nickname;
+        return data != null ? data.nickname() : null;
     }
 
     /**
-     * Determines if the message is a heartbeat signal.
-     * @return true if it is a heartbeat message, false otherwise
-     */
-    public boolean isHeartbeatMessage() {
-        return heartbeatMessage;
-    }
-
-    // Setters for the private fields
-
-    /**
-     * Setters for the private fields
-     * @param userNickname
+     * Sets the user's nickname associated with the message.
+     * @param userNickname the user's nickname
      */
     public void setUserNickname(String userNickname) {
-        this.nickname= userNickname;
+        if (data != null) {
+            this.data = new MessageData(userNickname, data.isMainControllerTarget());
+        } else {
+            this.data = new MessageData(userNickname, false);
+        }
     }
 
     /**
-     * Setters for the private fields
-     * @param mainControllerTarget
+     * Sets whether the message is aimed at the main controller.
+     * @param mainControllerTarget true if the message is for the main controller, false otherwise
      */
     public void setMainControllerTarget(boolean mainControllerTarget) {
-        this.isMainControllerTarget = mainControllerTarget;
+        if (data != null) {
+            this.data = new MessageData(data.nickname(), mainControllerTarget);
+        } else {
+            this.data = new MessageData(null, mainControllerTarget);
+        }
     }
-
-    /**
-     * Setters for the private fields
-     * @param heartbeatMessage
-     */
-    public void setHeartbeatMessage(boolean heartbeatMessage) {
-        this.heartbeatMessage = heartbeatMessage;
-    }
-
 }
+
+
+

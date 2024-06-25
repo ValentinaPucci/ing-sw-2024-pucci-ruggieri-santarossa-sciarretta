@@ -36,7 +36,6 @@ public abstract class SocketServerGenericMessage implements Serializable {
     /**
      * Method to log the message.
      */
-
     public void logMessage() {
         System.out.println("Processing message: " + messageContent);
     }

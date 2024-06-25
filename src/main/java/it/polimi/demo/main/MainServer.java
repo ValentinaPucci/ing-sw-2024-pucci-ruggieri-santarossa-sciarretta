@@ -29,7 +29,7 @@ public class MainServer {
             System.setProperty("java.rmi.server.hostname", Constants.Remote_ip);
 
         // Here we start Socket Server
-        new Server().start(Constants.Socket_port);
+        new Server(Constants.Socket_port);
         // Here we bind RMI Server
         new RMIServer();
     }
