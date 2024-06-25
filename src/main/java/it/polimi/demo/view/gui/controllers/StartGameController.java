@@ -10,6 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 /** Class that manages all the actions that happen before the main running scene
@@ -29,6 +31,8 @@ public class StartGameController extends GuiInputReaderController{
     @FXML public Text gameID;
     @FXML private Button buttonReady;
     @FXML private Text myNick;
+
+    private Map<String, Image> preloadedImages = new HashMap<>();
 
 
     //------------------------------------MENU SCENE-----------------------------------------------------------
@@ -131,6 +135,7 @@ public class StartGameController extends GuiInputReaderController{
     /** Method that inserts players in the waiting room scene
      * */
     public void showPlayerToWaitingRoom(ModelView model) {
+        preloadImages();
         pane0.setVisible(false);
         pane1.setVisible(false);
         pane2.setVisible(false);
@@ -147,31 +152,38 @@ public class StartGameController extends GuiInputReaderController{
         gameID.setText("GameID: "+id);
     }
 
+    public void preloadImages() {
+        String[] colors = {"blue", "green", "red", "yellow"};
+        for (String color : colors) {
+            String imagePath = "/" + color + ".png";
+            Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
+            preloadedImages.put(color, image);
+        }
+    }
+
     /** Method that sets the players in waiting room scene
      * */
     private void showWaitingRoomSpecific(String nickname, int playerIndex) {
         switch (playerIndex) {
             case 0 -> {
                 pane0.setVisible(true);
-                ImageView pane0ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/blueOwl.png")))); //blue
+                ImageView pane0ImageView = new ImageView(preloadedImages.get("blue"));
                 pane0ImageView.setFitWidth(286);
                 pane0ImageView.setFitHeight(418);
                 nicknameLabel1.setText(nickname);
                 pane0.getChildren().add(pane0ImageView);
-
             }
             case 1 -> {
                 pane1.setVisible(true);
-                ImageView pane1ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/green.png"))));
+                ImageView pane1ImageView = new ImageView(preloadedImages.get("green"));
                 pane1ImageView.setFitWidth(286);
                 pane1ImageView.setFitHeight(418);
                 nicknameLabel2.setText(nickname);
                 pane1.getChildren().add(pane1ImageView);
-
             }
             case 2 -> {
                 pane2.setVisible(true);
-                ImageView pane2ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/red.png"))));
+                ImageView pane2ImageView = new ImageView(preloadedImages.get("red"));
                 pane2ImageView.setFitWidth(286);
                 pane2ImageView.setFitHeight(418);
                 nicknameLabel3.setText(nickname);
@@ -179,7 +191,7 @@ public class StartGameController extends GuiInputReaderController{
             }
             case 3 -> {
                 pane3.setVisible(true);
-                ImageView pane3ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/yellow.png"))));
+                ImageView pane3ImageView = new ImageView(preloadedImages.get("yellow"));
                 pane3ImageView.setFitWidth(286);
                 pane3ImageView.setFitHeight(418);
                 nicknameLabel4.setText(nickname);
