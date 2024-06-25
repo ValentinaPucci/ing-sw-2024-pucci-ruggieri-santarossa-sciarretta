@@ -1,4 +1,4 @@
-package it.polimi.demo.network.socket.client.gameControllerMessages;
+package it.polimi.demo.network.socket.client.MsgForGameController;
 
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.GameControllerInterface;

@@ -80,7 +80,7 @@ public class ClientConnection extends Thread implements Serializable {
             outputStream = new ObjectOutputStream(bufferedOutputStream);
             outputStream.flush();  // Ensure the header of ObjectOutputStream is sent
 
-            GameListenersHandlerSocket gameListenerHandler = new GameListenersHandlerSocket(outputStream);
+            GameListenersSocket gameListenerHandler = new GameListenersSocket(outputStream);
 
             Thread messageReaderThread = new Thread(this::readMessages);
             messageReaderThread.start();
@@ -114,7 +114,7 @@ public class ClientConnection extends Thread implements Serializable {
      * Method used to handle the game logic .
      * @param gameListenerHandler
      */
-    private void handleGameLogic(GameListenersHandlerSocket gameListenerHandler) {
+    private void handleGameLogic(GameListenersSocket gameListenerHandler) {
         SocketClientGenericMessage message = messageQueue.poll();
         if (message != null) {
             try {
@@ -137,7 +137,7 @@ public class ClientConnection extends Thread implements Serializable {
         staticPrinter("ClientSocket disconnected due to communication failure");
         try {
             if (controller != null) {
-                controller.leave(new GameListenersHandlerSocket(outputStream), userNickname);
+                controller.leave(new GameListenersSocket(outputStream), userNickname);
             }
         } catch (RemoteException e) {
             staticPrinter("Error during disconnection: " + e.getMessage());

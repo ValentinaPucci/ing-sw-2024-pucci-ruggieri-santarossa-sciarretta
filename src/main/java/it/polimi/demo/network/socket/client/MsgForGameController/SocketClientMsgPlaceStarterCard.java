@@ -1,6 +1,7 @@
-package it.polimi.demo.network.socket.client.gameControllerMessages;
+package it.polimi.demo.network.socket.client.MsgForGameController;
 
 import it.polimi.demo.observer.Listener;
+import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
@@ -11,24 +12,24 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 /**
- * This class represents the message sent by the client to the server to choose a card from the hand.
+ * Class to send the placeStarterCard message to the server.
  */
-public class SocketClientMsgChooseCard extends SocketClientGenericMessage implements Serializable {
+public class SocketClientMsgPlaceStarterCard extends SocketClientGenericMessage implements Serializable {
     @Serial
-    private static final long serialVersionUID = 5796017918043405008L;
-    private int which_card;
+    private static final long serialVersionUID = -1739537774448253366L;
+    private Orientation orientation;
 
     /**
      * Constructor of the class.
-     * @param which_card the index of the card to choose
+     * @param orientation
      */
-    public SocketClientMsgChooseCard(int which_card) {
-        this.which_card = which_card;
+    public SocketClientMsgPlaceStarterCard(Orientation orientation) {
+        this.orientation = orientation;
         this.setMainControllerTarget(false);
     }
 
     /**
-     * Method to perform the corresponding action of the message.
+     * Only for implementation purposes
      * @param lis the game observer
      * @param mainController the main controller interface
      * @return
@@ -40,13 +41,13 @@ public class SocketClientMsgChooseCard extends SocketClientGenericMessage implem
     }
 
     /**
-     * Method to call chooseCardFromHand on the game controller.
+     * Method to perform placeStarterCard on the game controller.
      * @param gameController the game controller interface
      * @throws RemoteException
      * @throws GameEndedException
      */
     @Override
-    public void performOnGameController(GameControllerInterface gameController) throws RemoteException {
-        gameController.chooseCardFromHand(gameController.getCurrentPlayer().getNickname(), which_card);
+    public void performOnGameController(GameControllerInterface gameController) throws RemoteException, GameEndedException {
+        gameController.placeStarterCard(gameController.getCurrentPlayer().getNickname(), orientation);
     }
 }

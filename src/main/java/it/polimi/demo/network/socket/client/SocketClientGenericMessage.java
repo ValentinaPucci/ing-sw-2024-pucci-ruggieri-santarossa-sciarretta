@@ -66,7 +66,7 @@ public abstract class SocketClientGenericMessage implements Serializable {
     // Setters for the private fields
 
     /**
-     * Setters for the private fields
+     * Setter for the private field
      * @param userNickname
      */
     public void setUserNickname(String userNickname) {
@@ -74,7 +74,7 @@ public abstract class SocketClientGenericMessage implements Serializable {
     }
 
     /**
-     * Setters for the private fields
+     * Setter for the private field
      * @param mainControllerTarget
      */
     public void setMainControllerTarget(boolean mainControllerTarget) {
@@ -82,7 +82,7 @@ public abstract class SocketClientGenericMessage implements Serializable {
     }
 
     /**
-     * Setters for the private fields
+     * Setter for the private field
      * @param heartbeatMessage
      */
     public void setHeartbeatMessage(boolean heartbeatMessage) {

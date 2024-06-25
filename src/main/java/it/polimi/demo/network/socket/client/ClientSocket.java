@@ -6,12 +6,12 @@ import it.polimi.demo.model.enumerations.Orientation;
 
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.utils.PingSender;
-import it.polimi.demo.network.socket.client.gameControllerMessages.*;
+import it.polimi.demo.network.socket.client.MsgForGameController.*;
 import it.polimi.demo.network.socket.client.serverToClientMessages.SocketServerGenericMessage;
-import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMessageJoinFirstAvailableGame;
-import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMsgGameCreation;
-import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMsgJoinGame;
-import it.polimi.demo.network.socket.client.mainControllerMessages.SocketClientMsgLeaveGame;
+import it.polimi.demo.network.socket.client.MsgForMainController.SocketClientMessageJoinFirstAvailableGame;
+import it.polimi.demo.network.socket.client.MsgForMainController.SocketClientMsgGameCreation;
+import it.polimi.demo.network.socket.client.MsgForMainController.SocketClientMsgJoinGame;
+import it.polimi.demo.network.socket.client.MsgForMainController.SocketClientMsgLeaveGame;
 import it.polimi.demo.view.dynamic.ClientInterface;
 import it.polimi.demo.view.dynamic.GameDynamic;
 
