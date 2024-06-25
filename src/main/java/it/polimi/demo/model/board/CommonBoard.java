@@ -132,6 +132,54 @@ public class CommonBoard implements Serializable {
         return null;
     }
 
+
+    public void initializeBoardTestFinishingCard() {
+        setInitialPosition();
+        resource_concrete_deck.shuffle();
+        gold_concrete_deck.shuffle();
+        objective_concrete_deck.shuffle();
+
+        for(int i =0; i<34; i++){
+            resource_concrete_deck.popResourceCard(); // Remaning 6 cards
+        }
+
+        for(int i =0; i<36; i++){
+            gold_concrete_deck.popGoldCard(); // Remaning  cards
+        }
+
+        System.out.println("Resource Deck: " + resource_concrete_deck.size());
+        System.out.println("Gold Deck: " + gold_concrete_deck.size());
+
+        // Populate the table with cards from the decks
+        for (int i = 0; i < 2; i++) {
+            // Populate the first array with two cards from the Resource ConcreteDeck
+            try {
+                Card cardFromConcreteDeck1 = resource_concrete_deck.pop();
+                table_cards[0][i] = cardFromConcreteDeck1;
+            } catch (EmptyStackException e) {
+                System.err.println("Empty deck: " + e.getMessage());
+            }
+
+            // Populate the second array with two cards from the Gold ConcreteDeck
+            try {
+                Card cardFromConcreteDeck2 = gold_concrete_deck.pop();
+                table_cards[1][i] = cardFromConcreteDeck2;
+            } catch (EmptyStackException e) {
+                System.err.println("Empty deck: " + e.getMessage());
+            }
+
+            // Populate the second array with two cards from the Objective ConcreteDeck
+            try {
+                Card cardFromConcreteDeck3 = objective_concrete_deck.pop();
+                table_cards[2][i] = cardFromConcreteDeck3;
+            } catch (EmptyStackException e) {
+                System.err.println("Empty deck: " + e.getMessage());
+            }
+        }
+        decks.add(0, this.resource_concrete_deck);
+        decks.add(1, this.gold_concrete_deck);
+        decks.add(2, this.objective_concrete_deck);
+    }
     /**
      * Method to draw a card from the table and replace it with a card from the corresponding ConcreteDeck.
      * @param row

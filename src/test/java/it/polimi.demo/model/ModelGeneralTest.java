@@ -7,6 +7,10 @@ import it.polimi.demo.model.cards.gameCards.ResourceCard;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.view.text.TUI;
+
+import it.polimi.demo.model.board.CommonBoard;
+import it.polimi.demo.model.board.PersonalBoard;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -289,4 +293,5 @@ public class ModelGeneralTest {
 
         assertEquals(model.getStatus(), GameStatus.LAST_ROUND);
     }
+
 }

@@ -308,6 +308,9 @@ public class Model implements Serializable {
     public void initializeGame() {
         common_board.setPlayerCount(aux_order_players.size());
         common_board.initializeBoard();
+        // @Deprecated
+        // Only for test usage: test if the game ends when the resource card deck or the gold card deck finishes.
+        //common_board.initializeBoardTestFinishingCard();
         dealCards();
     }
 
