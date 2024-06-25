@@ -55,11 +55,11 @@ java -jar Client.jar
 ## UML Diagrams
 - Class Diagrams
   - [Model+Controller](DOC/UML/UML_model+controller.pdf)
-  - [RMI protocol](DOC/UML/UML_RMI.pdf)
-  - [SOCKET_protocol](DOC/UML/UML_socket.pdf)
+  - [RMI](DOC/UML/UML_RMI.pdf)
+  - [SOCKET](DOC/UML/UML_socket.pdf)
 - Sequence Diagrams
-  - [RMI protocol](DOC/sequenceDiagrams/UML_Protocol.pdf)
-  - [SOCKET protocol](DOC/sequenceDiagrams/Socket_Protocol.pdf)
+  - [RMI](DOC/sequenceDiagrams/UML_Protocol.pdf)
+  - [SOCKET](DOC/sequenceDiagrams/Socket_Protocol.pdf)
  
   
 ## Disclaimer
