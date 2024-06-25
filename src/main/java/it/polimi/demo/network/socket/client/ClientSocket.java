@@ -47,15 +47,15 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     private final GameDynamic dynamic;
     /**
-     * PingSender used to send heartbeats to the server, used to check the connection status.
+     * PingSender used to send pings to the server, used to check the connection status.
      */
-    private transient PingSender socketHeartbeat;
+    private transient PingSender socketPing;
 
     public ClientSocket(GameDynamic dynamic) {
         this.dynamic = dynamic;
         initializeConnection(Constants.serverIp, Constants.Socket_port);
         this.start();
-        socketHeartbeat = new PingSender(this);
+        socketPing = new PingSender(this);
     }
 
     /**
@@ -101,8 +101,8 @@ public class ClientSocket extends Thread implements ClientInterface {
             if (ob_in != null) ob_in.close();
             if (ob_out != null) ob_out.close();
             if (clientSocket != null) clientSocket.close();
-            if (socketHeartbeat != null && socketHeartbeat.isAlive()) {
-                socketHeartbeat.interrupt();
+            if (socketPing != null && socketPing.isAlive()) {
+                socketPing.interrupt();
             }
         } catch (IOException e) {
             staticPrinter("[ERROR] Error closing resources: " + e);
@@ -158,7 +158,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     public void createGame(String nickname, int num_of_players) throws IOException {
         this.nickname = nickname;
         sendMessage(new MCMsgGameCreation(nickname, num_of_players));
-        startHeartbeat();
+        startPing();
     }
 
     /**
@@ -171,7 +171,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     public void joinGame(String nick, int idGame) throws IOException {
         nickname = nick;
         sendMessage(new MCMsgJoinGame(nick, idGame));
-        startHeartbeat();
+        startPing();
     }
 
     /**
@@ -185,7 +185,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     public void joinRandomly(String nick) throws IOException, InterruptedException, NotBoundException {
         nickname = nick;
         sendMessage(new MCMsgJoinFirstAvailableGame(nick));
-        startHeartbeat();
+        startPing();
     }
 
     /**
@@ -198,7 +198,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     public void leave(String nick, int idGame) throws IOException {
         sendMessage(new MCMsgLeaveGame(nick, idGame));
         nickname = null;
-        stopHeartbeat();
+        stopPing();
     }
 
     /**
@@ -278,17 +278,17 @@ public class ClientSocket extends Thread implements ClientInterface {
     @Override
     public void ping() throws IOException, NotBoundException {}
 
-    private void startHeartbeat() {
-        if (socketHeartbeat != null && socketHeartbeat.isAlive()) {
-            socketHeartbeat.interrupt();
+    private void startPing() {
+        if (socketPing != null && socketPing.isAlive()) {
+            socketPing.interrupt();
         }
-        socketHeartbeat = new PingSender(this);
-        socketHeartbeat.start();
+        socketPing = new PingSender(this);
+        socketPing.start();
     }
 
-    private void stopHeartbeat() {
-        if (socketHeartbeat.isAlive()) {
-            socketHeartbeat.interrupt();
+    private void stopPing() {
+        if (socketPing.isAlive()) {
+            socketPing.interrupt();
         }
     }
 }

@@ -39,7 +39,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
 
     /**
      * This method is called when the thread is started. It continuously checks for disconnections
-     * of players by verifying the freshness of their heartbeats.
+     * of players by verifying the freshness of their pings.
      */
     @Override
     public void run() {
@@ -59,7 +59,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * Checks if any player is disconnected by verifying the freshness of their heartbeats.
+     * Checks if any player is disconnected by verifying the freshness of their pings.
      * If a player's ping is expired, handle their disconnection.
      */
     public void checkForDisconnections() {
@@ -90,7 +90,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * Adds a Ping to the list of heartbeats to monitor player connections.
+     * Adds a Ping to the list of pings to monitor player connections.
      *
      * @param nickname the player's nickname associated with the ping
      * @param listener the player's Listener associated with the ping
