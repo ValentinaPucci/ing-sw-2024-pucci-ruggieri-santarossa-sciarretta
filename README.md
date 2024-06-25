@@ -50,7 +50,7 @@ java -jar Client.jar
 ```
 
 ## Test Coverage
-![Coverage Report](deliverables/Test%20Coverage%20Report.png)
+![Coverage Report](DOC/CoverageReport.png)
 
 ## UML Diagrams
 - Class Diagrams
