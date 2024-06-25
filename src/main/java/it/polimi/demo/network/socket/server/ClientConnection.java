@@ -120,10 +120,12 @@ public class ClientConnection extends Thread implements Serializable {
             try {
                 if (message.isMainControllerTarget()) {
                     controller = message.performOnMainController(gameListenerHandler, MainController.getControllerInstance());
-                    userNickname = controller != null ? message.getUserNickname() : null;
-                } else if (!message.isHeartbeatMessage()) {
+                    if (controller == null)
+                        userNickname = null;
+                    else
+                        userNickname = message.getUserNickname();
+                } else
                     message.performOnGameController(controller);
-                }
             } catch (RemoteException | GameEndedException e) {
                 staticPrinter("Error handling game logic: " + e.getMessage());
             }

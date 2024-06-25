@@ -20,7 +20,8 @@ public class SocketClientMsgGameCreation extends SocketClientGenericMessage impl
     public SocketClientMsgGameCreation(String nick, int num_players) {
         this.setUserNickname(nick);
         this.setMainControllerTarget(true);
-        this.num_players = num_players;}
+        this.num_players = num_players;
+    }
 
     @Override
     public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
