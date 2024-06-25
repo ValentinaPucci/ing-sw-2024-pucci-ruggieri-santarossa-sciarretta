@@ -245,7 +245,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         FactType type = map.values().iterator().next();
 
         Map<FactType, Runnable> actions = Map.of(FactType.GENERIC_ERROR, () -> {
-                    ui.show_menu();
+                    ui.displayMenu();
                     nickname = null;
                     parser.getProcessedDataQueue().clear();
                     facts.offer(null, FactType.LOBBY_INFO);
@@ -275,7 +275,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
                 FactType.PLAYER_JOINED, () -> {
                     String nickLastPlayer = model.getPlayersConnected().getLast().getNickname();
                     if (nickLastPlayer.equals(nickname)) {
-                        ui.show_playerJoined(model, nickname);
+                        ui.displayPlayerJoined(model, nickname);
                         askReadyToStart();
                     }
                 }
@@ -296,15 +296,15 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
         Map<FactType, Runnable> actions = Map.of(
                 FactType.GAME_STARTED, () -> {
-                    ui.show_gameStarted(model);
+                    ui.displayGameStarted(model);
                     parser.bindPlayerToParser(model.getGameId(), model.getPlayerEntity(nickname));
                 },
                 FactType.NEXT_TURN, () -> {
-                    ui.show_nextTurn(model, nickname);
+                    ui.displayNextTurn(model, nickname);
                     if (amI(model)) {
-                        ui.show_objectiveCards(model);
+                        ui.displayObjectiveCards(model);
                         askWhichObjectiveCard();
-                        ui.show_starterCards(model);
+                        ui.displayStarterCards(model);
                         askStarterCardOrientationAndPlace();
                         //ui.show_StarterCardPB(nickname, model);
                     }
@@ -327,8 +327,8 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         Map<FactType, Runnable> actions = Map.of(
                 FactType.NEXT_TURN, () -> {
                     if (amI(model)) {
-                        ui.show_personalObjectiveCard(model);
-                        ui.show_playerHand(model, nickname);
+                        ui.displayPersonalObjectiveCard(model);
+                        ui.displayPlayerHand(model, nickname);
                         askWhichCard();
                     }
                 },
@@ -357,9 +357,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         Map<FactType, Runnable> actions = Map.of(
                 FactType.NEXT_TURN, () -> {
                     if (amI(model)) {
-                        ui.show_personalObjectiveCard(model);
-                        ui.show_playerHand(model, nickname);
-                        ui.show_pawnPositions(model);
+                        ui.displayPersonalObjectiveCard(model);
+                        ui.displayPlayerHand(model, nickname);
+                        ui.displayPawnPositions(model);
                         askWhichCard();
                     }
                 },
@@ -380,7 +380,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
 
         Map<FactType, Runnable> actions = Map.of(
                 FactType.GAME_ENDED, () -> {
-                    ui.show_menu();
+                    ui.displayMenu();
                     parser.getProcessedDataQueue().clear();
                     updateParser();
                     leave(nickname, model.getGameId());
@@ -410,7 +410,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         ModelView model = map.keySet().iterator().next();
 
         if (amI(model)) {
-            ui.show_cardChosen(nickname, model);
+            ui.displayCardChosen(nickname, model);
             askGameCardOrientationAndPlace();
         }
     }
@@ -429,9 +429,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Prompts the user to enter a nickname and displays the chosen nickname.
      */
     private void askNickname() {
-        ui.show_insertNickname();
+        ui.displayInsertNickname();
         nickname = getProcessedData();
-        ui.show_chosenNickname(nickname);
+        ui.displayChosenNickname(nickname);
     }
 
     /**
@@ -441,12 +441,12 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     private Integer askNumOfPlayers() {
         Integer num_of_players = null;
         while (num_of_players == null) {
-            ui.show_insertNumOfPlayers();
+            ui.displayInsertNumOfPlayers();
             try {
                 String temp = getProcessedData();
                 num_of_players = Integer.parseInt(temp);
             } catch (NumberFormatException e) {
-                ui.show_invalidInput();
+                ui.displayInvalidInput();
             }
         }
         return num_of_players;
@@ -512,12 +512,12 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     private Integer askGameId() {
         int gameId = -1;
         while (gameId < 0) {
-            ui.show_insertGameId();
+            ui.displayInsertGameId();
             try {
                 String temp = getProcessedData();
                 gameId = Integer.parseInt(temp);
             } catch (NumberFormatException e) {
-                ui.show_invalidInput();
+                ui.displayInvalidInput();
             }
         }
         return gameId;
@@ -527,7 +527,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Prompts the user to confirm readiness to start the game.
      */
     public void askReadyToStart() {
-        ui.show_genericMessage("Are you ready to start? (y)");
+        ui.displayGenericMessage("Are you ready to start? (y)");
         waitForValidInput("y");
         setAsReady();
     }
@@ -536,7 +536,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Prompts the user to select an objective card.
      */
     public void askWhichObjectiveCard() {
-        ui.show_whichObjectiveToChoose();
+        ui.displayWhichObjectiveToChoose();
         String choice = waitForValidInput("1", "2");
         try {
             chooseCard(Integer.parseInt(choice) - 1);
@@ -549,7 +549,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Prompts the user to select a card.
      */
     public void askWhichCard() {
-        ui.show_whichCardToPlace();
+        ui.displayWhichCardToPlace();
         String choice = waitForValidInput("1", "2", "3");
         try {
             chooseCard(Integer.parseInt(choice) - 1);
@@ -562,7 +562,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Prompts the user to select the orientation and placement of a starter card.
      */
     public void askStarterCardOrientationAndPlace() {
-        ui.show_orientation("Choose the orientation of the starter card");
+        ui.displayOrientation("Choose the orientation of the starter card");
         String orientation = waitForValidInput("f", "b").equals("f") ? "FRONT" : "BACK";
         try {
             placeStarterCard(Orientation.valueOf(orientation));
@@ -575,7 +575,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Prompts the user to select the orientation and placement of a game card.
      */
     public void askGameCardOrientationAndPlace() {
-        ui.show_orientation("Choose the orientation of the card to place");
+        ui.displayOrientation("Choose the orientation of the card to place");
         String orientation = waitForValidInput("f", "b").equals("f") ? "FRONT" : "BACK";
         int x = getValidatedCoordinate("x");
         int y = getValidatedCoordinate("y");
@@ -590,7 +590,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Prompts the user to select where to draw a card from.
      */
     public void askWhereToDrawFrom() {
-        ui.show_whereToDrawFrom();
+        ui.displayWhereToDrawFrom();
         int choice = Integer.parseInt(waitForValidInput("1", "2", "3", "4", "5", "6"));
         try {
             drawCard(choice);
@@ -624,7 +624,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         do {
             input = getProcessedData();
             if (!List.of(validInputs).contains(input))
-                ui.show_genericMessage("Invalid input. Please enter a valid input.");
+                ui.displayGenericMessage("Invalid input. Please enter a valid input.");
         } while (!List.of(validInputs).contains(input));
         return input;
     }
@@ -637,7 +637,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     private int getValidatedCoordinate(String coordinate) {
         String input;
         do {
-            ui.show_genericMessage("Choose the ** " + coordinate +
+            ui.displayGenericMessage("Choose the ** " + coordinate +
                     " ** coordinates where to place the card (insert a number between -250 and 250)");
             input = getProcessedData();
         } while (!isCoordinateValid(input));
@@ -654,7 +654,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
             int value = Integer.parseInt(input.trim());
             return value >= -250 && value <= 250;
         } catch (NumberFormatException e) {
-            ui.show_genericError("Invalid input. Please enter a valid number between -250 and 250.");
+            ui.displayGenericError("Invalid input. Please enter a valid number between -250 and 250.");
             return false;
         }
     }
@@ -666,7 +666,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      * Displays ui message indicating a connection error.
      */
     public void noConnectionError() {
-        ui.show_noConnectionError();
+        ui.displayNoConnectionError();
     }
 
     /**
@@ -701,7 +701,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void createGame(String nickname, int num_of_players) {
-        ui.show_createGame(nickname);
+        ui.displayCreateGame(nickname);
         handleAction(() -> client_interface.createGame(nickname, num_of_players));
     }
 
@@ -711,7 +711,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void joinRandomly(String nick) {
-        ui.show_joinRandom(nick);
+        ui.displayJoinRandom(nick);
         handleAction(() -> client_interface.joinRandomly(nick));
     }
 
@@ -722,7 +722,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void joinGame(String nick, int game_id) {
-        ui.show_join(game_id, nick);
+        ui.displayJoin(game_id, nick);
         handleAction(() -> client_interface.joinGame(nick, game_id));
     }
 
@@ -842,7 +842,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void starterCardPlaced(ModelView model, Orientation orientation, String nick) {
-        ifAmI(model, m -> ui.show_personalBoard(nickname, m));
+        ifAmI(model, m -> ui.displayPersonalBoard(nickname, m));
     }
 
     /**
@@ -865,8 +865,8 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void cardPlaced(ModelView model, int where_to_place_x, int where_to_place_y, Orientation orientation) {
         ifAmI(model, m -> {
-            ui.show_personalBoard(nickname, m);
-            ui.show_commonBoard(m);
+            ui.displayPersonalBoard(nickname, m);
+            ui.displayCommonBoard(m);
             facts.offer(m, FactType.CARD_PLACED);
         });
     }
@@ -878,9 +878,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void illegalMove(ModelView model) {
         ifAmI(model, m -> {
-            ui.show_illegalMove();
-            ui.show_genericMessage("Here we show you again your personal board:");
-            ui.show_personalBoard(nickname, m);
+            ui.displayIllegalMove();
+            ui.displayGenericMessage("Here we show you again your personal board:");
+            ui.displayPersonalBoard(nickname, m);
             facts.offer(m, FactType.ILLEGAL_MOVE);
         });
     }
@@ -893,8 +893,8 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void illegalMoveBecauseOf(ModelView model, String reason_why) {
         ifAmI(model, m -> {
-            ui.show_illegalMoveBecauseOf(reason_why);
-            ui.show_personalBoard(nickname, m);
+            ui.displayIllegalMoveBecauseOf(reason_why);
+            ui.displayPersonalBoard(nickname, m);
             facts.offer(m, FactType.ILLEGAL_MOVE);
         });
     }
@@ -906,7 +906,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void successfulMove(ModelView model, Coordinate coord) {
-        ifAmI(model, m -> ui.show_successfulMove(coord));
+        ifAmI(model, m -> ui.displaySuccessfulMove(coord));
     }
 
     /**
@@ -916,7 +916,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void cardDrawn(ModelView model, int index) {
-        ui.show_cardDrawn(model, nickname);
+        ui.displayCardDrawn(model, nickname);
     }
 
     /**
@@ -926,7 +926,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void nextTurn(ModelView model) {
         if (!amI(model) && (model.getStatus() == GameStatus.RUNNING || model.getStatus() == GameStatus.SECOND_LAST_ROUND || model.getStatus()==GameStatus.LAST_ROUND)) {
-            ui.show_myTurnIsFinished();
+            ui.displayMyTurnIsFinished();
         }
         facts.offer(model, FactType.NEXT_TURN);
         parser.getProcessedDataQueue().clear();
@@ -938,7 +938,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void playerJoined(ModelView gameModel) {
-        ui.show_playerJoined(gameModel, nickname);
+        ui.displayPlayerJoined(gameModel, nickname);
         facts.offer(gameModel, FactType.PLAYER_JOINED);
     }
 
@@ -949,8 +949,8 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void playerIsReadyToStart(ModelView gameModel, String nick) {
-        ui.show_playerJoined(gameModel, nickname);
-        Runnable showReadyToStart = () -> ui.show_readyToStart(gameModel, nickname);
+        ui.displayPlayerJoined(gameModel, nickname);
+        Runnable showReadyToStart = () -> ui.displayReadyToStart(gameModel, nickname);
         Optional.of(nick)
                 .filter(nickname::equals)
                 .ifPresent(n -> showReadyToStart.run());
@@ -965,8 +965,8 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void playerLeft(ModelView gameModel, String nick) {
-        ui.show_genericMessage("[EVENT]: Player " + nick + " decided to leave the game!");
-        ui.playerLeft(gameModel, nick);
+        ui.displayGenericMessage("[EVENT]: Player " + nick + " decided to leave the game!");
+        ui.displayPlayerLeft(gameModel, nick);
     }
 
     /**
@@ -978,7 +978,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void messageSent(ModelView gameModel, String nick, Message msg) {
         if (!msg.sender().getNickname().equals(nickname) && (nickname.equals(nick) || "Everyone".equals(nick))) {
-            ui.show_messageSent(gameModel, nick);
+            ui.displayMessageSent(gameModel, nick);
         }
     }
 
@@ -988,7 +988,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void genericErrorWhenEnteringGame(String why) {
-        ui.show_genericMessage("No available game to join: " + why);
+        ui.displayGenericMessage("No available game to join: " + why);
         facts.offer(null, FactType.GENERIC_ERROR);
     }
 
@@ -998,7 +998,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void gameStarted(ModelView gameModel) {
-        ui.show_genericMessage("All players are connected, the game will start soon!");
+        ui.displayGenericMessage("All players are connected, the game will start soon!");
         facts.offer(gameModel, FactType.GAME_STARTED);
     }
 
@@ -1009,7 +1009,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void gameEnded(ModelView gameModel) {
         facts.offer(gameModel, FactType.GAME_ENDED);
-        ui.show_gameEnded(gameModel);
+        ui.displayGameEnded(gameModel);
     }
 
     /**
@@ -1019,7 +1019,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void playerDisconnected(ModelView gameModel, String nick) {
-        ui.show_genericMessage("Player " + nick + " has just disconnected");
+        ui.displayGenericMessage("Player " + nick + " has just disconnected");
     }
 
     /**
@@ -1033,9 +1033,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     @Override
     public void showOthersPersonalBoard(ModelView modelView, String playerNickname, int playerIndex) throws RemoteException {
         if (modelView.getAllPlayers().size() > playerIndex && this.nickname.equals(playerNickname)) {
-            ui.show_othersPersonalBoard(modelView, playerIndex);
+            ui.displayOthersPersonalBoard(modelView, playerIndex);
         } else if (this.nickname.equals(playerNickname)) {
-            ui.show_genericMessage("Player index out of bounds");
+            ui.displayGenericMessage("Player index out of bounds");
         }
     }
 
@@ -1045,7 +1045,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void secondLastRound(ModelView gameModel) {
-        ui.show_genericMessage("*** Second last round begins! ***");
+        ui.displayGenericMessage("*** Second last round begins! ***");
     }
 
     /**
@@ -1054,7 +1054,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
      */
     @Override
     public void lastRound(ModelView gameModel) {
-        ui.show_genericMessage("*** Last round begins! Now you will not be able to draw any additional card! ***");
+        ui.displayGenericMessage("*** Last round begins! Now you will not be able to draw any additional card! ***");
     }
 
 }

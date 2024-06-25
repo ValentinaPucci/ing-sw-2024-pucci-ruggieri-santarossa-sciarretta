@@ -66,28 +66,28 @@ public class GUI extends UI {
     /** Method that shows the InsertIDgame scene.
      * */
     @Override
-    protected void show_insertGameId() {
+    protected void displayInsertGameId() {
         switchScene("InsertIDgame");
     }
 
     /** Method that shows the InsertNickname scene.
      * */
     @Override
-    protected void show_insertNickname() {
+    protected void displayInsertNickname() {
         switchScene("InsertNickname");
     }
 
     /** Method that shows the InsertNumPlayers scene.
      * */
     @Override
-    protected void show_insertNumOfPlayers() {
+    protected void displayInsertNumOfPlayers() {
         switchScene("InsertNumPlayers");
     }
 
     /** Method that shows the GenericWaitingRoom scene.
      * */
     @Override
-    protected void show_chosenNickname(String nickname) {
+    protected void displayChosenNickname(String nickname) {
         this.myNickname = nickname;
         switchScene("GenericWaitingRoom");
     }
@@ -95,7 +95,7 @@ public class GUI extends UI {
     /** Method that shows the GameOver scene.
      * */
     @Override
-    protected void show_gameEnded(ModelView model) {
+    protected void displayGameEnded(ModelView model) {
         executeOnPlatform(() -> {
             ((EndGameController) this.app.getSceneController("GameOver")).show(model);
             switchScene("GameOver");
@@ -105,7 +105,7 @@ public class GUI extends UI {
     /** Method that shows the Running scene and initializes all the elements of the scene.
      * */
     @Override
-    protected void show_gameStarted(ModelView model) {
+    protected void displayGameStarted(ModelView model) {
         modifyRunningController(controller -> {
             switchScene("Running");
             controller.setCardHand(model, myNickname);
@@ -120,14 +120,14 @@ public class GUI extends UI {
     /** Method that shows who is the first player to play
      * */
     @Override
-    protected void show_nextTurn(ModelView model, String nickname) {
+    protected void displayNextTurn(ModelView model, String nickname) {
         modifyRunningController(controller -> controller.changeTurn(model));
     }
 
     /** Method that hides the ready button.
      * */
     @Override
-    protected void show_readyToStart(ModelView gameModel, String nickname) {
+    protected void displayReadyToStart(ModelView gameModel, String nickname) {
         executeOnPlatform(() -> ((StartGameController) this.app.getSceneController("GenericWaitingRoom")).ReadyButtonVisibility(false));
     }
 
@@ -135,7 +135,7 @@ public class GUI extends UI {
      * It updated the GenericWaitingRoom scene.
      * */
     @Override
-    protected void show_playerJoined(ModelView gameModel, String nick) {
+    protected void displayPlayerJoined(ModelView gameModel, String nick) {
         if (!gameStarted) {
             executeOnPlatform(() -> {
                 StartGameController waitingRoomController = (StartGameController) app.getSceneController("GenericWaitingRoom");
@@ -156,14 +156,14 @@ public class GUI extends UI {
     /** Method that ables the click on the personal objective cards
      * */
     @Override
-    protected void show_objectiveCards(ModelView gameModel) {
+    protected void displayObjectiveCards(ModelView gameModel) {
         modifyRunningController(RunningController::ableObjectiveCardsClick);
     }
 
     /** Method that updates the common cards, score board position and points.
      * */
     @Override
-    protected void show_commonBoard(ModelView gameModel) {
+    protected void displayCommonBoard(ModelView gameModel) {
         modifyRunningController(controller -> {
             controller.setCommonCards(gameModel);
             controller.setScoreBoardPosition(gameModel);
@@ -174,14 +174,14 @@ public class GUI extends UI {
     /** Method that shows the end of my turn
      * */
     @Override
-    protected void show_myTurnIsFinished() {
+    protected void displayMyTurnIsFinished() {
         modifyRunningController(RunningController::myTurnIsFinished);
     }
 
     /** Method that shows my hand of cards
      * */
     @Override
-    protected void show_playerHand(ModelView gameModel, String nickname) {
+    protected void displayPlayerHand(ModelView gameModel, String nickname) {
         modifyRunningController(controller -> {
             controller.setCardHand(gameModel, nickname);
             controller.ableCommonCardsClick();
@@ -191,7 +191,7 @@ public class GUI extends UI {
     /** Method that updates the running scene for all the players.
      * */
     @Override
-    protected void show_cardDrawn(ModelView gameModel, String nickname) {
+    protected void displayCardDrawn(ModelView gameModel, String nickname) {
         modifyRunningController(controller -> {
             controller.setCommonCards(gameModel);
             controller.setCardHand(gameModel, nickname);
@@ -204,56 +204,56 @@ public class GUI extends UI {
     /** Method that shows the personal board of the given player.
      * */
     @Override
-    protected void show_othersPersonalBoard(ModelView modelView, int playerIndex) {
+    protected void displayOthersPersonalBoard(ModelView modelView, int playerIndex) {
         modifyRunningController(controller -> controller.setOthersPersonalBoard(playerIndex));
     }
 
     /** Method that shows the GameOver scene when a player decides to leave the game.
      * */
     @Override
-    protected void playerLeft(ModelView model, String nick) {
+    protected void displayPlayerLeft(ModelView model, String nick) {
         switchScene("GameOver");
     }
 
     /** Method that disables all other cards except the one chosen.
      * */
     @Override
-    protected void show_cardChosen(String nickname, ModelView model) {
+    protected void displayCardChosen(String nickname, ModelView model) {
         modifyRunningController(RunningController::disableAllOtherCardsInHand);
     }
 
     /** Method that shows the illegal move attempt
      * */
     @Override
-    public void show_illegalMove() {
+    public void displayIllegalMove() {
         modifyRunningController(RunningController::illegalMove);
     }
 
     /** Method that shows the successful move and then places the card in the personal board.
      * */
     @Override
-    protected void show_successfulMove(Coordinate coord) {
+    protected void displaySuccessfulMove(Coordinate coord) {
         modifyRunningController(controller -> controller.successfulMove(coord));
     }
 
     /** Method that allows the click on the common cards
      * */
     @Override
-    protected void show_whereToDrawFrom() {
+    protected void displayWhereToDrawFrom() {
         modifyRunningController(RunningController::ableCommonCardsClick);
     }
 
     /** Method that allows the click on the player hand
      * */
     @Override
-    public void show_whichCardToPlace() {
+    public void displayWhichCardToPlace() {
         modifyRunningController(RunningController::whichCardToPlace);
     }
 
     /** Method that updates the position on the score board
      * */
     @Override
-    public void show_pawnPositions(ModelView model) {
+    public void displayPawnPositions(ModelView model) {
         modifyRunningController(controller -> {
             controller.setScoreBoardPosition(model);
             controller.setPoints(model);
@@ -263,7 +263,7 @@ public class GUI extends UI {
     /** Method that allows to show the orientation on the chosen card
      * */
     @Override
-    protected void show_orientation(String message) {
+    protected void displayOrientation(String message) {
         modifyRunningController(controller -> {
             if ("Choose the orientation of the card to place".equals(message)) {
                 controller.whichOrientationToPlace();
@@ -276,66 +276,66 @@ public class GUI extends UI {
     /** Method shows the error scene, due to connection lost.
      * */
     @Override
-    protected void show_noConnectionError() {
+    protected void displayNoConnectionError() {
         switchScene("Error");
     }
 
     /** Method that shows the message sent in the chat.
      * */
     @Override
-    protected void show_messageSent(ModelView gameModel, String nickname) {
+    protected void displayMessageSent(ModelView gameModel, String nickname) {
         modifyRunningController(controller -> controller.updateChat(gameModel, nickname));
     }
 
     //------------------------------------methods used only in TUI----------------------------------------------
 
     @Override
-    protected void show_genericMessage(String s) {
+    protected void displayGenericMessage(String s) {
     }
 
     @Override
-    protected void show_genericError(String s) {
-
-    }
-
-    @Override
-    protected void show_invalidInput() {
-    }
-
-    @Override
-    protected void show_menu() {
-    }
-
-    @Override
-    protected void show_personalObjectiveCard(ModelView gameModel) {
-
-    }
-    @Override
-    public void show_whichObjectiveToChoose() {}
-
-    @Override
-    protected void show_starterCards(ModelView gameModel) {
+    protected void displayGenericError(String s) {
 
     }
 
     @Override
-    protected void show_personalBoard(String nick, ModelView gameModel) {
+    protected void displayInvalidInput() {
     }
 
     @Override
-    protected void show_createGame(String nickname) {
+    protected void displayMenu() {
     }
 
     @Override
-    protected void show_joinRandom(String nickname) {
+    protected void displayPersonalObjectiveCard(ModelView gameModel) {
+
+    }
+    @Override
+    public void displayWhichObjectiveToChoose() {}
+
+    @Override
+    protected void displayStarterCards(ModelView gameModel) {
+
     }
 
     @Override
-    protected void show_illegalMoveBecauseOf(String message) {
+    protected void displayPersonalBoard(String nick, ModelView gameModel) {
     }
 
     @Override
-    protected void show_join(int idGame, String nickname) {
+    protected void displayCreateGame(String nickname) {
+    }
+
+    @Override
+    protected void displayJoinRandom(String nickname) {
+    }
+
+    @Override
+    protected void displayIllegalMoveBecauseOf(String message) {
+    }
+
+    @Override
+    protected void displayJoin(int idGame, String nickname) {
     }
 }
 

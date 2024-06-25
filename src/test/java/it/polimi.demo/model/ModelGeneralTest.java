@@ -8,9 +8,6 @@ import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.view.text.TUI;
 
-import it.polimi.demo.model.board.CommonBoard;
-import it.polimi.demo.model.board.PersonalBoard;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -143,7 +140,7 @@ public class ModelGeneralTest {
 
         ModelView model_view = new ModelView(model);
 
-        tui.show_gameEnded(model_view);
+        tui.displayGameEnded(model_view);
 
         model.placeCard(card1, p1, 250, 250);
         // hit illegal starter
@@ -186,7 +183,7 @@ public class ModelGeneralTest {
 
         model_view = new ModelView(model);
 
-        tui.show_gameEnded(model_view);
+        tui.displayGameEnded(model_view);
 
         model.getPlayersConnected().getFirst().getPersonalBoard().setPoints(15);
         model.getPlayersConnected().getLast().getPersonalBoard().setPoints(20);
@@ -195,7 +192,7 @@ public class ModelGeneralTest {
 
         model_view = new ModelView(model);
 
-        tui.show_gameEnded(model_view);
+        tui.displayGameEnded(model_view);
 
         p1.getCardHandIds();
 
@@ -236,7 +233,7 @@ public class ModelGeneralTest {
 
         TUI tui = new TUI();
         ModelView model_view = new ModelView(model);
-        tui.show_gameEnded(model_view);
+        tui.displayGameEnded(model_view);
 
         model.getPlayersConnected().get(0).getPersonalBoard().setPoints(20);
         model.getPlayersConnected().get(1).getPersonalBoard().setPoints(20);
@@ -245,7 +242,7 @@ public class ModelGeneralTest {
         model.declareWinners();
 
         model_view = new ModelView(model);
-        tui.show_gameEnded(model_view);
+        tui.displayGameEnded(model_view);
 
 
         //Test model view methods
