@@ -24,7 +24,6 @@ public class SocketClientMsgSetReady extends SocketClientGameControllerMex imple
      */
     public SocketClientMsgSetReady(String nick) {
         this.setUserNickname(nick);
-        this.setMainControllerTarget(false);
     }
 
     /**

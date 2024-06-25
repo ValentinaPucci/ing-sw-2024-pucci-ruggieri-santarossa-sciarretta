@@ -24,7 +24,6 @@ public class SocketClientMsgChooseCard extends SocketClientGameControllerMex imp
      */
     public SocketClientMsgChooseCard(int which_card) {
         this.which_card = which_card;
-        this.setMainControllerTarget(false);
     }
 
     /**

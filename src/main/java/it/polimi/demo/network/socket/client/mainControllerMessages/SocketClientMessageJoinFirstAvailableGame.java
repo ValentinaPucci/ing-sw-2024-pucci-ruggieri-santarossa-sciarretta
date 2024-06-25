@@ -20,7 +20,6 @@ public class SocketClientMessageJoinFirstAvailableGame extends SocketClientMainC
 
     public SocketClientMessageJoinFirstAvailableGame(String nick) {
         this.setUserNickname(nick);
-        this.setMainControllerTarget(true);
     }
 
     /**

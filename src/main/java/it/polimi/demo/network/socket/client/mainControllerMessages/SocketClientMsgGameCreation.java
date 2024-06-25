@@ -19,7 +19,6 @@ public class SocketClientMsgGameCreation extends SocketClientMainControllerMex i
 
     public SocketClientMsgGameCreation(String nick, int num_players) {
         this.setUserNickname(nick);
-        this.setMainControllerTarget(true);
         this.num_players = num_players;
     }
 

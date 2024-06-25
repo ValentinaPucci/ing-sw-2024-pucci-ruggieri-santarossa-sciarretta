@@ -29,8 +29,6 @@ public class SocketClientMsgSendMessage extends SocketClientGameControllerMex im
     public SocketClientMsgSendMessage(String nick, Message chat_msg) {
         this.nick = nick;
         this.chat_msg = chat_msg;
-
-        this.setMainControllerTarget(false);
     }
 
     /**

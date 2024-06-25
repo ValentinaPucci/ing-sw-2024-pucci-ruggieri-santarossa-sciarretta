@@ -21,7 +21,6 @@ public class SocketClientMsgLeaveGame extends SocketClientMainControllerMex {
     public SocketClientMsgLeaveGame(String nick, int game_id) {
         this.game_id = game_id;
         this.setUserNickname(nick);
-        this.setMainControllerTarget(true);
     }
 
     /**
