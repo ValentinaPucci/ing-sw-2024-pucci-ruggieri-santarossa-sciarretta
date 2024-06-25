@@ -99,8 +99,6 @@ public class RunningController extends GuiInputReaderController {
     private Orientation cardHandOrientation;
     private Orientation starterCardOrientation;
     private ArrayList<Integer> cardHand = new ArrayList<>();
-    private ImageView my_pieceBlackImageView;
-    private ArrayList<ImageView> my_pieces;
     private int starterCard = 0;
     private ArrayList<Player> players_list;
     private int my_index = 0;
@@ -134,21 +132,9 @@ public class RunningController extends GuiInputReaderController {
      */
     public void initialize() {
 
+        preloadImages();
+
         personalObjectivesBox = new HBox();
-
-        my_pieces = new ArrayList<>();
-
-        ImageView my_piece1ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece1.png")))); //blue
-        ImageView my_piece2ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece2.png")))); //green
-        ImageView my_piece3ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece3.png")))); //red
-        ImageView my_piece4ImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece4.png")))); //yellow
-
-        my_pieces.add(0, my_piece1ImageView);
-        my_pieces.add(1, my_piece2ImageView);
-        my_pieces.add(2, my_piece3ImageView);
-        my_pieces.add(3, my_piece4ImageView);
-
-        my_pieceBlackImageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/pieces/piece0.png"))));
 
         bnImageViews[0] = bn0;
         bnImageViews[1] = bn1;
@@ -274,6 +260,41 @@ public class RunningController extends GuiInputReaderController {
         pb2.setDisable(false);
     }
 
+
+    private static final Map<String, Image> preloadedImages = new HashMap<>();
+
+    public void preloadImages() {
+        for (int i = 1; i <= 102; i++) {
+            String formattedCardId = String.format("%03d", i);
+            for (Orientation orientation : Orientation.values()) {
+                String imagePath = switch (orientation) {
+                    case FRONT -> "/images/cards/cards_front/" + formattedCardId + ".png";
+                    case BACK -> "/images/cards/cards_back/" + formattedCardId + ".png";
+                };
+                Image image = new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath)));
+                preloadedImages.put(formattedCardId + orientation, image);
+            }
+        }
+
+        // Preload placeholder image
+        String placeholderImagePath = "/images/placeholder.jpg";
+        Image placeholderImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(placeholderImagePath)));
+        preloadedImages.put("placeholder", placeholderImage);
+
+        // Preload piece images
+        for (int i = 1; i <= 4; i++) {
+            String pieceImagePath = "/images/pieces/piece" + i + ".png";
+            Image pieceImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(pieceImagePath)));
+            preloadedImages.put("piece" + (i-1), pieceImage);
+        }
+
+        // Preload the black piece image
+        String blackPieceImagePath = "/images/pieces/piece0.png";
+        Image blackPieceImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream(blackPieceImagePath)));
+        preloadedImages.put("pieceBlack", blackPieceImage);
+    }
+
+
     /**
     *    Method that is used to disable a group of components in a single call
     * */
@@ -312,15 +333,19 @@ public class RunningController extends GuiInputReaderController {
      * */
     private void movePieceToPosition(int player_index, int indexToGo) {
 
-        ImageView pieceToMove = my_pieces.get(player_index);
+        // Retrieve the piece image from the preloadedImages map
+        Image pieceToMoveImage = preloadedImages.get("piece" + player_index);
 
+        // Find the ImageView with the matching Image and clear it
         for (ImageView bnImageView : bnImageViews) {
-            if (bnImageView.getImage() == pieceToMove.getImage()) {
+            if (bnImageView.getImage() == pieceToMoveImage) {
                 bnImageView.setImage(null);
                 break;
             }
         }
-        bnImageViews[indexToGo].setImage(pieceToMove.getImage());
+
+        // Set the piece image to the new position
+        bnImageViews[indexToGo].setImage(pieceToMoveImage);
     }
 
     //-------------------------------OTHER PLAYERS--------------------------------------------
@@ -484,109 +509,88 @@ public class RunningController extends GuiInputReaderController {
      * Method that places the card of the other players in his personal board
      * */
     private void placeOthersPlayersCard(ArrayList<Player> all_players, int playerIndex, ArrayList<Integer> lastChosenCard, Orientation lastChosenOrientation, Coordinate coord) {
-        Player player_without_me = players_list.get(playerIndex);
-        int player_without_me_index = getPlayerIndex(players_without_me, player_without_me.getNickname());
-        if(rounds < players_list.size()){
-            String StarterImagePath;
+            Player player_without_me = players_list.get(playerIndex);
+            int player_without_me_index = getPlayerIndex(players_without_me, player_without_me.getNickname());
 
-            String formattedCardId = String.format("%03d", all_players.get(playerIndex).getStarterCard().getId());
-            if(all_players.get(playerIndex).getStarterCard().getOrientation() == Orientation.FRONT){
-                StarterImagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
-            }else if(all_players.get(playerIndex).getStarterCard().getOrientation()  == Orientation.BACK){
-                StarterImagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
-            } else {
+            if (rounds < players_list.size()) {
+                String formattedCardId = String.format("%03d", all_players.get(playerIndex).getStarterCard().getId());
+                Orientation orientation = all_players.get(playerIndex).getStarterCard().getOrientation();
+                Image starterImage = preloadedImages.get(formattedCardId + orientation);
+
+                if (starterImage == null) {
+                    System.out.println("Orientation non valida.");
+                    return;
+                }
+
+                ImageView StarterCardPic = new ImageView(starterImage);
+                StarterCardPic.setFitWidth(90);
+                StarterCardPic.setFitHeight(65);
+
+                String resultString = String.format("%d,%d", 0, 0);
+                int[] position = inverseMapper.getInverseMappedPosition(resultString);
+
+                StarterCardPic.setLayoutX(position[0] + offset_x);
+                StarterCardPic.setLayoutY(position[1] + offset_y);
+
+                switch (player_without_me_index) {
+                    case 0 -> pb0.getChildren().add(StarterCardPic);
+                    case 1 -> pb1.getChildren().add(StarterCardPic);
+                    case 2 -> pb2.getChildren().add(StarterCardPic);
+                }
+
+                // Get the piece image
+                Image pieceImage = preloadedImages.get("piece" + playerIndex);
+                ImageView piecePic = new ImageView(pieceImage);
+                piecePic.setFitWidth(20);
+                piecePic.setFitHeight(20);
+                piecePic.setLayoutX(position[0] + 20 + offset_x);
+                piecePic.setLayoutY(position[1] + 22.5 + offset_y);
+
+                switch (player_without_me_index) {
+                    case 0 -> pb0.getChildren().add(piecePic);
+                    case 1 -> pb1.getChildren().add(piecePic);
+                    case 2 -> pb2.getChildren().add(piecePic);
+                }
+
+                if (playerIndex == firstPlayerIndex) {
+                    Image blackPieceImage = preloadedImages.get("pieceBlack");
+                    ImageView BlackPiecePic = new ImageView(blackPieceImage);
+                    BlackPiecePic.setFitWidth(20);
+                    BlackPiecePic.setFitHeight(20);
+                    BlackPiecePic.setLayoutX(position[0] + 50 + offset_x);
+                    BlackPiecePic.setLayoutY(position[1] + 22.5 + offset_y);
+
+                    switch (player_without_me_index) {
+                        case 0 -> pb0.getChildren().add(BlackPiecePic);
+                        case 1 -> pb1.getChildren().add(BlackPiecePic);
+                        case 2 -> pb2.getChildren().add(BlackPiecePic);
+                    }
+                }
+                rounds++;
+            }
+
+            String formattedCardId = String.format("%03d", lastChosenCard.get(0));
+            Image lastChosenImage = preloadedImages.get(formattedCardId + lastChosenOrientation);
+
+            if (lastChosenImage == null) {
                 System.out.println("Orientation non valida.");
                 return;
             }
-            ImageView StarterCardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(StarterImagePath))));
-            StarterCardPic.setFitWidth(90);
-            StarterCardPic.setFitHeight(65);
 
-            String resultString = String.format("%d,%d", 0 , 0);
+            ImageView CardPic = new ImageView(lastChosenImage);
+            CardPic.setFitWidth(90);
+            CardPic.setFitHeight(65);
 
-            int[] position = inverseMapper.getInverseMappedPosition(resultString);
+            int[] result = {lastChosenCard.get(1) - 250, lastChosenCard.get(2) - 250};
 
-            StarterCardPic.setLayoutX((double)position[0] + offset_x);
-            StarterCardPic.setLayoutY((double)position[1] + offset_y);
-
-            switch (player_without_me_index) {
-                case 0 -> {
-                    pb0.getChildren().add(StarterCardPic);
+            switch (coord) {
+                case NE -> result[0]--;
+                case NW -> {
+                    result[0]--;
+                    result[1]--;
                 }
-                case 1 -> {
-                    pb1.getChildren().add(StarterCardPic);
-                }
-                case 2 -> {
-                    pb2.getChildren().add(StarterCardPic);
-                }
+                case SW -> result[1]--;
             }
-
-            ImageView piecePic = my_pieces.get(playerIndex);
-            piecePic.setFitWidth(20);
-            piecePic.setFitHeight(20);
-            piecePic.setLayoutX((double) position[0] + 20 + offset_x);
-            piecePic.setLayoutY((double) position[1] + 22.5 + offset_y);
-            switch (player_without_me_index) {
-                case 0 -> {
-                    pb0.getChildren().add(piecePic);
-                }
-                case 1 -> {
-                    pb1.getChildren().add(piecePic);
-                }
-                case 2 -> {
-                    pb2.getChildren().add(piecePic);
-                }
-            }
-
-
-            if(playerIndex == firstPlayerIndex) {
-                ImageView BlackPiecePic = my_pieceBlackImageView;
-                BlackPiecePic.setFitWidth(20);
-                BlackPiecePic.setFitHeight(20);
-                BlackPiecePic.setLayoutX((double) position[0] + 50 + offset_x);
-                BlackPiecePic.setLayoutY((double) position[1] + 22.5 + offset_y);
-                switch (player_without_me_index) {
-                    case 0 -> {
-                        pb0.getChildren().add(BlackPiecePic);
-                    }
-                    case 1 -> {
-                        pb1.getChildren().add(BlackPiecePic);
-                    }
-                    case 2 -> {
-                        pb2.getChildren().add(BlackPiecePic);
-                    }
-                }
-            }
-            rounds ++;
-        }
-
-        String imagePath;
-        String formattedCardId = String.format("%03d", lastChosenCard.getFirst());
-        if(lastChosenOrientation == Orientation.FRONT){
-            imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
-        }else if(lastChosenOrientation == Orientation.BACK){
-            imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
-        } else {
-            System.out.println("Orientation non valida.");
-            return;
-        }
-        ImageView CardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
-        CardPic.setFitWidth(90);
-        CardPic.setFitHeight(65);
-
-        int[] result = {lastChosenCard.get(1) - 250, lastChosenCard.get(2) - 250};
-
-        switch (coord) {
-            case NE -> result[0] = result[0] - 1;
-            case NW -> {
-                result[0] = result[0] - 1;
-                result[1] = result[1] - 1;
-            }
-            case SW -> result[1] = result[1] - 1;
-            case SE -> {
-                // it's correct
-            }
-        }
 
         String resultString = String.format("%d,%d", result[0], result[1]);
 
@@ -656,79 +660,55 @@ public class RunningController extends GuiInputReaderController {
         Integer[] cardIds = model.getCommonBoard().getCommonCardsId();
         for (int i = 0; i < cardIds.length; i++) {
             int cardId = cardIds[i];
-            if(cardId != -1){
-                String imagePath;
-                if (i == 0 || i == 3 || i == 6) {
-                    imagePath = "/images/cards/cards_back/" + String.format("%03d", cardId) + ".png";
-                } else {
-                    imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
-                }
-                InputStream imageStream = getClass().getResourceAsStream(imagePath);
-                if (imageStream == null) {
-                    System.out.println("Image not found: " + imagePath);
-                    continue;
-                }
-                ImageView imageView = new ImageView(new Image(imageStream));
-                imageView.setFitWidth(90);
-                imageView.setFitHeight(65);
+            String formattedCardId = cardId != -1 ? String.format("%03d", cardId) : "placeholder";
+            String key = (cardId != -1 ? formattedCardId + (i == 0 || i == 3 || i == 6 ? Orientation.BACK : Orientation.FRONT) : "placeholder");
+            Image image = preloadedImages.get(key);
 
-                if (i == 0) {
+            if (image == null) {
+                System.out.println("Image not found: " + key);
+                continue;
+            }
+
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(65);
+
+            switch (i) {
+                case 0 -> {
                     commonCard1.getChildren().add(imageView);
-                } else if (i == 1) {
+                    if (cardId == -1) cc1_ended = true;
+                }
+                case 1 -> {
                     commonCard2.getChildren().add(imageView);
-                } else if (i == 2) {
+                    if (cardId == -1) cc2_ended = true;
+                }
+                case 2 -> {
                     commonCard3.getChildren().add(imageView);
-                } else if (i == 3) {
+                    if (cardId == -1) cc3_ended = true;
+                }
+                case 3 -> {
                     commonCard4.getChildren().add(imageView);
-                } else if (i == 4) {
+                    if (cardId == -1) cc4_ended = true;
+                }
+                case 4 -> {
                     commonCard5.getChildren().add(imageView);
-                } else if (i == 5) {
+                    if (cardId == -1) cc5_ended = true;
+                }
+                case 5 -> {
                     commonCard6.getChildren().add(imageView);
-                } else if (i == 6) {
+                    if (cardId == -1) cc6_ended = true;
+                }
+                case 6 -> {
                     commonCard7.getChildren().add(imageView);
-                } else if (i == 7) {
+                    if (cardId == -1) cc7_ended = true;
+                }
+                case 7 -> {
                     commonCard8.getChildren().add(imageView);
-                } else {
+                    if (cardId == -1) cc8_ended = true;
+                }
+                case 8 -> {
                     commonCard9.getChildren().add(imageView);
-                }
-            }else{
-                String placeholderImagePath = "/images/placeholder.jpg";
-                InputStream placeholderImageStream = getClass().getResourceAsStream(placeholderImagePath);
-                if (placeholderImageStream == null) {
-                    System.out.println("Image not found: " + placeholderImagePath);
-                    continue;
-                }
-                ImageView placeholderImageView = new ImageView(new Image(placeholderImageStream));
-                placeholderImageView.setFitWidth(90);
-                placeholderImageView.setFitHeight(65);
-
-                if(i == 0){
-                    commonCard1.getChildren().add(placeholderImageView);
-                    cc1_ended = true;
-                } else if(i == 1){
-                    commonCard2.getChildren().add(placeholderImageView);
-                    cc2_ended = true;
-                } else if(i == 2){
-                    commonCard3.getChildren().add(placeholderImageView);
-                    cc3_ended = true;
-                } else if(i == 3){
-                    commonCard4.getChildren().add(placeholderImageView);
-                    cc4_ended = true;
-                } else if(i == 4){
-                    commonCard5.getChildren().add(placeholderImageView);
-                    cc5_ended = true;
-                } else if(i == 5){
-                    commonCard6.getChildren().add(placeholderImageView);
-                    cc6_ended = true;
-                } else if(i == 6){
-                    commonCard7.getChildren().add(placeholderImageView);
-                    cc7_ended = true;
-                } else if(i == 7){
-                    commonCard8.getChildren().add(placeholderImageView);
-                    cc8_ended = true;
-                } else if(i == 8){
-                    commonCard9.getChildren().add(placeholderImageView);
-                    cc9_ended = true;
+                    if (cardId == -1) cc9_ended = true;
                 }
             }
         }
@@ -854,20 +834,23 @@ public class RunningController extends GuiInputReaderController {
         this.personalObjectiveIds = new ArrayList<>(Arrays.asList(cardIds));
         for (int i = 0; i < cardIds.length; i++) {
             int cardId = cardIds[i];
-            String imagePath = "/images/cards/cards_front/" + String.format("%03d", cardId) + ".png";
-            InputStream imageStream = getClass().getResourceAsStream(imagePath);
-            if (imageStream == null) {
-                System.out.println("Image not found: " + imagePath);
+            String formattedCardId = String.format("%03d", cardId);
+            String key = formattedCardId + Orientation.FRONT;
+            Image image = preloadedImages.get(key);
+
+            if (image == null) {
+                System.out.println("Image not found: " + key);
                 continue;
             }
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90); 
+
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(90);
             imageView.setFitHeight(65);
 
             if (i == 0) {
                 personalObjective0Pane.getChildren().add(imageView);
             } else {
-                personalObjective1Pane.getChildren().add(imageView); 
+                personalObjective1Pane.getChildren().add(imageView);
             }
         }
     }
@@ -876,8 +859,16 @@ public class RunningController extends GuiInputReaderController {
      * Method that flips the personal objective that has not been chosen from the user
      * */
     public void flipPersonalObjective(int cardId, int i) {
-        String imagePath = "/images/cards/cards_back/"+String.format("%03d", cardId) + ".png";
-        ImageView imageView = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+        String formattedCardId = String.format("%03d", cardId);
+        String key = formattedCardId + Orientation.BACK;
+        Image image = preloadedImages.get(key);
+
+        if (image == null) {
+            System.out.println("Image not found: " + key);
+            return;
+        }
+
+        ImageView imageView = new ImageView(image);
         imageView.setFitWidth(90);
         imageView.setFitHeight(65);
         if (i == 0) {
@@ -936,57 +927,51 @@ public class RunningController extends GuiInputReaderController {
      * */
     public void setStarterCardFront(ModelView model, String nickname) {
         this.starterCard = model.getPlayerEntity(nickname).getStarterCardToChose().getFirst().getId();
-        String imagePath = "/images/cards/cards_back/" + String.format("%03d", starterCard) + ".png";
-        InputStream imageStream = getClass().getResourceAsStream(imagePath);
-        if (imageStream != null) {
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90);
-            imageView.setFitHeight(65); 
+        starterCardFrontLoading();
+    }
 
-            StarterCardImage.setImage(imageView.getImage());
-            starterCardOrientation = Orientation.FRONT;
+    private void starterCardFrontLoading() {
+        String formattedCardId = String.format("%03d", this.starterCard);
+        String key = formattedCardId + Orientation.BACK;
+        Image image = preloadedImages.get(key);
 
-        }else{
-            System.out.println("Image not found: " + imagePath);
+        if (image == null) {
+            System.out.println("Image not found: " + key);
+            return;
         }
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(90);
+        imageView.setFitHeight(65);
+
+        StarterCardImage.setImage(imageView.getImage());
+        starterCardOrientation = Orientation.FRONT;
     }
 
     /**
      * Method that sets the starter card on the front (it comes from the FLIP button)
      * */
     public void setStarterCardFront() {
-        String imagePath = "/images/cards/cards_back/"+ String.format("%03d", starterCard) + ".png";
-        InputStream imageStream = getClass().getResourceAsStream(imagePath);
-        if (imageStream != null) {
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90);
-            imageView.setFitHeight(65); 
-
-            StarterCardImage.setImage(imageView.getImage());
-            starterCardOrientation = Orientation.FRONT;
-
-        }else{
-            System.out.println("Image not found: " + imagePath);
-        }
+        starterCardFrontLoading();
     }
 
     /**
      * Method that sets the starter card on the back (it comes from the FLIP button)
      * */
     public void setStarterCardBack() {
-        String imagePath = "/images/cards/cards_front/" + String.format("%03d", starterCard) + ".png";
-        InputStream imageStream = getClass().getResourceAsStream(imagePath);
-        if (imageStream != null) {
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90);
-            imageView.setFitHeight(65);
+        String formattedCardId = String.format("%03d", this.starterCard);
+        String key = formattedCardId + Orientation.FRONT;
+        Image image = preloadedImages.get(key);
 
-            StarterCardImage.setImage(imageView.getImage());
-            starterCardOrientation = Orientation.BACK;
-
-        }else{
-            System.out.println("Image not found: " + imagePath);
+        if (image == null) {
+            System.out.println("Image not found: " + key);
+            return;
         }
+        ImageView imageView = new ImageView(image);
+        imageView.setFitWidth(90);
+        imageView.setFitHeight(65);
+
+        StarterCardImage.setImage(imageView.getImage());
+        starterCardOrientation = Orientation.BACK;
     }
 
     /**
@@ -1047,16 +1032,17 @@ public class RunningController extends GuiInputReaderController {
         for (int i = 0; i < cardIds.size(); i++) {
             cardHand.set(i, cardIds.get(i));
             String formattedCardId = String.format("%03d", cardIds.get(i));
-            String imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
-            InputStream imageStream = getClass().getResourceAsStream(imagePath);
-            if (imageStream == null) {
-                System.out.println("Image not found: " + imagePath);
+            String key = formattedCardId + Orientation.FRONT;
+            Image image = preloadedImages.get(key);
+
+            if (image == null) {
+                System.out.println("Image not found: " + key);
                 continue;
             }
 
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90); 
-            imageView.setFitHeight(65); 
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(65);
 
             if(i==0) {
                 handCard0.getChildren().add(imageView);
@@ -1076,16 +1062,18 @@ public class RunningController extends GuiInputReaderController {
         for (int i = 0; i < cardIds.size(); i++) {
             cardHand.set(i, cardIds.get(i));
             String formattedCardId = String.format("%03d", cardIds.get(i));
-            String imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
-            InputStream imageStream = getClass().getResourceAsStream(imagePath);
-            if (imageStream == null) {
-                System.out.println("Image not found: " + imagePath);
+            String key = formattedCardId + Orientation.BACK;
+            Image image = preloadedImages.get(key);
+
+            if (image == null) {
+                System.out.println("Image not found: " + key);
                 continue;
             }
 
-            ImageView imageView = new ImageView(new Image(imageStream));
-            imageView.setFitWidth(90); 
-            imageView.setFitHeight(65); 
+            ImageView imageView = new ImageView(image);
+            imageView.setFitWidth(90);
+            imageView.setFitHeight(65);
+
             if(i==0) {
                 handCard0.getChildren().add(imageView);
             } else if (i==1) {
@@ -1296,37 +1284,42 @@ public class RunningController extends GuiInputReaderController {
 
         double xCenter = (double)(position[0]+ offset_x);
         double yCenter = (double)(position[1]+ offset_y);
-        String imagePath;
 
         String formattedCardId = String.format("%03d", starterCard);
-        if(starterCardOrientation == Orientation.FRONT){
-            imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
-        }else if(starterCardOrientation == Orientation.BACK){
-            imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
-        } else {
-            System.out.println("Orientation non valida.");
+
+        String key = formattedCardId + (starterCardOrientation == Orientation.FRONT ? Orientation.BACK : Orientation.FRONT);
+        Image image = preloadedImages.get(key);
+
+        if (image == null) {
+            System.out.println("Image not found: " + key);
             return;
         }
-        ImageView StarterCardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+
+        ImageView StarterCardPic = new ImageView(image);
         StarterCardPic.setFitWidth(90);
         StarterCardPic.setFitHeight(65);
         StarterCardPic.setLayoutX(xCenter);
         StarterCardPic.setLayoutY(yCenter);
         personalBoardAnchorPane.getChildren().add(StarterCardPic);
 
-        ImageView piecePic = my_pieces.get(my_index);
+        // Retrieve the piece image from the preloadedImages map
+        Image pieceImage = preloadedImages.get("piece" + my_index);
+        ImageView piecePic = new ImageView(pieceImage);
         piecePic.setFitWidth(20);
         piecePic.setFitHeight(20);
-        piecePic.setLayoutX(xCenter+20);
-        piecePic.setLayoutY(yCenter+22.5);
+        piecePic.setLayoutX(xCenter + 20);
+        piecePic.setLayoutY(yCenter + 22.5);
         personalBoardAnchorPane.getChildren().add(piecePic);
 
-        if(my_index == firstPlayerIndex){
-            ImageView pieceBlackPic = my_pieceBlackImageView;
+        // Check if the current player is the first player
+        if (my_index == firstPlayerIndex) {
+            // Retrieve the black piece image from the preloadedImages map
+            Image blackPieceImage = preloadedImages.get("pieceBlack");
+            ImageView pieceBlackPic = new ImageView(blackPieceImage);
             pieceBlackPic.setFitWidth(20);
             pieceBlackPic.setFitHeight(20);
-            pieceBlackPic.setLayoutX(xCenter+50);
-            pieceBlackPic.setLayoutY(yCenter+22.5);
+            pieceBlackPic.setLayoutX(xCenter + 50);
+            pieceBlackPic.setLayoutY(yCenter + 22.5);
             personalBoardAnchorPane.getChildren().add(pieceBlackPic);
         }
         setMsgToShow("StarterCard placed", true);
@@ -1362,17 +1355,17 @@ public class RunningController extends GuiInputReaderController {
      * Method that places the card on my personal board
      * */
     private void reallyPlaceCard(double clickX, double clickY, Coordinate coord) {
-        String imagePath;
         String formattedCardId = String.format("%03d", chosenCard);
-        if(cardHandOrientation == Orientation.FRONT){
-            imagePath = "/images/cards/cards_front/" + formattedCardId + ".png";
-        }else if(cardHandOrientation == Orientation.BACK){
-            imagePath = "/images/cards/cards_back/" + formattedCardId + ".png";
-        } else {
-            System.out.println("Orientation non valida.");
+
+        String key = formattedCardId + cardHandOrientation;
+        Image image = preloadedImages.get(key);
+
+        if (image == null) {
+            System.out.println("Image not found: " + key);
             return;
         }
-        ImageView CardPic = new ImageView(new Image(Objects.requireNonNull(getClass().getResourceAsStream(imagePath))));
+
+        ImageView CardPic = new ImageView(image);
         CardPic.setFitWidth(90);
         CardPic.setFitHeight(65);
 
