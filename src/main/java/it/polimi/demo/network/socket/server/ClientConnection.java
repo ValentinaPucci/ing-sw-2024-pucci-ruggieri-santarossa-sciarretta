@@ -3,9 +3,9 @@ package it.polimi.demo.network.socket.server;
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.socket.client.GenericControllerMessage;
-import it.polimi.demo.network.socket.client.SocketClientGameControllerMex;
+import it.polimi.demo.network.socket.client.GCMsg;
 import it.polimi.demo.network.GameControllerInterface;
-import it.polimi.demo.network.socket.client.SocketClientMainControllerMex;
+import it.polimi.demo.network.socket.client.MCMsg;
 
 import java.io.*;
 import java.net.Socket;
@@ -120,14 +120,14 @@ public class ClientConnection extends Thread implements Serializable {
         GenericControllerMessage message = messageQueue.poll();
         if (message != null) {
             try {
-                if (message instanceof SocketClientMainControllerMex mex) {
+                if (message instanceof MCMsg mex) {
                     controller = mex.performOnMainController(gameListenerHandler, MainController.getControllerInstance());
                     if (controller == null)
                         userNickname = null;
                     else
                         userNickname = mex.getUserNickname();
                 } else {
-                    SocketClientGameControllerMex mex = (SocketClientGameControllerMex) message;
+                    GCMsg mex = (GCMsg) message;
                     mex.performOnGameController(controller);
                 }
             } catch (RemoteException | GameEndedException e) {

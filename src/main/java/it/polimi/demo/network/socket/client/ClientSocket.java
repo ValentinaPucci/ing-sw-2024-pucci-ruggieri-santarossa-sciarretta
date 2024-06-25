@@ -6,12 +6,12 @@ import it.polimi.demo.model.enumerations.Orientation;
 
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.utils.PingSender;
-import it.polimi.demo.network.socket.client.MsgForGameController.*;
-import it.polimi.demo.network.socket.client.serverToClientMessages.SocketServerGenericMessage;
-import it.polimi.demo.network.socket.client.MsgForMainController.SocketClientMessageJoinFirstAvailableGame;
-import it.polimi.demo.network.socket.client.MsgForMainController.SocketClientMsgGameCreation;
-import it.polimi.demo.network.socket.client.MsgForMainController.SocketClientMsgJoinGame;
-import it.polimi.demo.network.socket.client.MsgForMainController.SocketClientMsgLeaveGame;
+import it.polimi.demo.network.socket.client.ClientToServerMessages.*;
+import it.polimi.demo.network.socket.client.ServerToClientMessages.SocketServerGenericMessage;
+import it.polimi.demo.network.socket.client.ClientToServerMessages.MCMsgJoinFirstAvailableGame;
+import it.polimi.demo.network.socket.client.ClientToServerMessages.MCMsgGameCreation;
+import it.polimi.demo.network.socket.client.ClientToServerMessages.MCMsgJoinGame;
+import it.polimi.demo.network.socket.client.ClientToServerMessages.MCMsgLeaveGame;
 import it.polimi.demo.view.dynamic.ClientInterface;
 import it.polimi.demo.view.dynamic.GameDynamic;
 
@@ -157,7 +157,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     @Override
     public void createGame(String nickname, int num_of_players) throws IOException {
         this.nickname = nickname;
-        sendMessage(new SocketClientMsgGameCreation(nickname, num_of_players));
+        sendMessage(new MCMsgGameCreation(nickname, num_of_players));
         startHeartbeat();
     }
 
@@ -170,7 +170,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     @Override
     public void joinGame(String nick, int idGame) throws IOException {
         nickname = nick;
-        sendMessage(new SocketClientMsgJoinGame(nick, idGame));
+        sendMessage(new MCMsgJoinGame(nick, idGame));
         startHeartbeat();
     }
 
@@ -184,7 +184,7 @@ public class ClientSocket extends Thread implements ClientInterface {
     @Override
     public void joinRandomly(String nick) throws IOException, InterruptedException, NotBoundException {
         nickname = nick;
-        sendMessage(new SocketClientMessageJoinFirstAvailableGame(nick));
+        sendMessage(new MCMsgJoinFirstAvailableGame(nick));
         startHeartbeat();
     }
 
@@ -196,7 +196,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     @Override
     public void leave(String nick, int idGame) throws IOException {
-        sendMessage(new SocketClientMsgLeaveGame(nick, idGame));
+        sendMessage(new MCMsgLeaveGame(nick, idGame));
         nickname = null;
         stopHeartbeat();
     }
@@ -207,7 +207,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     @Override
     public void setAsReady() throws IOException {
-        sendMessage(new SocketClientMsgSetReady(nickname));
+        sendMessage(new GCMsgSetReady(nickname));
     }
 
     /**
@@ -218,7 +218,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     @Override
     public void placeStarterCard(Orientation orientation) throws IOException, GameEndedException {
-        sendMessage(new SocketClientMsgPlaceStarterCard(orientation));
+        sendMessage(new GCMsgPlaceStarterCard(orientation));
     }
 
     /**
@@ -228,7 +228,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     @Override
     public void chooseCard(int which_card) throws IOException {
-        sendMessage(new SocketClientMsgChooseCard(which_card));
+        sendMessage(new GCMsgChooseCard(which_card));
     }
 
     /**
@@ -240,7 +240,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     @Override
     public void placeCard(int where_to_place_x, int where_to_place_y, Orientation orientation) throws IOException {
-        sendMessage(new SocketClientMsgPlaceCard(where_to_place_x, where_to_place_y, orientation));
+        sendMessage(new GCMsgPlaceCard(where_to_place_x, where_to_place_y, orientation));
     }
 
     /**
@@ -251,7 +251,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     @Override
     public void drawCard(int index) throws IOException, GameEndedException {
-        sendMessage(new SocketClientMsgDrawCard(index));
+        sendMessage(new GCMsgDrawCard(index));
     }
 
     /**
@@ -261,7 +261,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     @Override
     public void showOthersPersonalBoard(int player_index) throws IOException {
-        sendMessage(new SocketClientMsgShowOthersPersonalBoard(nickname, player_index));
+        sendMessage(new GCMsgShowOthersPersonalBoard(nickname, player_index));
     }
 
     /**
@@ -272,7 +272,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     @Override
     public void sendMessage(String receiver, Message msg) throws IOException {
-        sendMessage(new SocketClientMsgSendMessage(receiver, msg));
+        sendMessage(new GCMsgSendMessage(receiver, msg));
     }
 
     @Override

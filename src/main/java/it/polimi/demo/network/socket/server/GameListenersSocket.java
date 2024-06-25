@@ -4,7 +4,7 @@ import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.ModelView;
-import it.polimi.demo.network.socket.client.serverToClientMessages.*;
+import it.polimi.demo.network.socket.client.ServerToClientMessages.*;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;

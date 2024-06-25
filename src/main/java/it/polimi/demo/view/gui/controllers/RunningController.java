@@ -1505,9 +1505,9 @@ public class RunningController extends GuiInputReaderController {
     public void updateChat(ModelView model, String nickname) {
         Message message = model.getChat().getLastMessage();
         if(nickname.equals("Everyone")){
-            chatArea.appendText(message.sender().getNickname() + "(to everyone): " + message.text() + "\n");
+            chatArea.appendText(message.sender().getNickname() + " (to everyone): " + message.text() + "\n");
         }else{
-            chatArea.appendText(message.sender().getNickname() + "(to you): " + message.text() + "\n");
+            chatArea.appendText(message.sender().getNickname() + " (to you): " + message.text() + "\n");
         }
 
     }
