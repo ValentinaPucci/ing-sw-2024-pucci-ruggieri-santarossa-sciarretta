@@ -51,7 +51,7 @@ public class RMIServer extends UnicastRemoteObject implements MainControllerInte
         try {
             Registry reg = LocateRegistry.createRegistry(Constants.RMI_port);
             reg.rebind(Constants.RMI_server_name, this);
-            StaticPrinter.staticPrinter("RMI ServerSocket ready");
+            StaticPrinter.staticPrinter("RMI Server ready");
         } catch (RemoteException ex) {
             logError(ex);
         }

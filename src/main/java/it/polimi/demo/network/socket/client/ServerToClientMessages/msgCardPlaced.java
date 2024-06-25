@@ -8,7 +8,7 @@ import java.io.Serial;
 import java.rmi.RemoteException;
 
 
-public class msgCardPlaced extends SocketServerGenericMessage {
+public class msgCardPlaced extends S2CGenericMessage {
 
     @Serial
     private static final long serialVersionUID = 1646902891110952903L;

@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 /**
  * This class represents the message sent by the server to the client to notify that a card has been chosen.
  */
-public class msgCardChosen extends SocketServerGenericMessage {
+public class msgCardChosen extends S2CGenericMessage {
     @Serial
     private static final long serialVersionUID = 7914302356958980212L;
     private ModelView gameModel;

@@ -8,7 +8,7 @@ import java.io.Serial;
 import java.rmi.RemoteException;
 
 
-public class msgCardDrawn extends SocketServerGenericMessage {
+public class msgCardDrawn extends S2CGenericMessage {
     @Serial
     private static final long serialVersionUID = 1145544034549465586L;
     private ModelView gameModel;

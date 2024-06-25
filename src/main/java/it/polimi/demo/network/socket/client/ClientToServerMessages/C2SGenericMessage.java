@@ -1,9 +1,11 @@
-package it.polimi.demo.network.socket.client;
+package it.polimi.demo.network.socket.client.ClientToServerMessages;
+
+import it.polimi.demo.network.socket.client.AuxMessage;
 
 import java.io.Serial;
 import java.io.Serializable;
 
-public abstract class GenericMessage implements Serializable {
+public abstract class C2SGenericMessage implements Serializable {
     @Serial
     private static final long serialVersionUID = 5406701198899441141L;
 

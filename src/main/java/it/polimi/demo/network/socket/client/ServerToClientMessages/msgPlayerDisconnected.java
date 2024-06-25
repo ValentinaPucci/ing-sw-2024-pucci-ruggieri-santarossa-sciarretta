@@ -6,7 +6,7 @@ import it.polimi.demo.model.ModelView;
 import java.io.Serial;
 import java.rmi.RemoteException;
 
-public class msgPlayerDisconnected extends SocketServerGenericMessage {
+public class msgPlayerDisconnected extends S2CGenericMessage {
     @Serial
     private static final long serialVersionUID = 888520400066911096L;
     private String nick;

@@ -5,7 +5,7 @@ import it.polimi.demo.observer.Listener;
 import java.io.Serial;
 import java.rmi.RemoteException;
 
-public class msgGenericErrorWhenEntryingGame extends SocketServerGenericMessage{
+public class msgGenericErrorWhenEntryingGame extends S2CGenericMessage {
 
     @Serial
     private static final long serialVersionUID = 6589522081938255852L;

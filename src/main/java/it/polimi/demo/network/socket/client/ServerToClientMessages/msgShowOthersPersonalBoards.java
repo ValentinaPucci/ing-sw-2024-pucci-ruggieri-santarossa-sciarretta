@@ -6,7 +6,7 @@ import it.polimi.demo.observer.Listener;
 import java.io.Serial;
 import java.rmi.RemoteException;
 
-public class msgShowOthersPersonalBoards extends SocketServerGenericMessage{
+public class msgShowOthersPersonalBoards extends S2CGenericMessage {
 
     @Serial
     private static final long serialVersionUID = 7914302356958980212L;

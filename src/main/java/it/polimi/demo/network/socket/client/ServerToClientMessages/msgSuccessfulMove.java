@@ -7,7 +7,7 @@ import it.polimi.demo.model.ModelView;
 import java.io.Serial;
 import java.rmi.RemoteException;
 
-public class msgSuccessfulMove extends SocketServerGenericMessage{
+public class msgSuccessfulMove extends S2CGenericMessage {
     @Serial
     private static final long serialVersionUID = -7118073750567528012L;
     private ModelView gamemodel;

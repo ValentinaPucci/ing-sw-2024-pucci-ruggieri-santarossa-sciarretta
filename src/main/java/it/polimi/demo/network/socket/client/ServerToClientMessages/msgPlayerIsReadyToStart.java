@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.Serial;
 import java.rmi.RemoteException;
 
-public class msgPlayerIsReadyToStart extends SocketServerGenericMessage {
+public class msgPlayerIsReadyToStart extends S2CGenericMessage {
     @Serial
     private static final long serialVersionUID = -1529885453195001299L;
     private ModelView model;

@@ -5,6 +5,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.rmi.RMIClient;
+import it.polimi.demo.network.socket.client.SocketClient;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.view.dynamic.utilities.TypeConnection;
 import it.polimi.demo.view.dynamic.utilities.gameFacts.FactQueue;
@@ -12,7 +13,6 @@ import it.polimi.demo.view.dynamic.utilities.gameFacts.FactType;
 import it.polimi.demo.view.dynamic.utilities.QueueParser;
 import it.polimi.demo.view.gui.FXApplication;
 import it.polimi.demo.view.gui.GUI;
-import it.polimi.demo.network.socket.client.ClientSocket;
 import it.polimi.demo.view.text.StaticPrinterTUI;
 import it.polimi.demo.view.text.TUI;
 
@@ -102,7 +102,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     public void startConnection(TypeConnection selection) {
         client_interface = (selection == TypeConnection.RMI)
                 ? new RMIClient(this)
-                : new ClientSocket(this);
+                : new SocketClient(this);
     }
 
     /**
@@ -660,7 +660,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     }
 
 
-    // Client --------> ServerSocket
+    // Client --------> SocketServer
 
     /**
      * Displays ui message indicating a connection error.

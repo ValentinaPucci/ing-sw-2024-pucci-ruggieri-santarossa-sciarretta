@@ -2,8 +2,7 @@ package it.polimi.demo.network.socket;
 
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.network.socket.GameListenersSocket;
-import it.polimi.demo.network.socket.client.GenericMessage;
+import it.polimi.demo.network.socket.client.ClientToServerMessages.C2SGenericMessage;
 import it.polimi.demo.network.socket.client.ClientToServerMessages.GCMsg;
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.socket.client.ClientToServerMessages.MCMsg;
@@ -45,7 +44,7 @@ public class ClientConnection extends Thread implements Serializable {
     /**
      * Queue of messages to process.
      */
-    private final ConcurrentLinkedQueue<GenericMessage> messageQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<C2SGenericMessage> messageQueue = new ConcurrentLinkedQueue<>();
     /**
      * Flag to check if the client is running.
      */
@@ -105,7 +104,7 @@ public class ClientConnection extends Thread implements Serializable {
     private void readMessages() {
         try {
             while (running.get()) {
-                GenericMessage message = (GenericMessage) inputStream.readObject();
+                C2SGenericMessage message = (C2SGenericMessage) inputStream.readObject();
                 messageQueue.add(message);
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -118,7 +117,7 @@ public class ClientConnection extends Thread implements Serializable {
      * @param gameListenerHandler
      */
     private void handleGameLogic(GameListenersSocket gameListenerHandler) {
-        GenericMessage message = messageQueue.poll();
+        C2SGenericMessage message = messageQueue.poll();
         if (message != null) {
             try {
                 if (message instanceof MCMsg mex) {
@@ -141,7 +140,7 @@ public class ClientConnection extends Thread implements Serializable {
      * Method to disconnect the client.
      */
     private void disconnectClient() {
-        staticPrinter("ClientSocket disconnected due to communication failure");
+        staticPrinter("SocketClient disconnected due to communication failure");
         try {
             if (controller != null) {
                 controller.leave(new GameListenersSocket(outputStream), userNickname);

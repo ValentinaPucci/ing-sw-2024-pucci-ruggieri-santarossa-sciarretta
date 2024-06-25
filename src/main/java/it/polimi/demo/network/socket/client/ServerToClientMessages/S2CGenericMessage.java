@@ -11,7 +11,7 @@ import java.rmi.RemoteException;
 
  */
 
-public abstract class SocketServerGenericMessage implements Serializable {
+public abstract class S2CGenericMessage implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -22,7 +22,7 @@ public abstract class SocketServerGenericMessage implements Serializable {
      * @param messageContent
      */
 
-    public SocketServerGenericMessage(String messageContent) {
+    public S2CGenericMessage(String messageContent) {
         this.messageContent = messageContent;
     }
 

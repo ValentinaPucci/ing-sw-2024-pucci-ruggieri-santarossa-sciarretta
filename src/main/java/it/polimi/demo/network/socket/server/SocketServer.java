@@ -12,15 +12,15 @@ import java.util.function.Consumer;
 import static it.polimi.demo.network.utils.StaticPrinter.staticPrinter;
 
 /**
- * ServerSocket class that represents the server socket
+ * SocketServer class that represents the server socket
  */
-public class ServerSocket extends Thread implements Serializable {
+public class SocketServer extends Thread implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -3450892858052318586L;
 
     /**
-     * Socket that represents the ServerSocket
+     * Socket that represents the SocketServer
      */
     private final transient java.net.ServerSocket serverSocket;
 
@@ -33,11 +33,11 @@ public class ServerSocket extends Thread implements Serializable {
      * Constructor that starts the server with the specified port
      * @param serverPort the port on which the server will listen
      */
-    public ServerSocket(int serverPort) {
+    public SocketServer(int serverPort) {
         handlers = new ArrayList<>();
         try {
             serverSocket = new java.net.ServerSocket(serverPort);
-            staticPrinter("ServerSocket Socket READY");
+            staticPrinter("SocketServer Socket READY");
 
             // Start listening for client connections
             this.start();
@@ -65,7 +65,7 @@ public class ServerSocket extends Thread implements Serializable {
                 }
             }
         } catch (Exception e) {
-            System.err.println("Error in ServerSocket run method: " + e.getMessage());
+            System.err.println("Error in SocketServer run method: " + e.getMessage());
         } finally {
             closeServerSocket();
         }

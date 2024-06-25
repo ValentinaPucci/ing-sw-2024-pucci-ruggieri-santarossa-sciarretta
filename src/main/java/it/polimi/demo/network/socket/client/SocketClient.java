@@ -7,7 +7,7 @@ import it.polimi.demo.model.enumerations.Orientation;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.utils.PingSender;
 import it.polimi.demo.network.socket.client.ClientToServerMessages.*;
-import it.polimi.demo.network.socket.client.ServerToClientMessages.SocketServerGenericMessage;
+import it.polimi.demo.network.socket.client.ServerToClientMessages.S2CGenericMessage;
 import it.polimi.demo.network.socket.client.ClientToServerMessages.MCMsgJoinFirstAvailableGame;
 import it.polimi.demo.network.socket.client.ClientToServerMessages.MCMsgGameCreation;
 import it.polimi.demo.network.socket.client.ClientToServerMessages.MCMsgJoinGame;
@@ -24,7 +24,7 @@ import static it.polimi.demo.network.utils.StaticPrinter.staticPrinter;
 /**
  * Client socket is together with clientConnection the main class for the client side of the socket connection.
  */
-public class ClientSocket extends Thread implements ClientInterface {
+public class SocketClient extends Thread implements ClientInterface {
 
     /**
      * Socket used to connect to the server.
@@ -51,7 +51,7 @@ public class ClientSocket extends Thread implements ClientInterface {
      */
     private transient PingSender socketPing;
 
-    public ClientSocket(GameDynamic dynamic) {
+    public SocketClient(GameDynamic dynamic) {
         this.dynamic = dynamic;
         initializeConnection(Constants.serverIp, Constants.Socket_port);
         this.start();
@@ -60,7 +60,7 @@ public class ClientSocket extends Thread implements ClientInterface {
 
     /**
      *  It is the main loop for receiving and processing messages from the server.
-     *  This method is executed in a separate thread when the start method of the ClientSocket class
+     *  This method is executed in a separate thread when the start method of the SocketClient class
      *  (which extends Thread) is called.
      */
     public void run() {
@@ -68,7 +68,7 @@ public class ClientSocket extends Thread implements ClientInterface {
         try {
             Runnable receiveAndProcess = () -> {
                 try {
-                    SocketServerGenericMessage msg = (SocketServerGenericMessage) ob_in.readObject();
+                    S2CGenericMessage msg = (S2CGenericMessage) ob_in.readObject();
                     msg.perform(dynamic);
                 } catch (IOException | ClassNotFoundException e) {
                     staticPrinter("[ERROR] Connection to server lost! " + e);
@@ -94,7 +94,7 @@ public class ClientSocket extends Thread implements ClientInterface {
 
 
     /**
-     * Close all the resources used by the ClientSocket.
+     * Close all the resources used by the SocketClient.
      */
     private void closeResources() {
         try {

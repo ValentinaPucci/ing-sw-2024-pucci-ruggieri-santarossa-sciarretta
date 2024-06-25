@@ -7,7 +7,7 @@ import java.io.Serial;
 import java.rmi.RemoteException;
 
 
-public class msgGameEnded extends SocketServerGenericMessage {
+public class msgGameEnded extends S2CGenericMessage {
     @Serial
     private static final long serialVersionUID = 3481171846738649670L;
     private ModelView gamemodel;

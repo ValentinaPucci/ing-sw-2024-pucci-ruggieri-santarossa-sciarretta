@@ -7,7 +7,7 @@ import it.polimi.demo.model.ModelView;
 import java.io.Serial;
 import java.rmi.RemoteException;
 
-public class msgMessageSent extends SocketServerGenericMessage {
+public class msgMessageSent extends S2CGenericMessage {
     @Serial
     private static final long serialVersionUID = 8655827387792587552L;
     private String nick;

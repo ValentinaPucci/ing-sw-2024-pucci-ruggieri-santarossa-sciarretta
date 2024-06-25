@@ -2,7 +2,6 @@ package it.polimi.demo.network.socket.client.ClientToServerMessages;
 
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.GameControllerInterface;
-import it.polimi.demo.network.socket.client.GenericMessage;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -11,7 +10,7 @@ import java.rmi.RemoteException;
 /**
  * This abstract class represents a generic message that can be sent by the client to the server.
  */
-public abstract class GCMsg extends GenericMessage implements Serializable {
+public abstract class GCMsg extends C2SGenericMessage implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -5886817470118365739L;
