@@ -660,7 +660,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     }
 
 
-    // Client --------> Server
+    // Client --------> ServerSocket
 
     /**
      * Displays ui message indicating a connection error.

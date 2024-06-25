@@ -1,7 +1,6 @@
-package it.polimi.demo.network.socket.client.gameControllerMessages;
+package it.polimi.demo.network.socket.client.MsgForGameController;
 
 import it.polimi.demo.observer.Listener;
-import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
@@ -12,33 +11,29 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 
 /**
- * Class to send a message in the CHAT.
+ * Class to send the draw card message to the server.
  */
-public class SocketClientMsgSendMessage extends SocketClientGameControllerMex implements Serializable {
-
+public class SocketClientMsgDrawCard extends SocketClientGameControllerMex implements Serializable {
     @Serial
-    private static final long serialVersionUID = -8369247984549388589L;
-    private Message chat_msg;
-    private String nick;
+    private static final long serialVersionUID = 7272108078804819811L;
+    private int index;
 
     /**
      * Constructor of the class.
-     * @param nick
-     * @param chat_msg
+     * @param index
      */
-    public SocketClientMsgSendMessage(String nick, Message chat_msg) {
-        this.nick = nick;
-        this.chat_msg = chat_msg;
+    public SocketClientMsgDrawCard(int index) {
+         this.index = index;
     }
 
     /**
-     * Method to perform sendMessage of the chat on the game controller.
+     * Method to perform drawCard on the game controller.
      * @param gameController the game controller interface
      * @throws RemoteException
      * @throws GameEndedException
      */
     @Override
     public void performOnGameController(GameControllerInterface gameController) throws RemoteException, GameEndedException {
-        gameController.sendMessage(nick, chat_msg);
+        gameController.drawCard(gameController.getCurrentPlayer().getNickname(), index);
     }
 }

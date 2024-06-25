@@ -1,7 +1,6 @@
 package it.polimi.demo.network.socket.server;
 
 import it.polimi.demo.observer.Listener;
-import it.polimi.demo.model.Player;
 import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.ModelView;
@@ -15,14 +14,14 @@ import java.rmi.RemoteException;
 import java.util.function.Consumer;
 
 /**
- * This class is used to handle the messages that are sent to the client
+ * This class is used to handle the messages (Listener) that are sent to the client
  */
-public class GameListenersHandlerSocket implements Listener, Serializable {
+public class GameListenersSocket implements Listener, Serializable {
     @Serial
     private static final long serialVersionUID = -44724272240516582L;
     private final transient ObjectOutputStream ob_out;
 
-    public GameListenersHandlerSocket(ObjectOutputStream output) {
+    public GameListenersSocket(ObjectOutputStream output) {
         ob_out = output;
     }
 

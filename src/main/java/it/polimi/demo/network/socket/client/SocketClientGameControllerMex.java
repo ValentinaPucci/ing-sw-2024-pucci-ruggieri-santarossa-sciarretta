@@ -15,8 +15,6 @@ public abstract class SocketClientGameControllerMex extends GenericControllerMes
     @Serial
     private static final long serialVersionUID = -5886817470118365739L;
 
-    private final AuxMessage data = new AuxMessage();
-
     /**
      * Processes the message with the game controller.
      * @param gameCtrlInterface the game controller interface
@@ -25,21 +23,6 @@ public abstract class SocketClientGameControllerMex extends GenericControllerMes
      */
     public abstract void performOnGameController(GameControllerInterface gameCtrlInterface) throws RemoteException, GameEndedException;
 
-    /**
-     * Retrieves the user's nickname associated with the message.
-     * @return the user's nickname, or null if data is null
-     */
-    public String getUserNickname() {
-        return data.getUserNickname();
-    }
-
-    /**
-     * Sets the user's nickname associated with the message.
-     * @param userNickname the user's nickname
-     */
-    public void setUserNickname(String userNickname) {
-        data.setUserNickname(userNickname);
-    }
 }
 
 
