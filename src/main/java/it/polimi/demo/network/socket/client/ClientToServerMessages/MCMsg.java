@@ -1,14 +1,15 @@
-package it.polimi.demo.network.socket.client;
+package it.polimi.demo.network.socket.client.ClientToServerMessages;
 
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
+import it.polimi.demo.network.socket.client.GenericMessage;
 import it.polimi.demo.observer.Listener;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public abstract class MCMsg extends GenericControllerMessage implements Serializable {
+public abstract class MCMsg extends GenericMessage implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 7667308065938007850L;

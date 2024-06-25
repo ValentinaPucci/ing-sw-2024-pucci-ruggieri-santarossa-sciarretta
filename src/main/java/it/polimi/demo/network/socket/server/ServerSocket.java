@@ -1,5 +1,7 @@
 package it.polimi.demo.network.socket.server;
 
+import it.polimi.demo.network.socket.ClientConnection;
+
 import java.io.IOException;
 import java.io.Serial;
 import java.io.Serializable;

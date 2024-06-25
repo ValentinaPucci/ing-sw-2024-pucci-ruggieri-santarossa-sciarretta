@@ -1,11 +1,12 @@
-package it.polimi.demo.network.socket.server;
+package it.polimi.demo.network.socket;
 
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.network.socket.client.GenericControllerMessage;
-import it.polimi.demo.network.socket.client.GCMsg;
+import it.polimi.demo.network.socket.GameListenersSocket;
+import it.polimi.demo.network.socket.client.GenericMessage;
+import it.polimi.demo.network.socket.client.ClientToServerMessages.GCMsg;
 import it.polimi.demo.network.GameControllerInterface;
-import it.polimi.demo.network.socket.client.MCMsg;
+import it.polimi.demo.network.socket.client.ClientToServerMessages.MCMsg;
 
 import java.io.*;
 import java.net.Socket;
@@ -44,7 +45,7 @@ public class ClientConnection extends Thread implements Serializable {
     /**
      * Queue of messages to process.
      */
-    private final ConcurrentLinkedQueue<GenericControllerMessage> messageQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<GenericMessage> messageQueue = new ConcurrentLinkedQueue<>();
     /**
      * Flag to check if the client is running.
      */
@@ -104,7 +105,7 @@ public class ClientConnection extends Thread implements Serializable {
     private void readMessages() {
         try {
             while (running.get()) {
-                GenericControllerMessage message = (GenericControllerMessage) inputStream.readObject();
+                GenericMessage message = (GenericMessage) inputStream.readObject();
                 messageQueue.add(message);
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -117,7 +118,7 @@ public class ClientConnection extends Thread implements Serializable {
      * @param gameListenerHandler
      */
     private void handleGameLogic(GameListenersSocket gameListenerHandler) {
-        GenericControllerMessage message = messageQueue.poll();
+        GenericMessage message = messageQueue.poll();
         if (message != null) {
             try {
                 if (message instanceof MCMsg mex) {

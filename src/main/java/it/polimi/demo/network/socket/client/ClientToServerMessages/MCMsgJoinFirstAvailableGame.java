@@ -2,7 +2,6 @@ package it.polimi.demo.network.socket.client.ClientToServerMessages;
 
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
-import it.polimi.demo.network.socket.client.MCMsg;
 import it.polimi.demo.observer.Listener;
 
 import java.io.Serial;

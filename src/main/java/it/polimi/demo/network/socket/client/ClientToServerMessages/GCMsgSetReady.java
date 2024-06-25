@@ -1,7 +1,6 @@
 package it.polimi.demo.network.socket.client.ClientToServerMessages;
 
 import it.polimi.demo.network.GameControllerInterface;
-import it.polimi.demo.network.socket.client.GCMsg;
 
 import java.io.Serial;
 import java.io.Serializable;
