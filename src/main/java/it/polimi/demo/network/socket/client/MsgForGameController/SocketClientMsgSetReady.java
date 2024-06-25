@@ -3,7 +3,7 @@ package it.polimi.demo.network.socket.client.MsgForGameController;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
-import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
+import it.polimi.demo.network.socket.client.SocketClientGameControllerMex;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
  * Class that represents the message sent by the client to the game controller to notify that the player is ready to start the game.
 
  */
-public class SocketClientMsgSetReady extends SocketClientGenericMessage implements Serializable {
+public class SocketClientMsgSetReady extends SocketClientGameControllerMex implements Serializable {
 
 
     @Serial
@@ -24,14 +24,8 @@ public class SocketClientMsgSetReady extends SocketClientGenericMessage implemen
      */
     public SocketClientMsgSetReady(String nick) {
         this.setUserNickname(nick);
-        this.setMainControllerTarget(false);
     }
 
-
-    @Override
-    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return null;
-    }
     /**
      * Method to perform playerIsReadyToStart on the game controller.
      * @param gameController the game controller interface

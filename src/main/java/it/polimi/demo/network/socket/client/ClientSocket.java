@@ -64,24 +64,34 @@ public class ClientSocket extends Thread implements ClientInterface {
      *  (which extends Thread) is called.
      */
     public void run() {
+        boolean running = true;
         try {
-            while (true) {
+            Runnable receiveAndProcess = () -> {
                 try {
                     SocketServerGenericMessage msg = (SocketServerGenericMessage) ob_in.readObject();
                     msg.perform(dynamic);
                 } catch (IOException | ClassNotFoundException e) {
                     staticPrinter("[ERROR] Connection to server lost! " + e);
-                    break;
+                    throw new RuntimeException(e);
                 } catch (InterruptedException e) {
                     staticPrinter("[ERROR] Thread interrupted! " + e);
                     Thread.currentThread().interrupt();
-                    break;
+                    throw new RuntimeException(e);
+                }
+            };
+
+            while (running) {
+                try {
+                    receiveAndProcess.run();
+                } catch (RuntimeException e) {
+                    running = false;
                 }
             }
         } finally {
             closeResources();
         }
     }
+
 
     /**
      * Close all the resources used by the ClientSocket.

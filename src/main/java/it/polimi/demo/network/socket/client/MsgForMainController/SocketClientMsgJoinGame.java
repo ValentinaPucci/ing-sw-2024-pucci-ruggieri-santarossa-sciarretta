@@ -1,15 +1,15 @@
 package it.polimi.demo.network.socket.client.MsgForMainController;
 
+import it.polimi.demo.network.socket.client.SocketClientMainControllerMex;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
-import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
 
 import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 
-public class SocketClientMsgJoinGame extends SocketClientGenericMessage implements Serializable {
+public class SocketClientMsgJoinGame extends SocketClientMainControllerMex implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -6436517584047451724L;
@@ -24,8 +24,6 @@ public class SocketClientMsgJoinGame extends SocketClientGenericMessage implemen
     public SocketClientMsgJoinGame(String nick, int game_id) {
         this.game_id = game_id;
         this.setUserNickname(nick);
-        this.setMainControllerTarget(true);
-
     }
 
     /**
@@ -39,16 +37,6 @@ public class SocketClientMsgJoinGame extends SocketClientGenericMessage implemen
     @Override
     public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
         return mainController.joinGame(lis, this.getUserNickname(), game_id);
-    }
-
-    /**
-     * Only for implementation purposes.
-     * @param gameController the game controller interface
-     * @throws RemoteException if there is a remote communication error
-     */
-    @Override
-    public void performOnGameController(GameControllerInterface gameController) throws RemoteException {
-
     }
 
 }

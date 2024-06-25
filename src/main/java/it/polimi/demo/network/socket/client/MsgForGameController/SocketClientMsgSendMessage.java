@@ -5,7 +5,7 @@ import it.polimi.demo.model.chat.Message;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
-import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
+import it.polimi.demo.network.socket.client.SocketClientGameControllerMex;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -14,7 +14,7 @@ import java.rmi.RemoteException;
 /**
  * Class to send a message in the CHAT.
  */
-public class SocketClientMsgSendMessage extends SocketClientGenericMessage implements Serializable {
+public class SocketClientMsgSendMessage extends SocketClientGameControllerMex implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -8369247984549388589L;
@@ -29,13 +29,6 @@ public class SocketClientMsgSendMessage extends SocketClientGenericMessage imple
     public SocketClientMsgSendMessage(String nick, Message chat_msg) {
         this.nick = nick;
         this.chat_msg = chat_msg;
-
-        this.setMainControllerTarget(false);
-    }
-
-    @Override
-    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return null;
     }
 
     /**

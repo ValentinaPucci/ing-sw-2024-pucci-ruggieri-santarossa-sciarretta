@@ -5,7 +5,7 @@ import it.polimi.demo.model.enumerations.*;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
-import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
+import it.polimi.demo.network.socket.client.SocketClientGameControllerMex;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -15,7 +15,7 @@ import java.rmi.RemoteException;
  * Class to send the place card message to the server.
 
  */
-public class SocketClientMsgPlaceCard extends SocketClientGenericMessage implements Serializable {
+public class SocketClientMsgPlaceCard extends SocketClientGameControllerMex implements Serializable {
     @Serial
     private static final long serialVersionUID = -4335518806107022454L;
     int x;
@@ -32,19 +32,6 @@ public class SocketClientMsgPlaceCard extends SocketClientGenericMessage impleme
         this.x = x;
         this.y = y;
         this.orientation = orientation;
-        this.setMainControllerTarget(false);
-    }
-
-    /**
-     * Only for implementation purposes.
-     * @param observer the game observer
-     * @param mainCtrlInterface the main controller interface
-     * @return
-     * @throws RemoteException
-     */
-    @Override
-    public GameControllerInterface performOnMainController(Listener observer, MainControllerInterface mainCtrlInterface) throws RemoteException {
-        return null;
     }
 
     /**

@@ -2,8 +2,10 @@ package it.polimi.demo.network.socket.server;
 
 import it.polimi.demo.controller.MainController;
 import it.polimi.demo.model.exceptions.GameEndedException;
-import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
+import it.polimi.demo.network.socket.client.GenericControllerMessage;
+import it.polimi.demo.network.socket.client.SocketClientGameControllerMex;
 import it.polimi.demo.network.GameControllerInterface;
+import it.polimi.demo.network.socket.client.SocketClientMainControllerMex;
 
 import java.io.*;
 import java.net.Socket;
@@ -42,7 +44,7 @@ public class ClientConnection extends Thread implements Serializable {
     /**
      * Queue of messages to process.
      */
-    private final ConcurrentLinkedQueue<SocketClientGenericMessage> messageQueue = new ConcurrentLinkedQueue<>();
+    private final ConcurrentLinkedQueue<GenericControllerMessage> messageQueue = new ConcurrentLinkedQueue<>();
     /**
      * Flag to check if the client is running.
      */
@@ -80,7 +82,7 @@ public class ClientConnection extends Thread implements Serializable {
             outputStream = new ObjectOutputStream(bufferedOutputStream);
             outputStream.flush();  // Ensure the header of ObjectOutputStream is sent
 
-            GameListenersSocket gameListenerHandler = new GameListenersSocket(outputStream);
+            GameListenersHandlerSocket gameListenerHandler = new GameListenersHandlerSocket(outputStream);
 
             Thread messageReaderThread = new Thread(this::readMessages);
             messageReaderThread.start();
@@ -102,7 +104,7 @@ public class ClientConnection extends Thread implements Serializable {
     private void readMessages() {
         try {
             while (running.get()) {
-                SocketClientGenericMessage message = (SocketClientGenericMessage) inputStream.readObject();
+                GenericControllerMessage message = (GenericControllerMessage) inputStream.readObject();
                 messageQueue.add(message);
             }
         } catch (IOException | ClassNotFoundException e) {
@@ -114,15 +116,19 @@ public class ClientConnection extends Thread implements Serializable {
      * Method used to handle the game logic .
      * @param gameListenerHandler
      */
-    private void handleGameLogic(GameListenersSocket gameListenerHandler) {
-        SocketClientGenericMessage message = messageQueue.poll();
+    private void handleGameLogic(GameListenersHandlerSocket gameListenerHandler) {
+        GenericControllerMessage message = messageQueue.poll();
         if (message != null) {
             try {
-                if (message.isMainControllerTarget()) {
-                    controller = message.performOnMainController(gameListenerHandler, MainController.getControllerInstance());
-                    userNickname = controller != null ? message.getUserNickname() : null;
-                } else if (!message.isHeartbeatMessage()) {
-                    message.performOnGameController(controller);
+                if (message instanceof SocketClientMainControllerMex mex) {
+                    controller = mex.performOnMainController(gameListenerHandler, MainController.getControllerInstance());
+                    if (controller == null)
+                        userNickname = null;
+                    else
+                        userNickname = mex.getUserNickname();
+                } else {
+                    SocketClientGameControllerMex mex = (SocketClientGameControllerMex) message;
+                    mex.performOnGameController(controller);
                 }
             } catch (RemoteException | GameEndedException e) {
                 staticPrinter("Error handling game logic: " + e.getMessage());
@@ -137,7 +143,7 @@ public class ClientConnection extends Thread implements Serializable {
         staticPrinter("ClientSocket disconnected due to communication failure");
         try {
             if (controller != null) {
-                controller.leave(new GameListenersSocket(outputStream), userNickname);
+                controller.leave(new GameListenersHandlerSocket(outputStream), userNickname);
             }
         } catch (RemoteException e) {
             staticPrinter("Error during disconnection: " + e.getMessage());
