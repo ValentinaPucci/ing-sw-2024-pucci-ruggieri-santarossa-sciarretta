@@ -224,7 +224,6 @@ public class Model implements Serializable {
     public void removePlayer(Player p) {
         players_connected.remove(p);
         aux_order_players.remove(p);
-        observers.notify_playerLeft(this, p.getNickname());
     }
 
     //-------------------------chat and messages---------------------------------------------

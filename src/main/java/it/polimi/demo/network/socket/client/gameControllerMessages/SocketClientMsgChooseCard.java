@@ -4,7 +4,7 @@ import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
-import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
+import it.polimi.demo.network.socket.client.SocketClientGameControllerMex;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
 /**
  * This class represents the message sent by the client to the server to choose a card from the hand.
  */
-public class SocketClientMsgChooseCard extends SocketClientGenericMessage implements Serializable {
+public class SocketClientMsgChooseCard extends SocketClientGameControllerMex implements Serializable {
     @Serial
     private static final long serialVersionUID = 5796017918043405008L;
     private int which_card;
@@ -25,18 +25,6 @@ public class SocketClientMsgChooseCard extends SocketClientGenericMessage implem
     public SocketClientMsgChooseCard(int which_card) {
         this.which_card = which_card;
         this.setMainControllerTarget(false);
-    }
-
-    /**
-     * Method to perform the corresponding action of the message.
-     * @param lis the game observer
-     * @param mainController the main controller interface
-     * @return
-     * @throws RemoteException
-     */
-    @Override
-    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return null;
     }
 
     /**
