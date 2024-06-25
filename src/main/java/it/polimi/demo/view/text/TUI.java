@@ -53,7 +53,7 @@ public class TUI extends UI {
     /**
      * shows the title
      */
-    public void show_title() {
+    public void displayTitle() {
         resetConsole();
         String message = ansi().fg(YELLOW).a("""
                   ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄▄  ▄▄▄▄▄▄▄▄▄▄   ▄▄▄▄▄▄▄▄▄▄▄  ▄       ▄                                                      \s
@@ -157,11 +157,11 @@ public class TUI extends UI {
         for (ResourceCard c : player_hand) {
             if (c instanceof GoldCard) {
                 System.out.println("** GOLD CARD **" + " " + "(" + (player_hand.indexOf(c) + 1) + ")" + "\n");
-                TuiCardGraphics.showGoldCard((GoldCard) c);
+                TuiCardGraphics.displayGoldCard((GoldCard) c);
             }
             else {
                 System.out.println("** RESOURCE CARD **" + " " + "(" + (player_hand.indexOf(c) + 1) + ")" + "\n");
-                TuiCardGraphics.showResourceCard(c);
+                TuiCardGraphics.displayResourceCard(c);
             }
         }
     }
@@ -175,8 +175,8 @@ public class TUI extends UI {
         resetConsole();
         StaticPrinterTUI.print("First, we show you the two objective cards you can choose from: \n");
         List<ObjectiveCard> objectiveCards = gameModel.getObjectiveCards(nickname);
-        TuiCardGraphics.showObjectiveCard(objectiveCards.get(0));
-        TuiCardGraphics.showObjectiveCard(objectiveCards.get(1));
+        TuiCardGraphics.displayObjectiveCard(objectiveCards.get(0));
+        TuiCardGraphics.displayObjectiveCard(objectiveCards.get(1));
         resetConsole();
     }
 
@@ -188,8 +188,8 @@ public class TUI extends UI {
     public void displayStarterCards(ModelView gameModel) {
         resetConsole();
         List<StarterCard> starterCards = gameModel.getStarterCards(nickname);
-        TuiCardGraphics.showStarterCardFront(starterCards.get(0));
-        TuiCardGraphics.showStarterCardBack(starterCards.get(1));
+        TuiCardGraphics.displayStarterCardFront(starterCards.get(0));
+        TuiCardGraphics.displayStarterCardBack(starterCards.get(1));
         resetConsole();
     }
 
@@ -203,11 +203,11 @@ public class TUI extends UI {
         resetConsole();
         if (model.getPlayerEntity(nickname).getChosenGameCard() instanceof GoldCard) {
             System.out.println("You have chosen the following Gold Card: \n");
-            TuiCardGraphics.showGoldCard((GoldCard) model.getPlayerEntity(nickname).getChosenGameCard());
+            TuiCardGraphics.displayGoldCard((GoldCard) model.getPlayerEntity(nickname).getChosenGameCard());
         }
         else {
             System.out.println("You have chosen the following Resource Card: \n");
-            TuiCardGraphics.showResourceCard(model.getPlayerEntity(nickname).getChosenGameCard());
+            TuiCardGraphics.displayResourceCard(model.getPlayerEntity(nickname).getChosenGameCard());
         }
         resetConsole();
     }
@@ -319,7 +319,7 @@ public class TUI extends UI {
     public void displayPersonalObjectiveCard(ModelView gameModel) {
         resetConsole();
         System.out.println("Your chosen objective card is: \n");
-        TuiCardGraphics.showObjectiveCard(gameModel.getPlayerEntity(nickname).getChosenObjectiveCard());
+        TuiCardGraphics.displayObjectiveCard(gameModel.getPlayerEntity(nickname).getChosenObjectiveCard());
         resetConsole();
     }
 
@@ -405,7 +405,7 @@ public class TUI extends UI {
     @Override
     public void displayGameStarted(ModelView model) {
         resetConsole();
-        show_title();
+        displayTitle();
     }
 
     /**
@@ -458,9 +458,9 @@ public class TUI extends UI {
      * shows options
      */
     @Override
-    public void startFirstScene() {
+    public void startTheGame() {
         this.resetConsole();
-        this.show_title();
+        this.displayTitle();
         StaticPrinterTUI.print(ansi().cursor(9, 0).a("""
                 > Select one option:
                 \ttype (c) to create a new game
@@ -517,7 +517,7 @@ public class TUI extends UI {
     public void displayCreateGame(String nickname) {
         this.nickname = nickname;
         resetConsole();
-        show_title();
+        displayTitle();
         StaticPrinterTUI.print("> Creating a new game...");
     }
 
@@ -529,7 +529,7 @@ public class TUI extends UI {
     public void displayJoinRandom(String nickname) {
         this.nickname = nickname;
         resetConsole();
-        show_title();
+        displayTitle();
         StaticPrinterTUI.print("> Connecting to the first available game...");
     }
 
@@ -542,7 +542,7 @@ public class TUI extends UI {
     public void displayJoin(int idGame, String nickname) {
         this.nickname = nickname;
         resetConsole();
-        show_title();
+        displayTitle();
         StaticPrinterTUI.print("> You have selected to join to Game with id: '" + idGame + "', trying to connect");
     }
 

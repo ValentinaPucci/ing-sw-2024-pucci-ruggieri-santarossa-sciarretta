@@ -313,7 +313,7 @@ public class TuiCardGraphics {
      * Method to print the resource card.
      * @param resource_card the resource card to print
      */
-    public static void showResourceCard(ResourceCard resource_card) {
+    public static void displayResourceCard(ResourceCard resource_card) {
 
         Color card_color = resource_card.getColor();
         String graphic_color = null;
@@ -374,7 +374,7 @@ public class TuiCardGraphics {
      * Method to print the gold card.
      * @param gold_card the gold card to print
      */
-    public static void showGoldCard(GoldCard gold_card) {
+    public static void displayGoldCard(GoldCard gold_card) {
         Color card_color = gold_card.getColor();
         String graphic_color = null;
         switch (card_color) {
@@ -450,7 +450,7 @@ public class TuiCardGraphics {
      * Method to print the starter card.
      * @param starter_card the starter card to print
      */
-    public static void showStarterCardFront(StarterCard starter_card) {
+    public static void displayStarterCardFront(StarterCard starter_card) {
         ArrayList<Corner> corners = new ArrayList<>();
         corners.add(starter_card.getCornerAtNW());
         corners.add(starter_card.getCornerAtNE());
@@ -537,7 +537,7 @@ public class TuiCardGraphics {
      * Method to print the starter card.
      * @param starter_card the starter card to print
      */
-    public static void showStarterCardBack(StarterCard starter_card) {
+    public static void displayStarterCardBack(StarterCard starter_card) {
         ArrayList<Corner> corners = new ArrayList<>();
         corners.add(starter_card.getCornerAtNW());
         corners.add(starter_card.getCornerAtNE());
@@ -586,7 +586,7 @@ public class TuiCardGraphics {
      * Method to print the objective card.
      * @param objective_card the objective card to print
      */
-    public static void showObjectiveCard(ObjectiveCard objective_card) {
+    public static void displayObjectiveCard(ObjectiveCard objective_card) {
         if (objective_card instanceof LetterPatternObjectiveCard || objective_card instanceof DiagonalPatternObjectiveCard) {
             TuiCardGraphics ob_card = new TuiCardGraphics(objective_card.getId(), objective_card.getPoints());
             ob_card.printPatternObjectivecard();

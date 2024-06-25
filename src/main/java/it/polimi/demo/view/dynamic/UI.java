@@ -11,7 +11,7 @@ public abstract class UI {
     /**
      * Shows the options available to the user.
      */
-    protected abstract void startFirstScene();
+    protected abstract void startTheGame();
 
     /**
      * Shows the message indicating the creation of a game with the specified nickname.

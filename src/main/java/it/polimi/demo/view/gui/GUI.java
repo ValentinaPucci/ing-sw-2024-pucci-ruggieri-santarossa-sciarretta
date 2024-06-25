@@ -56,7 +56,7 @@ public class GUI extends UI {
      * It shows the Menu scene.
      * */
     @Override
-    protected void startFirstScene() {
+    protected void startTheGame() {
         executeOnPlatform(() -> {
             this.app.setGUIReaderToScenes(this.GuiReader);
             this.app.changeScene("Menu");
