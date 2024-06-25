@@ -30,13 +30,11 @@
                         <ColorAdjust hue="0.17" saturation="0.3" />
                      </effect>
                   </Button>
-                      <Text fx:id="myNick" fill="#4d0202" layoutX="308.0" layoutY="712.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" " wrappingWidth="179.66716154871494">
+                      <Text fx:id="myNick" fill="#4d0202" layoutX="308.0" layoutY="706.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" " wrappingWidth="179.66716154871494">
                           <font>
                               <Font name="Luminari" size="30.0" />
                           </font>
                       </Text>
-      
-      
                       <Text fill="#4d0202" layoutX="57.0" layoutY="706.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your nickname:" textAlignment="CENTER" wrappingWidth="250.66716154871494">
                           <font>
                               <Font name="Luminari" size="30.0" />
@@ -45,7 +43,6 @@
                </children>
                 </Pane>
 
-      
                       <Pane layoutX="30.0" layoutY="20.0" maxHeight="634.0" maxWidth="1261.0" opacity="0.8" prefHeight="634.0" prefWidth="1261.0">
                     <cursor>
                         <Cursor fx:constant="DEFAULT" />
