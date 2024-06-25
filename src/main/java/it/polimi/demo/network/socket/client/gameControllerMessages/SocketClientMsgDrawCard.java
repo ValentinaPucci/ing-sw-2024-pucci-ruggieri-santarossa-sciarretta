@@ -4,7 +4,7 @@ import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
-import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
+import it.polimi.demo.network.socket.client.SocketClientGameControllerMex;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ import java.rmi.RemoteException;
 /**
  * Class to send the draw card message to the server.
  */
-public class SocketClientMsgDrawCard extends SocketClientGenericMessage implements Serializable {
+public class SocketClientMsgDrawCard extends SocketClientGameControllerMex implements Serializable {
     @Serial
     private static final long serialVersionUID = 7272108078804819811L;
     private int index;
@@ -25,11 +25,6 @@ public class SocketClientMsgDrawCard extends SocketClientGenericMessage implemen
     public SocketClientMsgDrawCard(int index) {
          this.index = index;
          this.setMainControllerTarget(false);
-    }
-
-    @Override
-    public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
-        return null;
     }
 
     /**

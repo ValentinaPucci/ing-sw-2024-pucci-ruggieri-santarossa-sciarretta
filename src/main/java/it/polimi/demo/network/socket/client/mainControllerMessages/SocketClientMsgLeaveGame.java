@@ -1,9 +1,9 @@
 package it.polimi.demo.network.socket.client.mainControllerMessages;
 
+import it.polimi.demo.network.socket.client.SocketClientMainControllerMex;
 import it.polimi.demo.observer.Listener;
 import it.polimi.demo.network.GameControllerInterface;
 import it.polimi.demo.network.MainControllerInterface;
-import it.polimi.demo.network.socket.client.SocketClientGenericMessage;
 
 import java.io.Serial;
 import java.rmi.RemoteException;
@@ -12,7 +12,7 @@ import java.rmi.RemoteException;
 /**
  * This class represents the message sent by the client to the main controller to leave a game.
  */
-public class SocketClientMsgLeaveGame extends SocketClientGenericMessage {
+public class SocketClientMsgLeaveGame extends SocketClientMainControllerMex {
 
     @Serial
     private static final long serialVersionUID = 6214430342463902214L;
@@ -35,15 +35,5 @@ public class SocketClientMsgLeaveGame extends SocketClientGenericMessage {
     public GameControllerInterface performOnMainController(Listener lis, MainControllerInterface mainController) throws RemoteException {
         mainController.leaveGame(lis, getUserNickname(), game_id);
         return mainController.getGameController(game_id);
-    }
-
-    /**
-     * Only for implementation purposes
-     * @param mainController the game controller interface
-     * @throws RemoteException
-     */
-    @Override
-    public void performOnGameController(GameControllerInterface mainController) throws RemoteException {
-
     }
 }

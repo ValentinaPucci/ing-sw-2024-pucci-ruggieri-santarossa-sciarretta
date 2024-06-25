@@ -1,9 +1,7 @@
 package it.polimi.demo.network.socket.client;
 
-import it.polimi.demo.observer.Listener;
 import it.polimi.demo.model.exceptions.GameEndedException;
 import it.polimi.demo.network.GameControllerInterface;
-import it.polimi.demo.network.MainControllerInterface;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -12,21 +10,12 @@ import java.rmi.RemoteException;
 /**
  * This abstract class represents a generic message that can be sent by the client to the server.
  */
-public abstract class SocketClientGenericMessage implements Serializable {
+public abstract class SocketClientGameControllerMex extends GenericControllerMessage implements Serializable {
 
     @Serial
     private static final long serialVersionUID = -5886817470118365739L;
 
-    private MessageData data;
-
-    /**
-     * Processes the message with the main controller and observer.
-     * @param observer the game observer
-     * @param mainCtrlInterface the main controller interface
-     * @return the game controller interface after processing the message
-     * @throws RemoteException in case of remote communication issues
-     */
-    public abstract GameControllerInterface performOnMainController(Listener observer, MainControllerInterface mainCtrlInterface) throws RemoteException;
+    private final AuxMessage data = new AuxMessage();
 
     /**
      * Processes the message with the game controller.
@@ -37,19 +26,11 @@ public abstract class SocketClientGenericMessage implements Serializable {
     public abstract void performOnGameController(GameControllerInterface gameCtrlInterface) throws RemoteException, GameEndedException;
 
     /**
-     * Checks if the message is aimed at the main controller.
-     * @return true if the message is for the main controller, false otherwise
-     */
-    public boolean isMainControllerTarget() {
-        return data != null && Boolean.TRUE.equals(data.isMainControllerTarget());
-    }
-
-    /**
      * Retrieves the user's nickname associated with the message.
      * @return the user's nickname, or null if data is null
      */
     public String getUserNickname() {
-        return data != null ? data.nickname() : null;
+        return data.getUserNickname();
     }
 
     /**
@@ -57,11 +38,7 @@ public abstract class SocketClientGenericMessage implements Serializable {
      * @param userNickname the user's nickname
      */
     public void setUserNickname(String userNickname) {
-        if (data != null) {
-            this.data = new MessageData(userNickname, data.isMainControllerTarget());
-        } else {
-            this.data = new MessageData(userNickname, false);
-        }
+        data.setUserNickname(userNickname);
     }
 
     /**
@@ -69,11 +46,7 @@ public abstract class SocketClientGenericMessage implements Serializable {
      * @param mainControllerTarget true if the message is for the main controller, false otherwise
      */
     public void setMainControllerTarget(boolean mainControllerTarget) {
-        if (data != null) {
-            this.data = new MessageData(data.nickname(), mainControllerTarget);
-        } else {
-            this.data = new MessageData(null, mainControllerTarget);
-        }
+        data.setMainControllerTarget(mainControllerTarget);
     }
 }
 
