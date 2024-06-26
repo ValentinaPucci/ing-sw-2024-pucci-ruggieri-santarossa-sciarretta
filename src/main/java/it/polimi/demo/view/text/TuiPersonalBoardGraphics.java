@@ -24,10 +24,10 @@ public class TuiPersonalBoardGraphics {
         showObjectsCount(personal_board);
         Cell[][] matrix = personal_board.getBoard();
 
-        int first_row = 240;
-        int last_row = 260;
-        int first_column = 240;
-        int last_column = 260;
+        int first_row = 15;
+        int last_row = 35;
+        int first_column = 15;
+        int last_column = 35;
 
         printHorizontalLine(10);
         for (int i = first_row; i <= last_row; i++) {
@@ -66,7 +66,7 @@ public class TuiPersonalBoardGraphics {
      */
     public static void printHorizontalLine(int columns) {
         //System.out.print("+");
-        for (int i = 240 ; i < 257; i++) {
+        for (int i = 15 ; i < 32; i++) {
             System.out.print("─────");
         }
         System.out.println();

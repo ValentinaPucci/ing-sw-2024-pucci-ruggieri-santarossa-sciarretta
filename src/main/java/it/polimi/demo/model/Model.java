@@ -437,7 +437,7 @@ public class Model implements Serializable {
             observers.notify_illegalMove(this);
         }
         else {
-            if (250 <= x && x <= 251 && 250 <= y && y <= 251) {
+            if (25 <= x && x <= 26 && 25 <= y && y <= 26) {
                 StarterCard already_placed_card = p.getStarterCard();
                 Coordinate coord = already_placed_card.getCoordinateAt(x, y);
                 admissible_move = personal_board.placeCardAt(already_placed_card, card_chosen, coord);
@@ -511,7 +511,7 @@ public class Model implements Serializable {
             observers.notify_illegalMove(this);
         }
         else {
-            if (250 <= x && x <= 251 && 250 <= y && y <= 251) {
+            if (25 <= x && x <= 26 && 25 <= y && y <= 26) {
                 StarterCard already_placed_card = p.getStarterCard();
                 Coordinate coord = already_placed_card.getCoordinateAt(x, y);
                 admissible_move = personal_board.placeCardAt(already_placed_card, card_chosen, coord);

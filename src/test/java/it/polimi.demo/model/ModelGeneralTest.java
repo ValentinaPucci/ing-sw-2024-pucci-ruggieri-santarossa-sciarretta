@@ -142,25 +142,25 @@ public class ModelGeneralTest {
 
         tui.displayGameEnded(model_view);
 
-        model.placeCard(card1, p1, 250, 250);
+        model.placeCard(card1, p1, 25, 25);
         // hit illegal starter
-        model.placeCard(card1, p1, 250, 250);
+        model.placeCard(card1, p1, 25, 25);
 
-        model.placeCard(card2, p1, 250, 251);
-        model.placeCard(card3, p1, 251, 250);
-        model.placeCard(card4, p1, 251, 251);
+        model.placeCard(card2, p1, 25, 26);
+        model.placeCard(card3, p1, 26, 25);
+        model.placeCard(card4, p1, 26, 26);
 
-        model.placeCard(card1, p1, 249, 249);
+        model.placeCard(card1, p1, 24, 24);
         // hit illegal resource
-        model.placeCard(card1, p1, 249, 249);
+        model.placeCard(card1, p1, 24, 24);
 
-        model.placeCard(card2, p1, 248, 248);
+        model.placeCard(card2, p1, 23, 23);
 
-        model.placeCard(card3, p1, 247, 247);
+        model.placeCard(card3, p1, 23, 23);
         // hit illegal gold
-        model.placeCard(card3, p1, 247, 247);
+        model.placeCard(card3, p1, 23, 23);
 
-        model.placeCard(card4, p1, 246, 246);
+        model.placeCard(card4, p1, 22, 22);
 
         model.setStatus(GameStatus.RUNNING);
 

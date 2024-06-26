@@ -59,6 +59,13 @@ public class FactQueue implements Serializable {
                         factType.equals(FactType.ALREADY_USED_NICKNAME) ||
                         factType.equals(FactType.FULL_GAME)));
     }
+
+    /**
+     * Clears the queue of facts.
+     */
+    public void clear() {
+        queue_of_facts.clear();
+    }
 }
 
 

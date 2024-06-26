@@ -58,8 +58,8 @@ public class PersonalBoard implements Serializable {
      */
 
     public PersonalBoard() {
-        this.dim1 = 500;
-        this.dim2 = 500;
+        this.dim1 = 50;
+        this.dim2 = 50;
 
         this.board = new Cell[dim1][dim2];
         for (int i = 0; i < dim1; i++) {
