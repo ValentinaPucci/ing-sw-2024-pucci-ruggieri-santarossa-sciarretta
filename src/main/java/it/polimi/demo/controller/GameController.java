@@ -97,7 +97,8 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     @Override
     public void addPing(String nickname, Listener listener) {
-        pings.put(listener, new Ping(System.currentTimeMillis(), nickname));
+        if (model.arePlayersReadyToStartAndEnough())
+            pings.put(listener, new Ping(System.currentTimeMillis(), nickname));
     }
 
     /**

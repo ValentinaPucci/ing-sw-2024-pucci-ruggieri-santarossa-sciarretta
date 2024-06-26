@@ -183,8 +183,6 @@ public class RMIClient implements ClientInterface {
         });
     }
 
-
-
     /**
      * Sets the player as ready for the game.
      *
@@ -323,15 +321,13 @@ public class RMIClient implements ClientInterface {
      */
     @Override
     public void ping() throws RemoteException, NotBoundException {
-        if (initialized) {
-            withRegistry(reg -> {
-                try {
-                    asks.addPing(lis, nickname, game_id);
-                } catch (RemoteException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
+        withRegistry(reg -> {
+            try {
+                asks.addPing(lis, nickname, game_id);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     /**
