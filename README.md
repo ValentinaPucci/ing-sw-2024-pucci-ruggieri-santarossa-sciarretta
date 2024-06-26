@@ -41,7 +41,7 @@ First of all you need to save the two jars in a directory. Then, open the termin
 
 to start the Server:
 ```bash
-java -jar Server.jar
+java -jar Client.jar
 ```
 
 to start the Client:
