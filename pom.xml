@@ -7,7 +7,10 @@
     <groupId>it.polimi.demo</groupId>
     <artifactId>ing-sw-2024-pucci-ruggieri-santarossa-sciarretta</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
     <name>ing-sw-2024-pucci-ruggieri-santarossa-sciarretta</name>
+    <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.10.0</junit.version>
