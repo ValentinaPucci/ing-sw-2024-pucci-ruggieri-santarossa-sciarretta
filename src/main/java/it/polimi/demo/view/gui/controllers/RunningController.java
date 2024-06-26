@@ -581,7 +581,7 @@ public class RunningController extends GuiInputReaderController {
             CardPic.setFitWidth(90);
             CardPic.setFitHeight(65);
 
-            int[] result = {lastChosenCard.get(1) - 250, lastChosenCard.get(2) - 250};
+            int[] result = {lastChosenCard.get(1) - 25, lastChosenCard.get(2) - 25};
 
             switch (coord) {
                 case NE -> result[0]--;
