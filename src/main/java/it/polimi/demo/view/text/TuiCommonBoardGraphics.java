@@ -50,11 +50,12 @@ public class TuiCommonBoardGraphics {
         char[][] players = new char[common_board.getPlayerCount() + 1][30];
 
         printHorizontalLine(grid[0].length);
-        players[1][common_board.getPlayerPosition(0)] = 'R';
-        players[2][common_board.getPlayerPosition(1)] = 'B';
+        players[1][common_board.getPlayerPosition(0)] = 'B';
+        players[2][common_board.getPlayerPosition(1)] = 'G';
         if (common_board.getPlayerCount() == 3)
-            players[3][common_board.getPlayerPosition(2)] = 'G';
+            players[3][common_board.getPlayerPosition(2)] = 'R';
         else if (common_board.getPlayerCount() == 4)
+            players[3][common_board.getPlayerPosition(2)] = 'R';
             players[4][common_board.getPlayerPosition(3)] = 'Y';
 
         for (int i = 0; i < grid.length; i++) {
@@ -70,10 +71,10 @@ public class TuiCommonBoardGraphics {
                             System.out.print("\u001B[34m " + playerSymbol + " \u001B[0m");
                             break;
                         case 'G':
-                            System.out.print("\u001B[32m V \u001B[0m");
+                            System.out.print("\u001B[32m " + playerSymbol + " \u001B[0m");
                             break;
                         case 'Y':
-                            System.out.print("\u001B[33m G \u001B[0m");
+                            System.out.print("\u001B[33m " + playerSymbol + " \u001B[0m");
                             break;
                         default:
                             System.out.print(" " + playerSymbol + " ");
