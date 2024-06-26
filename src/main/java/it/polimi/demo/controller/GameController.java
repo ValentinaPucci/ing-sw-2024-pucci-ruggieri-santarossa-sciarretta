@@ -23,7 +23,6 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     private static final long serialVersionUID = -1535857999701952102L;
     private final Model model;
     private final Map<Listener, Ping> pings;
-    private volatile boolean running = true;
 
     /**
      * Constructor of the class
@@ -45,7 +44,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     @Override
     public void run() {
         Runnable checkDisconnections = () -> {
-            while (running) {
+            while (!Thread.currentThread().isInterrupted()) {
                 if (model.getStatus() != GameStatus.WAIT) {
                     checkForDisconnections();
                 }
@@ -60,26 +59,14 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
-     * Adds a Ping to the list of pings to monitor player connections.
-     *
-     * @param nickname the player's nickname associated with the ping
-     * @param listener the player's Listener associated with the ping
-     */
-    @Override
-    public void addPing(String nickname, Listener listener) {
-        pings.put(listener, new Ping(System.currentTimeMillis(), nickname));
-    }
-
-    /**
      * Checks if any player is disconnected by verifying the freshness of their pings.
-     * If a player's ping is expired, handle the disconnection for all entries.
+     * If a player's ping is expired, handle their disconnection.
      */
     public void checkForDisconnections() {
-        boolean hasOldPing = pings.values().stream().anyMatch(this::isPingOld);
-        running = false;
-        if (hasOldPing) {
-            pings.forEach((key, value) -> handleDisconnection(value, key));
-        }
+        pings.entrySet().stream()
+                .filter(entry -> isPingFresh(entry.getValue()))
+                .toList()
+                .forEach(entry -> handleDisconnection(entry.getValue(), entry.getKey()));
     }
 
     /**
@@ -88,7 +75,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param ping the ping to check
      * @return true if the ping is expired, false otherwise
      */
-    private boolean isPingOld(Ping ping) {
+    private boolean isPingFresh(Ping ping) {
         return (System.currentTimeMillis() - ping.ping()) > Constants.secondsToWaitReconnection;
     }
 
@@ -103,6 +90,17 @@ public class GameController implements GameControllerInterface, Serializable, Ru
     }
 
     /**
+     * Adds a Ping to the list of pings to monitor player connections.
+     *
+     * @param nickname the player's nickname associated with the ping
+     * @param listener the player's Listener associated with the ping
+     */
+    @Override
+    public void addPing(String nickname, Listener listener) {
+        pings.put(listener, new Ping(System.currentTimeMillis(), nickname));
+    }
+
+    /**
      * Disconnects the player and performs a specified action during disconnection.
      *
      * @param nick the player's nickname
@@ -111,8 +109,10 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     public void disconnectPlayer(String nick, Listener listener, BiConsumer<String, Listener> disconnectAction) {
         Player player = model.getIdentityOfPlayer(nick);
-        if (player != null)
+        if (player != null) {
             disconnectAction.accept(nick, listener);
+            removeListener(listener);
+        }
     }
 
     /**
@@ -122,11 +122,10 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param listener the player's Listener
      */
     private void removeAndNotify(String nick, Listener listener) {
-        StaticPrinter.staticPrinter("Disconnection detected by ping of player: " + nick + " ");
         removeListener(listener);
         model.removePlayer(model.getIdentityOfPlayer(nick));
+        StaticPrinter.staticPrinter("Disconnection detected by ping of player: " + nick + " ");
         model.setStatus(GameStatus.ENDED);
-        pings.remove(listener);
         MainController.getControllerInstance().deleteGame(this.getGameId());
     }
 
