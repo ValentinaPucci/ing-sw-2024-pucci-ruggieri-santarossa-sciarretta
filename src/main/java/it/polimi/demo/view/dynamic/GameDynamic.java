@@ -580,7 +580,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         int x = getValidatedCoordinate("x");
         int y = getValidatedCoordinate("y");
         try {
-            placeCard(x + 250, y + 250, Orientation.valueOf(orientation));
+            placeCard(x + 25, y + 25, Orientation.valueOf(orientation));
         } catch (RemoteException e) {
             throw new RuntimeException(e);
         }
@@ -638,7 +638,7 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
         String input;
         do {
             ui.displayGenericMessage("Choose the ** " + coordinate +
-                    " ** coordinates where to place the card (insert a number between -250 and 250)");
+                    " ** coordinates where to place the card (insert a number between -40 and +40)");
             input = getProcessedData();
         } while (!isCoordinateValid(input));
         return Integer.parseInt(input.trim());
@@ -652,9 +652,9 @@ public class GameDynamic implements Listener, Runnable, ClientInterface {
     private boolean isCoordinateValid(String input) {
         try {
             int value = Integer.parseInt(input.trim());
-            return value >= -250 && value <= 250;
+            return value >= -25 && value <= 25;
         } catch (NumberFormatException e) {
-            ui.displayGenericError("Invalid input. Please enter a valid number between -250 and 250.");
+            ui.displayGenericError("Invalid input. Please enter a valid number between -40 and +40.");
             return false;
         }
     }

@@ -123,13 +123,13 @@ public class StarterCard extends Card {
 
     //TODO: use the default values in the appropriate class instead of explicit indexes.
     public Coordinate getCoordinateAt(int i, int j) {
-        if (i == 250 && j == 250)
+        if (i == 25 && j == 25)
             return Coordinate.NW;
-        else if (i == 250 && j == 251)
+        else if (i == 25 && j == 26)
             return Coordinate.NE;
-        else if (i == 251 && j == 250)
+        else if (i == 26 && j == 25)
             return Coordinate.SW;
-        else if (i == 251 && j == 251)
+        else if (i == 26 && j == 26)
             return Coordinate.SE;
         else
             throw new IndexOutOfBoundsException("Invalid index");
