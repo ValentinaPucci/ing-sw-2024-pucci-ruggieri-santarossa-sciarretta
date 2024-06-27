@@ -19,7 +19,7 @@ We have implemented the following features:
 | Chat  | :heavy_check_mark:    |
 
 Requirements: <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/requirements.pdf">requirements.pdf</a> <br>
-Rulebook_ITA:  <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/CODEX_Rulebook_IT.pdf">Rulebook_ITA</a> <br>
+Rulebook_ITA: <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/CODEX_Rulebook_IT.pdf">Rulebook_ITA</a> <br>
 Rulebook_ENG: <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/CODEX_Rulebook_EN.pdf">Rulebook_EN</a> <br>
 Official Site: <a href="https://www.craniocreations.it/prodotto/codex-naturalis">producer site</a>
 
@@ -50,8 +50,8 @@ java -jar Client.jar
 ```
 
 ## Test Coverage
-![Coverage Report](Deliverables/CoverageReport1.png)
-![Coverage Report](Deliverables/CoverageReport2.png)
+![Coverage Report](Deliverables/CoverageReports/CoverageReport1.png)
+![Coverage Report](Deliverables/CoverageReports/CoverageReport2.png)
 
 ## UML Diagrams
 - Class Diagrams
