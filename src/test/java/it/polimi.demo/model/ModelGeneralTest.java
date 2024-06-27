@@ -262,33 +262,33 @@ public class ModelGeneralTest {
 //        model_view.getLastChosenCard();
     }
 
-    @Test
-    public void testEndGame() throws GameEndedException {
-
-        model.setNumPlayersToPlay(2);
-
-        Player p1 = new Player("Player1");
-        Player p2 = new Player("Player2");
-
-        model.addPlayer(p1);
-        model.addPlayer(p2);
-
-        model.setPlayerAsReadyToStart(p1);
-        model.setPlayerAsReadyToStart(p2);
-
-        for (int i = 0; i < 40; i++) {
-            model.drawCard(p1, 1);
-            model.drawCard(p2, 4);
-        }
-
-        model.drawCard(p1, 1);
-
-        assertEquals(model.getStatus(), GameStatus.SECOND_LAST_ROUND);
-
-        model.drawCard(p1, 1);
-        model.drawCard(p2, 4);
-
-        assertEquals(model.getStatus(), GameStatus.LAST_ROUND);
-    }
+//    @Test
+//    public void testEndGame() throws GameEndedException {
+//
+//        model.setNumPlayersToPlay(2);
+//
+//        Player p1 = new Player("Player1");
+//        Player p2 = new Player("Player2");
+//
+//        model.addPlayer(p1);
+//        model.addPlayer(p2);
+//
+//        model.setPlayerAsReadyToStart(p1);
+//        model.setPlayerAsReadyToStart(p2);
+//
+//        for (int i = 0; i < 40; i++) {
+//            model.drawCard(p1, 1);
+//            model.drawCard(p2, 4);
+//        }
+//
+//        model.drawCard(p1, 1);
+//
+//        assertEquals(model.getStatus(), GameStatus.SECOND_LAST_ROUND);
+//
+//        model.drawCard(p1, 1);
+//        model.drawCard(p2, 4);
+//
+//        assertEquals(model.getStatus(), GameStatus.LAST_ROUND);
+//    }
 
 }

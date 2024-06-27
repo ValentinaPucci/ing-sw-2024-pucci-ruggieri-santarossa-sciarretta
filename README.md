@@ -50,16 +50,16 @@ java -jar Client.jar
 ```
 
 ## Test Coverage
-![Coverage Report](DOC/CoverageReport.png)
+![Coverage Report](Deliverables/CoverageReport.png)
 
 ## UML Diagrams
 - Class Diagrams
-  - [Model+Controller](DOC/UML/UML_model+controller.pdf)
-  - [RMI](DOC/UML/UML_RMI.pdf)
-  - [SOCKET](DOC/UML/UML_socket.pdf)
+  - [Model+Controller](Deliverables/UML/UML_model+controller.pdf)
+  - [RMI](Deliverables/UML/UML_RMI.pdf)
+  - [SOCKET](Deliverables/UML/UML_socket.pdf)
 - Sequence Diagrams
-  - [RMI](DOC/sequenceDiagrams/UML_Protocol.pdf)
-  - [SOCKET](DOC/sequenceDiagrams/Socket_Protocol.pdf)
+  - [RMI](Deliverables/sequenceDiagrams/UML_Protocol.pdf)
+  - [SOCKET](Deliverables/sequenceDiagrams/Socket_Protocol.pdf)
  
   
 ## Disclaimer
