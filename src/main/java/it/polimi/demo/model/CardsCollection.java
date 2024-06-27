@@ -1,5 +1,6 @@
 package it.polimi.demo.model;
 
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -63,14 +64,13 @@ public  class CardsCollection implements Serializable {
 
     /**
      * Method for populating the generic deck of Resource Cards or Gold Cards.
-     * @param jsonFilePath
      * @param type of Card, either "Resource" or "Gold"
      */
-    public void populateDeck(String jsonFilePath, String type) {
+    public void populateDeck(InputStream inputStream, String type) {
         cards.clear();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
+            JsonNode rootNode = objectMapper.readTree(inputStream);
             JsonNode cardsNode = rootNode.path("cards");
 
             for (JsonNode cardNode : cardsNode) {
@@ -228,14 +228,13 @@ public  class CardsCollection implements Serializable {
 
     /**
      * Method for populating the deck of Objective Cards.
-     * @param jsonFilePath
      */
 
-    public void populateDeckObjective(String jsonFilePath) {
+    public void populateDeckObjective(InputStream inputStream) {
         cards.clear();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
+            JsonNode rootNode = objectMapper.readTree(inputStream);
             JsonNode cardsNode = rootNode.path("cards");
 
             for (JsonNode cardNode : cardsNode) {
@@ -312,16 +311,15 @@ public  class CardsCollection implements Serializable {
 
     /**
      * Method for populating the deck of Starter Cards.
-     * @param jsonFilePath
      */
 
     // Remark: at the moment the same deck has both front and back of stater cards. Use the flag Orientation.
 
-    public void populateDeckStarterFrontAndBack(String jsonFilePath) {
+    public void populateDeckStarterFrontAndBack(InputStream inputStream) {
         cards.clear();
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            JsonNode rootNode = objectMapper.readTree(new File(jsonFilePath));
+            JsonNode rootNode = objectMapper.readTree(inputStream);
             JsonNode cardsNode = rootNode.path("cards");
 
             for (JsonNode cardNode : cardsNode) {
