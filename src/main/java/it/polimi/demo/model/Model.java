@@ -640,8 +640,6 @@ public class Model implements Serializable {
             // at the end of every player round, we check for her/his points
             if (getStatus() == GameStatus.SECOND_LAST_ROUND && aux_order_players.getLast().equals(p))
                 setStatus(GameStatus.LAST_ROUND);
-            else if (common_board.getResourceConcreteDeck().isEmpty() && common_board.getGoldConcreteDeck().isEmpty())
-                setStatus(GameStatus.LAST_ROUND);
             else if (p.getCurrentPoints() >= Constants.num_points_for_second_last_round) {
                 if (aux_order_players.getLast().equals(p)) {
                     setStatus(GameStatus.LAST_ROUND);
@@ -649,6 +647,10 @@ public class Model implements Serializable {
                 else if (getStatus() == GameStatus.RUNNING)
                     setStatus(GameStatus.SECOND_LAST_ROUND);
             }
+            nextTurn();
+        }
+        else if (common_board.getResourceConcreteDeck().isEmpty() && common_board.getGoldConcreteDeck().isEmpty()) {
+            setStatus(GameStatus.LAST_ROUND);
             nextTurn();
         }
     }
