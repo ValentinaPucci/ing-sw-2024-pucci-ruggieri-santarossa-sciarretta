@@ -98,7 +98,6 @@ public  class CardsCollection implements Serializable {
                     actual_corners[0][1].setEmpty();
 
                 } else {
-                    //TODO: Check with new database.
                     if (!NE_corner_content.equals("Empty")) {
                         if (NE_corner_content.equals("Mushroom") || NE_corner_content.equals("Leaf") ||
                                 NE_corner_content.equals("Butterfly") || NE_corner_content.equals("Wolf")) {
