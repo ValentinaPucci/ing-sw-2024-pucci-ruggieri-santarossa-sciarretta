@@ -282,7 +282,6 @@ public class ModelGeneralTest {
         }
 
         model.drawCard(p1, 1);
-
         model.drawCard(p1, 1);
         model.drawCard(p2, 4);
 
