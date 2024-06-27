@@ -62,8 +62,8 @@ java -jar artifacts/Client_jar/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta.
   - [RMI](Deliverables/UML/UML_RMI.pdf)
   - [SOCKET](Deliverables/UML/UML_socket.pdf)
 - Sequence Diagrams
-  - [RMI](Deliverables/sequenceDiagrams/UML_RMI.pdf)
-  - [SOCKET](Deliverables/sequenceDiagrams/UML_socket.pdf)
+  - [RMI](Deliverables/sequenceDiagrams/RMI_Protocol.pdf)
+  - [SOCKET](Deliverables/sequenceDiagrams/Socket_protocol.pdf)
  
   
 ## Disclaimer
