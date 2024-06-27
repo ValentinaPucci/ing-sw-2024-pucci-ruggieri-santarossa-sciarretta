@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="Server:jar" />
+    </artifacts-to-build>
+  </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="340bde2f-7a8d-4a71-8a39-736952a5840e" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 7
+}]]></component>
+  <component name="ProjectId" id="2iSsfb1DGHdbHooKDQ8rsWA5IK9" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+    <option name="showMembers" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "JUnit.All in ing-sw-2024-pucci-ruggieri-santarossa-sciarretta.executor": "Coverage",
+    "JUnit.CardsCollectionTest.executor": "Run",
+    "JUnit.CardsCollectionTest.testPopulateDeck.executor": "Run",
+    "JUnit.CardsCollectionTest.testPopulateDeckMultipleTimes.executor": "Run",
+    "JUnit.CardsCollectionTest.testPopulateDeckObjectiveCard.executor": "Run",
+    "JUnit.CardsCollectionTest.testPopulateDeckStarterFrontAndBack.executor": "Run",
+    "JUnit.CardsCollectionTest.testPopulateDeckWithInvalidFilePath.executor": "Run",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Artifacts",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.1150748",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "GitStage.ChangesTree.GroupingKeys": [
+      "directory",
+      "module",
+      "repository"
+    ]
+  }
+}]]></component>
+  <component name="RunManager" selected="JUnit.All in ing-sw-2024-pucci-ruggieri-santarossa-sciarretta">
+    <configuration name="All in ing-sw-2024-pucci-ruggieri-santarossa-sciarretta" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ing-sw-2024-pucci-ruggieri-santarossa-sciarretta" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TEST_OBJECT" value="package" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CardsCollectionTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ing-sw-2024-pucci-ruggieri-santarossa-sciarretta" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.polimi.demo.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="it.polimi.demo.model" />
+      <option name="MAIN_CLASS_NAME" value="it.polimi.demo.model.CardsCollectionTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CardsCollectionTest.testPopulateDeck" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ing-sw-2024-pucci-ruggieri-santarossa-sciarretta" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.polimi.demo.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="it.polimi.demo.model" />
+      <option name="MAIN_CLASS_NAME" value="it.polimi.demo.model.CardsCollectionTest" />
+      <option name="METHOD_NAME" value="testPopulateDeck" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CardsCollectionTest.testPopulateDeckMultipleTimes" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ing-sw-2024-pucci-ruggieri-santarossa-sciarretta" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.polimi.demo.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="it.polimi.demo.model" />
+      <option name="MAIN_CLASS_NAME" value="it.polimi.demo.model.CardsCollectionTest" />
+      <option name="METHOD_NAME" value="testPopulateDeckMultipleTimes" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CardsCollectionTest.testPopulateDeckStarterFrontAndBack" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="ing-sw-2024-pucci-ruggieri-santarossa-sciarretta" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="it.polimi.demo.model.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="it.polimi.demo.model" />
+      <option name="MAIN_CLASS_NAME" value="it.polimi.demo.model.CardsCollectionTest" />
+      <option name="METHOD_NAME" value="testPopulateDeckStarterFrontAndBack" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.All in ing-sw-2024-pucci-ruggieri-santarossa-sciarretta" />
+        <item itemvalue="JUnit.CardsCollectionTest" />
+        <item itemvalue="JUnit.CardsCollectionTest.testPopulateDeckStarterFrontAndBack" />
+        <item itemvalue="JUnit.CardsCollectionTest.testPopulateDeck" />
+        <item itemvalue="JUnit.CardsCollectionTest.testPopulateDeckMultipleTimes" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-21.0.2-corretto-21.0.2-4caba194b151-221dcadf" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="340bde2f-7a8d-4a71-8a39-736952a5840e" name="Changes" comment="" />
+      <created>1719495416472</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1719495416472</updated>
+      <workItem from="1719495418222" duration="3676000" />
+    </task>
+    <task id="LOCAL-00001" summary="CardsCollection testing fixed">
+      <option name="closed" value="true" />
+      <created>1719505355993</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1719505355993</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="CardsCollection testing fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="CardsCollection testing fixed" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/finito$All_in_ing_sw_2024_pucci_ruggieri_santarossa_sciarretta.ic" NAME="All in ing-sw-2024-pucci-ruggieri-santarossa-sciarretta Coverage Results" MODIFIED="1719505108204" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />
+  </component>
+</project>
