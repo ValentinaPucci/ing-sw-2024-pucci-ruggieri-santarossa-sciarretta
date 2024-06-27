@@ -1,7 +1,7 @@
 # Prova Finale - Ingegneria del Software - A.A. 2023/24
 ![Logo](src/main/resources/Codex.png)
 
-### Gruppo GC02
+### Gruppo GC49
 - [Valentina Pucci](https://github.com/ValentinaPucci)
 - [Riccardo Ruggieri](https://github.com/RiccardoRuggieri)
 - [Margherita Santarossa](https://github.com/margherita-santarossa)
