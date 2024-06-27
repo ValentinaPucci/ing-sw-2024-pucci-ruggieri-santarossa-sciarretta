@@ -38,7 +38,6 @@ If a player disconnects, the game ends immediately.
 
 # How to Use 
 Jar's are in the "out" directory. There are two jars, respectively of the Server and the Client.
-[jars](Deliverables/CoverageReport/Jars)
 First of all you need to save the "out" directory wherever you need. Then, open the terminal in that directory and type:
 
 to start the Server:
