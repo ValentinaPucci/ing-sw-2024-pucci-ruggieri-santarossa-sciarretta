@@ -264,7 +264,7 @@ public class TUI extends UI {
     @Override
     public void displayCommonBoard(ModelView model) {
         resetConsole();
-        TuiCommonBoardGraphics.showCommonBoard(model.getCommonBoard());
+        //TuiCommonBoardGraphics.showCommonBoard(model.getCommonBoard());
         resetConsole();
     }
 
