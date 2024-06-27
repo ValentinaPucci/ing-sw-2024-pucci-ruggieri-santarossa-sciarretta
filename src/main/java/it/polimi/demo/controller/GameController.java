@@ -31,7 +31,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      */
     public GameController(int gameID, int numberOfPlayers) {
         model = new Model(gameID, numberOfPlayers);
-        pings = new ConcurrentHashMap<>();
+        pings = new HashMap<>();
         new Thread(this).start();
     }
 
@@ -62,7 +62,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * Checks if any player is disconnected by verifying the freshness of their pings.
      * If a player's ping is expired, handle their disconnection.
      */
-    public void checkForDisconnections() {
+    public synchronized void checkForDisconnections() {
         pings.entrySet().stream()
                 .filter(entry -> isPingFresh(entry.getValue()))
                 .toList()
@@ -75,7 +75,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param ping the ping to check
      * @return true if the ping is expired, false otherwise
      */
-    private boolean isPingFresh(Ping ping) {
+    private synchronized boolean isPingFresh(Ping ping) {
         return (System.currentTimeMillis() - ping.ping()) > Constants.secondsToWaitReconnection;
     }
 
@@ -85,7 +85,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param ping the ping of the player
      * @param listener the listener of the player
      */
-    public void handleDisconnection(Ping ping, Listener listener) {
+    public synchronized void handleDisconnection(Ping ping, Listener listener) {
         disconnectPlayer(ping.nickname(), listener, this::removeAndNotify);
     }
 
@@ -96,7 +96,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param listener the player's Listener associated with the ping
      */
     @Override
-    public void addPing(String nickname, Listener listener) {
+    public synchronized void addPing(String nickname, Listener listener) {
         if (model.arePlayersReadyToStartAndEnough())
             pings.put(listener, new Ping(System.currentTimeMillis(), nickname));
     }
@@ -108,7 +108,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param listener the player's Listener
      * @param disconnectAction the action to perform during disconnection
      */
-    public void disconnectPlayer(String nick, Listener listener, BiConsumer<String, Listener> disconnectAction) {
+    public synchronized void disconnectPlayer(String nick, Listener listener, BiConsumer<String, Listener> disconnectAction) {
         Player player = model.getIdentityOfPlayer(nick);
         if (player != null) {
             disconnectAction.accept(nick, listener);
@@ -122,7 +122,7 @@ public class GameController implements GameControllerInterface, Serializable, Ru
      * @param nick the player's nickname
      * @param listener the player's Listener
      */
-    private void removeAndNotify(String nick, Listener listener) {
+    private synchronized void removeAndNotify(String nick, Listener listener) {
         removeListener(listener);
         model.removePlayer(model.getIdentityOfPlayer(nick));
         StaticPrinter.staticPrinter("Disconnection detected by ping of player: " + nick + " ");
