@@ -19,7 +19,7 @@ We have implemented the following features:
 | Chat  | :heavy_check_mark:    |
 
 Requirements: <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/requirements.pdf">requirements.pdf</a> <br>
-Rulebook_ITA:  <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/CODEX_Rulebook_IT.pdf">Rulebook_ITA</a> <br>
+Rulebook_ITA: <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/CODEX_Rulebook_IT.pdf">Rulebook_ITA</a> <br>
 Rulebook_ENG: <a href="https://github.com/ValentinaPucci/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta/blob/main/DOC/Requirements/CODEX_Rulebook_EN.pdf">Rulebook_EN</a> <br>
 Official Site: <a href="https://www.craniocreations.it/prodotto/codex-naturalis">producer site</a>
 
@@ -37,21 +37,22 @@ Private message: they need to write "/cs", the Nickname of the recipient player 
 If a player disconnects, the game ends immediately.
 
 # How to Use 
-First of all you need to save the two jars in a directory. Then, open the terminal in that directory and type:
+Jar's are in the "out" directory. There are two jars, respectively of the Server and the Client.
+First of all you need to save the "out" directory wherever you need. Then, open the terminal in that directory and type:
 
 to start the Server:
 ```bash
-java -jar Client.jar
+java -jar artifacts/Server_jar/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta.jar
 ```
 
 to start the Client:
 ```bash
-java -jar Client.jar
+java -jar artifacts/Client_jar/ing-sw-2024-pucci-ruggieri-santarossa-sciarretta.jar
 ```
 
 ## Test Coverage
-![Coverage Report](Deliverables/CoverageReport1.png)
-![Coverage Report](Deliverables/CoverageReport2.png)
+![Coverage Report](Deliverables/CoverageReport/CoverageReport1.png)
+![Coverage Report](Deliverables/CoverageReport/CoverageReport2.png)
 
 ## UML Diagrams
 - Class Diagrams
