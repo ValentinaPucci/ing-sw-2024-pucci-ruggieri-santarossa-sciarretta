@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AnalysisUIOptions">
+    <option name="ANALYZE_TEST_SOURCES" value="false" />
+  </component>
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
       <artifact name="Server:jar" />
@@ -9,7 +12,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="340bde2f-7a8d-4a71-8a39-736952a5840e" name="Changes" comment="" />
+    <list default="true" id="340bde2f-7a8d-4a71-8a39-736952a5840e" name="Changes" comment="javadocs added" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -21,9 +24,9 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="2iSsfb1DGHdbHooKDQ8rsWA5IK9" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -52,6 +55,7 @@
     "project.structure.last.edited": "Artifacts",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.1150748",
+    "settings.editor.selected.configurable": "preferences.intentionPowerPack",
     "vue.rearranger.settings.migration": "true"
   },
   "keyToStringList": {
@@ -145,6 +149,13 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <list>
+      <item itemvalue="JUnit.All in ing-sw-2024-pucci-ruggieri-santarossa-sciarretta" />
+      <item itemvalue="JUnit.CardsCollectionTest" />
+      <item itemvalue="JUnit.CardsCollectionTest.testPopulateDeck" />
+      <item itemvalue="JUnit.CardsCollectionTest.testPopulateDeckMultipleTimes" />
+      <item itemvalue="JUnit.CardsCollectionTest.testPopulateDeckStarterFrontAndBack" />
+    </list>
     <recent_temporary>
       <list>
         <item itemvalue="JUnit.All in ing-sw-2024-pucci-ruggieri-santarossa-sciarretta" />
@@ -180,7 +191,15 @@
       <option name="project" value="LOCAL" />
       <updated>1719505355993</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="javadocs added">
+      <option name="closed" value="true" />
+      <created>1719507434777</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1719507434777</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -188,7 +207,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="CardsCollection testing fixed" />
-    <option name="LAST_COMMIT_MESSAGE" value="CardsCollection testing fixed" />
+    <MESSAGE value="javadocs added" />
+    <option name="LAST_COMMIT_MESSAGE" value="javadocs added" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/finito$All_in_ing_sw_2024_pucci_ruggieri_santarossa_sciarretta.ic" NAME="All in ing-sw-2024-pucci-ruggieri-santarossa-sciarretta Coverage Results" MODIFIED="1719505108204" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" />

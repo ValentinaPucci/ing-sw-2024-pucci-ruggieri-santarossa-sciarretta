@@ -94,7 +94,6 @@ public class ResourceCard extends Card {
     public Corner getCornerAtNW () { return corners[0][0]; }
 
     /**
-     * @requires
      *      0 <= i < 2 && 0 <= j < 2;
      * @param i
      * @param j

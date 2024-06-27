@@ -1,0 +1,9 @@
+<changelist name="Uncommitted_changes_before_Update_at_27_06_24,_18_45_[Changes]" date="1719506751755" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_06_24,_18_45_[Changes]/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Update at 27/06/24, 18:45 [Changes]" />
+  <binary>
+    <option name="BEFORE_PATH" value="target/classes/it/polimi/demo/controller/GameController.class" />
+    <option name="AFTER_PATH" value="target/classes/it/polimi/demo/controller/GameController.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_27_06_24,_18_45_[Changes]/GameController.class" />
+  </binary>
+</changelist>

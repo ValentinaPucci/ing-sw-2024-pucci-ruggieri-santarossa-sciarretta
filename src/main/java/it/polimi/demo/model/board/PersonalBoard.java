@@ -459,7 +459,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the NE corner
+     * ensures card_to_play is attached to another card, specifically in the NE corner
      * of the game_card
      */
     public boolean placeCardAtNE(ResourceCard game_card, ResourceCard card_to_play) {
@@ -506,13 +506,13 @@ public class PersonalBoard implements Serializable {
     }
 
     /**
-     * @Overloading
+     * overloading:
      *
      * We assume that the game_card's corners have a specified board_coordinate, 
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the NE corner
+     * ensures card_to_play is attached to another card, specifically in the NE corner
      * of the game_card
      */
     public boolean placeCardAtNE(ResourceCard game_card, GoldCard card_to_play) {
@@ -545,7 +545,7 @@ public class PersonalBoard implements Serializable {
     
     
     /**
-     * @Overloading
+     * overloading:
      *
      * This method assumes that the corners of the game card have specified board coordinates.
      * It is utilized when placing a new ResourceCard (@param card_to_play) onto a corner
@@ -553,7 +553,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the NE corner
+     * ensures card_to_play is attached to another card, specifically in the NE corner
      * of the game_card
      */
     public boolean placeCardAtNE(StarterCard game_card, ResourceCard card_to_play) {
@@ -595,7 +595,7 @@ public class PersonalBoard implements Serializable {
     }
 
     /**
-     * @Overloading
+     * overloading:
      *
      * This method assumes that the corners of the game card have specified board coordinates.
      * It is utilized when placing a new GoldCard (@param card_to_play) onto a corner
@@ -603,7 +603,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the NE corner
+     * ensures card_to_play is attached to another card, specifically in the NE corner
      * of the game_card
      */
     public boolean placeCardAtNE(StarterCard game_card, GoldCard card_to_play) {
@@ -640,7 +640,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the SE corner
+     * ensures card_to_play is attached to another card, specifically in the SE corner
      * of the game_card
      */
 
@@ -672,7 +672,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the SE corner
+     * ensures card_to_play is attached to another card, specifically in the SE corner
      * of the game_card
      */
     public boolean placeCardAtSE(ResourceCard game_card, GoldCard card_to_play) {
@@ -711,7 +711,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the SE corner
+     * ensures card_to_play is attached to another card, specifically in the SE corner
      * of the game_card
      */
     public boolean placeCardAtSE(StarterCard game_card, ResourceCard card_to_play) {
@@ -743,7 +743,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the SE corner
+     * ensures card_to_play is attached to another card, specifically in the SE corner
      * of the game_card
      */
 
@@ -782,7 +782,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the SW corner
+     * ensures card_to_play is attached to another card, specifically in the SW corner
      * of the game_card
      */
     public boolean placeCardAtSW(ResourceCard game_card, ResourceCard card_to_play) {
@@ -813,7 +813,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the SW corner
+     * ensures card_to_play is attached to another card, specifically in the SW corner
      * of the game_card
      */
     public boolean placeCardAtSW(ResourceCard game_card, GoldCard card_to_play) {
@@ -846,7 +846,7 @@ public class PersonalBoard implements Serializable {
 
 
     /**
-     * @Overloading
+     * overloading:
      *
      * We assume that the game_card's corners have a specified board_coordinate,
      * It is utilized when placing a new ResourceCard (@param card_to_play) onto a corner
@@ -854,7 +854,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the SW corner
+     * ensures card_to_play is attached to another card, specifically in the SW corner
      * of the game_card
      */
     public boolean placeCardAtSW(StarterCard game_card, ResourceCard card_to_play) {
@@ -881,7 +881,7 @@ public class PersonalBoard implements Serializable {
 
 
     /**
-     * @Overloading
+     * overloading:
      *
      * We assume that the game_card's corners have a specified board_coordinate,
      * It is utilized when placing a new GoldCard (@param card_to_play) onto a corner
@@ -889,7 +889,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the SW corner
+     * ensures card_to_play is attached to another card, specifically in the SW corner
      * of the game_card
      */
     public boolean placeCardAtSW(StarterCard game_card, GoldCard card_to_play) {
@@ -925,7 +925,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the NW corner
+     * ensures card_to_play is attached to another card, specifically in the NW corner
      * of the game_card
      */
 
@@ -956,7 +956,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the NW corner
+     * ensures card_to_play is attached to another card, specifically in the NW corner
      * of the game_card
      */
     public boolean placeCardAtNW(ResourceCard game_card, GoldCard card_to_play) {
@@ -988,7 +988,7 @@ public class PersonalBoard implements Serializable {
     }
 
     /**
-     * @Overloading
+     * overloading:
      *
      * We assume that the game_card's corners have a specified board_coordinate,
      * It is utilized when placing a new ResourceCard (@param card_to_play) onto a corner
@@ -996,7 +996,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the NW corner
+     * ensures card_to_play is attached to another card, specifically in the NW corner
      * of the game_card
      */
     public boolean placeCardAtNW(StarterCard game_card, ResourceCard card_to_play) {
@@ -1023,7 +1023,7 @@ public class PersonalBoard implements Serializable {
 
 
     /**
-     * @Overloading
+     * overloading:
      *
      * We assume that the game_card's corners have a specified board_coordinate,
      * It is utilized when placing a new GoldCard (@param card_to_play) onto a corner
@@ -1031,7 +1031,7 @@ public class PersonalBoard implements Serializable {
      *
      * @param game_card    is the card already on the PersonalBoard
      * @param card_to_play is the card to put on the PersonalBoard
-     * @ensures card_to_play is attached to another card, specifically in the NW corner
+     * ensures card_to_play is attached to another card, specifically in the NW corner
      * of the game_card
      */
     public boolean placeCardAtNW(StarterCard game_card, GoldCard card_to_play) {

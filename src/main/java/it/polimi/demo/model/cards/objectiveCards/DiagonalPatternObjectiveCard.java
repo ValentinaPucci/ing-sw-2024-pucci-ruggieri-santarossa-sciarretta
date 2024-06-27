@@ -43,7 +43,6 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
      * Remark: Both increasing diagonal pattern and decreasing diagonal
      * pattern deal with cards of the SAME color.
      *
-     * @requires
      *      color == RED || color == BLUE
      * @param color
      */
@@ -62,7 +61,6 @@ public class DiagonalPatternObjectiveCard extends ObjectiveCard {
     /**
      * Symmetric method to the previous one
      *
-     * @requires
      *      color == GREEN || color == PURPLE
      *
      * @param color

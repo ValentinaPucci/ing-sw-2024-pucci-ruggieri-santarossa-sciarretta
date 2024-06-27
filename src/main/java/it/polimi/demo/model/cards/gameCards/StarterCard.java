@@ -104,7 +104,6 @@ public class StarterCard extends Card {
     }
 
     /**
-     * @requires
      *      0 <= i < 2 && 0 <= j < 2;
      * @param i
      * @param j
