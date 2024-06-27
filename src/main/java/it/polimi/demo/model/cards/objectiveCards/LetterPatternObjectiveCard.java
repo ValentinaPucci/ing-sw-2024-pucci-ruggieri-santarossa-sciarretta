@@ -41,7 +41,7 @@ public class LetterPatternObjectiveCard extends it.polimi.demo.model.cards.objec
      *
      * Remark: color is not a parameter anymore.
      *
-     * @requires
+     *
      *      color == RED || color == BLUE
      */
     public void init_obj_L() {
@@ -63,7 +63,6 @@ public class LetterPatternObjectiveCard extends it.polimi.demo.model.cards.objec
      *
      * Remark: color is not a parameter anymore.
      *
-     * @requires
      *      color == GREEN || color == PURPLE
      */
     public void init_obj_J() {
@@ -85,7 +84,6 @@ public class LetterPatternObjectiveCard extends it.polimi.demo.model.cards.objec
      *
      * Remark: color is not a parameter anymore.
      *
-     * @requires
      *      color == RED || color == BLUE
      */
     public void init_obj_P() {
@@ -107,7 +105,6 @@ public class LetterPatternObjectiveCard extends it.polimi.demo.model.cards.objec
      *
      * Remark: color is not a parameter anymore.
      *
-     * @requires
      *      color == BLUE || color == PURPLE
      */
     public void init_obj_Q() {
