@@ -283,8 +283,6 @@ public class ModelGeneralTest {
 
         model.drawCard(p1, 1);
 
-        //assertEquals(model.getStatus(), GameStatus.SECOND_LAST_ROUND);
-
         model.drawCard(p1, 1);
         model.drawCard(p2, 4);
 

@@ -16,7 +16,7 @@ public class Constants implements Serializable {
     public final static String RMI_server_name = "CodexNaturalis";
     public static String serverIp = "127.0.0.1";
     public final static String Remote_ip = "127.0.0.1";
-    public final static int secondsToWaitReconnection = 5000;
+    public final static int secondsToWaitReconnection = 10000;
 
     //INPUT
     public final static int row_input = 36;
